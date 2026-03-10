@@ -1,4 +1,5 @@
-første utkast til README.md
-mateus var her
-Daniel;)
-VIKTORIA 
+første utkast til README.md  
+mateus var her  
+Daniel;)  
+VIKTORIA  
+*Linnea*
