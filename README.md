@@ -2,5 +2,5 @@ første utkast til README.md
 mateus var her  
 Daniel;)  
 VIKTORIA  
-*Linnea*
+*Linnea*  
 Benjamin:D  
