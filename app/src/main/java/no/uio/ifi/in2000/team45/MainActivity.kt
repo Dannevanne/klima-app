@@ -44,7 +44,8 @@ fun App(modifier: Modifier = Modifier) {
     AsyncImage(
         model = ImageRequest
         .Builder(context = LocalContext.current)
-        .data(img)
+        .data("https://nve.geodataonline.no/arcgis/rest/services/Flomsoner2/MapServer" +
+                "/export?bbox=10,59,11,60&bboxSR=4326&size=800,600&format=png&f=image")
         .crossfade(true)
         .build(),
         contentDescription = ""
