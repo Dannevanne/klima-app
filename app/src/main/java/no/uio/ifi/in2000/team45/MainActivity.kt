@@ -10,7 +10,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import no.uio.ifi.in2000.team45.data.kart.KartDatasource
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Team45Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    App(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -31,17 +37,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun App(modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest
+        .Builder(context = LocalContext.current)
+        .data(getKart())
+        .crossfade(true)
+        .build(),
+        contentDescription = ""
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Team45Theme {
-        Greeting("Android")
+fun getKart(): String {
+    val kart = KartDatasource()
+    var tekst = ""
+    GlobalScope.launch(Dispatchers.Default) {
+        tekst = kart.getKart()
     }
+    return tekst
 }
