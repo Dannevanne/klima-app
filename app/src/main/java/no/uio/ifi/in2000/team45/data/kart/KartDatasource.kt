@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.data.kart
 
 import android.util.Log
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
@@ -14,7 +15,7 @@ class KartDatasource {
                 "https://nve.geodataonline.no/arcgis/rest/services/Flomsoner2/MapServer" +
                         "/export?bbox=10,59,11,60&bboxSR=4326&size=800,600&format=png&f=image"
             )
-            val body = httpResponse.bodyAsText()
+            val body: String = httpResponse.body()
 
             if (httpResponse.status.value != 200) {
                 Log.e("Kart", "HTTP error ${httpResponse.status.value}: $body")

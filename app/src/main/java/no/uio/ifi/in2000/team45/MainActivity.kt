@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.kart.KartDatasource
+import no.uio.ifi.in2000.team45.ui.kart.KartViewModel
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 
 class MainActivity : ComponentActivity() {
@@ -38,21 +39,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
+    val kartViewModel = KartViewModel()
+    val img = kartViewModel.img
     AsyncImage(
         model = ImageRequest
         .Builder(context = LocalContext.current)
-        .data(getKart())
+        .data(img)
         .crossfade(true)
         .build(),
         contentDescription = ""
     )
-}
-
-fun getKart(): String {
-    val kart = KartDatasource()
-    var tekst = ""
-    GlobalScope.launch(Dispatchers.Default) {
-        tekst = kart.getKart()
-    }
-    return tekst
 }
