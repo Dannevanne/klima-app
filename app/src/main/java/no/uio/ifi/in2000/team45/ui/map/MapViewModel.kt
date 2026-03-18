@@ -9,30 +9,11 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapDatasource
 
 sealed interface MapUiState {
-    data class Success(val overlay: String): MapUiState
+    object Success : MapUiState
     object Error : MapUiState
     object Loading : MapUiState
 }
 
-class MapViewModel(
-    private val mapDatasource: MapDatasource = MapDatasource()
-) : ViewModel() {
-    var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
-        private set
-
-    init {
-        getMap()
-    }
-
-    fun getMap() {
-        viewModelScope.launch {
-            try {
-                val imgTekst = mapDatasource.getMap()
-                mapUiState = MapUiState.Success(imgTekst)
-            }
-            catch (e: Exception) {
-                mapUiState = MapUiState.Error
-            }
-        }
-    }
+class MapViewModel : ViewModel(){
+    var mapUiState: MapUiState by mutableStateOf<MapUiState>(MapUiState.Success)
 }
