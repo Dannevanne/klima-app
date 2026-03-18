@@ -20,6 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import coil.compose.AsyncImage
+import androidx.compose.foundation.layout.fillMaxSize
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 
 
 @Composable
@@ -65,5 +70,13 @@ fun DataMap(
     mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
+    val mapViewportState: MapViewportState = rememberMapViewportState {
+        setCameraOptions {
+            center(Point.fromLngLat(11.0, 64.5))
+            zoom(4.0)
+        }
+    }
 
+    MapboxMap(modifier = modifier.fillMaxSize(),
+        mapViewportState = mapViewportState)
 }
