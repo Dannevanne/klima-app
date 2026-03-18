@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import no.uio.ifi.in2000.team45.ui.AppNavigation
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 
@@ -22,25 +23,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             Team45Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    App(
+                    AppNavigation(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
     }
-}
-
-@Composable
-fun App(modifier: Modifier = Modifier) {
-    val mapViewModel = MapViewModel()
-    val img = mapViewModel.img
-    AsyncImage(
-        model = ImageRequest
-        .Builder(context = LocalContext.current)
-        .data("https://public-victoria.met.no/wms?service=WMS&version=1.3.0&request=GetCapabilities&format=image%2Fpng&transparent=true&group=IN2000")
-        .crossfade(true)
-        .build(),
-        contentDescription = ""
-    )
 }
