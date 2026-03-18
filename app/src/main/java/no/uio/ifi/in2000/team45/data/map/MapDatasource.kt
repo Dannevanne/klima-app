@@ -1,15 +1,13 @@
-package no.uio.ifi.in2000.team45.data.kart
+package no.uio.ifi.in2000.team45.data.map
 
 import android.util.Log
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.statement.bodyAsText
 import no.uio.ifi.in2000.team45.network.KtorClient
 
-class KartDatasource {
+class MapDatasource {
 
-    suspend fun getKart(): String {
+    suspend fun getMap(): String {
         try {
             val httpResponse = KtorClient.client.get(
                 "https://nve.geodataonline.no/arcgis/rest/services/Flomsoner2/MapServer" +
@@ -18,14 +16,14 @@ class KartDatasource {
             val body: String = httpResponse.body()
 
             if (httpResponse.status.value != 200) {
-                Log.e("Kart", "HTTP error ${httpResponse.status.value}: $body")
+                Log.e("Map", "HTTP error ${httpResponse.status.value}: $body")
                 throw Exception("Failed with HTTP ${httpResponse.status.value}")
             }
 
             println(body)
             return body
         } catch (e: Exception) {
-            Log.e("Kart", "Couldn't get map", e)
+            Log.e("Map", "Couldn't get map", e)
             throw e
         }
     }

@@ -7,18 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.team45.data.kart.KartDatasource
-import no.uio.ifi.in2000.team45.ui.kart.KartViewModel
+import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 
 class MainActivity : ComponentActivity() {
@@ -39,13 +33,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
-    val kartViewModel = KartViewModel()
-    val img = kartViewModel.img
+    val mapViewModel = MapViewModel()
+    val img = mapViewModel.img
     AsyncImage(
         model = ImageRequest
         .Builder(context = LocalContext.current)
-        .data("https://nve.geodataonline.no/arcgis/rest/services/Flomsoner2/MapServer" +
-                "/export?bbox=10,59,11,60&bboxSR=4326&size=800,600&format=png&f=image")
+        .data("https://public-victoria.met.no/wms?service=WMS&version=1.3.0&request=GetCapabilities&format=image%2Fpng&transparent=true&group=IN2000")
         .crossfade(true)
         .build(),
         contentDescription = ""
