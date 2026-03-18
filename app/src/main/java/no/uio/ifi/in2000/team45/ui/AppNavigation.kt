@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team45.ui.map.MapScreen
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
+import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
@@ -31,16 +32,24 @@ fun AppNavigation(
             composable(route = "MapScreen") {
                 MapScreen (
                     modifier = modifier,
-                    onSettingsClick = {},
-                    onStatisticsClick = {},
+                    onSettingsClick = { navController.navigate("SettingsScreen") },
+                    onStatisticClick = { navController.navigate("StatisticScreen") },
                     mapViewModel = mapViewModel
                 )
             }
             composable(route = "StatisticScreen") {
                 StatisticScreen (
                     modifier = modifier,
-                    onClick = {},
+                    onSettingsClick = { navController.navigate("SettingsScreen") },
+                    onMapClick = { navController.navigate("MapScreen") },
                     statisticViewModel = statisticViewModel
+                )
+            }
+            composable(route = "SettingsScreen") {
+                SettingsScreen (
+                    modifier = modifier,
+                    onMapClick = { navController.navigate("MapScreen") },
+                    onStatisticClick = { navController.navigate("StatisticScreen") }
                 )
             }
         }
