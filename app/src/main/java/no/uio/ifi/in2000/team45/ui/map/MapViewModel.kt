@@ -17,7 +17,7 @@ sealed interface MapUiState {
 class MapViewModel(
     private val mapDatasource: MapDatasource = MapDatasource()
 ) : ViewModel() {
-    var img: String by mutableStateOf("")
+    var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
 
     init {
@@ -28,10 +28,10 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 val imgTekst = mapDatasource.getMap()
-                img = imgTekst
+                mapUiState = MapUiState.Success(imgTekst)
             }
             catch (e: Exception) {
-                throw e
+                mapUiState = MapUiState.Error
             }
         }
     }
