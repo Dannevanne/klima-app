@@ -19,22 +19,22 @@ import androidx.compose.ui.Modifier
 fun MapScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
-    onStatisticsClick: () -> Unit,
+    onStatisticClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         bottomBar = {
                 BottomAppBar{
-                        Icon(Icons.Filled.Place, contentDescription = "")
                         IconButton(onClick = onSettingsClick) {
                             Icon(Icons.Outlined.Settings, contentDescription = "to settings")
                         }
-                        IconButton(onClick = onStatisticsClick) {
+                        Icon(Icons.Filled.Place, contentDescription = "")
+                        IconButton(onClick = onStatisticClick) {
                             Icon(Icons.Outlined.Info, contentDescription = "to statistics")
                         }
                     }
             }
-    ) {
+    ) { innerPadding ->
 
     }
 }
