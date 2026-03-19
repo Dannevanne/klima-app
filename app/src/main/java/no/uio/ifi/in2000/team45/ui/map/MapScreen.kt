@@ -72,8 +72,10 @@ fun DataMap(
         modifier = modifier.fillMaxSize(),
         mapViewportState = rememberMapViewportState {
             setCameraOptions {
-                center(Point.fromLngLat(10.75, 59.91))
-                zoom(9.0)
+                center(Point.fromLngLat(15.0, 65.0))
+                zoom(3.75)
+                pitch(0.0)
+                bearing(0.0)
             }
         }
     ) {
