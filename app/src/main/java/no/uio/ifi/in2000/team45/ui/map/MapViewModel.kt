@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapDatasource
+import no.uio.ifi.in2000.team45.data.map.MapRepository
 
 sealed interface MapUiState {
     data class Success(val overlay: String): MapUiState
@@ -15,7 +16,7 @@ sealed interface MapUiState {
 }
 
 class MapViewModel(
-    private val mapDatasource: MapDatasource = MapDatasource()
+    private val mapRepository: MapRepository = MapRepository()
 ) : ViewModel() {
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
@@ -27,7 +28,7 @@ class MapViewModel(
     fun getMap() {
         viewModelScope.launch {
             try {
-                val imgTekst = mapDatasource.getMap()
+                val imgTekst = mapRepository.getMap()
                 mapUiState = MapUiState.Success(imgTekst)
             }
             catch (e: Exception) {
