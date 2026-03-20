@@ -1,15 +1,5 @@
 package no.uio.ifi.in2000.team45.ui.map
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -20,7 +10,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import coil.compose.AsyncImage
-
+import androidx.compose.foundation.layout.fillMaxSize
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.extension.compose.style.MapStyle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CircularProgressIndicator
 
 @Composable
 fun MapScreen(
@@ -45,14 +48,14 @@ fun MapScreen(
             }
     ) { innerPadding ->
         Box(
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier.fillMaxSize().padding(innerPadding),
             contentAlignment = Alignment.Center
         ){
             when (uiState) {
                 is MapUiState.Error -> Text("Error", color = Color.Red)
                 is MapUiState.Loading -> CircularProgressIndicator()
                 is MapUiState.Success -> DataMap(
-                    modifier = modifier,
+                    modifier = Modifier.fillMaxSize(),
                     mapViewModel = mapViewModel
                 )
             }
@@ -65,5 +68,16 @@ fun DataMap(
     mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
-
+    MapboxMap(
+        modifier = modifier.fillMaxSize(),
+        mapViewportState = rememberMapViewportState {
+            setCameraOptions {
+                center(Point.fromLngLat(15.0, 65.0))
+                zoom(3.75)
+                pitch(0.0)
+                bearing(0.0)
+            }
+        }
+    ) {
+    }
 }

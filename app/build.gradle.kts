@@ -67,4 +67,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    //mapbox
+    implementation("com.mapbox.maps:android-ndk27:11.20.1")
+    implementation("com.mapbox.extension:maps-compose-ndk27:11.20.1")
 }
