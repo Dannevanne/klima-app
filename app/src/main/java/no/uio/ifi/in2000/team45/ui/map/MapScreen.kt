@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -17,6 +18,9 @@ import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportS
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.style.MapStyle
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -24,6 +28,9 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun MapScreen(
@@ -37,13 +44,22 @@ fun MapScreen(
     Scaffold(
         bottomBar = {
                 BottomAppBar{
+                    Row(
+                        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+
+                    ) {
                         IconButton(onClick = onSettingsClick) {
                             Icon(Icons.Outlined.Settings, contentDescription = "to settings")
                         }
-                        Icon(Icons.Filled.Place, contentDescription = "")
+                        IconButton({}) {
+                            Icon(Icons.Filled.Place, contentDescription = "")
+                        }
                         IconButton(onClick = onStatisticClick) {
                             Icon(Icons.Outlined.Info, contentDescription = "to statistics")
                         }
+                    }
                     }
             }
     ) { innerPadding ->
@@ -80,4 +96,14 @@ fun DataMap(
         }
     ) {
     }
+}
+
+@Preview
+@Composable
+fun MapScreenPreview() {
+    MapScreen(
+        mapViewModel = viewModel(),
+        {},
+        {}
+    )
 }
