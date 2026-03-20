@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.team45.ui
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,8 +19,8 @@ import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    mapViewModel: MapViewModel = MapViewModel(),
-    statisticViewModel: StatisticViewModel = StatisticViewModel()
+    mapViewModel: MapViewModel = viewModel(),
+    statisticViewModel: StatisticViewModel = viewModel()
 ) {
     Surface {
         NavHost(
