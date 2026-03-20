@@ -28,7 +28,7 @@ class MapViewModel(
     fun getMap() {
         viewModelScope.launch {
             try {
-                val imgTekst = mapRepository.getMap()
+                val imgTekst = mapRepository.getOverlay()
                 mapUiState = MapUiState.Success(imgTekst)
             }
             catch (e: Exception) {

@@ -7,12 +7,10 @@ import no.uio.ifi.in2000.team45.network.KtorClient
 
 class MapDatasource {
 
-    suspend fun getMap(): String {
+    suspend fun getOverlay(): String {
         try {
-            val httpResponse = KtorClient.client.get(
-                "https://nve.geodataonline.no/arcgis/rest/services/Flomsoner2/MapServer" +
-                        "/export?bbox=10,59,11,60&bboxSR=4326&size=800,600&format=png&f=image"
-            )
+            val url = ""
+            val httpResponse = KtorClient.client.get(url)
             val body: String = httpResponse.body()
 
             if (httpResponse.status.value != 200) {
