@@ -28,9 +28,16 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.request.ImageRequest
+import com.mapbox.geojson.BoundingBox
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
+import com.mapbox.maps.extension.style.layers.generated.lineLayer
+import com.mapbox.maps.extension.style.sources.generated.geoJsonSource
+import com.mapbox.maps.extension.style.sources.generated.imageSource
 
 @Composable
 fun MapScreen(
@@ -41,11 +48,14 @@ fun MapScreen(
 ) {
 
     val uiState = mapViewModel.mapUiState
+
     Scaffold(
         bottomBar = {
                 BottomAppBar{
                     Row(
-                        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
@@ -64,7 +74,9 @@ fun MapScreen(
             }
     ) { innerPadding ->
         Box(
-            modifier = modifier.fillMaxSize().padding(innerPadding),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             contentAlignment = Alignment.Center
         ){
             when (uiState) {
@@ -72,7 +84,7 @@ fun MapScreen(
                 is MapUiState.Loading -> CircularProgressIndicator()
                 is MapUiState.Success -> DataMap(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel = mapViewModel
+                    overlay = uiState.overlay
                 )
             }
         }
@@ -81,7 +93,7 @@ fun MapScreen(
 
 @Composable
 fun DataMap(
-    mapViewModel: MapViewModel,
+    overlay: String,
     modifier: Modifier = Modifier
 ) {
     MapboxMap(
@@ -93,9 +105,43 @@ fun DataMap(
                 pitch(0.0)
                 bearing(0.0)
             }
+        },
+        style = {
+            geoJsonSource("1") {
+                data(overlay)
+            }
+            imageSource("1") {
+                coordinates(
+                    listOf(
+                        listOf(59.93895,10.69977),
+                        listOf(59.93895,10.73090),
+                        listOf(59.94470,10.69977),
+                        listOf(59.94470,10.73090)
+                    )
+                )
+            }
         }
     ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(overlay)
+                .crossfade(true).build(),
+            contentDescription = ""
+        )
     }
+}
+
+@Composable
+fun MapOverlay(
+    overlay: String
+) {
+    val southwest = doubleArrayOf(59.93895,10.69977)
+    val northeast = doubleArrayOf(59.94470,10.73090)
+
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(overlay)
+                .crossfade(true).build(),
+            contentDescription = ""
+        )
 }
 
 @Preview
