@@ -59,9 +59,12 @@ import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberUpdatedState
 import coil.ImageLoader
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
+import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 
 @Composable
 fun MapScreen(
@@ -123,6 +126,9 @@ fun DataMap(
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
+    val currentMapWidth by rememberUpdatedState(mapWidth)
+    val currentMapHeight by rememberUpdatedState(mapHeight)
+    var mapViewRef by remember { mutableStateOf<com.mapbox.maps.MapView?>(null) }
     val viewportState = rememberMapViewportState {
         setCameraOptions {
             center(Point.fromLngLat(11.05, 60.5))
@@ -142,22 +148,42 @@ fun DataMap(
                 },
             mapViewportState = viewportState
         ) {
-            MapEffect(mapWidth, mapHeight) { mapView ->
-                if (mapWidth <= 0 || mapHeight <= 0) return@MapEffect
-                val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                    mapView.mapboxMap.cameraState.toCameraOptions()
-                )
-                val bbox = listOf(
-                    bounds.southwest.longitude(),
-                    bounds.southwest.latitude(),
-                    bounds.northeast.longitude(),
-                    bounds.northeast.latitude()
-                )
-                mapViewModel.updateOverlay(
-                    bbox = bbox,
-                    width = mapWidth,
-                    height = mapHeight
-                )
+            MapEffect(Unit) { mapView ->
+                mapViewRef = mapView
+            }
+
+            DisposableEffect(mapViewRef) {
+                val mapView = mapViewRef
+                if (mapView == null) {
+                    onDispose { }
+                } else {
+                    fun updateFromCamera() {
+                        if (currentMapWidth <= 0 || currentMapHeight <= 0) return
+                        val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
+                            mapView.mapboxMap.cameraState.toCameraOptions()
+                        )
+                        val bbox = listOf(
+                            bounds.southwest.longitude(),
+                            bounds.southwest.latitude(),
+                            bounds.northeast.longitude(),
+                            bounds.northeast.latitude()
+                        )
+                        mapViewModel.updateOverlay(
+                            bbox = bbox,
+                            width = currentMapWidth,
+                            height = currentMapHeight
+                        )
+                    }
+
+                    val listener = OnCameraChangeListener {
+                        updateFromCamera()
+                    }
+                    mapView.mapboxMap.addOnCameraChangeListener(listener)
+                    updateFromCamera()
+                    onDispose {
+                        mapView.mapboxMap.removeOnCameraChangeListener(listener)
+                    }
+                }
             }
 
             LaunchedEffect(overlayURL) {
