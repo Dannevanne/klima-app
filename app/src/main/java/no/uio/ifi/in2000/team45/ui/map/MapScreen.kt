@@ -28,17 +28,26 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.request.ImageRequest
 import com.mapbox.geojson.BoundingBox
+import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.style.layers.generated.lineLayer
 import com.mapbox.maps.extension.style.sources.generated.geoJsonSource
 import com.mapbox.maps.extension.style.sources.generated.imageSource
-
+import com.mapbox.maps.toCameraOptions
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.onSizeChanged
+import com.mapbox.maps.extension.compose.MapEffect
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel,
@@ -92,16 +101,45 @@ fun DataMap(
     mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
-    MapboxMap(
-        modifier = modifier.fillMaxSize(),
-        mapViewportState = rememberMapViewportState {
-            setCameraOptions {
-                center(Point.fromLngLat(15.0, 65.0))
-                zoom(3.75)
-                pitch(0.0)
-                bearing(0.0)
+    var mapWidth by remember { mutableStateOf(0) }
+    var mapHeight by remember { mutableStateOf(0) }
+    val viewportState = rememberMapViewportState {
+        setCameraOptions {
+            center(Point.fromLngLat(11.05, 60.5))
+            zoom(11.5)
+            pitch(0.0)
+            bearing(0.0)
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        MapboxMap(
+            modifier = Modifier.fillMaxSize()
+                .onSizeChanged {
+                    mapWidth = it.width
+                    mapHeight = it.height
+                },
+            mapViewportState = viewportState
+        ) {
+            MapEffect(mapWidth, mapHeight) { mapView ->
+                if (mapWidth <= 0 || mapHeight <= 0) return@MapEffect
+                val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
+                    mapView.mapboxMap.cameraState.toCameraOptions()
+                )
+                val bbox = listOf(
+                    bounds.southwest.longitude(),
+                    bounds.southwest.latitude(),
+                    bounds.northeast.longitude(),
+                    bounds.northeast.latitude()
+                )
+                mapViewModel.updateOverlay(
+                    bbox = bbox,
+                    width = mapWidth,
+                    height = mapHeight
+                )
             }
-        }){}
+        }
+    }
 }
 
 @Composable
