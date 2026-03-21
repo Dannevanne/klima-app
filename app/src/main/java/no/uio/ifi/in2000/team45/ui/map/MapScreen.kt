@@ -187,16 +187,19 @@ fun DataMap(
             }
 
             LaunchedEffect(overlayURL) {
-                if(overlayURL != null){
-                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
+                bitmap = if (overlayURL != null) {
+                    makeBitmap(context = context, imageURL = overlayURL)
+                } else {
+                    null
                 }
             }
 
-            MapEffect(bitmap){ mapView ->
+            MapEffect(bitmap) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
                 val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                    mapView.mapboxMap.cameraState.toCameraOptions())
+                    mapView.mapboxMap.cameraState.toCameraOptions()
+                )
                 val bbox = listOf(
                     bounds.southwest.longitude(),
                     bounds.southwest.latitude(),
@@ -205,24 +208,31 @@ fun DataMap(
                 )
                 val corners = cornersFromBBOX(bbox)
 
-                if(style.getSource("overlaysource") == null){
-                    val source = ImageSource.Builder("overlaysource")
-                        .coordinates(corners)
-                        .build()
-                    style.addSource(source)
+                if (style.getLayer("overlaylayer") != null) {
+                    style.removeStyleLayer("overlaylayer")
                 }
+
+                if (style.getSource("overlaysource") != null) {
+                    style.removeStyleSource("overlaysource")
+                }
+
+                val source = ImageSource.Builder("overlaysource")
+                    .coordinates(corners)
+                    .build()
+
+                style.addSource(source)
                 style.getSourceAs<ImageSource>("overlaysource")?.updateImage(currentBitmap)
 
-                if(style.getLayer("overlaylayer") == null){
-                    style.addLayer(rasterLayer("overlaylayer", "overlaysource"){
+
+                if (style.getLayer("overlaylayer") == null) {
+                    style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
                         rasterOpacity(0.5)
                     })
                 }
-
             }
         }
     }
-}
+    }
 
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     val request = ImageRequest.Builder(context)
