@@ -89,7 +89,7 @@ fun MapScreen(
 
 @Composable
 fun DataMap(
-    overlay: String,
+    mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
     MapboxMap(
@@ -101,29 +101,7 @@ fun DataMap(
                 pitch(0.0)
                 bearing(0.0)
             }
-        },
-        style = {
-            geoJsonSource("1") {
-                data(overlay)
-            }
-            imageSource("1") {
-                coordinates(
-                    listOf(
-                        listOf(59.93895,10.69977),
-                        listOf(59.93895,10.73090),
-                        listOf(59.94470,10.69977),
-                        listOf(59.94470,10.73090)
-                    )
-                )
-            }
-        }
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current).data(overlay)
-                .crossfade(true).build(),
-            contentDescription = ""
-        )
-    }
+        }){}
 }
 
 @Composable
