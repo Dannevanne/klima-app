@@ -6,7 +6,6 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()){
                       height: Int): String{
         return mapDatasource.buildFloodExportURL(bbox = bbox,
             width = width,
-            height = height,
-            layersIDs = "17")
+            height = height)
     }
 }
