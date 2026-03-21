@@ -7,28 +7,25 @@ import io.ktor.client.request.parameter
 import no.uio.ifi.in2000.team45.network.KtorClient
 
 class MapDatasource {
+    fun buildFloodExportURL(bbox: List<Double>,
+                            width: Int,
+                            height: Int,
+                            layersIDs: String = "17"): String{
+        val minLon = bbox[0]
+        val minLat = bbox[1]
+        val maxLon = bbox[2]
+        val maxLat = bbox[3]
 
-    suspend fun getOverlay(): String {
-        try {
-            val baseUrl = "https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/export?"
-            val httpResponse = KtorClient.client.get(baseUrl) {
-                parameter("bbox","10.0,40.0,20.0,70.0")
-                parameter("format", "png")
-                parameter("transparent", "true")
-                parameter("f", "image")
-            }
-            val body: String = httpResponse.body()
-
-            if (httpResponse.status.value != 200) {
-                Log.e("Map", "HTTP error ${httpResponse.status.value}: $body")
-                throw Exception("Failed with HTTP ${httpResponse.status.value}")
-            }
-
-            println(body)
-            return body
-        } catch (e: Exception) {
-            Log.e("Map", "Couldn't get map", e)
-            throw e
+        return buildString{
+            append("https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/export")
+            append("?bbox=$minLon,$minLat,$maxLon,$maxLat")
+            append("&bboxSR=4326")
+            append("&imageSR=4326")
+            append("&size=$width,$height")
+            append("&format=png32")
+            append("&transparent=false")
+            append("&layers=show:$layersIDs")
+            append("&f=image")
         }
     }
 }
