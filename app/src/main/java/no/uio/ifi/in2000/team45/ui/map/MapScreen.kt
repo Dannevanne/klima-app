@@ -79,13 +79,9 @@ fun MapScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ){
-            when (uiState) {
-                is MapUiState.Error -> Text("Error", color = Color.Red)
-                is MapUiState.Loading -> CircularProgressIndicator()
-                is MapUiState.Success -> DataMap(
-                    modifier = Modifier.fillMaxSize(),
-                    overlay = uiState.overlay
-                )
+            DataMap(mapViewModel = mapViewModel, modifier = Modifier.fillMaxSize())
+            if(uiState is MapUiState.Error){
+                Text("Error", color = Color.Red)
             }
         }
     }
