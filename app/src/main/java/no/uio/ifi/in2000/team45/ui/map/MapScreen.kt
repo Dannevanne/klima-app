@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +49,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.core.graphics.drawable.toBitmap
+import coil.request.SuccessResult
 import com.mapbox.maps.extension.compose.MapEffect
+import com.mapbox.maps.extension.style.layers.addLayer
+import com.mapbox.maps.extension.style.layers.generated.rasterLayer
+import com.mapbox.maps.extension.style.layers.getLayer
+import com.mapbox.maps.extension.style.sources.addSource
+import com.mapbox.maps.extension.style.sources.generated.ImageSource
+import com.mapbox.maps.extension.style.sources.getSource
+import android.content.Context
+import coil.ImageLoader
+import com.mapbox.maps.extension.style.sources.getSourceAs
+import com.mapbox.maps.extension.style.sources.updateImage
+
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel,
@@ -101,6 +116,9 @@ fun DataMap(
     mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val uiState = mapViewModel.mapUiState
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
     val viewportState = rememberMapViewportState {
@@ -111,6 +129,7 @@ fun DataMap(
             bearing(0.0)
         }
     }
+    val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
 
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
@@ -138,30 +157,71 @@ fun DataMap(
                     height = mapHeight
                 )
             }
+
+            LaunchedEffect(overlayURL) {
+                if(overlayURL != null){
+                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
+                }
+            }
+
+            MapEffect(bitmap){ mapView ->
+                val currentBitmap = bitmap ?: return@MapEffect
+                val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
+                val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
+                    mapView.mapboxMap.cameraState.toCameraOptions())
+                val bbox = listOf(
+                    bounds.southwest.longitude(),
+                    bounds.southwest.latitude(),
+                    bounds.northeast.longitude(),
+                    bounds.northeast.latitude()
+                )
+                val corners = cornersFromBBOX(bbox)
+
+                if(style.getSource("overlaysource") == null){
+                    val source = ImageSource.Builder("overlaysource")
+                        .coordinates(corners)
+                        .build()
+                    style.addSource(source)
+                }
+                style.getSourceAs<ImageSource>("overlaysource")?.updateImage(currentBitmap)
+
+                if(style.getLayer("overlaylayer") == null){
+                    style.addLayer(rasterLayer("overlaylayer", "overlaysource"){
+                        rasterOpacity(0.5)
+                    })
+                }
+
+            }
         }
     }
 }
 
-@Composable
-fun MapOverlay(
-    overlay: String
-) {
-    val southwest = doubleArrayOf(59.93895,10.69977)
-    val northeast = doubleArrayOf(59.94470,10.73090)
+suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
+    val request = ImageRequest.Builder(context)
+        .data(imageURL)
+        .allowHardware(false)
+        .build()
 
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current).data(overlay)
-                .crossfade(true).build(),
-            contentDescription = ""
-        )
+    val result = ImageLoader(context).execute(request)
+
+    return if(result is SuccessResult){
+        result.drawable.toBitmap()
+    }
+    else{
+        null
+    }
 }
 
-@Preview
-@Composable
-fun MapScreenPreview() {
-    MapScreen(
-        mapViewModel = viewModel(),
-        {},
-        {}
+fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
+    val minLon = bbox[0]
+    val minLat = bbox[1]
+    val maxLon = bbox[2]
+    val maxLat = bbox[3]
+
+    return listOf(
+        listOf(minLon, maxLat),
+        listOf(maxLon, maxLat),
+        listOf(maxLon, minLat),
+        listOf(minLon, minLat)
     )
 }
