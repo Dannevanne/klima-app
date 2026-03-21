@@ -21,6 +21,8 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
 
+    private var lastOverlayURL: String? = null
+
     fun updateOverlay(bbox: List<Double>,
                       width: Int,
                       height: Int){
@@ -29,7 +31,10 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
             val url = mapRepository.getOverlayURL(bbox = bbox,
                 width = width,
                 height = height)
-            mapUiState = MapUiState.Success(url)
+            if(url != lastOverlayURL){
+                lastOverlayURL = url
+                mapUiState = MapUiState.Success(url)
+            }
         }
         catch(e: Exception){
             mapUiState = MapUiState.Error
