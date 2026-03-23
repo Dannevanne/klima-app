@@ -6,7 +6,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import no.uio.ifi.in2000.team45.network.KtorClient
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -50,9 +49,10 @@ class StatisticDatasource {
     }
 
     suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
+        val encodedName = java.net.URLEncoder.encode(query.trim(), "UTF-8")
         val url = "$FROST_BASE/sources/v0.jsonld" +
                 "?types=SensorSystem" +
-                "&name=${query.trim()}*" +
+                "&name=$encodedName*" +
                 "&country=Norge"
         try {
             val response = KtorClient.client.get(url) {
