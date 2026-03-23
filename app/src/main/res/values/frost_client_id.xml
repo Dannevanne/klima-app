@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="frost_client_id" translatable="false" tools:ignore="UnusedResources">INSERT_YOUR_FROST_CLIENT_ID_HERE</string>
+    <string name="frost_client_id" translatable="false" tools:ignore="UnusedResources">5f6bc151-bdc4-4734-a72c-25aa35ecbb7e</string>
 </resources>

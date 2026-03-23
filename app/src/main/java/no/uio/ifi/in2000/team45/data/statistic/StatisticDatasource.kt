@@ -82,7 +82,7 @@ class StatisticDatasource {
             "min(air_temperature P1M)",
             "sum(precipitation_amount P1M)",
             "mean(wind_speed P1M)"
-        ).joinToString(",")
+        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
 
         val url = "$FROST_BASE/climatenormals/v0.jsonld" +
                 "?sources=$stationId" +
@@ -111,7 +111,10 @@ class StatisticDatasource {
         yearFrom: Int,
         yearTo: Int
     ): List<MonthlyObservation> {
-        val elements = "mean(air_temperature P1M),sum(precipitation_amount P1M)"
+        val elements = listOf(
+            "mean(air_temperature P1M)",
+            "sum(precipitation_amount P1M)"
+        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
