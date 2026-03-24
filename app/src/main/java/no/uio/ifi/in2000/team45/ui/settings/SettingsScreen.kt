@@ -81,7 +81,7 @@ fun SettingsScreen(
             item {
                 MapThemeSetting(selectedTheme = mapViewModel.mapTheme,
                     onThemeSelected = { theme ->
-                        mapViewModel.setMapTheme(theme)
+                        mapViewModel.updateMapTheme(theme)
                     })
             }
             item {
