@@ -53,9 +53,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import com.mapbox.maps.Style
+import com.mapbox.maps.extension.style.expressions.dsl.generated.mod
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
+import com.mapbox.maps.MapView
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.CameraOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -238,6 +242,12 @@ fun DataMap(
                 }
             }
         }
+
+        MapZoomControls(
+            onZoomIn = { zoomMap(mapViewRef, viewportState, 1.0) },
+            onZoomOut = { zoomMap(mapViewRef, viewportState, -1.0) },
+            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 80.dp)
+        )
     }
     }
 
@@ -289,4 +299,17 @@ fun MapThemeEffect(useDarkMap: Boolean){
             if(useDarkMap) Style.DARK else Style.STANDARD
         )
     }
+}
+
+private fun zoomMap(mapView: MapView?,
+                    viewPortState: MapViewportState,
+                    zoomChange: Double) {
+    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
+
+    val camera = CameraOptions.Builder().zoom(
+        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
+    )
+        .build()
+
+    viewPortState.easeTo(camera)
 }
