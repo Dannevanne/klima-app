@@ -286,7 +286,7 @@ fun RememberUseDarkMap(mapTheme: MapTheme): Boolean{
 fun MapThemeEffect(useDarkMap: Boolean){
     MapEffect(useDarkMap) { mapView ->
         mapView.mapboxMap.loadStyle(
-            if(useDarkMap) Style.DARK else Style.LIGHT
+            if(useDarkMap) Style.DARK else Style.STANDARD
         )
     }
 }
