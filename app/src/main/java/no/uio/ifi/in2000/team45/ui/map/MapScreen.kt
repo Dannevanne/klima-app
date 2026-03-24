@@ -44,13 +44,18 @@ import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel,
@@ -62,11 +67,24 @@ fun MapScreen(
     val uiState = mapViewModel.mapUiState
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                navigationIcon = { Icon(Icons.Filled.Place, contentDescription = "") },
+                title = {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = "Map",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold)
+                }
+            )
+        },
         bottomBar = {
                 BottomAppBar{
                     Row(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(2.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -87,8 +105,7 @@ fun MapScreen(
     ) { innerPadding ->
         Box(
             modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
             DataMap(mapViewModel = mapViewModel, modifier = Modifier.fillMaxSize())
