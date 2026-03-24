@@ -44,7 +44,7 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
         }
     }
 
-    fun setMapTheme(theme: MapTheme){
+    fun updateMapTheme(theme: MapTheme){
         mapTheme = theme
     }
 }
