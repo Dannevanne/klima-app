@@ -148,11 +148,3 @@ fun MapThemeSetting(selectedTheme: MapTheme,
         }
     }
 }
-
-@Preview
-@Composable
-fun SettingsScreenPreview() {
-    SettingsScreen(mapViewModel = MapViewModel(),
-        {},
-        {})
-}
