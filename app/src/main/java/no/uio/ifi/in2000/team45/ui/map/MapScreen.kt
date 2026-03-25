@@ -44,6 +44,8 @@ import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
@@ -105,7 +107,7 @@ fun MapScreen(
     ) { innerPadding ->
         Box(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxSize().padding(innerPadding),
             contentAlignment = Alignment.Center
         ){
             DataMap(mapViewModel = mapViewModel, modifier = Modifier.fillMaxSize())
