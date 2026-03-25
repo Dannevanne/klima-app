@@ -14,7 +14,6 @@ import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
-
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
@@ -22,33 +21,43 @@ fun AppNavigation(
     mapViewModel: MapViewModel = viewModel(),
     statisticViewModel: StatisticViewModel = viewModel()
 ) {
+    fun navigateTo(route: String) {
+        navController.navigate(route) {
+            popUpTo("MapScreen") { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     Surface {
         NavHost(
             navController = navController,
             startDestination = "MapScreen"
         ) {
             composable(route = "MapScreen") {
+
                 MapStateScreen (
                     modifier = modifier,
-                    onSettingsClick = { navController.navigate("SettingsScreen") },
-                    onStatisticClick = { navController.navigate("StatisticScreen") },
+                    onSettingsClick = { navigateTo("SettingsScreen") },
+                    onStatisticClick = { navigateTo("StatisticScreen") },
                     mapViewModel = mapViewModel
                 )
             }
             composable(route = "StatisticScreen") {
-                StatisticScreen (
+                StatisticScreen(
                     modifier = modifier,
-                    onSettingsClick = { navController.navigate("SettingsScreen") },
-                    onMapClick = { navController.navigate("MapScreen") },
+                    onSettingsClick = { navigateTo("SettingsScreen") },
+                    onMapClick = { navigateTo("MapScreen") },
                     statisticViewModel = statisticViewModel
                 )
             }
             composable(route = "SettingsScreen") {
                 SettingsScreen (
                     mapViewModel = mapViewModel,
+
                     modifier = modifier,
-                    onMapClick = { navController.navigate("MapScreen") },
-                    onStatisticClick = { navController.navigate("StatisticScreen") }
+                    onMapClick = { navigateTo("MapScreen") },
+                    onStatisticClick = { navigateTo("StatisticScreen") }
                 )
             }
         }
