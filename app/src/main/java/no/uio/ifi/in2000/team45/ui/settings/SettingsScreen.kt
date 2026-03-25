@@ -33,6 +33,8 @@ import com.mapbox.maps.extension.style.expressions.dsl.generated.hsl
 import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import androidx.compose.material3.RadioButton
+import androidx.compose.ui.res.stringResource
+import no.uio.ifi.in2000.team45.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +52,7 @@ fun SettingsScreen(
                 title = {
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = "Settings",
+                        text = stringResource(R.string.settings),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold)
                 }
@@ -59,7 +61,9 @@ fun SettingsScreen(
         bottomBar = {
             BottomAppBar{
                 Row(
-                    modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -67,17 +71,21 @@ fun SettingsScreen(
                         Icon(Icons.Filled.Settings, contentDescription = "")
                     }
                     IconButton(onClick = onMapClick) {
-                        Icon(Icons.Outlined.Place, contentDescription = "to map")
+                        Icon(Icons.Outlined.Place,
+                            contentDescription = stringResource(R.string.to_map))
                     }
                     IconButton(onClick = onStatisticClick) {
-                        Icon(Icons.Outlined.Info, contentDescription = "to statistics")
+                        Icon(Icons.Outlined.Info,
+                            contentDescription = stringResource(R.string.to_statistics))
                     }
                 }
             }
         }
     ) {
         innerPadding ->
-        LazyColumn(modifier = modifier.padding(innerPadding).padding(8.dp)) {
+        LazyColumn(modifier = modifier
+            .padding(innerPadding)
+            .padding(8.dp)) {
             item {
                 MapThemeSetting(selectedTheme = mapViewModel.mapTheme,
                     onThemeSelected = { theme ->
@@ -89,7 +97,9 @@ fun SettingsScreen(
             }
             item {
                 Row(
-                    modifier = Modifier.padding(4.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -115,13 +125,16 @@ fun SettingsScreen(
 fun MapThemeSetting(selectedTheme: MapTheme,
                     onThemeSelected: (MapTheme) -> Unit,
                     modifier: Modifier = Modifier){
-    Column(modifier = modifier.fillMaxWidth().padding(4.dp)) {
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .padding(4.dp)) {
         Text(modifier = Modifier.padding(8.dp),
-            text = "Theme",
+            text = stringResource(R.string.theme),
             fontSize = 18.sp)
 
-        Row(modifier = Modifier.fillMaxWidth().
-        padding(horizontal = 8.dp),
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
             RadioButton(selected = selectedTheme == MapTheme.DEVICE,
@@ -129,8 +142,9 @@ fun MapThemeSetting(selectedTheme: MapTheme,
             Text(text = "Use device settings")
         }
 
-        Row(modifier = Modifier.fillMaxWidth().
-        padding(horizontal = 8.dp),
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
             RadioButton(selected = selectedTheme == MapTheme.LIGHT,
@@ -138,8 +152,9 @@ fun MapThemeSetting(selectedTheme: MapTheme,
             Text(text = "Lightmode")
         }
 
-        Row(modifier = Modifier.fillMaxWidth().
-        padding(horizontal = 8.dp),
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
             RadioButton(selected = selectedTheme == MapTheme.DARK,
