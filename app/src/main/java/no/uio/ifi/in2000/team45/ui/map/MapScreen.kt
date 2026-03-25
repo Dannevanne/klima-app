@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
@@ -45,8 +44,10 @@ import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
@@ -56,7 +57,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import com.mapbox.maps.Style
-import com.mapbox.maps.extension.style.expressions.dsl.generated.mod
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
@@ -64,7 +64,6 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.CameraOptions
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 
 @Composable
 fun MapStateScreen(
@@ -87,7 +86,7 @@ fun MapStateScreen(
             onStatisticClick = onStatisticClick,
             modifier = modifier)
         when(uiState){
-            is MapUiState.Loading -> LogoScreen()
+            is MapUiState.Loading -> CircularProgressIndicator()
             is MapUiState.Error -> Text("Error", color = Color.Red)
             else -> {}
         }
@@ -102,6 +101,7 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showDropDownMenu by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -113,6 +113,30 @@ fun MapScreen(
                         text = stringResource(R.string.map),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold)
+                },
+                actions = {
+                    IconButton(
+                        onClick = { showDropDownMenu = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = stringResource(R.string.filter_climate_hazard)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showDropDownMenu,
+                        onDismissRequest = { showDropDownMenu = false }
+                        // offset = DpOffset((-102).dp, (-64).dp),
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.flood)) },
+                            onClick = { showDropDownMenu = false }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.landslide)) },
+                            onClick = { showDropDownMenu = false }
+                        )
+                    }
                 }
             )
         },
@@ -143,7 +167,9 @@ fun MapScreen(
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         )
     }
 }
