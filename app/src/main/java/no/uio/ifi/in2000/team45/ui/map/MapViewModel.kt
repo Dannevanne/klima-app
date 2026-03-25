@@ -48,3 +48,11 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
         mapTheme = theme
     }
 }
+
+fun useDarkThemeFrom(theme: MapTheme, systemIsDark: Boolean): Boolean{
+    return when(theme) {
+        MapTheme.DEVICE -> systemIsDark
+        MapTheme.DARK -> true
+        MapTheme.LIGHT -> false
+    }
+}
