@@ -139,7 +139,7 @@ fun MapThemeSetting(selectedTheme: MapTheme,
         {
             RadioButton(selected = selectedTheme == MapTheme.DEVICE,
                 onClick = { onThemeSelected(MapTheme.DEVICE)})
-            Text(text = "Use device settings")
+            Text(text = stringResource(R.string.device_settings))
         }
 
         Row(modifier = Modifier
@@ -149,7 +149,7 @@ fun MapThemeSetting(selectedTheme: MapTheme,
         {
             RadioButton(selected = selectedTheme == MapTheme.LIGHT,
                 onClick = { onThemeSelected(MapTheme.LIGHT)})
-            Text(text = "Lightmode")
+            Text(text = stringResource(R.string.lightmode))
         }
 
         Row(modifier = Modifier
@@ -159,7 +159,7 @@ fun MapThemeSetting(selectedTheme: MapTheme,
         {
             RadioButton(selected = selectedTheme == MapTheme.DARK,
                 onClick = { onThemeSelected(MapTheme.DARK)})
-            Text(text = "Darkmode   ")
+            Text(text = stringResource(R.string.darkmode))
         }
     }
 }

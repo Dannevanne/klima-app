@@ -7,4 +7,20 @@
     <string name="to_map">to map</string>
     <string name="theme">Theme</string>
     <string name="trygg_eiendom">Trygg Eiendom</string>
+    <string name="filter_climate_hazard">Filter by climate hazard</string>
+    <string name="flood">Flood</string>
+    <string name="landslide">Landslide</string>
+    <string name="device_settings">Use device settings</string>
+    <string name="lightmode">Light mode</string>
+    <string name="darkmode">Dark mode</string>
+    <string name="climate_statistics">Climate Statistics</string>
+    <string name="place_or_station">Search by location or station</string>
+    <string name="search">Search</string>
+    <string name="search_to_see_stats">Search for a location to see climate statistics</string>
+    <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsø\"</string>
+    <string name="choose_station">Choose a station:</string>
+    <string name="back_to_search">Back to search</string>
+    <string name="temperature">Temperature</string>
+    <string name="precipitation">Precipitation</string>
+    <string name="wind">Wind</string>
 </resources>

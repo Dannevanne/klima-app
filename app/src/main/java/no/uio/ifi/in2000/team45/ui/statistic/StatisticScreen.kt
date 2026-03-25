@@ -38,17 +38,19 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 
 private val MONTH_NAMES = listOf(
-    "Jan", "Feb", "Mar", "Apr", "Mai", "Jun",
-    "Jul", "Aug", "Sep", "Okt", "Nov", "Des"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 )
 
 @Composable
@@ -62,7 +64,9 @@ fun StatisticScreen(
         bottomBar = {
             BottomAppBar {
                 Row(
-                    modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -86,7 +90,7 @@ fun StatisticScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Klimastatistikk",
+                text = stringResource(R.string.climate_statistics),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -145,10 +149,11 @@ private fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        label = { Text("Sok etter sted eller stasjon") },
+        label = { Text(stringResource(R.string.place_or_station)) },
         trailingIcon = {
             IconButton(onClick = onSearch) {
-                Icon(Icons.Filled.Search, contentDescription = "Sok")
+                Icon(Icons.Filled.Search,
+                    contentDescription = stringResource(R.string.search))
             }
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -166,14 +171,14 @@ private fun IdleContent() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Sok etter et sted for a se klimastatistikk",
+                text = stringResource(R.string.search_to_see_stats),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "F.eks. \"Oslo\", \"Bergen\" eller \"Tromsoe\"",
+                text = stringResource(R.string.ex_oslo_bergen_troms),
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -188,7 +193,7 @@ private fun StationList(
     onStationClick: (WeatherStation) -> Unit
 ) {
     Text(
-        text = "Velg en stasjon:",
+        text = stringResource(R.string.choose_station),
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(bottom = 8.dp)
     )
@@ -234,7 +239,7 @@ private fun ClimateDataView(
     LazyColumn {
         item {
             TextButton(onClick = onBack) {
-                Text("Tilbake til sok")
+                Text(stringResource(R.string.back_to_search))
             }
         }
 
@@ -258,7 +263,7 @@ private fun ClimateDataView(
         if (stats.any { it.meanTemp != null }) {
             item {
                 ClimateTable(
-                    title = "Temperatur",
+                    title = stringResource(R.string.temperature),
                     stats = stats,
                     rows = buildTemperatureRows(stats)
                 )
@@ -269,7 +274,7 @@ private fun ClimateDataView(
         if (stats.any { it.precipitation != null }) {
             item {
                 ClimateTable(
-                    title = "Nedbor",
+                    title = stringResource(R.string.precipitation),
                     stats = stats,
                     rows = buildPrecipitationRows(stats)
                 )
@@ -280,7 +285,7 @@ private fun ClimateDataView(
         if (stats.any { it.windSpeed != null }) {
             item {
                 ClimateTable(
-                    title = "Vind",
+                    title = stringResource(R.string.wind),
                     stats = stats,
                     rows = buildWindRows(stats)
                 )
@@ -322,7 +327,9 @@ private fun ClimateTable(
                     // Header row with month names
                     Row {
                         Box(
-                            modifier = Modifier.width(80.dp).padding(4.dp),
+                            modifier = Modifier
+                                .width(80.dp)
+                                .padding(4.dp),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Text(
@@ -333,7 +340,9 @@ private fun ClimateTable(
                         }
                         MONTH_NAMES.forEach { month ->
                             Box(
-                                modifier = Modifier.width(48.dp).padding(4.dp),
+                                modifier = Modifier
+                                    .width(48.dp)
+                                    .padding(4.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -351,7 +360,9 @@ private fun ClimateTable(
                     rows.forEach { row ->
                         Row {
                             Box(
-                                modifier = Modifier.width(80.dp).padding(4.dp),
+                                modifier = Modifier
+                                    .width(80.dp)
+                                    .padding(4.dp),
                                 contentAlignment = Alignment.CenterStart
                             ) {
                                 Text(
@@ -362,7 +373,9 @@ private fun ClimateTable(
                             }
                             row.values.forEach { value ->
                                 Box(
-                                    modifier = Modifier.width(48.dp).padding(4.dp),
+                                    modifier = Modifier
+                                        .width(48.dp)
+                                        .padding(4.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
