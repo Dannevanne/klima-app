@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.team45.ui.map.MapScreen
+import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
@@ -28,7 +28,7 @@ fun AppNavigation(
             startDestination = "MapScreen"
         ) {
             composable(route = "MapScreen") {
-                MapScreen (
+                MapStateScreen (
                     modifier = modifier,
                     onSettingsClick = { navController.navigate("SettingsScreen") },
                     onStatisticClick = { navController.navigate("StatisticScreen") },
