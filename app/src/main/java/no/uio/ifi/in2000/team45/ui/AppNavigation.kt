@@ -18,7 +18,7 @@ import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    mapViewModel: MapViewModel = viewModel(),
+    mapViewModel: MapViewModel,
     statisticViewModel: StatisticViewModel = viewModel()
 ) {
     fun navigateTo(route: String) {
