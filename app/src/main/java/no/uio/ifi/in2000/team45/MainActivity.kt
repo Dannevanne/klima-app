@@ -19,13 +19,18 @@ import no.uio.ifi.in2000.team45.ui.AppNavigation
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
+import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
+import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
         setContent {
-            val mapViewModel: MapViewModel = viewModel()
+            val mapViewModel: MapViewModel = viewModel(
+                factory = MapViewModelFactory(themePreferenceRepository)
+            )
             val useDarkTheme = useDarkThemeFrom(
                 theme = mapViewModel.mapTheme,
                 systemIsDark = isSystemInDarkTheme()
