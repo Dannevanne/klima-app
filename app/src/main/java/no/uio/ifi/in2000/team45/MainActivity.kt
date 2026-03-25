@@ -6,11 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import no.uio.ifi.in2000.team45.ui.AppNavigation
+import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +22,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Team45Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AppNavigation(
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Team45Theme {
-        Greeting("Android")
     }
 }
