@@ -14,7 +14,7 @@
     <string name="lightmode">Light mode</string>
     <string name="darkmode">Dark mode</string>
     <string name="climate_statistics">Climate Statistics</string>
-    <string name="place_or_station">Search by location or station</string>
+    <string name="place_or_station">Search by location or weather station</string>
     <string name="search">Search</string>
     <string name="search_to_see_stats">Search for a location to see climate statistics</string>
     <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsø\"</string>
@@ -23,4 +23,5 @@
     <string name="temperature">Temperature</string>
     <string name="precipitation">Precipitation</string>
     <string name="wind">Wind</string>
+    <string name="try_again">Try again</string>
 </resources>

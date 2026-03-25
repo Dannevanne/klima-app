@@ -411,7 +411,7 @@ private fun ErrorContent(
             )
             Spacer(modifier = Modifier.height(12.dp))
             TextButton(onClick = onRetry) {
-                Text("Prov igjen")
+                Text(stringResource(R.string.try_again))
             }
         }
     }
