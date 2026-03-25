@@ -51,6 +51,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -62,6 +63,36 @@ import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.CameraOptions
+import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+
+@Composable
+fun MapStateScreen(
+    mapViewModel: MapViewModel,
+    onSettingsClick: () -> Unit,
+    onStatisticClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val uiState = mapViewModel.mapUiState
+
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+
+        MapScreen(
+            mapViewModel = mapViewModel,
+            onSettingsClick = onSettingsClick,
+            onStatisticClick = onStatisticClick,
+            modifier = modifier)
+        when(uiState){
+            is MapUiState.Loading -> LogoScreen()
+            is MapUiState.Error -> Text("Error", color = Color.Red)
+            else -> {}
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,9 +102,6 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val uiState = mapViewModel.mapUiState
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -82,7 +110,7 @@ fun MapScreen(
                 title = {
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = "Map",
+                        text = stringResource(R.string.map),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold)
                 }
@@ -99,30 +127,24 @@ fun MapScreen(
 
                     ) {
                         IconButton(onClick = onSettingsClick) {
-                            Icon(Icons.Outlined.Settings, contentDescription = "to settings")
+                            Icon(Icons.Outlined.Settings,
+                                contentDescription = stringResource(R.string.to_settings))
                         }
                         IconButton({}) {
                             Icon(Icons.Filled.Place, contentDescription = "")
                         }
                         IconButton(onClick = onStatisticClick) {
-                            Icon(Icons.Outlined.Info, contentDescription = "to statistics")
+                            Icon(Icons.Outlined.Info,
+                                contentDescription = stringResource(R.string.to_statistics))
                         }
                     }
                     }
             }
     ) { innerPadding ->
-        Box(
-            modifier = modifier
-                .fillMaxSize().padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ){
-            DataMap(mapViewModel = mapViewModel, modifier = Modifier.fillMaxSize())
-            when(uiState){
-                is MapUiState.Loading -> CircularProgressIndicator()
-                is MapUiState.Error -> Text("Error", color = Color.Red)
-                else -> {}
-            }
-        }
+        DataMap(
+            mapViewModel = mapViewModel,
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
+        )
     }
 }
 
@@ -152,7 +174,8 @@ fun DataMap(
 
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .onSizeChanged {
                     mapWidth = it.width
                     mapHeight = it.height
@@ -248,7 +271,9 @@ fun DataMap(
         MapZoomControls(
             onZoomIn = { zoomMap(mapViewRef, viewportState, 1.0) },
             onZoomOut = { zoomMap(mapViewRef, viewportState, -1.0) },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 80.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 80.dp)
         )
     }
     }
