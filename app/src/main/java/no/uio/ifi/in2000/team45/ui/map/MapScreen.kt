@@ -169,8 +169,10 @@ fun DataMap(
 ) {
     val context = LocalContext.current
     val uiState = mapViewModel.mapUiState
-    val useDarkMap = useDarkThemeFrom(theme = mapViewModel.mapTheme,
-        systemIsDark = isSystemInDarkTheme())
+    val useDarkMap = useDarkThemeFrom(
+        theme = mapViewModel.mapTheme,
+        systemIsDark = isSystemInDarkTheme()
+    )
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
@@ -291,7 +293,7 @@ fun DataMap(
                 .padding(end = 16.dp, bottom = 80.dp)
         )
     }
-    }
+}
 
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     val request = ImageRequest.Builder(context)
@@ -327,7 +329,8 @@ fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
 fun MapThemeEffect(useDarkMap: Boolean){
     MapEffect(useDarkMap) { mapView ->
         mapView.mapboxMap.loadStyle(
-            if(useDarkMap) Style.DARK else Style.STANDARD
+            if(useDarkMap) "mapbox://styles/mapbox/navigation-night-v1"
+            else Style.STANDARD
         )
     }
 }
