@@ -44,6 +44,7 @@ import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,9 +54,14 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
+import com.mapbox.maps.Style
+import com.mapbox.maps.extension.style.expressions.dsl.generated.mod
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
+import com.mapbox.maps.MapView
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.CameraOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,6 +133,7 @@ fun DataMap(
 ) {
     val context = LocalContext.current
     val uiState = mapViewModel.mapUiState
+    val useDarkMap = RememberUseDarkMap(mapViewModel.mapTheme)
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
@@ -155,6 +162,8 @@ fun DataMap(
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
             }
+
+            MapThemeEffect(useDarkMap)
 
             DisposableEffect(mapViewRef) {
                 val mapView = mapViewRef
@@ -198,7 +207,7 @@ fun DataMap(
                 }
             }
 
-            MapEffect(bitmap) { mapView ->
+            MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
                 val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
@@ -235,6 +244,12 @@ fun DataMap(
                 }
             }
         }
+
+        MapZoomControls(
+            onZoomIn = { zoomMap(mapViewRef, viewportState, 1.0) },
+            onZoomOut = { zoomMap(mapViewRef, viewportState, -1.0) },
+            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 80.dp)
+        )
     }
     }
 
@@ -266,4 +281,37 @@ fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
         listOf(maxLon, minLat),
         listOf(minLon, minLat)
     )
+}
+
+@Composable
+fun RememberUseDarkMap(mapTheme: MapTheme): Boolean{
+    val isDark = isSystemInDarkTheme()
+
+    return when(mapTheme){
+        MapTheme.DEVICE -> isDark
+        MapTheme.DARK -> true
+        MapTheme.LIGHT -> false
+    }
+}
+
+@Composable
+fun MapThemeEffect(useDarkMap: Boolean){
+    MapEffect(useDarkMap) { mapView ->
+        mapView.mapboxMap.loadStyle(
+            if(useDarkMap) Style.DARK else Style.STANDARD
+        )
+    }
+}
+
+private fun zoomMap(mapView: MapView?,
+                    viewPortState: MapViewportState,
+                    zoomChange: Double) {
+    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
+
+    val camera = CameraOptions.Builder().zoom(
+        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
+    )
+        .build()
+
+    viewPortState.easeTo(camera)
 }

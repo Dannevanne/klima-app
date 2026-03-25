@@ -45,6 +45,7 @@ fun AppNavigation(
             }
             composable(route = "SettingsScreen") {
                 SettingsScreen (
+                    mapViewModel = mapViewModel,
                     modifier = modifier,
                     onMapClick = { navController.navigate("MapScreen") },
                     onStatisticClick = { navController.navigate("StatisticScreen") }
