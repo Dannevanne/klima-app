@@ -4,22 +4,17 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.fillMaxSize
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
-import com.mapbox.maps.extension.compose.style.MapStyle
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.BottomAppBar
@@ -33,25 +28,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.request.ImageRequest
-import com.mapbox.geojson.BoundingBox
 import com.mapbox.maps.extension.compose.MapEffect
-import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
-import com.mapbox.maps.extension.style.layers.generated.lineLayer
-import com.mapbox.maps.extension.style.sources.generated.geoJsonSource
-import com.mapbox.maps.extension.style.sources.generated.imageSource
 import com.mapbox.maps.toCameraOptions
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.core.graphics.drawable.toBitmap
 import coil.request.SuccessResult
-import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.style.layers.addLayer
 import com.mapbox.maps.extension.style.layers.generated.rasterLayer
 import com.mapbox.maps.extension.style.layers.getLayer
@@ -59,13 +44,57 @@ import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import android.content.Context
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import coil.ImageLoader
+import com.mapbox.maps.Style
+import com.mapbox.maps.extension.style.expressions.dsl.generated.mod
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
+import com.mapbox.maps.MapView
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.CameraOptions
+import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 
+@Composable
+fun MapStateScreen(
+    mapViewModel: MapViewModel,
+    onSettingsClick: () -> Unit,
+    onStatisticClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val uiState = mapViewModel.mapUiState
+
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+
+        MapScreen(
+            mapViewModel = mapViewModel,
+            onSettingsClick = onSettingsClick,
+            onStatisticClick = onStatisticClick,
+            modifier = modifier)
+        when(uiState){
+            is MapUiState.Loading -> LogoScreen()
+            is MapUiState.Error -> Text("Error", color = Color.Red)
+            else -> {}
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel,
@@ -73,46 +102,49 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val uiState = mapViewModel.mapUiState
-
     Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                navigationIcon = { Icon(Icons.Filled.Place, contentDescription = "") },
+                title = {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = stringResource(R.string.map),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold)
+                }
+            )
+        },
         bottomBar = {
                 BottomAppBar{
                     Row(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(2.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
                     ) {
                         IconButton(onClick = onSettingsClick) {
-                            Icon(Icons.Outlined.Settings, contentDescription = "to settings")
+                            Icon(Icons.Outlined.Settings,
+                                contentDescription = stringResource(R.string.to_settings))
                         }
                         IconButton({}) {
                             Icon(Icons.Filled.Place, contentDescription = "")
                         }
                         IconButton(onClick = onStatisticClick) {
-                            Icon(Icons.Outlined.Info, contentDescription = "to statistics")
+                            Icon(Icons.Outlined.Info,
+                                contentDescription = stringResource(R.string.to_statistics))
                         }
                     }
                     }
             }
     ) { innerPadding ->
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ){
-            DataMap(mapViewModel = mapViewModel, modifier = Modifier.fillMaxSize())
-            when(uiState){
-                is MapUiState.Loading -> CircularProgressIndicator()
-                is MapUiState.Error -> Text("Error", color = Color.Red)
-                else -> {}
-            }
-        }
+        DataMap(
+            mapViewModel = mapViewModel,
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
+        )
     }
 }
 
@@ -123,6 +155,7 @@ fun DataMap(
 ) {
     val context = LocalContext.current
     val uiState = mapViewModel.mapUiState
+    val useDarkMap = RememberUseDarkMap(mapViewModel.mapTheme)
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
@@ -141,7 +174,8 @@ fun DataMap(
 
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .onSizeChanged {
                     mapWidth = it.width
                     mapHeight = it.height
@@ -151,6 +185,8 @@ fun DataMap(
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
             }
+
+            MapThemeEffect(useDarkMap)
 
             DisposableEffect(mapViewRef) {
                 val mapView = mapViewRef
@@ -194,7 +230,7 @@ fun DataMap(
                 }
             }
 
-            MapEffect(bitmap) { mapView ->
+            MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
                 val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
@@ -231,6 +267,14 @@ fun DataMap(
                 }
             }
         }
+
+        MapZoomControls(
+            onZoomIn = { zoomMap(mapViewRef, viewportState, 1.0) },
+            onZoomOut = { zoomMap(mapViewRef, viewportState, -1.0) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 80.dp)
+        )
     }
     }
 
@@ -262,4 +306,37 @@ fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
         listOf(maxLon, minLat),
         listOf(minLon, minLat)
     )
+}
+
+@Composable
+fun RememberUseDarkMap(mapTheme: MapTheme): Boolean{
+    val isDark = isSystemInDarkTheme()
+
+    return when(mapTheme){
+        MapTheme.DEVICE -> isDark
+        MapTheme.DARK -> true
+        MapTheme.LIGHT -> false
+    }
+}
+
+@Composable
+fun MapThemeEffect(useDarkMap: Boolean){
+    MapEffect(useDarkMap) { mapView ->
+        mapView.mapboxMap.loadStyle(
+            if(useDarkMap) Style.DARK else Style.STANDARD
+        )
+    }
+}
+
+private fun zoomMap(mapView: MapView?,
+                    viewPortState: MapViewportState,
+                    zoomChange: Double) {
+    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
+
+    val camera = CameraOptions.Builder().zoom(
+        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
+    )
+        .build()
+
+    viewPortState.easeTo(camera)
 }

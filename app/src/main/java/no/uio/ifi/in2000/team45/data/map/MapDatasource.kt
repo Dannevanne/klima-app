@@ -23,7 +23,7 @@ class MapDatasource {
             append("&imageSR=4326")
             append("&size=$width,$height")
             append("&format=png32")
-            append("&transparent=false")
+            append("&transparent=true")
             append("&layers=show:$layersIDs")
             append("&f=image")
         }

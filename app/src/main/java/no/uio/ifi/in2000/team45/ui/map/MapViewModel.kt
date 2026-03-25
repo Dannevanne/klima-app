@@ -9,6 +9,7 @@ import com.mapbox.maps.renderer.widget.Widget
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapDatasource
 import no.uio.ifi.in2000.team45.data.map.MapRepository
+import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import okhttp3.internal.http2.Header
 
 sealed interface MapUiState {
@@ -21,6 +22,8 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
 
+    var mapTheme by mutableStateOf(MapTheme.DEVICE)
+        private set
     private var lastOverlayURL: String? = null
 
     fun updateOverlay(bbox: List<Double>,
@@ -39,5 +42,9 @@ class MapViewModel(private val mapRepository: MapRepository = MapRepository()) :
         catch(e: Exception){
             mapUiState = MapUiState.Error
         }
+    }
+
+    fun updateMapTheme(theme: MapTheme){
+        mapTheme = theme
     }
 }

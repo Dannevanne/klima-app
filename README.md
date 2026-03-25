@@ -49,7 +49,3 @@ All apputvikling har skjedd paa denne branchen:
 2. Mapbox-integrasjon (merget inn fra `mapbox`-branchen)
 3. NVE flomsone-overlay
 4. Frost API klimastatistikk-skjerm
-
-## Teammedlemmer
-
-Mateus, Daniel, Viktoria, Linnea
