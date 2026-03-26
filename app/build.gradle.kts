@@ -71,4 +71,7 @@ dependencies {
     //mapbox
     implementation("com.mapbox.maps:android-ndk27:11.20.1")
     implementation("com.mapbox.extension:maps-compose-ndk27:11.20.1")
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
 }

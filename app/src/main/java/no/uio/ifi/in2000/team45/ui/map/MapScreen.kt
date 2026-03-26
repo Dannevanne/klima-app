@@ -48,7 +48,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
@@ -106,7 +108,14 @@ fun MapScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                navigationIcon = { Icon(Icons.Filled.Place, contentDescription = "") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                navigationIcon = {
+                    Icon(Icons.Filled.Place,
+                        contentDescription = "") },
                 title = {
                     Text(
                         modifier = Modifier.padding(8.dp),
@@ -117,7 +126,10 @@ fun MapScreen(
             )
         },
         bottomBar = {
-                BottomAppBar{
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ){
                     Row(
                         modifier = Modifier
                             .padding(2.dp)
@@ -143,7 +155,9 @@ fun MapScreen(
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         )
     }
 }
@@ -155,7 +169,10 @@ fun DataMap(
 ) {
     val context = LocalContext.current
     val uiState = mapViewModel.mapUiState
-    val useDarkMap = RememberUseDarkMap(mapViewModel.mapTheme)
+    val useDarkMap = useDarkThemeFrom(
+        theme = mapViewModel.mapTheme,
+        systemIsDark = isSystemInDarkTheme()
+    )
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
@@ -276,7 +293,7 @@ fun DataMap(
                 .padding(end = 16.dp, bottom = 80.dp)
         )
     }
-    }
+}
 
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     val request = ImageRequest.Builder(context)
@@ -309,21 +326,11 @@ fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
 }
 
 @Composable
-fun RememberUseDarkMap(mapTheme: MapTheme): Boolean{
-    val isDark = isSystemInDarkTheme()
-
-    return when(mapTheme){
-        MapTheme.DEVICE -> isDark
-        MapTheme.DARK -> true
-        MapTheme.LIGHT -> false
-    }
-}
-
-@Composable
 fun MapThemeEffect(useDarkMap: Boolean){
     MapEffect(useDarkMap) { mapView ->
         mapView.mapboxMap.loadStyle(
-            if(useDarkMap) Style.DARK else Style.STANDARD
+            if(useDarkMap) "mapbox://styles/mapbox/navigation-night-v1"
+            else Style.STANDARD
         )
     }
 }
