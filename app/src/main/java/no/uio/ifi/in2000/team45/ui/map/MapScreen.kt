@@ -89,7 +89,7 @@ fun MapStateScreen(
             onStatisticClick = onStatisticClick,
             modifier = modifier)
         when(uiState){
-            is MapUiState.Loading -> LogoScreen()
+            is MapUiState.Loading -> CircularProgressIndicator()
             is MapUiState.Error -> Text("Error", color = Color.Red)
             else -> {}
         }
