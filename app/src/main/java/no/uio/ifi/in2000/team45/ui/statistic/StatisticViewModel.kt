@@ -42,7 +42,7 @@ class StatisticViewModel(
     }
 
     fun searchStations() {
-        // Removed this logic in order to complete TDD for this function
+        uiState = StatisticUiState.Loading
     }
 
     fun selectStation(station: WeatherStation) {
