@@ -139,31 +139,8 @@ class StatisticDatasource {
     }
 
     fun parseStations(body: String): List<WeatherStation> {
-        val root = json.parseToJsonElement(body).jsonObject
-        val data = root["data"]?.jsonArray ?: return emptyList()
-
-        return data.mapNotNull { item ->
-            val obj = item.jsonObject
-            val id = obj["id"]?.jsonPrimitive?.content ?: return@mapNotNull null
-            val name = obj["name"]?.jsonPrimitive?.content ?: return@mapNotNull null
-            val geometry = obj["geometry"]?.jsonObject ?: return@mapNotNull null
-            val coords = geometry["coordinates"]?.jsonArray ?: return@mapNotNull null
-            if (coords.size < 2) return@mapNotNull null
-
-            val lon = coords[0].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
-            val lat = coords[1].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
-            val municipality = obj["municipality"]?.jsonPrimitive?.content ?: ""
-            val county = obj["county"]?.jsonPrimitive?.content ?: ""
-
-            WeatherStation(
-                id = id,
-                name = name,
-                latitude = lat,
-                longitude = lon,
-                municipality = municipality,
-                county = county
-            )
-        }
+        // Removed parseStations implementation to TDD the api (datasource)
+        return emptyList()
     }
 
     private fun parseClimateNormals(body: String): List<ClimateNormal> {
