@@ -21,9 +21,18 @@ class StatisticRepository(
         stationId: String,
         clientId: String
     ): List<MonthlyClimateStats> {
-        return List(12) {
-            MonthlyClimateStats(it + 1, null, null, null, null, null)
+        val normals = datasource.getClimateNormals(stationId, clientId)
+
+        if (normals.isNotEmpty()) {
+            return buildStatsFromNormals(normals)
         }
+
+        val observations = datasource.getMonthlyObservations(
+            stationId, clientId,
+            yearFrom = 2010,
+            yearTo = 2024
+        )
+        return buildStatsFromObservations(observations)
     }
 
     private fun buildStatsFromNormals(normals: List<ClimateNormal>): List<MonthlyClimateStats> {
