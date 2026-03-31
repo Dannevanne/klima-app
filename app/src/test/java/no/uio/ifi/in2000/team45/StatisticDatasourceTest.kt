@@ -6,6 +6,8 @@ import org.junit.Assert.*
 
 class StatisticDatasourceTest {
 
+    // You can notice that the naming convention for the tests is different than
+    // the one they use from "ukesoppgaver", because in the lecture they named liked this.
     @Test
     fun testParseStationsShouldReturnListOfWeatherStation() {
         val datasource = StatisticDatasource()
@@ -27,7 +29,6 @@ class StatisticDatasourceTest {
         """.trimIndent()
 
         val result = datasource.parseStations(dummyData)
-
 
         assertEquals(1, result.size)
         assertEquals("Oslo", result[0].name)
