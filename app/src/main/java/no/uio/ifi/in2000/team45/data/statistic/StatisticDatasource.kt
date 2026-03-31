@@ -138,7 +138,7 @@ class StatisticDatasource {
         }
     }
 
-    private fun parseStations(body: String): List<WeatherStation> {
+    fun parseStations(body: String): List<WeatherStation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
 
