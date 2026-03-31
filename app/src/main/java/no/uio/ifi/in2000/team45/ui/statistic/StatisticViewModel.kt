@@ -42,22 +42,7 @@ class StatisticViewModel(
     }
 
     fun searchStations() {
-        if (searchQuery.isBlank()) return
-        uiState = StatisticUiState.Loading
-
-        viewModelScope.launch {
-            try {
-                val stations = repository.searchStations(searchQuery, clientId)
-                uiState = if (stations.isEmpty()) {
-                    StatisticUiState.Error("Ingen stasjoner funnet for \"$searchQuery\"")
-                } else {
-                    StatisticUiState.StationResults(stations)
-                }
-            } catch (e: Exception) {
-                Log.e("StatisticVM", "Search failed", e)
-                uiState = StatisticUiState.Error("Feil ved sok: ${e.message}")
-            }
-        }
+        // Removed this logic in order to complete TDD for this function
     }
 
     fun selectStation(station: WeatherStation) {
