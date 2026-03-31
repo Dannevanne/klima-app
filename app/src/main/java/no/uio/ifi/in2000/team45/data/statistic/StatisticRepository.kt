@@ -21,8 +21,9 @@ class StatisticRepository(
         stationId: String,
         clientId: String
     ): List<MonthlyClimateStats> {
-        // Removed implementation to do TDD of the repository
-        return emptyList()
+        return List(12) {
+            MonthlyClimateStats(it + 1, null, null, null, null, null)
+        }
     }
 
     private fun buildStatsFromNormals(normals: List<ClimateNormal>): List<MonthlyClimateStats> {
