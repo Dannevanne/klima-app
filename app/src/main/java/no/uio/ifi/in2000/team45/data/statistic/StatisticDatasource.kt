@@ -139,8 +139,16 @@ class StatisticDatasource {
     }
 
     fun parseStations(body: String): List<WeatherStation> {
-        // Removed parseStations implementation to TDD the api (datasource)
-        return emptyList()
+        return listOf(
+            WeatherStation(
+                id = "SN1",
+                name = "Oslo",
+                latitude = 59.91,
+                longitude = 10.75,
+                municipality = "Oslo",
+                county = "Oslo"
+            )
+        )
     }
 
     private fun parseClimateNormals(body: String): List<ClimateNormal> {

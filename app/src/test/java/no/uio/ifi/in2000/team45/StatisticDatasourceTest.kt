@@ -28,6 +28,7 @@ class StatisticDatasourceTest {
 
         val result = datasource.parseStations(dummyData)
 
+
         assertEquals(1, result.size)
         assertEquals("Oslo", result[0].name)
     }
