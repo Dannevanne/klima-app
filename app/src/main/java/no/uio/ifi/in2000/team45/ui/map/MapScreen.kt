@@ -227,8 +227,12 @@ fun DataMap(
                             bounds.northeast.longitude(),
                             bounds.northeast.latitude()
                         )
+
+                        // Changed this to take in the expanded bbox
+                        val expandedBBox = expandBBox(bbox)
+
                         mapViewModel.updateOverlay(
-                            bbox = bbox,
+                            bbox = expandedBBox,
                             width = currentMapWidth,
                             height = currentMapHeight
                         )
@@ -318,6 +322,26 @@ suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     else{
         null
     }
+}
+
+// Function that should just expand the current bbox on the map
+// factor is the expanding number
+fun expandBBox(bbox: List<Double>, factor: Double = 0.5): List<Double> {
+    val minLon = bbox[0]
+    val minLat = bbox[1]
+    val maxLon = bbox[2]
+    val maxLat = bbox[3]
+
+    // expanding the bbox
+    val lonExpand = (maxLon - minLon) * factor
+    val latExpand = (maxLat - minLat) * factor
+
+    return listOf(
+        minLon - lonExpand,
+        minLat - latExpand,
+        maxLon + lonExpand,
+        maxLat + latExpand
+    )
 }
 
 fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
