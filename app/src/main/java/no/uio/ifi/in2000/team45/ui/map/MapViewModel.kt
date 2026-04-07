@@ -31,6 +31,7 @@ class MapViewModel(
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
     private var throttleMs = 300L
+    private var lastBBox: List<Double>? = null
 
     init{
         viewModelScope.launch {
@@ -51,6 +52,12 @@ class MapViewModel(
         }
         lastUpdateTime = now
 
+        // Check if user has moved the camera enough to trigger new fetch
+        if (!hasMovedEnough(bbox)) {
+            return
+        }
+        lastBBox = bbox
+
         if(bbox.size != 4 || width <= 0 || height <= 0) return
         try{
             val url = mapRepository.getOverlayURL(bbox = bbox,
@@ -63,6 +70,17 @@ class MapViewModel(
         }
         catch(e: Exception){
             mapUiState = MapUiState.Error
+        }
+    }
+
+    // Helper function to decide if it should fetch
+    private fun hasMovedEnough(newBBox: List<Double>): Boolean {
+        val old = lastBBox ?: return true
+        // moving threshold, can change but should be kept low I think
+        val threshold = 0.001
+        // calculates if new bbox is moved enough to trigger fetch
+        return (0..3).any {
+            i -> kotlin.math.abs(old[i] - newBBox[i]) > threshold
         }
     }
 
