@@ -29,6 +29,8 @@ class MapViewModel(
     var mapTheme by mutableStateOf(MapTheme.DEVICE)
         private set
     private var lastOverlayURL: String? = null
+    private var lastUpdateTime = 0L
+    private var throttleMs = 300L
 
     init{
         viewModelScope.launch {
@@ -41,6 +43,14 @@ class MapViewModel(
     fun updateOverlay(bbox: List<Double>,
                       width: Int,
                       height: Int){
+
+        // Throttling, so it updates every X ms, not constantly
+        val now = System.currentTimeMillis()
+        if (now - lastUpdateTime < throttleMs) {
+            return
+        }
+        lastUpdateTime = now
+
         if(bbox.size != 4 || width <= 0 || height <= 0) return
         try{
             val url = mapRepository.getOverlayURL(bbox = bbox,
