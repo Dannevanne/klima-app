@@ -1,6 +1,8 @@
 package no.uio.ifi.in2000.team45.ui.favorites
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -207,6 +213,23 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
     }
 }
 
+// Color based on temperature
+private fun tempColor(temp: Double): Color = when {
+    temp <= -10 -> Color(0xFFBBDEFB)
+    temp <= 0 -> Color(0xFFE3F2FD)
+    temp <= 10 -> Color(0xFFC8E6C9)
+    temp <= 20 -> Color(0xFFFFF9C4)
+    else -> Color(0xFFFFCCBC)
+}
+
+// Color based on wind speed
+private fun windColor(speed: Double): Color = when {
+    speed <= 3 -> Color(0xFFE8F5E9)
+    speed <= 8 -> Color(0xFFFFF9C4)
+    speed <= 15 -> Color(0xFFFFCCBC)
+    else -> Color(0xFFEF9A9A)
+}
+
 @Composable
 private fun LocationCard(
     location: FavoriteLocation,
@@ -220,6 +243,7 @@ private fun LocationCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
+            // Header: name + coordinates + delete
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -233,12 +257,12 @@ private fun LocationCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = location.label.ifBlank { "Kartposisjon" },
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
                     Text(
                         text = "%.4f, %.4f".format(location.latitude, location.longitude),
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -249,29 +273,74 @@ private fun LocationCard(
 
             // Current conditions from nearest station
             if (status != null) {
-                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
                 Text(
-                    text = "Naermeste stasjon: ${status.stationName}",
+                    text = "Stasjon: ${status.stationName}",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 6.dp)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // Temperature chip
+                    status.temperature?.let { temp ->
+                        StatusChip(
+                            label = "Temperatur",
+                            value = "${String.format("%.1f", temp)} C",
+                            color = tempColor(temp),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    // Wind chip
+                    status.windSpeed?.let { wind ->
+                        StatusChip(
+                            label = "Vind",
+                            value = "${String.format("%.1f", wind)} m/s",
+                            color = windColor(wind),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    // Precipitation chip
+                    status.precipitation?.let { precip ->
+                        StatusChip(
+                            label = "Nedbor",
+                            value = "${String.format("%.1f", precip)} mm/t",
+                            color = Color(0xFFE3F2FD),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            } else {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Henter vaerdata...",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    status.temperature?.let {
-                        Text("${String.format("%.1f", it)} C", fontSize = 14.sp)
-                    }
-                    status.windSpeed?.let {
-                        Text("${String.format("%.1f", it)} m/s", fontSize = 14.sp)
-                    }
-                    status.precipitation?.let {
-                        Text("${String.format("%.1f", it)} mm/t", fontSize = 14.sp)
-                    }
-                }
             }
+        }
+    }
+}
+
+@Composable
+private fun StatusChip(
+    label: String,
+    value: String,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(color, RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 6.dp)
+    ) {
+        Column {
+            Text(label, fontSize = 10.sp, color = Color.DarkGray)
+            Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
