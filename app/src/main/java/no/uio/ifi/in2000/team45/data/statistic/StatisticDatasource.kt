@@ -224,16 +224,20 @@ class StatisticDatasource {
     suspend fun findNearestStation(
         lat: Double, lon: Double, clientId: String
     ): WeatherStation? {
+        val geometry = java.net.URLEncoder.encode("nearest(POINT($lon $lat))", "UTF-8")
         val url = "$FROST_BASE/sources/v0.jsonld" +
                 "?types=SensorSystem" +
-                "&geometry=nearest(POINT($lon $lat))" +
+                "&geometry=$geometry" +
                 "&nearestmaxcount=1"
         return try {
             val response = KtorClient.client.get(url) {
                 header("Authorization", authHeader(clientId))
             }
             val body: String = response.body()
-            if (response.status.value != 200) return null
+            if (response.status.value != 200) {
+                Log.e(TAG, "Nearest station failed: ${response.status.value}")
+                return null
+            }
             parseStations(body).firstOrNull()
         } catch (e: Exception) {
             Log.e(TAG, "Nearest station error", e)

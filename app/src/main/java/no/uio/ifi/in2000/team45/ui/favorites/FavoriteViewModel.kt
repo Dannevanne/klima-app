@@ -76,7 +76,11 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
             try {
                 val station = statisticRepository.findNearestStation(
                     location.latitude, location.longitude, clientId
-                ) ?: return@launch
+                )
+                if (station == null) {
+                    locationStatuses[key] = LocationStatus(stationName = "Ingen stasjon funnet")
+                    return@launch
+                }
 
                 val obs = statisticRepository.getLatestObservations(station.id, clientId)
                 locationStatuses[key] = LocationStatus(
@@ -89,6 +93,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
+                locationStatuses[key] = LocationStatus(stationName = "Feil ved henting")
             }
         }
     }
