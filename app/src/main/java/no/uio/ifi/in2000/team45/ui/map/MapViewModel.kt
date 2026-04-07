@@ -14,7 +14,10 @@ import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import okhttp3.internal.http2.Header
 
 sealed interface MapUiState {
-    data class Success(val overlayURL: String): MapUiState
+    data class Success(
+        val overlayURL: String,
+        val bbox: List<Double>
+    ): MapUiState
     object Error : MapUiState
     object Loading : MapUiState
 }
@@ -65,7 +68,7 @@ class MapViewModel(
                 height = height)
             if(url != lastOverlayURL){
                 lastOverlayURL = url
-                mapUiState = MapUiState.Success(url)
+                mapUiState = MapUiState.Success(url, bbox)
             }
         }
         catch(e: Exception){
@@ -77,7 +80,7 @@ class MapViewModel(
     private fun hasMovedEnough(newBBox: List<Double>): Boolean {
         val old = lastBBox ?: return true
         // moving threshold, can change but should be kept low I think
-        val threshold = 0.001
+        val threshold = 0.01
         // calculates if new bbox is moved enough to trigger fetch
         return (0..3).any {
             i -> kotlin.math.abs(old[i] - newBBox[i]) > threshold

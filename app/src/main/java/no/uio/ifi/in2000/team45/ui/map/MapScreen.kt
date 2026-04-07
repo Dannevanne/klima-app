@@ -190,6 +190,7 @@ fun DataMap(
         }
     }
     val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
+    val overlayBBox = (uiState as? MapUiState.Success)?.bbox
 
     // saving the bitmap creating as a job, so it is cancellable
     // but this "DataMap" should have its own viewmodel for all of this state hosting
@@ -263,15 +264,9 @@ fun DataMap(
             MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
-                val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                    mapView.mapboxMap.cameraState.toCameraOptions()
-                )
-                val bbox = listOf(
-                    bounds.southwest.longitude(),
-                    bounds.southwest.latitude(),
-                    bounds.northeast.longitude(),
-                    bounds.northeast.latitude()
-                )
+
+                // changed to so that the expanded box is rendered
+                val bbox = overlayBBox ?: return@MapEffect
                 val corners = cornersFromBBOX(bbox)
 
                 if (style.getLayer("overlaylayer") != null) {
@@ -325,8 +320,8 @@ suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
 }
 
 // Function that should just expand the current bbox on the map
-// factor is the expanding number
-fun expandBBox(bbox: List<Double>, factor: Double = 0.5): List<Double> {
+// factor is the expanding number, 1.5 might be good
+fun expandBBox(bbox: List<Double>, factor: Double = 1.5): List<Double> {
     val minLon = bbox[0]
     val minLat = bbox[1]
     val maxLon = bbox[2]
