@@ -7,11 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.maps.renderer.widget.Widget
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.team45.data.map.MapDatasource
 import no.uio.ifi.in2000.team45.data.map.MapRepository
+import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
-import no.uio.ifi.in2000.team45.ui.map.MapTheme
-import okhttp3.internal.http2.Header
 
 sealed interface MapUiState {
     data class Success(
@@ -30,6 +28,8 @@ class MapViewModel(
         private set
 
     var mapTheme by mutableStateOf(MapTheme.DEVICE)
+        private set
+    var activeOverlay by mutableStateOf(OverlayType.FLOOD)
         private set
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
@@ -63,7 +63,9 @@ class MapViewModel(
 
         if(bbox.size != 4 || width <= 0 || height <= 0) return
         try{
-            val url = mapRepository.getOverlayURL(bbox = bbox,
+            val url = mapRepository.getOverlayURL(
+                type = activeOverlay,
+                bbox = bbox,
                 width = width,
                 height = height)
             if(url != lastOverlayURL){
@@ -92,6 +94,14 @@ class MapViewModel(
         viewModelScope.launch {
             themePreferenceRepository.saveMapTheme(theme)
         }
+    }
+
+    fun setOverlay(type: OverlayType) {
+        activeOverlay = type
+        // Reset so next camera update triggers a fetch with the new overlay type
+        lastOverlayURL = null
+        lastBBox = null
+        mapUiState = MapUiState.Loading
     }
 }
 
