@@ -126,7 +126,58 @@ fun StatisticScreen(
 
             when (val state = statisticViewModel.uiState) {
                 is StatisticUiState.Idle -> {
-                    IdleContent()
+                    if (favoriteStations.isNotEmpty()) {
+                        // Show pinned stations for quick access (like YR)
+                        Text(
+                            text = "Lagrede stasjoner",
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        LazyColumn {
+                            items(favoriteStations) { fav ->
+                                val station = WeatherStation(
+                                    id = fav.stationId,
+                                    name = fav.name,
+                                    latitude = 0.0, longitude = 0.0,
+                                    municipality = fav.municipality,
+                                    county = fav.county
+                                )
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp)
+                                        .clickable { statisticViewModel.selectStation(station) },
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = androidx.compose.ui.graphics.Color(0xFFFFC107),
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                            if (fav.municipality.isNotBlank()) {
+                                                Text(
+                                                    "${fav.municipality}, ${fav.county}",
+                                                    fontSize = 13.sp,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        IdleContent()
+                    }
                 }
                 is StatisticUiState.Loading -> {
                     Box(
@@ -137,12 +188,15 @@ fun StatisticScreen(
                     }
                 }
                 is StatisticUiState.StationResults -> {
+                    val favIds = favoriteStations.map { it.stationId }.toSet()
+                    // Pinned stations first, then the rest
+                    val sorted = state.stations.sortedByDescending { it.id in favIds }
                     StationList(
-                        stations = state.stations,
-                        favoriteIds = favoriteStations.map { it.stationId }.toSet(),
+                        stations = sorted,
+                        favoriteIds = favIds,
                         onStationClick = { statisticViewModel.selectStation(it) },
                         onToggleFavorite = { station ->
-                            val isFav = favoriteStations.any { it.stationId == station.id }
+                            val isFav = station.id in favIds
                             if (isFav) {
                                 favoriteViewModel.removeStation(station.id)
                             } else {

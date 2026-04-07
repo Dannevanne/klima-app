@@ -110,37 +110,8 @@ fun FavoriteScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
-            // Saved stations section
-            item {
-                Text(
-                    text = "Lagrede stasjoner",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                )
-            }
-
-            if (stations.isEmpty()) {
-                item {
-                    Text(
-                        text = "Ingen lagrede stasjoner enda. Bruk stjerne-ikonet i statistikk for aa lagre.",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                }
-            }
-
-            items(stations) { station ->
-                StationCard(
-                    station = station,
-                    onRemove = { favoriteViewModel.removeStation(station.stationId) }
-                )
-            }
-
             // Saved map locations section
             item {
-                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Lagrede kartposisjoner",
                     fontSize = 18.sp,
