@@ -52,8 +52,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -65,8 +72,11 @@ fun StatisticScreen(
     statisticViewModel: StatisticViewModel,
     onSettingsClick: () -> Unit,
     onMapClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
+    val favoriteStations by favoriteViewModel.stations.collectAsState()
     Scaffold(
         bottomBar = {
             BottomAppBar {
@@ -85,6 +95,9 @@ fun StatisticScreen(
                     }
                     IconButton({}) {
                         Icon(Icons.Filled.Info, contentDescription = "")
+                    }
+                    IconButton(onClick = onFavoritesClick) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Favoritter")
                     }
                 }
             }

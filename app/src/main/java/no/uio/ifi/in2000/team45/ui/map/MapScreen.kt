@@ -71,7 +71,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FilterChip
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
@@ -81,6 +84,8 @@ fun MapStateScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState = mapViewModel.mapUiState
@@ -95,6 +100,8 @@ fun MapStateScreen(
             mapViewModel = mapViewModel,
             onSettingsClick = onSettingsClick,
             onStatisticClick = onStatisticClick,
+            onFavoritesClick = onFavoritesClick,
+            favoriteViewModel = favoriteViewModel,
             modifier = modifier)
         when(uiState){
             is MapUiState.Loading -> CircularProgressIndicator()
@@ -110,6 +117,8 @@ fun MapScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -156,6 +165,10 @@ fun MapScreen(
                         IconButton(onClick = onStatisticClick) {
                             Icon(Icons.Outlined.Info,
                                 contentDescription = stringResource(R.string.to_statistics))
+                        }
+                        IconButton(onClick = onFavoritesClick) {
+                            Icon(Icons.Filled.Favorite,
+                                contentDescription = "Favoritter")
                         }
                     }
                     }

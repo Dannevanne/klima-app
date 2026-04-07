@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteScreen
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
@@ -19,7 +21,8 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     mapViewModel: MapViewModel,
-    statisticViewModel: StatisticViewModel = viewModel()
+    statisticViewModel: StatisticViewModel = viewModel(),
+    favoriteViewModel: FavoriteViewModel = viewModel()
 ) {
     fun navigateTo(route: String) {
         navController.navigate(route) {
@@ -35,12 +38,13 @@ fun AppNavigation(
             startDestination = "MapScreen"
         ) {
             composable(route = "MapScreen") {
-
-                MapStateScreen (
+                MapStateScreen(
                     modifier = modifier,
                     onSettingsClick = { navigateTo("SettingsScreen") },
                     onStatisticClick = { navigateTo("StatisticScreen") },
-                    mapViewModel = mapViewModel
+                    onFavoritesClick = { navigateTo("FavoriteScreen") },
+                    mapViewModel = mapViewModel,
+                    favoriteViewModel = favoriteViewModel
                 )
             }
             composable(route = "StatisticScreen") {
@@ -48,16 +52,27 @@ fun AppNavigation(
                     modifier = modifier,
                     onSettingsClick = { navigateTo("SettingsScreen") },
                     onMapClick = { navigateTo("MapScreen") },
-                    statisticViewModel = statisticViewModel
+                    onFavoritesClick = { navigateTo("FavoriteScreen") },
+                    statisticViewModel = statisticViewModel,
+                    favoriteViewModel = favoriteViewModel
                 )
             }
             composable(route = "SettingsScreen") {
-                SettingsScreen (
+                SettingsScreen(
                     mapViewModel = mapViewModel,
-
                     modifier = modifier,
                     onMapClick = { navigateTo("MapScreen") },
-                    onStatisticClick = { navigateTo("StatisticScreen") }
+                    onStatisticClick = { navigateTo("StatisticScreen") },
+                    onFavoritesClick = { navigateTo("FavoriteScreen") }
+                )
+            }
+            composable(route = "FavoriteScreen") {
+                FavoriteScreen(
+                    favoriteViewModel = favoriteViewModel,
+                    onSettingsClick = { navigateTo("SettingsScreen") },
+                    onMapClick = { navigateTo("MapScreen") },
+                    onStatisticClick = { navigateTo("StatisticScreen") },
+                    modifier = modifier
                 )
             }
         }
