@@ -20,7 +20,7 @@ class MapDatasource {
             append("https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/export")
             append("?bbox=$minLon,$minLat,$maxLon,$maxLat")
             append("&bboxSR=4326")
-            append("&imageSR=4326")
+            append("&imageSR=3857")
             append("&size=$width,$height")
             append("&format=png32")
             append("&transparent=true")
