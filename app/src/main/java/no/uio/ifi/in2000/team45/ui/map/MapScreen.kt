@@ -78,6 +78,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FilterChip
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.SmallFloatingActionButton
 
 @Composable
 fun MapStateScreen(
@@ -331,8 +332,8 @@ fun DataMap(
             }
         }
 
-        // Save current location button
-        IconButton(
+        // Save current map position
+        SmallFloatingActionButton(
             onClick = {
                 val center = mapViewRef?.mapboxMap?.cameraState?.center
                 if (center != null) {
@@ -344,13 +345,13 @@ fun DataMap(
                 }
             },
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 140.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 16.dp, bottom = 16.dp),
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         ) {
             Icon(
                 Icons.Filled.FavoriteBorder,
-                contentDescription = "Lagre posisjon",
-                tint = MaterialTheme.colorScheme.primary
+                contentDescription = "Lagre posisjon"
             )
         }
 
