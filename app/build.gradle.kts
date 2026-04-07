@@ -74,4 +74,7 @@ dependencies {
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    //locationPermission
+    implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 }
