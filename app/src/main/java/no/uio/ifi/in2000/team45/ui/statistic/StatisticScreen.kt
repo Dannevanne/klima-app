@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -11,8 +12,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -292,7 +296,14 @@ private fun ClimateDataView(
                     stats = stats,
                     rows = buildWindRows(stats)
                 )
+                Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        // UV index estimate based on latitude and month
+        item {
+            UvIndexCard(latitude = station.latitude)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -567,4 +578,124 @@ private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
             colorScale = ColorScale.WIND
         )
     )
+}
+
+// Estimate peak summer UV index based on latitude.
+// Southern Norway (~58N) gets UV ~6-7, northern (~70N) gets ~3-4 in summer.
+// Current month scales this down (winter = near zero).
+private fun estimateUvIndex(latitude: Double): Double {
+    val month = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1
+    // Peak UV for this latitude (summer solstice)
+    val peakUv = (10.0 - (latitude - 50.0) * 0.15).coerceIn(1.0, 11.0)
+    // Monthly scaling factor (peaks in June/July)
+    val monthFactor = when (month) {
+        1, 12 -> 0.05
+        2, 11 -> 0.10
+        3, 10 -> 0.25
+        4, 9 -> 0.50
+        5, 8 -> 0.75
+        6, 7 -> 1.0
+        else -> 0.3
+    }
+    return (peakUv * monthFactor).coerceIn(0.0, 11.0)
+}
+
+private fun uvLabel(uv: Double): String = when {
+    uv < 3 -> "Lav"
+    uv < 6 -> "Moderat"
+    uv < 8 -> "Hoy"
+    uv < 11 -> "Veldig hoy"
+    else -> "Ekstrem"
+}
+
+@Composable
+private fun UvIndexCard(latitude: Double) {
+    val uvIndex = estimateUvIndex(latitude)
+    val maxUv = 11.0
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "UV-indeks (estimat for denne maneden)",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = "${String.format("%.1f", uvIndex)} - ${uvLabel(uvIndex)}",
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            // Gradient bar with indicator
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+            ) {
+                // Gradient background
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(14.dp)
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF4CAF50), // green - low
+                                Color(0xFFCDDC39), // lime
+                                Color(0xFFFFEB3B), // yellow - moderate
+                                Color(0xFFFF9800), // orange - high
+                                Color(0xFFF44336), // red - very high
+                                Color(0xFF9C27B0)  // purple - extreme
+                            )
+                        )
+                    )
+                }
+
+                // Indicator dot
+                val fraction = (uvIndex / maxUv).toFloat().coerceIn(0f, 1f)
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(28.dp)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    val x = size.width * fraction
+                    // Triangle pointer at top
+                    drawCircle(
+                        color = Color.Black,
+                        radius = 8f,
+                        center = Offset(x, 6f)
+                    )
+                    // Line down to bar
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(x, 10f),
+                        end = Offset(x, size.height),
+                        strokeWidth = 2f
+                    )
+                }
+            }
+
+            // Scale labels
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("0", fontSize = 10.sp, color = Color.Gray)
+                Text("3", fontSize = 10.sp, color = Color.Gray)
+                Text("6", fontSize = 10.sp, color = Color.Gray)
+                Text("8", fontSize = 10.sp, color = Color.Gray)
+                Text("11+", fontSize = 10.sp, color = Color.Gray)
+            }
+        }
+    }
 }
