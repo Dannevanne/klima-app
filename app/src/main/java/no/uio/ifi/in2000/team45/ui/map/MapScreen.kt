@@ -65,6 +65,8 @@ import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.CameraOptions
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 
@@ -189,6 +191,10 @@ fun DataMap(
     }
     val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
 
+    // saving the bitmap creating as a job, so it is cancellable
+    // but this "DataMap" should have its own viewmodel for all of this state hosting
+    var imageJob by remember {mutableStateOf<Job?>(null)}
+
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
             modifier = Modifier
@@ -239,11 +245,14 @@ fun DataMap(
                 }
             }
 
+            // Changed LaunchedEffect so it creates bitmaps as jobs
             LaunchedEffect(overlayURL) {
-                bitmap = if (overlayURL != null) {
-                    makeBitmap(context = context, imageURL = overlayURL)
-                } else {
-                    null
+                imageJob?.cancel()
+
+                imageJob = launch {
+                    bitmap = overlayURL?.let {
+                        makeBitmap(context = context, imageURL = it)
+                    }
                 }
             }
 
