@@ -73,12 +73,12 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+import android.widget.Toast
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FilterChip
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.SmallFloatingActionButton
+import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 
 @Composable
 fun MapStateScreen(
@@ -230,6 +230,20 @@ fun DataMap(
         ) {
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
+                // Long-press to save location
+                mapView.mapboxMap.addOnMapLongClickListener { point ->
+                    favoriteViewModel.addLocation(
+                        lat = point.latitude(),
+                        lng = point.longitude(),
+                        label = ""
+                    )
+                    Toast.makeText(
+                        context,
+                        "Posisjon lagret: %.4f, %.4f".format(point.latitude(), point.longitude()),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
             }
 
             MapThemeEffect(useDarkMap)
@@ -330,29 +344,6 @@ fun DataMap(
                     label = { Text(type.label, fontSize = 12.sp) }
                 )
             }
-        }
-
-        // Save current map position
-        SmallFloatingActionButton(
-            onClick = {
-                val center = mapViewRef?.mapboxMap?.cameraState?.center
-                if (center != null) {
-                    favoriteViewModel.addLocation(
-                        lat = center.latitude(),
-                        lng = center.longitude(),
-                        label = ""
-                    )
-                }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 16.dp, bottom = 16.dp),
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ) {
-            Icon(
-                Icons.Filled.FavoriteBorder,
-                contentDescription = "Lagre posisjon"
-            )
         }
 
         MapZoomControls(
