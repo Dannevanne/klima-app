@@ -220,6 +220,61 @@ class StatisticDatasource {
         }
     }
 
+    // Find nearest station to given coordinates
+    suspend fun findNearestStation(
+        lat: Double, lon: Double, clientId: String
+    ): WeatherStation? {
+        val url = "$FROST_BASE/sources/v0.jsonld" +
+                "?types=SensorSystem" +
+                "&geometry=nearest(POINT($lon $lat))" +
+                "&nearestmaxcount=1"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            val body: String = response.body()
+            if (response.status.value != 200) return null
+            parseStations(body).firstOrNull()
+        } catch (e: Exception) {
+            Log.e(TAG, "Nearest station error", e)
+            null
+        }
+    }
+
+    // Get latest observations for a station
+    suspend fun getLatestObservations(
+        stationId: String, clientId: String
+    ): Map<String, Double> {
+        val elements = "air_temperature,wind_speed,sum(precipitation_amount PT1H)"
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=latest" +
+                "&elements=${java.net.URLEncoder.encode(elements, "UTF-8")}"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            val body: String = response.body()
+            if (response.status.value != 200) return emptyMap()
+
+            val root = json.parseToJsonElement(body).jsonObject
+            val data = root["data"]?.jsonArray ?: return emptyMap()
+            val result = mutableMapOf<String, Double>()
+            for (item in data) {
+                val obs = item.jsonObject["observations"]?.jsonArray ?: continue
+                for (o in obs) {
+                    val oid = o.jsonObject["elementId"]?.jsonPrimitive?.content ?: continue
+                    val v = o.jsonObject["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                    result[oid] = v
+                }
+            }
+            result
+        } catch (e: Exception) {
+            Log.e(TAG, "Latest observations error", e)
+            emptyMap()
+        }
+    }
+
     private fun parseMonthlyObservations(body: String): List<MonthlyObservation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()

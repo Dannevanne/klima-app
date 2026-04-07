@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -132,8 +133,15 @@ fun FavoriteScreen(
             }
 
             items(locations) { location ->
+                // Trigger fetch of current conditions
+                LaunchedEffect(location) {
+                    favoriteViewModel.fetchStatusForLocation(location)
+                }
+                val key = "${location.latitude},${location.longitude}"
+                val status = favoriteViewModel.locationStatuses[key]
                 LocationCard(
                     location = location,
+                    status = status,
                     onRemove = { favoriteViewModel.removeLocation(location) }
                 )
             }
@@ -200,39 +208,69 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
 }
 
 @Composable
-private fun LocationCard(location: FavoriteLocation, onRemove: () -> Unit) {
+private fun LocationCard(
+    location: FavoriteLocation,
+    status: LocationStatus?,
+    onRemove: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Outlined.Place,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = location.label.ifBlank { "Kartposisjon" },
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Outlined.Place,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = location.label.ifBlank { "Kartposisjon" },
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "%.4f, %.4f".format(location.latitude, location.longitude),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = onRemove) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                }
+            }
+
+            // Current conditions from nearest station
+            if (status != null) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "%.4f, %.4f".format(location.latitude, location.longitude),
-                    fontSize = 13.sp,
+                    text = "Naermeste stasjon: ${status.stationName}",
+                    fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
-            IconButton(onClick = onRemove) {
-                Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    status.temperature?.let {
+                        Text("${String.format("%.1f", it)} C", fontSize = 14.sp)
+                    }
+                    status.windSpeed?.let {
+                        Text("${String.format("%.1f", it)} m/s", fontSize = 14.sp)
+                    }
+                    status.precipitation?.let {
+                        Text("${String.format("%.1f", it)} mm/t", fontSize = 14.sp)
+                    }
+                }
             }
         }
     }
