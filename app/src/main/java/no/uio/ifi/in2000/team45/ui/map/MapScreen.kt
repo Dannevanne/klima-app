@@ -83,17 +83,27 @@ fun MapStateScreen(
         contentAlignment = Alignment.Center
     ){
 
-        MapScreen(
-            mapViewModel = mapViewModel,
-            onSettingsClick = onSettingsClick,
-            onStatisticClick = onStatisticClick,
-            modifier = modifier)
-        when(uiState){
-            is MapUiState.Loading -> CircularProgressIndicator()
-            is MapUiState.Error -> Text("Error", color = Color.Red)
-            else -> {}
-        }
-    }
+            MapScreen(
+                mapViewModel = mapViewModel,
+                locationGranted = locationGranted,
+                onLocationClick = {
+                    if (locationGranted){
+                        mapViewModel.moveToUserLocation()
+                    } else {
+                        showDialog = true
+                    }
+                },
+                onSettingsClick = onSettingsClick,
+                onStatisticClick = onStatisticClick,
+                modifier = modifier
+            )
+            when (uiState) {
+                is MapUiState.Loading -> CircularProgressIndicator()
+                is MapUiState.Error -> Text("Error", color = Color.Red)
+                else -> {}
+            }
+
+        }}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
