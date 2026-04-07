@@ -520,6 +520,28 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             )
         )
     }
+    if (stats.any { it.recordHigh != null }) {
+        rows.add(
+            TableRow(
+                label = "Rekord H",
+                unit = "C",
+                values = stats.map { formatValue(it.recordHigh) },
+                rawValues = stats.map { it.recordHigh },
+                colorScale = ColorScale.TEMPERATURE
+            )
+        )
+    }
+    if (stats.any { it.recordLow != null }) {
+        rows.add(
+            TableRow(
+                label = "Rekord L",
+                unit = "C",
+                values = stats.map { formatValue(it.recordLow) },
+                rawValues = stats.map { it.recordLow },
+                colorScale = ColorScale.TEMPERATURE
+            )
+        )
+    }
     return rows
 }
 
