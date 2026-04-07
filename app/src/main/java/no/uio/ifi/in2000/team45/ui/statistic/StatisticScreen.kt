@@ -44,6 +44,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -294,11 +297,61 @@ private fun ClimateDataView(
     }
 }
 
+enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, NONE }
+
 data class TableRow(
     val label: String,
     val unit: String,
-    val values: List<String>
+    val values: List<String>,
+    val rawValues: List<Double?> = emptyList(),
+    val colorScale: ColorScale = ColorScale.NONE
 )
+
+// Blue (cold) -> white (mild) -> red (hot)
+private fun temperatureColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= -15 -> Color(0xFFBBDEFB)
+        value <= -5 -> Color(0xFFE3F2FD)
+        value <= 5 -> Color(0xFFF5F5F5)
+        value <= 15 -> Color(0xFFFFF9C4)
+        value <= 25 -> Color(0xFFFFCCBC)
+        else -> Color(0xFFEF9A9A)
+    }
+}
+
+// Green (dry) -> blue (wet)
+private fun precipitationColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 30 -> Color(0xFFE8F5E9)
+        value <= 80 -> Color(0xFFC8E6C9)
+        value <= 150 -> Color(0xFFBBDEFB)
+        value <= 250 -> Color(0xFF90CAF9)
+        else -> Color(0xFF64B5F6)
+    }
+}
+
+// Green (calm) -> red (strong)
+private fun windColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 2 -> Color(0xFFE8F5E9)
+        value <= 5 -> Color(0xFFC8E6C9)
+        value <= 8 -> Color(0xFFFFF9C4)
+        value <= 12 -> Color(0xFFFFCCBC)
+        else -> Color(0xFFEF9A9A)
+    }
+}
+
+private fun cellColor(value: Double?, scale: ColorScale): Color {
+    return when (scale) {
+        ColorScale.TEMPERATURE -> temperatureColor(value)
+        ColorScale.PRECIPITATION -> precipitationColor(value)
+        ColorScale.WIND -> windColor(value)
+        ColorScale.NONE -> Color.Transparent
+    }
+}
 
 @Composable
 private fun ClimateTable(
@@ -371,11 +424,16 @@ private fun ClimateTable(
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            row.values.forEach { value ->
+                            row.values.forEachIndexed { index, value ->
+                                val rawVal = row.rawValues.getOrNull(index)
+                                val bgColor = cellColor(rawVal, row.colorScale)
                                 Box(
                                     modifier = Modifier
                                         .width(48.dp)
-                                        .padding(4.dp),
+                                        .padding(2.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(bgColor)
+                                        .padding(2.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -434,7 +492,9 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Snitt",
                 unit = "C",
-                values = stats.map { formatValue(it.meanTemp) }
+                values = stats.map { formatValue(it.meanTemp) },
+                rawValues = stats.map { it.meanTemp },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -443,7 +503,9 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Maks",
                 unit = "C",
-                values = stats.map { formatValue(it.maxTemp) }
+                values = stats.map { formatValue(it.maxTemp) },
+                rawValues = stats.map { it.maxTemp },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -452,7 +514,9 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Min",
                 unit = "C",
-                values = stats.map { formatValue(it.minTemp) }
+                values = stats.map { formatValue(it.minTemp) },
+                rawValues = stats.map { it.minTemp },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -464,7 +528,9 @@ private fun buildPrecipitationRows(stats: List<MonthlyClimateStats>): List<Table
         TableRow(
             label = "Nedbor",
             unit = "mm",
-            values = stats.map { formatValue(it.precipitation) }
+            values = stats.map { formatValue(it.precipitation) },
+            rawValues = stats.map { it.precipitation },
+            colorScale = ColorScale.PRECIPITATION
         )
     )
 }
@@ -474,7 +540,9 @@ private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
         TableRow(
             label = "Snitt",
             unit = "m/s",
-            values = stats.map { formatValue(it.windSpeed) }
+            values = stats.map { formatValue(it.windSpeed) },
+            rawValues = stats.map { it.windSpeed },
+            colorScale = ColorScale.WIND
         )
     )
 }
