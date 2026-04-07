@@ -139,13 +139,31 @@ fun StatisticScreen(
                 is StatisticUiState.StationResults -> {
                     StationList(
                         stations = state.stations,
-                        onStationClick = { statisticViewModel.selectStation(it) }
+                        favoriteIds = favoriteStations.map { it.stationId }.toSet(),
+                        onStationClick = { statisticViewModel.selectStation(it) },
+                        onToggleFavorite = { station ->
+                            val isFav = favoriteStations.any { it.stationId == station.id }
+                            if (isFav) {
+                                favoriteViewModel.removeStation(station.id)
+                            } else {
+                                favoriteViewModel.addStation(station)
+                            }
+                        }
                     )
                 }
                 is StatisticUiState.ClimateData -> {
+                    val isFav = favoriteStations.any { it.stationId == state.station.id }
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
+                        isFavorite = isFav,
+                        onToggleFavorite = {
+                            if (isFav) {
+                                favoriteViewModel.removeStation(state.station.id)
+                            } else {
+                                favoriteViewModel.addStation(state.station)
+                            }
+                        },
                         onBack = { statisticViewModel.goBack() }
                     )
                 }
@@ -210,7 +228,9 @@ private fun IdleContent() {
 @Composable
 private fun StationList(
     stations: List<WeatherStation>,
-    onStationClick: (WeatherStation) -> Unit
+    favoriteIds: Set<String>,
+    onStationClick: (WeatherStation) -> Unit,
+    onToggleFavorite: (WeatherStation) -> Unit
 ) {
     Text(
         text = stringResource(R.string.choose_station),
@@ -219,6 +239,7 @@ private fun StationList(
     )
     LazyColumn {
         items(stations.take(20)) { station ->
+            val isFav = station.id in favoriteIds
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -226,24 +247,39 @@ private fun StationList(
                     .clickable { onStationClick(station) },
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = station.name,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
-                    )
-                    if (station.municipality.isNotBlank()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "${station.municipality}, ${station.county}",
-                            fontSize = 13.sp,
+                            text = station.name,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        if (station.municipality.isNotBlank()) {
+                            Text(
+                                text = "${station.municipality}, ${station.county}",
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Text(
+                            text = "ID: ${station.id}",
+                            fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    Text(
-                        text = "ID: ${station.id}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    IconButton(onClick = { onToggleFavorite(station) }) {
+                        Icon(
+                            imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                            contentDescription = if (isFav) "Fjern favoritt" else "Legg til favoritt",
+                            tint = if (isFav) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                                   else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
@@ -254,6 +290,8 @@ private fun StationList(
 private fun ClimateDataView(
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
     onBack: () -> Unit
 ) {
     LazyColumn {
@@ -264,12 +302,27 @@ private fun ClimateDataView(
         }
 
         item {
-            Text(
-                text = station.name,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = station.name,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 4.dp)
+                )
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
+                        contentDescription = if (isFavorite) "Fjern favoritt" else "Legg til favoritt",
+                        tint = if (isFavorite) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                               else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
             if (station.municipality.isNotBlank()) {
                 Text(
                     text = "${station.municipality}, ${station.county}",

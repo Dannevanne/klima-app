@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteRepository
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,6 +22,19 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     val locations = repository.favoriteLocationsFlow.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
+
+    fun addStation(station: WeatherStation) {
+        viewModelScope.launch {
+            repository.addStation(
+                FavoriteStation(
+                    stationId = station.id,
+                    name = station.name,
+                    municipality = station.municipality,
+                    county = station.county
+                )
+            )
+        }
+    }
 
     fun removeStation(stationId: String) {
         viewModelScope.launch { repository.removeStation(stationId) }
