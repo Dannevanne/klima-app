@@ -176,6 +176,7 @@ fun MapScreen(
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
+            favoriteViewModel = favoriteViewModel,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -186,6 +187,7 @@ fun MapScreen(
 @Composable
 fun DataMap(
     mapViewModel: MapViewModel,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -327,6 +329,29 @@ fun DataMap(
                     label = { Text(type.label, fontSize = 12.sp) }
                 )
             }
+        }
+
+        // Save current location button
+        IconButton(
+            onClick = {
+                val center = mapViewRef?.mapboxMap?.cameraState?.center
+                if (center != null) {
+                    favoriteViewModel.addLocation(
+                        lat = center.latitude(),
+                        lng = center.longitude(),
+                        label = ""
+                    )
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 140.dp)
+        ) {
+            Icon(
+                Icons.Filled.FavoriteBorder,
+                contentDescription = "Lagre posisjon",
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
 
         MapZoomControls(
