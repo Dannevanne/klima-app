@@ -7,11 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.maps.renderer.widget.Widget
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.team45.data.map.MapDatasource
 import no.uio.ifi.in2000.team45.data.map.MapRepository
+import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
-import no.uio.ifi.in2000.team45.ui.map.MapTheme
-import okhttp3.internal.http2.Header
 
 sealed interface MapUiState {
     data class Success(
@@ -31,10 +29,14 @@ class MapViewModel(
 
     var mapTheme by mutableStateOf(MapTheme.DEVICE)
         private set
+    var activeOverlay by mutableStateOf(OverlayType.FLOOD)
+        private set
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
     private var throttleMs = 300L
     private var lastBBox: List<Double>? = null
+    private var lastWidth = 0
+    private var lastHeight = 0
 
     init{
         viewModelScope.launch {
@@ -60,10 +62,14 @@ class MapViewModel(
             return
         }
         lastBBox = bbox
+        lastWidth = width
+        lastHeight = height
 
         if(bbox.size != 4 || width <= 0 || height <= 0) return
         try{
-            val url = mapRepository.getOverlayURL(bbox = bbox,
+            val url = mapRepository.getOverlayURL(
+                type = activeOverlay,
+                bbox = bbox,
                 width = width,
                 height = height)
             if(url != lastOverlayURL){
@@ -91,6 +97,20 @@ class MapViewModel(
         mapTheme = theme
         viewModelScope.launch {
             themePreferenceRepository.saveMapTheme(theme)
+        }
+    }
+
+    fun setOverlay(type: OverlayType) {
+        activeOverlay = type
+        lastOverlayURL = null
+        // Re-fetch immediately using the last known bbox
+        val bbox = lastBBox
+        if (bbox != null && lastWidth > 0 && lastHeight > 0) {
+            lastBBox = null
+            lastUpdateTime = 0L
+            updateOverlay(bbox, lastWidth, lastHeight)
+        } else {
+            mapUiState = MapUiState.Loading
         }
     }
 }

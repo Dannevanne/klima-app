@@ -1,7 +1,9 @@
 package no.uio.ifi.in2000.team45.ui.map
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -68,7 +70,11 @@ import com.mapbox.maps.CameraOptions
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+import androidx.compose.material3.FilterChip
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilterChipDefaults
 
 @Composable
 fun MapStateScreen(
@@ -290,6 +296,23 @@ fun DataMap(
                         rasterOpacity(0.5)
                     })
                 }
+            }
+        }
+
+        // Overlay type selector
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(start = 8.dp, top = 8.dp)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            OverlayType.entries.forEach { type ->
+                FilterChip(
+                    selected = mapViewModel.activeOverlay == type,
+                    onClick = { mapViewModel.setOverlay(type) },
+                    label = { Text(type.label, fontSize = 12.sp) }
+                )
             }
         }
 
