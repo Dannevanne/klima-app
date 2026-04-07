@@ -3,6 +3,9 @@ package no.uio.ifi.in2000.team45.ui.map
 import android.graphics.Bitmap
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,16 +74,25 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+import android.widget.Toast
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
+import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState = mapViewModel.mapUiState
@@ -95,6 +107,8 @@ fun MapStateScreen(
             mapViewModel = mapViewModel,
             onSettingsClick = onSettingsClick,
             onStatisticClick = onStatisticClick,
+            onFavoritesClick = onFavoritesClick,
+            favoriteViewModel = favoriteViewModel,
             modifier = modifier)
         when(uiState){
             is MapUiState.Loading -> CircularProgressIndicator()
@@ -110,6 +124,8 @@ fun MapScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -157,12 +173,17 @@ fun MapScreen(
                             Icon(Icons.Outlined.Info,
                                 contentDescription = stringResource(R.string.to_statistics))
                         }
+                        IconButton(onClick = onFavoritesClick) {
+                            Icon(Icons.Filled.Favorite,
+                                contentDescription = "Favoritter")
+                        }
                     }
                     }
             }
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
+            favoriteViewModel = favoriteViewModel,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -173,6 +194,7 @@ fun MapScreen(
 @Composable
 fun DataMap(
     mapViewModel: MapViewModel,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -182,6 +204,9 @@ fun DataMap(
         systemIsDark = isSystemInDarkTheme()
     )
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    // Long-press save dialog state
+    var pendingPoint by remember { mutableStateOf<Point?>(null) }
+    var locationName by remember { mutableStateOf("") }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
     val currentMapWidth by rememberUpdatedState(mapWidth)
@@ -214,6 +239,12 @@ fun DataMap(
         ) {
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
+                // Long-press opens naming dialog
+                mapView.mapboxMap.addOnMapLongClickListener { point ->
+                    pendingPoint = point
+                    locationName = ""
+                    true
+                }
             }
 
             MapThemeEffect(useDarkMap)
@@ -322,6 +353,48 @@ fun DataMap(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
+        )
+    }
+
+    // Naming dialog for saved location
+    pendingPoint?.let { point ->
+        AlertDialog(
+            onDismissRequest = { pendingPoint = null },
+            title = { Text("Lagre posisjon") },
+            text = {
+                Column {
+                    Text(
+                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = { locationName = it },
+                        label = { Text("Navn") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    favoriteViewModel.addLocation(
+                        lat = point.latitude(),
+                        lng = point.longitude(),
+                        label = locationName.trim()
+                    )
+                    pendingPoint = null
+                }) {
+                    Text("Lagre")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingPoint = null }) {
+                    Text("Avbryt")
+                }
+            }
         )
     }
 }

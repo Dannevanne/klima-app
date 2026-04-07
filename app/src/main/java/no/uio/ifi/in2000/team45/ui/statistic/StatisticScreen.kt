@@ -52,8 +52,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -65,8 +72,11 @@ fun StatisticScreen(
     statisticViewModel: StatisticViewModel,
     onSettingsClick: () -> Unit,
     onMapClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
+    val favoriteStations by favoriteViewModel.stations.collectAsState()
     Scaffold(
         bottomBar = {
             BottomAppBar {
@@ -85,6 +95,9 @@ fun StatisticScreen(
                     }
                     IconButton({}) {
                         Icon(Icons.Filled.Info, contentDescription = "")
+                    }
+                    IconButton(onClick = onFavoritesClick) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Favoritter")
                     }
                 }
             }
@@ -113,7 +126,58 @@ fun StatisticScreen(
 
             when (val state = statisticViewModel.uiState) {
                 is StatisticUiState.Idle -> {
-                    IdleContent()
+                    if (favoriteStations.isNotEmpty()) {
+                        // Show pinned stations for quick access (like YR)
+                        Text(
+                            text = "Lagrede stasjoner",
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        LazyColumn {
+                            items(favoriteStations) { fav ->
+                                val station = WeatherStation(
+                                    id = fav.stationId,
+                                    name = fav.name,
+                                    latitude = 0.0, longitude = 0.0,
+                                    municipality = fav.municipality,
+                                    county = fav.county
+                                )
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp)
+                                        .clickable { statisticViewModel.selectStation(station) },
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = androidx.compose.ui.graphics.Color(0xFFFFC107),
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                            if (fav.municipality.isNotBlank()) {
+                                                Text(
+                                                    "${fav.municipality}, ${fav.county}",
+                                                    fontSize = 13.sp,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        IdleContent()
+                    }
                 }
                 is StatisticUiState.Loading -> {
                     Box(
@@ -124,15 +188,36 @@ fun StatisticScreen(
                     }
                 }
                 is StatisticUiState.StationResults -> {
+                    val favIds = favoriteStations.map { it.stationId }.toSet()
+                    // Pinned stations first, then the rest
+                    val sorted = state.stations.sortedByDescending { it.id in favIds }
                     StationList(
-                        stations = state.stations,
-                        onStationClick = { statisticViewModel.selectStation(it) }
+                        stations = sorted,
+                        favoriteIds = favIds,
+                        onStationClick = { statisticViewModel.selectStation(it) },
+                        onToggleFavorite = { station ->
+                            val isFav = station.id in favIds
+                            if (isFav) {
+                                favoriteViewModel.removeStation(station.id)
+                            } else {
+                                favoriteViewModel.addStation(station)
+                            }
+                        }
                     )
                 }
                 is StatisticUiState.ClimateData -> {
+                    val isFav = favoriteStations.any { it.stationId == state.station.id }
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
+                        isFavorite = isFav,
+                        onToggleFavorite = {
+                            if (isFav) {
+                                favoriteViewModel.removeStation(state.station.id)
+                            } else {
+                                favoriteViewModel.addStation(state.station)
+                            }
+                        },
                         onBack = { statisticViewModel.goBack() }
                     )
                 }
@@ -197,7 +282,9 @@ private fun IdleContent() {
 @Composable
 private fun StationList(
     stations: List<WeatherStation>,
-    onStationClick: (WeatherStation) -> Unit
+    favoriteIds: Set<String>,
+    onStationClick: (WeatherStation) -> Unit,
+    onToggleFavorite: (WeatherStation) -> Unit
 ) {
     Text(
         text = stringResource(R.string.choose_station),
@@ -206,6 +293,7 @@ private fun StationList(
     )
     LazyColumn {
         items(stations.take(20)) { station ->
+            val isFav = station.id in favoriteIds
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -213,24 +301,39 @@ private fun StationList(
                     .clickable { onStationClick(station) },
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = station.name,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
-                    )
-                    if (station.municipality.isNotBlank()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "${station.municipality}, ${station.county}",
-                            fontSize = 13.sp,
+                            text = station.name,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        if (station.municipality.isNotBlank()) {
+                            Text(
+                                text = "${station.municipality}, ${station.county}",
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Text(
+                            text = "ID: ${station.id}",
+                            fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    Text(
-                        text = "ID: ${station.id}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    IconButton(onClick = { onToggleFavorite(station) }) {
+                        Icon(
+                            imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                            contentDescription = if (isFav) "Fjern favoritt" else "Legg til favoritt",
+                            tint = if (isFav) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                                   else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
@@ -241,6 +344,8 @@ private fun StationList(
 private fun ClimateDataView(
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
     onBack: () -> Unit
 ) {
     LazyColumn {
@@ -251,12 +356,27 @@ private fun ClimateDataView(
         }
 
         item {
-            Text(
-                text = station.name,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = station.name,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 4.dp)
+                )
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
+                        contentDescription = if (isFavorite) "Fjern favoritt" else "Legg til favoritt",
+                        tint = if (isFavorite) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                               else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
             if (station.municipality.isNotBlank()) {
                 Text(
                     text = "${station.municipality}, ${station.county}",

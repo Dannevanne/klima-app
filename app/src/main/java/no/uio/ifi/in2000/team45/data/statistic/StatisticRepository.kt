@@ -19,6 +19,14 @@ class StatisticRepository(
         return datasource.searchStations(query, clientId)
     }
 
+    suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
+        return datasource.findNearestStation(lat, lon, clientId)
+    }
+
+    suspend fun getLatestObservations(stationId: String, clientId: String): Map<String, Double> {
+        return datasource.getLatestObservations(stationId, clientId)
+    }
+
     suspend fun getClimateStats(
         stationId: String,
         clientId: String
