@@ -6,7 +6,9 @@ data class MonthlyClimateStats(
     val maxTemp: Double?,
     val minTemp: Double?,
     val precipitation: Double?,
-    val windSpeed: Double?
+    val windSpeed: Double?,
+    val recordHigh: Double? = null,
+    val recordLow: Double? = null
 )
 
 class StatisticRepository(
@@ -56,6 +58,12 @@ class StatisticRepository(
                 }?.normal,
                 windSpeed = monthData.find {
                     it.elementId.contains("wind_speed")
+                }?.normal,
+                recordHigh = monthData.find {
+                    it.elementId.contains("record_high")
+                }?.normal,
+                recordLow = monthData.find {
+                    it.elementId.contains("record_low")
                 }?.normal
             )
         }

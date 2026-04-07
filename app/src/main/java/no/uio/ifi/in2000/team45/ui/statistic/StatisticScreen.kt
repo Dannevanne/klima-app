@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -11,8 +12,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -44,6 +48,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -289,16 +296,73 @@ private fun ClimateDataView(
                     stats = stats,
                     rows = buildWindRows(stats)
                 )
+                Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        // UV index estimate based on latitude and month
+        item {
+            UvIndexCard(latitude = station.latitude)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
+enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, NONE }
+
 data class TableRow(
     val label: String,
     val unit: String,
-    val values: List<String>
+    val values: List<String>,
+    val rawValues: List<Double?> = emptyList(),
+    val colorScale: ColorScale = ColorScale.NONE
 )
+
+// Blue (cold) -> white (mild) -> red (hot)
+private fun temperatureColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= -15 -> Color(0xFFBBDEFB)
+        value <= -5 -> Color(0xFFE3F2FD)
+        value <= 5 -> Color(0xFFF5F5F5)
+        value <= 15 -> Color(0xFFFFF9C4)
+        value <= 25 -> Color(0xFFFFCCBC)
+        else -> Color(0xFFEF9A9A)
+    }
+}
+
+// Green (dry) -> blue (wet)
+private fun precipitationColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 30 -> Color(0xFFE8F5E9)
+        value <= 80 -> Color(0xFFC8E6C9)
+        value <= 150 -> Color(0xFFBBDEFB)
+        value <= 250 -> Color(0xFF90CAF9)
+        else -> Color(0xFF64B5F6)
+    }
+}
+
+// Green (calm) -> red (strong)
+private fun windColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 2 -> Color(0xFFE8F5E9)
+        value <= 5 -> Color(0xFFC8E6C9)
+        value <= 8 -> Color(0xFFFFF9C4)
+        value <= 12 -> Color(0xFFFFCCBC)
+        else -> Color(0xFFEF9A9A)
+    }
+}
+
+private fun cellColor(value: Double?, scale: ColorScale): Color {
+    return when (scale) {
+        ColorScale.TEMPERATURE -> temperatureColor(value)
+        ColorScale.PRECIPITATION -> precipitationColor(value)
+        ColorScale.WIND -> windColor(value)
+        ColorScale.NONE -> Color.Transparent
+    }
+}
 
 @Composable
 private fun ClimateTable(
@@ -371,11 +435,16 @@ private fun ClimateTable(
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            row.values.forEach { value ->
+                            row.values.forEachIndexed { index, value ->
+                                val rawVal = row.rawValues.getOrNull(index)
+                                val bgColor = cellColor(rawVal, row.colorScale)
                                 Box(
                                     modifier = Modifier
                                         .width(48.dp)
-                                        .padding(4.dp),
+                                        .padding(2.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(bgColor)
+                                        .padding(2.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -434,7 +503,9 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Snitt",
                 unit = "C",
-                values = stats.map { formatValue(it.meanTemp) }
+                values = stats.map { formatValue(it.meanTemp) },
+                rawValues = stats.map { it.meanTemp },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -443,7 +514,9 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Maks",
                 unit = "C",
-                values = stats.map { formatValue(it.maxTemp) }
+                values = stats.map { formatValue(it.maxTemp) },
+                rawValues = stats.map { it.maxTemp },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -452,7 +525,31 @@ private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRo
             TableRow(
                 label = "Min",
                 unit = "C",
-                values = stats.map { formatValue(it.minTemp) }
+                values = stats.map { formatValue(it.minTemp) },
+                rawValues = stats.map { it.minTemp },
+                colorScale = ColorScale.TEMPERATURE
+            )
+        )
+    }
+    if (stats.any { it.recordHigh != null }) {
+        rows.add(
+            TableRow(
+                label = "Rekord H",
+                unit = "C",
+                values = stats.map { formatValue(it.recordHigh) },
+                rawValues = stats.map { it.recordHigh },
+                colorScale = ColorScale.TEMPERATURE
+            )
+        )
+    }
+    if (stats.any { it.recordLow != null }) {
+        rows.add(
+            TableRow(
+                label = "Rekord L",
+                unit = "C",
+                values = stats.map { formatValue(it.recordLow) },
+                rawValues = stats.map { it.recordLow },
+                colorScale = ColorScale.TEMPERATURE
             )
         )
     }
@@ -464,7 +561,9 @@ private fun buildPrecipitationRows(stats: List<MonthlyClimateStats>): List<Table
         TableRow(
             label = "Nedbor",
             unit = "mm",
-            values = stats.map { formatValue(it.precipitation) }
+            values = stats.map { formatValue(it.precipitation) },
+            rawValues = stats.map { it.precipitation },
+            colorScale = ColorScale.PRECIPITATION
         )
     )
 }
@@ -474,7 +573,129 @@ private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
         TableRow(
             label = "Snitt",
             unit = "m/s",
-            values = stats.map { formatValue(it.windSpeed) }
+            values = stats.map { formatValue(it.windSpeed) },
+            rawValues = stats.map { it.windSpeed },
+            colorScale = ColorScale.WIND
         )
     )
+}
+
+// Estimate peak summer UV index based on latitude.
+// Southern Norway (~58N) gets UV ~6-7, northern (~70N) gets ~3-4 in summer.
+// Current month scales this down (winter = near zero).
+private fun estimateUvIndex(latitude: Double): Double {
+    val month = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1
+    // Peak UV for this latitude (summer solstice)
+    val peakUv = (10.0 - (latitude - 50.0) * 0.15).coerceIn(1.0, 11.0)
+    // Monthly scaling factor (peaks in June/July)
+    val monthFactor = when (month) {
+        1, 12 -> 0.05
+        2, 11 -> 0.10
+        3, 10 -> 0.25
+        4, 9 -> 0.50
+        5, 8 -> 0.75
+        6, 7 -> 1.0
+        else -> 0.3
+    }
+    return (peakUv * monthFactor).coerceIn(0.0, 11.0)
+}
+
+private fun uvLabel(uv: Double): String = when {
+    uv < 3 -> "Lav"
+    uv < 6 -> "Moderat"
+    uv < 8 -> "Hoy"
+    uv < 11 -> "Veldig hoy"
+    else -> "Ekstrem"
+}
+
+@Composable
+private fun UvIndexCard(latitude: Double) {
+    val uvIndex = estimateUvIndex(latitude)
+    val maxUv = 11.0
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "UV-indeks (estimat for denne maneden)",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = "${String.format("%.1f", uvIndex)} - ${uvLabel(uvIndex)}",
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            // Gradient bar with indicator
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+            ) {
+                // Gradient background
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(14.dp)
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF4CAF50), // green - low
+                                Color(0xFFCDDC39), // lime
+                                Color(0xFFFFEB3B), // yellow - moderate
+                                Color(0xFFFF9800), // orange - high
+                                Color(0xFFF44336), // red - very high
+                                Color(0xFF9C27B0)  // purple - extreme
+                            )
+                        )
+                    )
+                }
+
+                // Indicator dot
+                val fraction = (uvIndex / maxUv).toFloat().coerceIn(0f, 1f)
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(28.dp)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    val x = size.width * fraction
+                    // Triangle pointer at top
+                    drawCircle(
+                        color = Color.Black,
+                        radius = 8f,
+                        center = Offset(x, 6f)
+                    )
+                    // Line down to bar
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(x, 10f),
+                        end = Offset(x, size.height),
+                        strokeWidth = 2f
+                    )
+                }
+            }
+
+            // Scale labels
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("0", fontSize = 10.sp, color = Color.Gray)
+                Text("3", fontSize = 10.sp, color = Color.Gray)
+                Text("6", fontSize = 10.sp, color = Color.Gray)
+                Text("8", fontSize = 10.sp, color = Color.Gray)
+                Text("11+", fontSize = 10.sp, color = Color.Gray)
+            }
+        }
+    }
 }
