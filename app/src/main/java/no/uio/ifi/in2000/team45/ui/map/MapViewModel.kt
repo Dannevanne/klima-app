@@ -35,6 +35,8 @@ class MapViewModel(
     private var lastUpdateTime = 0L
     private var throttleMs = 300L
     private var lastBBox: List<Double>? = null
+    private var lastWidth = 0
+    private var lastHeight = 0
 
     init{
         viewModelScope.launch {
@@ -60,6 +62,8 @@ class MapViewModel(
             return
         }
         lastBBox = bbox
+        lastWidth = width
+        lastHeight = height
 
         if(bbox.size != 4 || width <= 0 || height <= 0) return
         try{
@@ -98,10 +102,16 @@ class MapViewModel(
 
     fun setOverlay(type: OverlayType) {
         activeOverlay = type
-        // Reset so next camera update triggers a fetch with the new overlay type
         lastOverlayURL = null
-        lastBBox = null
-        mapUiState = MapUiState.Loading
+        // Re-fetch immediately using the last known bbox
+        val bbox = lastBBox
+        if (bbox != null && lastWidth > 0 && lastHeight > 0) {
+            lastBBox = null
+            lastUpdateTime = 0L
+            updateOverlay(bbox, lastWidth, lastHeight)
+        } else {
+            mapUiState = MapUiState.Loading
+        }
     }
 }
 
