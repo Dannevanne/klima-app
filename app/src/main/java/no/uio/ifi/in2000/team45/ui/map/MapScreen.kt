@@ -203,6 +203,37 @@ fun DataMap(
                 mapViewRef = mapView
             }
 
+            //Activates the blue location-dot
+            //Rerun every time locationGranted changes
+            MapEffect(locationGranted) { mapView ->
+                mapView.location.apply {
+
+                    //On/Off based on permission
+                    enabled = locationGranted
+
+                    //Show pulsing animation around the blue dot
+                    pulsingEnabled = true
+                }
+                //Listens to locationchanges from Mapbox and updates userLocation in viewmodel
+                if (locationGranted) {
+                    mapView.location.addOnIndicatorPositionChangedListener { point ->
+                        mapViewModel.updateUserLocation(point)
+                    }
+                }
+            }
+
+            //Listens to selectedLocation and reruns when moveToUserLocation() is called
+            LaunchedEffect(mapViewModel.selectedLocation) {
+                mapViewModel.selectedLocation?.let {
+                    viewportState.easeTo(
+                        CameraOptions.Builder()
+                            .center(it)
+                            .zoom(13.0)
+                            .build()
+                    )
+                }
+            }
+
             MapThemeEffect(useDarkMap)
 
             DisposableEffect(mapViewRef) {
