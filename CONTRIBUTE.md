@@ -4,7 +4,7 @@
 - `feat: <something something>`
 - `fix: <something something>`
 - `add: <new file>`
-- `refactor: <what was refactored?>
+- `refactor: <what was refactored?>`
 
 
 **Do** prefix all branches with their respective type, followed by a slash Examples:
