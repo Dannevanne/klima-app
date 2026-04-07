@@ -292,6 +292,28 @@ fun DataMap(
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
         )
+
+        //Locationbutton
+        SmallFloatingActionButton(
+            onClick = onLocationClick,
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 16.dp),
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            Icon(
+                imageVector = if (locationGranted)
+                    Icons.Filled.LocationOn
+                else
+                    Icons.Outlined.Lock,
+                contentDescription = stringResource(R.string.my_position),
+                tint = if (locationGranted)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
