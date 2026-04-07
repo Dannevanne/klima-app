@@ -3,6 +3,9 @@ package no.uio.ifi.in2000.team45.ui.map
 import android.graphics.Bitmap
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,7 +78,10 @@ import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 import android.widget.Toast
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
@@ -198,6 +204,9 @@ fun DataMap(
         systemIsDark = isSystemInDarkTheme()
     )
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    // Long-press save dialog state
+    var pendingPoint by remember { mutableStateOf<Point?>(null) }
+    var locationName by remember { mutableStateOf("") }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
     val currentMapWidth by rememberUpdatedState(mapWidth)
@@ -230,18 +239,10 @@ fun DataMap(
         ) {
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
-                // Long-press to save location
+                // Long-press opens naming dialog
                 mapView.mapboxMap.addOnMapLongClickListener { point ->
-                    favoriteViewModel.addLocation(
-                        lat = point.latitude(),
-                        lng = point.longitude(),
-                        label = ""
-                    )
-                    Toast.makeText(
-                        context,
-                        "Posisjon lagret: %.4f, %.4f".format(point.latitude(), point.longitude()),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    pendingPoint = point
+                    locationName = ""
                     true
                 }
             }
@@ -352,6 +353,48 @@ fun DataMap(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
+        )
+    }
+
+    // Naming dialog for saved location
+    pendingPoint?.let { point ->
+        AlertDialog(
+            onDismissRequest = { pendingPoint = null },
+            title = { Text("Lagre posisjon") },
+            text = {
+                Column {
+                    Text(
+                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = { locationName = it },
+                        label = { Text("Navn") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    favoriteViewModel.addLocation(
+                        lat = point.latitude(),
+                        lng = point.longitude(),
+                        label = locationName.trim()
+                    )
+                    pendingPoint = null
+                }) {
+                    Text("Lagre")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingPoint = null }) {
+                    Text("Avbryt")
+                }
+            }
         )
     }
 }
