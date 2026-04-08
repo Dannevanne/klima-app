@@ -91,8 +91,8 @@ fun MapStateScreen(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(stringResource(R.string.locationsharing_required)) },
-            text = { Text(stringResource(R.string.need_location_settings)) },
+            title = { Text(stringResource(R.string.need_location_permission)) },
+            text = { Text(stringResource(R.string.permission_settings)) },
             confirmButton = {
                 Button(onClick = {
                     showDialog = false
