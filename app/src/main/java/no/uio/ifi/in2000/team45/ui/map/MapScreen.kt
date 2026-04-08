@@ -83,6 +83,8 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.FilterChipDefaults
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 
@@ -174,7 +176,7 @@ fun MapScreen(
                                 contentDescription = stringResource(R.string.to_statistics))
                         }
                         IconButton(onClick = onFavoritesClick) {
-                            Icon(Icons.Filled.Favorite,
+                            Icon(Icons.Outlined.FavoriteBorder,
                                 contentDescription = "Favoritter")
                         }
                     }
