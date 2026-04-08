@@ -58,6 +58,7 @@ import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -97,7 +98,7 @@ fun StatisticScreen(
                         Icon(Icons.Filled.Info, contentDescription = "")
                     }
                     IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Filled.Favorite, contentDescription = "Favoritter")
+                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favoritter")
                     }
                 }
             }
