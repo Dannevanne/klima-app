@@ -69,7 +69,9 @@ import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
+import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
+import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.toCameraOptions
 import no.uio.ifi.in2000.team45.R
@@ -260,12 +262,12 @@ fun DataMap(
             //Activates the blue location-dot
             //Rerun every time locationGranted changes
             MapEffect(locationGranted) { mapView ->
-                mapView.location.apply {
-
-                    //On/Off based on permission
+                mapView.location.updateSettings {
+                    locationPuck = createDefault2DPuck(withBearing = false)
                     enabled = locationGranted
+                    puckBearing = PuckBearing.COURSE
+                    puckBearingEnabled = true
 
-                    //Show pulsing animation around the blue dot
                     pulsingEnabled = true
                 }
                 //Listens to locationchanges from Mapbox and updates userLocation in viewmodel
