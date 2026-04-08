@@ -265,9 +265,6 @@ fun DataMap(
                 mapView.location.updateSettings {
                     locationPuck = createDefault2DPuck(withBearing = false)
                     enabled = locationGranted
-                    puckBearing = PuckBearing.COURSE
-                    puckBearingEnabled = true
-
                     pulsingEnabled = true
                 }
                 //Listens to locationchanges from Mapbox and updates userLocation in viewmodel
