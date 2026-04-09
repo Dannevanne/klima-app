@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import com.mapbox.maps.renderer.widget.Widget
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
@@ -59,6 +60,12 @@ class MapViewModel(
         private set
 
     var isSearching by mutableStateOf(false)
+    //User current location
+    var userLocation by mutableStateOf<Point?>(null)
+        private set
+
+    //Separated from userLocation so the camera does not continuously follow the user
+    var selectedLocation by mutableStateOf<Point?>(null)
         private set
 
     init{
@@ -123,6 +130,15 @@ class MapViewModel(
         }
     }
 
+    //Is called by Mapbox's locationlistener in DataMap
+    //Updates the location without moving the camera
+    fun updateUserLocation(point: Point) {
+        userLocation = point
+    }
+
+    //Copies userLocation to selectedLocation which trigger the camera to move
+    fun moveToUserLocation() {
+        userLocation?.let { selectedLocation = it }
     fun setOverlay(type: OverlayType) {
         activeOverlay = type
         lastOverlayURL = null
