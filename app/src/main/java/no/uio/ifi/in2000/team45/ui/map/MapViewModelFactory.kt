@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 
 class MapViewModelFactory(
-    private val themePreferenceRepository: ThemePreferenceRepository
+    private val themePreferenceRepository: ThemePreferenceRepository,
+    private val mapboxAccessToken: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(MapViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
             return MapViewModel(
-                themePreferenceRepository = themePreferenceRepository
+                themePreferenceRepository = themePreferenceRepository,
+                mapboxAccessToken = mapboxAccessToken
             ) as T
         }
         throw IllegalArgumentException("Invalid ViewModel class")
