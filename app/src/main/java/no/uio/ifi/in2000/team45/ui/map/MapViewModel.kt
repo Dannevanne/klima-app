@@ -6,11 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.maps.renderer.widget.Widget
+import com.mapbox.search.autocomplete.PlaceAutocomplete
+import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
+import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
+import com.mapbox.search.autofill.Query
+import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
-
+import java.util.Locale
+import com.mapbox.geojson.Point
 sealed interface MapUiState {
     data class Success(
         val overlayURL: String,
@@ -20,9 +26,16 @@ sealed interface MapUiState {
     object Loading : MapUiState
 }
 
+data class SearchSuggestionUi(
+    val suggestion: PlaceAutocompleteSuggestion,
+    val title: String,
+    val subtitle: String?
+)
+
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
-    private val themePreferenceRepository: ThemePreferenceRepository)
+    private val themePreferenceRepository: ThemePreferenceRepository,
+    private val mapboxAccessToken: String)
     : ViewModel() {
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
@@ -37,6 +50,17 @@ class MapViewModel(
     private var lastBBox: List<Double>? = null
     private var lastWidth = 0
     private var lastHeight = 0
+
+    private val placeAutocomplete = PlaceAutocomplete.create(mapboxAccessToken)
+
+    var searchQuery by mutableStateOf("")
+        private set
+
+    var searchSuggestions by mutableStateOf<List<SearchSuggestionUi>>(emptyList())
+        private set
+
+    var isSearching by mutableStateOf(false)
+        private set
 
     init{
         viewModelScope.launch {
@@ -112,6 +136,48 @@ class MapViewModel(
         } else {
             mapUiState = MapUiState.Loading
         }
+    }
+
+    fun updateSearchQuery(query: String){
+        searchQuery = query
+
+        if(query.isBlank()){
+            searchSuggestions = emptyList()
+            isSearching = false
+            return
+        }
+
+        viewModelScope.launch {
+            isSearching = true
+
+            val response = placeAutocomplete.suggestions(
+                query = query,
+                options = PlaceAutocompleteOptions(
+                    limit = 8,
+                    countries = listOf(IsoCountryCode.NORWAY)
+                )
+            )
+
+            response.onValue { suggestions ->
+                searchSuggestions = suggestions.map { suggestion ->
+                    SearchSuggestionUi(
+                        suggestion = suggestion,
+                        title = suggestion.name,
+                        subtitle = suggestion.formattedAddress
+                    )
+                }
+                isSearching = false
+            }.onError{
+                searchSuggestions = emptyList()
+                isSearching = false
+            }
+        }
+    }
+
+    fun clearSearch(){
+        searchQuery = ""
+        searchSuggestions = emptyList()
+        isSearching = false
     }
 }
 
