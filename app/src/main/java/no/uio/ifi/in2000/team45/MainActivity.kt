@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.mapbox.common.MapboxOptions
 import no.uio.ifi.in2000.team45.ui.AppNavigation
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
@@ -26,15 +27,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
+        MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
+
         setContent {
             val mapViewModel: MapViewModel = viewModel(
-                factory = MapViewModelFactory(themePreferenceRepository)
+                factory = MapViewModelFactory(
+                    themePreferenceRepository = themePreferenceRepository)
             )
+
             val useDarkTheme = useDarkThemeFrom(
                 theme = mapViewModel.mapTheme,
                 systemIsDark = isSystemInDarkTheme()
             )
+
             Team45Theme(darkTheme = useDarkTheme) {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(

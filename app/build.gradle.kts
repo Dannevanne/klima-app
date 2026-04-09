@@ -80,4 +80,11 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.9")
     // coroutines testing
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+    implementation("com.mapbox.search:autofill-ndk27:2.21.0")
+    implementation("com.mapbox.search:discover-ndk27:2.21.0")
+    implementation("com.mapbox.search:place-autocomplete-ndk27:2.21.0")
+    implementation("com.mapbox.search:offline-ndk27:2.21.0")
+    implementation("com.mapbox.search:mapbox-search-android-ndk27:2.21.0")
+    implementation("com.mapbox.search:mapbox-search-android-ui-ndk27:2.21.0")
 }
