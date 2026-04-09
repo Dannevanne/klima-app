@@ -179,6 +179,20 @@ class MapViewModel(
         searchSuggestions = emptyList()
         isSearching = false
     }
+
+    fun selectSuggestion(
+        item: SearchSuggestionUi,
+        onResult: (Point) -> Unit
+    ){
+        viewModelScope.launch {
+            val selectionResponse = placeAutocomplete.select(item.suggestion)
+
+            selectionResponse.onValue { result ->
+                clearSearch()
+                onResult(result.coordinate)
+            }.onError{}
+        }
+    }
 }
 
 fun useDarkThemeFrom(theme: MapTheme, systemIsDark: Boolean): Boolean{
