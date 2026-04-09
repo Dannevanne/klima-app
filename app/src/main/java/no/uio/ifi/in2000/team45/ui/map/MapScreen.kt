@@ -85,7 +85,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChipDefaults
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
-
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
@@ -467,6 +466,18 @@ private fun zoomMap(mapView: MapView?,
     val camera = CameraOptions.Builder().zoom(
         (currentZoom + zoomChange).coerceIn(1.0, 20.0)
     )
+        .build()
+
+    viewPortState.easeTo(camera)
+}
+
+private fun moveToPoint(
+    point: Point,
+    viewPortState: MapViewportState
+){
+    val camera = CameraOptions.Builder()
+        .center(point)
+        .zoom(13.5)
         .build()
 
     viewPortState.easeTo(camera)
