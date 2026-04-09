@@ -77,14 +77,26 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.TextField
+import androidx.compose.ui.text.style.LineHeightStyle
+import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
+import androidx.compose.foundation.lazy.items
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
@@ -238,7 +250,7 @@ fun DataMap(
                     mapHeight = it.height
                 },
             mapViewportState = viewportState
-        ) {
+        ){
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
                 // Long-press opens naming dialog
@@ -328,6 +340,86 @@ fun DataMap(
                     style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
                         rasterOpacity(0.5)
                     })
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            TextField(
+                value = searchQuery,
+                onValueChange = { mapViewModel.updateSearchQuery(it) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search after place in Norway") },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
+                },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { mapViewModel.clearSearch() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Empty search"
+                            )
+                        }
+                    }
+                },
+                shape = RoundedCornerShape(28.dp)
+            )
+            if (isSearching || searchSuggestions.isNotEmpty()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                ) {
+                    if (isSearching) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        LazyColumn {
+                            items(searchSuggestions) { item ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            mapViewModel.selectSuggestion(item) { point ->
+                                                moveToPoint(point, viewportState)
+                                            }
+                                        }
+                                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                                ) {
+                                    Text(
+                                        text = item.title,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    item.subtitle?.let {
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = it,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
