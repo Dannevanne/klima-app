@@ -221,6 +221,9 @@ fun DataMap(
     }
     val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
+    val searchQuery = mapViewModel.searchQuery
+    val searchSuggestions = mapViewModel.searchSuggestions
+    val isSearching = mapViewModel.isSearching
 
     // saving the bitmap creating as a job, so it is cancellable
     // but this "DataMap" should have its own viewmodel for all of this state hosting
