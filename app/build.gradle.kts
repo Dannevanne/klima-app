@@ -74,7 +74,10 @@ dependencies {
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
-
     //locationPermission
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
+    // mockk for testing
+    testImplementation("io.mockk:mockk:1.14.9")
+    // coroutines testing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 }

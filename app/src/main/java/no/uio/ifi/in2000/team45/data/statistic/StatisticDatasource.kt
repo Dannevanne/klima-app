@@ -48,28 +48,60 @@ class StatisticDatasource {
         return "Basic $encoded"
     }
 
-    suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
-        val encodedName = java.net.URLEncoder.encode(query.trim(), "UTF-8")
-        val url = "$FROST_BASE/sources/v0.jsonld" +
-                "?types=SensorSystem" +
-                "&name=$encodedName*" +
-                "&country=Norge"
-        try {
-            val response = KtorClient.client.get(url) {
-                header("Authorization", authHeader(clientId))
-            }
-            val body: String = response.body()
+    // Expand query to handle Norwegian letter substitutions (o->oe, a->aa, etc.)
+    private fun norwegianVariants(query: String): List<String> {
+        val trimmed = query.trim()
+        val variants = mutableSetOf(trimmed)
 
-            if (response.status.value != 200) {
-                Log.e(TAG, "Station search failed: ${response.status.value}")
-                return emptyList()
-            }
+        // Map common ASCII approximations to Norwegian letters
+        val substitutions = mapOf(
+            "ae" to "\u00e6", "\u00e6" to "ae",
+            "oe" to "\u00f8", "\u00f8" to "oe", "\u00f6" to "\u00f8",
+            "aa" to "\u00e5", "\u00e5" to "aa",
+            "o" to "\u00f8", "a" to "\u00e5"
+        )
 
-            return parseStations(body)
-        } catch (e: Exception) {
-            Log.e(TAG, "Station search error", e)
-            return emptyList()
+        for ((from, to) in substitutions) {
+            val lower = trimmed.lowercase()
+            if (lower.contains(from)) {
+                variants.add(trimmed.replace(from, to, ignoreCase = true))
+            }
         }
+        return variants.toList()
+    }
+
+    suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
+        val allStations = mutableListOf<WeatherStation>()
+        val seenIds = mutableSetOf<String>()
+
+        for (variant in norwegianVariants(query)) {
+            val encodedName = java.net.URLEncoder.encode(variant, "UTF-8")
+            val url = "$FROST_BASE/sources/v0.jsonld" +
+                    "?types=SensorSystem" +
+                    "&name=$encodedName*" +
+                    "&country=Norge"
+            try {
+                val response = KtorClient.client.get(url) {
+                    header("Authorization", authHeader(clientId))
+                }
+                val body: String = response.body()
+
+                if (response.status.value != 200) {
+                    Log.e(TAG, "Station search failed: ${response.status.value}")
+                    continue
+                }
+
+                for (station in parseStations(body)) {
+                    if (seenIds.add(station.id)) {
+                        allStations.add(station)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Station search error", e)
+            }
+        }
+
+        return allStations
     }
 
     suspend fun getClimateNormals(
@@ -81,7 +113,9 @@ class StatisticDatasource {
             "max(air_temperature P1M)",
             "min(air_temperature P1M)",
             "sum(precipitation_amount P1M)",
-            "mean(wind_speed P1M)"
+            "mean(wind_speed P1M)",
+            "record_high(air_temperature P1M)",
+            "record_low(air_temperature P1M)"
         ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
 
         val url = "$FROST_BASE/climatenormals/v0.jsonld" +
@@ -138,7 +172,7 @@ class StatisticDatasource {
         }
     }
 
-    private fun parseStations(body: String): List<WeatherStation> {
+    fun parseStations(body: String): List<WeatherStation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
 
@@ -183,6 +217,65 @@ class StatisticDatasource {
                 month = month,
                 normal = normal
             )
+        }
+    }
+
+    // Find nearest station to given coordinates
+    suspend fun findNearestStation(
+        lat: Double, lon: Double, clientId: String
+    ): WeatherStation? {
+        val geometry = java.net.URLEncoder.encode("nearest(POINT($lon $lat))", "UTF-8")
+        val url = "$FROST_BASE/sources/v0.jsonld" +
+                "?types=SensorSystem" +
+                "&geometry=$geometry" +
+                "&nearestmaxcount=1"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            val body: String = response.body()
+            if (response.status.value != 200) {
+                Log.e(TAG, "Nearest station failed: ${response.status.value}")
+                return null
+            }
+            parseStations(body).firstOrNull()
+        } catch (e: Exception) {
+            Log.e(TAG, "Nearest station error", e)
+            null
+        }
+    }
+
+    // Get latest observations for a station
+    suspend fun getLatestObservations(
+        stationId: String, clientId: String
+    ): Map<String, Double> {
+        val elements = "air_temperature,wind_speed,sum(precipitation_amount PT1H)"
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=latest" +
+                "&elements=${java.net.URLEncoder.encode(elements, "UTF-8")}"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            val body: String = response.body()
+            if (response.status.value != 200) return emptyMap()
+
+            val root = json.parseToJsonElement(body).jsonObject
+            val data = root["data"]?.jsonArray ?: return emptyMap()
+            val result = mutableMapOf<String, Double>()
+            for (item in data) {
+                val obs = item.jsonObject["observations"]?.jsonArray ?: continue
+                for (o in obs) {
+                    val oid = o.jsonObject["elementId"]?.jsonPrimitive?.content ?: continue
+                    val v = o.jsonObject["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                    result[oid] = v
+                }
+            }
+            result
+        } catch (e: Exception) {
+            Log.e(TAG, "Latest observations error", e)
+            emptyMap()
         }
     }
 

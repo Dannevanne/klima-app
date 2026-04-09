@@ -6,7 +6,9 @@ data class MonthlyClimateStats(
     val maxTemp: Double?,
     val minTemp: Double?,
     val precipitation: Double?,
-    val windSpeed: Double?
+    val windSpeed: Double?,
+    val recordHigh: Double? = null,
+    val recordLow: Double? = null
 )
 
 class StatisticRepository(
@@ -15,6 +17,14 @@ class StatisticRepository(
 
     suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
         return datasource.searchStations(query, clientId)
+    }
+
+    suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
+        return datasource.findNearestStation(lat, lon, clientId)
+    }
+
+    suspend fun getLatestObservations(stationId: String, clientId: String): Map<String, Double> {
+        return datasource.getLatestObservations(stationId, clientId)
     }
 
     suspend fun getClimateStats(
@@ -56,6 +66,12 @@ class StatisticRepository(
                 }?.normal,
                 windSpeed = monthData.find {
                     it.elementId.contains("wind_speed")
+                }?.normal,
+                recordHigh = monthData.find {
+                    it.elementId.contains("record_high")
+                }?.normal,
+                recordLow = monthData.find {
+                    it.elementId.contains("record_low")
                 }?.normal
             )
         }

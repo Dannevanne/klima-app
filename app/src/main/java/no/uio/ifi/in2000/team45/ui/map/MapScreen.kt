@@ -7,6 +7,24 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.fillMaxSize
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -75,12 +93,32 @@ import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.toCameraOptions
 import no.uio.ifi.in2000.team45.R
+import com.mapbox.maps.MapView
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.CameraOptions
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.map.OverlayType
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
+import android.widget.Toast
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilterChipDefaults
+import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState = mapViewModel.mapUiState
@@ -114,6 +152,18 @@ fun MapStateScreen(
                 }
             }
         )
+        MapScreen(
+            mapViewModel = mapViewModel,
+            onSettingsClick = onSettingsClick,
+            onStatisticClick = onStatisticClick,
+            onFavoritesClick = onFavoritesClick,
+            favoriteViewModel = favoriteViewModel,
+            modifier = modifier)
+        when(uiState){
+            is MapUiState.Loading -> CircularProgressIndicator()
+            is MapUiState.Error -> Text("Error", color = Color.Red)
+            else -> {}
+        }
     }
 
     LocationPermission { locationGranted ->
@@ -154,6 +204,8 @@ fun MapScreen(
     onLocationClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -201,6 +253,10 @@ fun MapScreen(
                             Icon(Icons.Outlined.Info,
                                 contentDescription = stringResource(R.string.to_statistics))
                         }
+                        IconButton(onClick = onFavoritesClick) {
+                            Icon(Icons.Filled.Favorite,
+                                contentDescription = "Favoritter")
+                        }
                     }
                     }
             }
@@ -209,6 +265,7 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             locationGranted = locationGranted,
             onLocationClick = onLocationClick,
+            favoriteViewModel = favoriteViewModel,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -221,6 +278,7 @@ fun DataMap(
     mapViewModel: MapViewModel,
     locationGranted: Boolean,
     onLocationClick: () -> Unit,
+    favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -230,6 +288,9 @@ fun DataMap(
         systemIsDark = isSystemInDarkTheme()
     )
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    // Long-press save dialog state
+    var pendingPoint by remember { mutableStateOf<Point?>(null) }
+    var locationName by remember { mutableStateOf("") }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
     val currentMapWidth by rememberUpdatedState(mapWidth)
@@ -244,6 +305,11 @@ fun DataMap(
         }
     }
     val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
+    val overlayBBox = (uiState as? MapUiState.Success)?.bbox
+
+    // saving the bitmap creating as a job, so it is cancellable
+    // but this "DataMap" should have its own viewmodel for all of this state hosting
+    var imageJob by remember {mutableStateOf<Job?>(null)}
 
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
@@ -257,6 +323,12 @@ fun DataMap(
         ) {
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
+                // Long-press opens naming dialog
+                mapView.mapboxMap.addOnMapLongClickListener { point ->
+                    pendingPoint = point
+                    locationName = ""
+                    true
+                }
             }
 
             //Activates the blue location-dot
@@ -305,8 +377,12 @@ fun DataMap(
                             bounds.northeast.longitude(),
                             bounds.northeast.latitude()
                         )
+
+                        // Changed this to take in the expanded bbox
+                        val expandedBBox = expandBBox(bbox)
+
                         mapViewModel.updateOverlay(
-                            bbox = bbox,
+                            bbox = expandedBBox,
                             width = currentMapWidth,
                             height = currentMapHeight
                         )
@@ -323,26 +399,23 @@ fun DataMap(
                 }
             }
 
+            // Changed LaunchedEffect so it creates bitmaps as jobs
             LaunchedEffect(overlayURL) {
-                bitmap = if (overlayURL != null) {
-                    makeBitmap(context = context, imageURL = overlayURL)
-                } else {
-                    null
+                imageJob?.cancel()
+
+                imageJob = launch {
+                    bitmap = overlayURL?.let {
+                        makeBitmap(context = context, imageURL = it)
+                    }
                 }
             }
 
             MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
-                val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                    mapView.mapboxMap.cameraState.toCameraOptions()
-                )
-                val bbox = listOf(
-                    bounds.southwest.longitude(),
-                    bounds.southwest.latitude(),
-                    bounds.northeast.longitude(),
-                    bounds.northeast.latitude()
-                )
+
+                // changed to so that the expanded box is rendered
+                val bbox = overlayBBox ?: return@MapEffect
                 val corners = cornersFromBBOX(bbox)
 
                 if (style.getLayer("overlaylayer") != null) {
@@ -366,6 +439,23 @@ fun DataMap(
                         rasterOpacity(0.5)
                     })
                 }
+            }
+        }
+
+        // Overlay type selector
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(start = 8.dp, top = 8.dp)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            OverlayType.entries.forEach { type ->
+                FilterChip(
+                    selected = mapViewModel.activeOverlay == type,
+                    onClick = { mapViewModel.setOverlay(type) },
+                    label = { Text(type.label, fontSize = 12.sp) }
+                )
             }
         }
 
@@ -399,6 +489,48 @@ fun DataMap(
             )
         }
     }
+
+    // Naming dialog for saved location
+    pendingPoint?.let { point ->
+        AlertDialog(
+            onDismissRequest = { pendingPoint = null },
+            title = { Text("Lagre posisjon") },
+            text = {
+                Column {
+                    Text(
+                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = { locationName = it },
+                        label = { Text("Navn") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    favoriteViewModel.addLocation(
+                        lat = point.latitude(),
+                        lng = point.longitude(),
+                        label = locationName.trim()
+                    )
+                    pendingPoint = null
+                }) {
+                    Text("Lagre")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingPoint = null }) {
+                    Text("Avbryt")
+                }
+            }
+        )
+    }
 }
 
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
@@ -415,6 +547,26 @@ suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     else{
         null
     }
+}
+
+// Function that should just expand the current bbox on the map
+// factor is the expanding number, 1.5 might be good
+fun expandBBox(bbox: List<Double>, factor: Double = 1.5): List<Double> {
+    val minLon = bbox[0]
+    val minLat = bbox[1]
+    val maxLon = bbox[2]
+    val maxLat = bbox[3]
+
+    // expanding the bbox
+    val lonExpand = (maxLon - minLon) * factor
+    val latExpand = (maxLat - minLat) * factor
+
+    return listOf(
+        minLon - lonExpand,
+        minLat - latExpand,
+        maxLon + lonExpand,
+        maxLat + latExpand
+    )
 }
 
 fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
