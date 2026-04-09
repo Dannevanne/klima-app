@@ -26,15 +26,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
+        val mapboxAccessToken = getString(R.string.mapbox_access_token)
+
         setContent {
             val mapViewModel: MapViewModel = viewModel(
-                factory = MapViewModelFactory(themePreferenceRepository)
+                factory = MapViewModelFactory(themePreferenceRepository = themePreferenceRepository,
+                    mapboxAccessToken = mapboxAccessToken)
             )
+
             val useDarkTheme = useDarkThemeFrom(
                 theme = mapViewModel.mapTheme,
                 systemIsDark = isSystemInDarkTheme()
             )
+
             Team45Theme(darkTheme = useDarkTheme) {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppNavigation(
