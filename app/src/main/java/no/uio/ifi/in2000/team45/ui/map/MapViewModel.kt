@@ -34,8 +34,7 @@ data class SearchSuggestionUi(
 
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
-    private val themePreferenceRepository: ThemePreferenceRepository,
-    private val mapboxAccessToken: String)
+    private val themePreferenceRepository: ThemePreferenceRepository)
     : ViewModel() {
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
@@ -51,7 +50,7 @@ class MapViewModel(
     private var lastWidth = 0
     private var lastHeight = 0
 
-    private val placeAutocomplete = PlaceAutocomplete.create(mapboxAccessToken)
+    private val placeAutocomplete = PlaceAutocomplete.create()
 
     var searchQuery by mutableStateOf("")
         private set
