@@ -113,6 +113,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.res.painterResource
+
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
@@ -233,23 +235,19 @@ fun MapScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
                     ) {
-                        IconButton(onClick = onSettingsClick) {
-                            Icon(Icons.Outlined.Settings,
-                                contentDescription = stringResource(R.string.to_settings))
-                        }
                         IconButton({}) {
                             Icon(Icons.Filled.Place, contentDescription = "")
                         }
                         IconButton(onClick = onStatisticClick) {
-                            Icon(Icons.Outlined.Info,
+                            Icon(painter = painterResource(R.drawable.outline_analytics),
                                 contentDescription = stringResource(R.string.to_statistics))
                         }
                         IconButton(onClick = onFavoritesClick) {
                             Icon(Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Favoritter")
+                                contentDescription = stringResource(R.string.favorites))
                         }
                     }
-                    }
+                }
             }
     ) { innerPadding ->
         DataMap(
