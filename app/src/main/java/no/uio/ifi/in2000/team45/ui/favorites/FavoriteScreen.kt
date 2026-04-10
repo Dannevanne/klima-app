@@ -139,7 +139,6 @@ fun FavoriteScreen(
             }
 
             items(locations) { location ->
-                // Trigger fetch of current conditions
                 LaunchedEffect(location) {
                     favoriteViewModel.fetchStatusForLocation(location)
                 }
@@ -150,6 +149,9 @@ fun FavoriteScreen(
                     status = status,
                     onRemove = { favoriteViewModel.removeLocation(location) }
                 )
+                if (status?.inFloodZone == true) {
+                    FloodZoneTips(location.label.ifBlank { "Kartposisjon" })
+                }
             }
 
             // Advice section (mocked)
@@ -359,5 +361,35 @@ private fun AdviceCard(text: String, backgroundColor: Color) {
             modifier = Modifier.padding(16.dp),
             fontSize = 14.sp
         )
+    }
+}
+
+@Composable
+private fun FloodZoneTips(locationName: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0B2)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Flomsone-varsel for $locationName",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = Color(0xFFE65100)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Denne posisjonen ligger i en flomsone. Her er noen tips:",
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("- Sjekk NVE sine flomvarsler jevnlig", fontSize = 13.sp)
+            Text("- Ha en beredskapsplan for flom", fontSize = 13.sp)
+            Text("- Flytt verdisaker bort fra kjeller/underetasje", fontSize = 13.sp)
+            Text("- Sjekk forsikringsdekningen din", fontSize = 13.sp)
+        }
     }
 }

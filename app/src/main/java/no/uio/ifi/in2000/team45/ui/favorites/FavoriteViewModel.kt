@@ -12,21 +12,23 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteRepository
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 
-// Current conditions for a location
 data class LocationStatus(
     val stationName: String = "",
     val temperature: Double? = null,
     val windSpeed: Double? = null,
-    val precipitation: Double? = null
+    val precipitation: Double? = null,
+    val inFloodZone: Boolean = false
 )
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = FavoriteRepository(application)
     private val statisticRepository = StatisticRepository()
+    private val mapRepository = MapRepository()
     private val clientId: String = application.getString(R.string.frost_client_id)
 
     val stations = repository.favoriteStationsFlow.stateIn(
@@ -67,7 +69,6 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // Fetch current weather for a saved location from nearest station
     fun fetchStatusForLocation(location: FavoriteLocation) {
         val key = "${location.latitude},${location.longitude}"
         if (locationStatuses.containsKey(key)) return
@@ -77,8 +78,15 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val station = statisticRepository.findNearestStation(
                     location.latitude, location.longitude, clientId
                 )
+                val floodZone = mapRepository.isInFloodZone(
+                    location.latitude, location.longitude
+                )
+
                 if (station == null) {
-                    locationStatuses[key] = LocationStatus(stationName = "Ingen stasjon funnet")
+                    locationStatuses[key] = LocationStatus(
+                        stationName = "Ingen stasjon funnet",
+                        inFloodZone = floodZone
+                    )
                     return@launch
                 }
 
@@ -89,7 +97,8 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                     windSpeed = obs["wind_speed"],
                     precipitation = obs.entries.find {
                         it.key.contains("precipitation")
-                    }?.value
+                    }?.value,
+                    inFloodZone = floodZone
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
