@@ -431,6 +431,17 @@ private fun ClimateDataView(
             }
         }
 
+        if (stats.any { it.cloudCover != null }) {
+            item {
+                ClimateTable(
+                    title = "Skydekke",
+                    stats = stats,
+                    rows = buildCloudRows(stats)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
         // UV index estimate based on latitude and month
         item {
             UvIndexCard(latitude = station.latitude)
@@ -713,15 +724,31 @@ private fun buildPrecipitationRows(stats: List<MonthlyClimateStats>): List<Table
 }
 
 private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
-    return listOf(
-        TableRow(
-            label = "Snitt",
-            unit = "m/s",
-            values = stats.map { formatValue(it.windSpeed) },
-            rawValues = stats.map { it.windSpeed },
-            colorScale = ColorScale.WIND
+    val rows = mutableListOf<TableRow>()
+
+    if (stats.any { it.windSpeed != null }) {
+        rows.add(
+            TableRow(
+                label = "Snitt",
+                unit = "m/s",
+                values = stats.map { formatValue(it.windSpeed) },
+                rawValues = stats.map { it.windSpeed },
+                colorScale = ColorScale.WIND
+            )
         )
-    )
+    }
+    if (stats.any { it.windGust != null }) {
+        rows.add(
+            TableRow(
+                label = "Kast",
+                unit = "m/s",
+                values = stats.map { formatValue(it.windGust) },
+                rawValues = stats.map { it.windGust },
+                colorScale = ColorScale.WIND
+            )
+        )
+    }
+    return rows
 }
 
 private fun buildSnowRows(stats: List<MonthlyClimateStats>): List<TableRow> {
@@ -732,6 +759,18 @@ private fun buildSnowRows(stats: List<MonthlyClimateStats>): List<TableRow> {
             values = stats.map { formatValue(it.snowDepth) },
             rawValues = stats.map { it.snowDepth },
             colorScale = ColorScale.SNOW
+        )
+    )
+}
+
+private fun buildCloudRows(stats: List<MonthlyClimateStats>): List<TableRow> {
+    return listOf(
+        TableRow(
+            label = "Snitt",
+            unit = "%",
+            values = stats.map { formatValue(it.cloudCover) },
+            rawValues = stats.map { it.cloudCover },
+            colorScale = ColorScale.NONE
         )
     )
 }
