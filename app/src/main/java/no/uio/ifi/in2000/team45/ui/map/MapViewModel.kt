@@ -10,14 +10,11 @@ import com.mapbox.maps.renderer.widget.Widget
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
-import com.mapbox.search.autofill.Query
 import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
-import java.util.Locale
-import com.mapbox.geojson.Point
 sealed interface MapUiState {
     data class Success(
         val overlayURL: String,
@@ -139,6 +136,8 @@ class MapViewModel(
     //Copies userLocation to selectedLocation which trigger the camera to move
     fun moveToUserLocation() {
         userLocation?.let { selectedLocation = it }
+    }
+
     fun setOverlay(type: OverlayType) {
         activeOverlay = type
         lastOverlayURL = null

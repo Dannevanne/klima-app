@@ -1,5 +1,10 @@
 package no.uio.ifi.in2000.team45.data.map
 
+import android.util.Log
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import no.uio.ifi.in2000.team45.network.KtorClient
+
 enum class OverlayType(val label: String) {
     FLOOD("Flom"),
     QUICK_CLAY("Kvikkleire"),
@@ -8,6 +13,33 @@ enum class OverlayType(val label: String) {
 }
 
 class MapDatasource {
+
+    // Check if coordinates fall inside an NVE flood zone
+    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
+        val tolerance = 0.001
+        val url = buildString {
+            append("https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/identify")
+            append("?geometry=$lon,$lat")
+            append("&geometryType=esriGeometryPoint")
+            append("&sr=4326")
+            append("&layers=all")
+            append("&tolerance=5")
+            append("&mapExtent=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
+            append("&imageDisplay=100,100,96")
+            append("&returnGeometry=false")
+            append("&f=json")
+        }
+        return try {
+            val response = KtorClient.client.get(url)
+            val body: String = response.body()
+            // If "results" array is non-empty, point is in a flood zone
+            body.contains("\"results\"") && !body.contains("\"results\":[]")
+                    && !body.contains("\"results\": []")
+        } catch (e: Exception) {
+            Log.e("MapDatasource", "Flood zone check failed", e)
+            false
+        }
+    }
 
     fun buildOverlayURL(
         type: OverlayType,

@@ -56,7 +56,7 @@ import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.collectAsState
@@ -97,7 +97,7 @@ fun StatisticScreen(
                         Icon(Icons.Filled.Info, contentDescription = "")
                     }
                     IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Filled.Favorite, contentDescription = "Favoritter")
+                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favoritter")
                     }
                 }
             }
@@ -420,6 +420,28 @@ private fun ClimateDataView(
             }
         }
 
+        if (stats.any { it.snowDepth != null }) {
+            item {
+                ClimateTable(
+                    title = "Snodybde",
+                    stats = stats,
+                    rows = buildSnowRows(stats)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if (stats.any { it.cloudCover != null }) {
+            item {
+                ClimateTable(
+                    title = "Skydekke",
+                    stats = stats,
+                    rows = buildCloudRows(stats)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
         // UV index estimate based on latitude and month
         item {
             UvIndexCard(latitude = station.latitude)
@@ -428,7 +450,7 @@ private fun ClimateDataView(
     }
 }
 
-enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, NONE }
+enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, SNOW, NONE }
 
 data class TableRow(
     val label: String,
@@ -475,11 +497,24 @@ private fun windColor(value: Double?): Color {
     }
 }
 
+// White (no snow) -> light blue (deep snow)
+private fun snowColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 1 -> Color(0xFFF5F5F5)
+        value <= 10 -> Color(0xFFE3F2FD)
+        value <= 30 -> Color(0xFFBBDEFB)
+        value <= 60 -> Color(0xFF90CAF9)
+        else -> Color(0xFF64B5F6)
+    }
+}
+
 private fun cellColor(value: Double?, scale: ColorScale): Color {
     return when (scale) {
         ColorScale.TEMPERATURE -> temperatureColor(value)
         ColorScale.PRECIPITATION -> precipitationColor(value)
         ColorScale.WIND -> windColor(value)
+        ColorScale.SNOW -> snowColor(value)
         ColorScale.NONE -> Color.Transparent
     }
 }
@@ -689,13 +724,53 @@ private fun buildPrecipitationRows(stats: List<MonthlyClimateStats>): List<Table
 }
 
 private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
+    val rows = mutableListOf<TableRow>()
+
+    if (stats.any { it.windSpeed != null }) {
+        rows.add(
+            TableRow(
+                label = "Snitt",
+                unit = "m/s",
+                values = stats.map { formatValue(it.windSpeed) },
+                rawValues = stats.map { it.windSpeed },
+                colorScale = ColorScale.WIND
+            )
+        )
+    }
+    if (stats.any { it.windGust != null }) {
+        rows.add(
+            TableRow(
+                label = "Kast",
+                unit = "m/s",
+                values = stats.map { formatValue(it.windGust) },
+                rawValues = stats.map { it.windGust },
+                colorScale = ColorScale.WIND
+            )
+        )
+    }
+    return rows
+}
+
+private fun buildSnowRows(stats: List<MonthlyClimateStats>): List<TableRow> {
     return listOf(
         TableRow(
             label = "Snitt",
-            unit = "m/s",
-            values = stats.map { formatValue(it.windSpeed) },
-            rawValues = stats.map { it.windSpeed },
-            colorScale = ColorScale.WIND
+            unit = "cm",
+            values = stats.map { formatValue(it.snowDepth) },
+            rawValues = stats.map { it.snowDepth },
+            colorScale = ColorScale.SNOW
+        )
+    )
+}
+
+private fun buildCloudRows(stats: List<MonthlyClimateStats>): List<TableRow> {
+    return listOf(
+        TableRow(
+            label = "Snitt",
+            unit = "%",
+            values = stats.map { formatValue(it.cloudCover) },
+            rawValues = stats.map { it.cloudCover },
+            colorScale = ColorScale.NONE
         )
     )
 }

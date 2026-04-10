@@ -34,7 +34,7 @@ import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import androidx.compose.material3.RadioButton
 import androidx.compose.ui.res.stringResource
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import no.uio.ifi.in2000.team45.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +81,7 @@ fun SettingsScreen(
                             contentDescription = stringResource(R.string.to_statistics))
                     }
                     IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Filled.Favorite,
+                        Icon(Icons.Outlined.FavoriteBorder,
                             contentDescription = "Favoritter")
                     }
                 }
