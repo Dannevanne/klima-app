@@ -149,7 +149,7 @@ fun FavoriteScreen(
                             contentDescription = stringResource(R.string.map))
                     }
                     IconButton(onClick = onStatisticClick) {
-                        Icon(Icons.Outlined.Info,
+                        Icon(painter = painterResource(R.drawable.outline_analytics),
                             contentDescription = stringResource(R.string.to_statistics))
                     }
                     IconButton(onClick = {}) {
