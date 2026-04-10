@@ -24,4 +24,9 @@
     <string name="precipitation">Precipitation</string>
     <string name="wind">Wind</string>
     <string name="try_again">Try again</string>
+    <string name="need_location_permission">Needs location permission</string>
+    <string name="permission_settings">"We need your permission to use your location. Go to settings to change permissions "</string>
+    <string name="go_to_settings">Go to settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="my_position">My position</string>
 </resources>

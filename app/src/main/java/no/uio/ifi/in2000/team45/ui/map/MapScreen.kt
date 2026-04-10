@@ -8,7 +8,6 @@ import android.provider.Settings
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -17,12 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxSize
-import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import androidx.compose.foundation.layout.Box
@@ -72,12 +66,9 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
-import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.style.layers.addLayer
 import com.mapbox.maps.extension.style.layers.generated.rasterLayer
@@ -92,7 +83,6 @@ import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.toCameraOptions
-import no.uio.ifi.in2000.team45.R
 import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.CameraOptions
@@ -163,18 +153,6 @@ fun MapStateScreen(
                 }
             }
         )
-        MapScreen(
-            mapViewModel = mapViewModel,
-            onSettingsClick = onSettingsClick,
-            onStatisticClick = onStatisticClick,
-            onFavoritesClick = onFavoritesClick,
-            favoriteViewModel = favoriteViewModel,
-            modifier = modifier)
-        when(uiState){
-            is MapUiState.Loading -> CircularProgressIndicator()
-            is MapUiState.Error -> Text("Error", color = Color.Red)
-            else -> {}
-        }
     }
 
     LocationPermission { locationGranted ->
@@ -186,6 +164,7 @@ fun MapStateScreen(
 
             MapScreen(
                 mapViewModel = mapViewModel,
+                favoriteViewModel = favoriteViewModel,
                 locationGranted = locationGranted,
                 onLocationClick = {
                     if (locationGranted){
@@ -196,6 +175,7 @@ fun MapStateScreen(
                 },
                 onSettingsClick = onSettingsClick,
                 onStatisticClick = onStatisticClick,
+                onFavoritesClick = onFavoritesClick,
                 modifier = modifier
             )
             when (uiState) {
