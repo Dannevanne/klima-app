@@ -8,7 +8,10 @@ data class MonthlyClimateStats(
     val precipitation: Double?,
     val windSpeed: Double?,
     val recordHigh: Double? = null,
-    val recordLow: Double? = null
+    val recordLow: Double? = null,
+    val snowDepth: Double? = null,
+    val windGust: Double? = null,
+    val cloudCover: Double? = null
 )
 
 class StatisticRepository(
@@ -72,6 +75,15 @@ class StatisticRepository(
                 }?.normal,
                 recordLow = monthData.find {
                     it.elementId.contains("record_low")
+                }?.normal,
+                snowDepth = monthData.find {
+                    it.elementId.contains("surface_snow_thickness")
+                }?.normal,
+                windGust = monthData.find {
+                    it.elementId.contains("wind_speed_of_gust")
+                }?.normal,
+                cloudCover = monthData.find {
+                    it.elementId.contains("cloud_area_fraction")
                 }?.normal
             )
         }

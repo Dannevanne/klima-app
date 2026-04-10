@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -17,11 +19,24 @@ fun MapZoomControls(onZoomIn: () -> Unit,
 ){
     Column(modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        FilledIconButton(onClick = onZoomIn) {
+        FilledIconButton(
+            onClick = onZoomIn,
+            colors = IconButtonColors(
+                Color.LightGray,
+                Color.White,
+                Color.LightGray,
+                Color.LightGray)
+        ) {
             Text(text = "+",
                 fontSize = 20.sp)
         }
-        FilledIconButton(onClick = onZoomOut) {
+        FilledIconButton(
+            onClick = onZoomOut,
+            colors = IconButtonColors(
+                Color.LightGray,
+                Color.White,
+                Color.LightGray,
+                Color.LightGray)) {
             Text(text = "-",
                 fontSize = 20.sp)
         }
