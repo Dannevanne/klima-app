@@ -104,7 +104,7 @@ import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
@@ -265,7 +265,7 @@ fun MapScreen(
                                 contentDescription = stringResource(R.string.to_statistics))
                         }
                         IconButton(onClick = onFavoritesClick) {
-                            Icon(Icons.Filled.Favorite,
+                            Icon(Icons.Outlined.FavoriteBorder,
                                 contentDescription = "Favoritter")
                         }
                     }
