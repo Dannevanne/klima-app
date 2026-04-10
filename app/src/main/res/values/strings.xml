@@ -24,4 +24,9 @@
     <string name="precipitation">Precipitation</string>
     <string name="wind">Wind</string>
     <string name="try_again">Try again</string>
+    <string name="info">Info</string>
+    <string name="go_back">Go back</string>
+    <string name="help">Help</string>
+    <string name="menu">Menu</string>
+    <string name="favorites">favorites</string>
 </resources>
