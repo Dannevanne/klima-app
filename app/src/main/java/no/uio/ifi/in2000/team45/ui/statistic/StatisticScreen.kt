@@ -420,6 +420,17 @@ private fun ClimateDataView(
             }
         }
 
+        if (stats.any { it.snowDepth != null }) {
+            item {
+                ClimateTable(
+                    title = "Snodybde",
+                    stats = stats,
+                    rows = buildSnowRows(stats)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
         // UV index estimate based on latitude and month
         item {
             UvIndexCard(latitude = station.latitude)
@@ -428,7 +439,7 @@ private fun ClimateDataView(
     }
 }
 
-enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, NONE }
+enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, SNOW, NONE }
 
 data class TableRow(
     val label: String,
@@ -475,11 +486,24 @@ private fun windColor(value: Double?): Color {
     }
 }
 
+// White (no snow) -> light blue (deep snow)
+private fun snowColor(value: Double?): Color {
+    if (value == null) return Color.Transparent
+    return when {
+        value <= 1 -> Color(0xFFF5F5F5)
+        value <= 10 -> Color(0xFFE3F2FD)
+        value <= 30 -> Color(0xFFBBDEFB)
+        value <= 60 -> Color(0xFF90CAF9)
+        else -> Color(0xFF64B5F6)
+    }
+}
+
 private fun cellColor(value: Double?, scale: ColorScale): Color {
     return when (scale) {
         ColorScale.TEMPERATURE -> temperatureColor(value)
         ColorScale.PRECIPITATION -> precipitationColor(value)
         ColorScale.WIND -> windColor(value)
+        ColorScale.SNOW -> snowColor(value)
         ColorScale.NONE -> Color.Transparent
     }
 }
@@ -696,6 +720,18 @@ private fun buildWindRows(stats: List<MonthlyClimateStats>): List<TableRow> {
             values = stats.map { formatValue(it.windSpeed) },
             rawValues = stats.map { it.windSpeed },
             colorScale = ColorScale.WIND
+        )
+    )
+}
+
+private fun buildSnowRows(stats: List<MonthlyClimateStats>): List<TableRow> {
+    return listOf(
+        TableRow(
+            label = "Snitt",
+            unit = "cm",
+            values = stats.map { formatValue(it.snowDepth) },
+            rawValues = stats.map { it.snowDepth },
+            colorScale = ColorScale.SNOW
         )
     )
 }

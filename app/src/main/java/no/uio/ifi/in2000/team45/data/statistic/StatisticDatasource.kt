@@ -115,7 +115,8 @@ class StatisticDatasource {
             "sum(precipitation_amount P1M)",
             "mean(wind_speed P1M)",
             "record_high(air_temperature P1M)",
-            "record_low(air_temperature P1M)"
+            "record_low(air_temperature P1M)",
+            "mean(surface_snow_thickness P1M)"
         ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
 
         val url = "$FROST_BASE/climatenormals/v0.jsonld" +

@@ -8,7 +8,8 @@ data class MonthlyClimateStats(
     val precipitation: Double?,
     val windSpeed: Double?,
     val recordHigh: Double? = null,
-    val recordLow: Double? = null
+    val recordLow: Double? = null,
+    val snowDepth: Double? = null
 )
 
 class StatisticRepository(
@@ -72,6 +73,9 @@ class StatisticRepository(
                 }?.normal,
                 recordLow = monthData.find {
                     it.elementId.contains("record_low")
+                }?.normal,
+                snowDepth = monthData.find {
+                    it.elementId.contains("surface_snow_thickness")
                 }?.normal
             )
         }
