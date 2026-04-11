@@ -126,7 +126,8 @@ fun MapStateScreen(
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
 
-    //Shows module asking for permission in settings when user clicks the locationbutton without permission
+    // Shows module asking for permission in settings when user
+    // clicks the location button without permission
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
@@ -136,10 +137,10 @@ fun MapStateScreen(
                 Button(onClick = {
                     showDialog = false
 
-                    //Opens the apps settings in systemssettings
+                    // Opens the apps settings in systems settings
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
 
-                        //Points to the apps settings
+                        // Points to the apps settings
                         data = Uri.fromParts("package", context.packageName, null)
                     }
                     context.startActivity(intent)
@@ -274,6 +275,9 @@ fun DataMap(
 ) {
     val context = LocalContext.current
     val uiState = mapViewModel.mapUiState
+
+    // The selected theme is translated to a boolean that decides if the theme
+    // should be dark or not.
     val useDarkMap = useDarkThemeFrom(
         theme = mapViewModel.mapTheme,
         systemIsDark = isSystemInDarkTheme()
@@ -287,6 +291,8 @@ fun DataMap(
     val currentMapWidth by rememberUpdatedState(mapWidth)
     val currentMapHeight by rememberUpdatedState(mapHeight)
     var mapViewRef by remember { mutableStateOf<com.mapbox.maps.MapView?>(null) }
+
+    // Sets the cameras start position
     val viewportState = rememberMapViewportState {
         setCameraOptions {
             center(Point.fromLngLat(11.05, 60.5))
@@ -297,12 +303,14 @@ fun DataMap(
     }
     val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
+
+    // Compose state from MapViewModel
     val searchQuery = mapViewModel.searchQuery
     val searchSuggestions = mapViewModel.searchSuggestions
     val isSearching = mapViewModel.isSearching
 
-    // saving the bitmap creating as a job, so it is cancellable
-    // but this "DataMap" should have its own viewmodel for all of this state hosting
+    // Saving the bitmap creating as a job, so it is cancellable.
+    // But this "DataMap" should have its own viewmodel for all of this state hosting.
     var imageJob by remember {mutableStateOf<Job?>(null)}
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -311,7 +319,10 @@ fun DataMap(
                 .fillMaxSize()
                 .onSizeChanged {
                     mapWidth = it.width
-                    mapHeight = it.height
+                    mapHeight = it.height // The maps size is needed
+                                         // when the overlayURL is being built
+                                        // because the backend service returns
+                                        // a photo depending on the shown map window
                 },
             mapViewportState = viewportState
         ){
@@ -325,15 +336,16 @@ fun DataMap(
                 }
             }
 
-            //Activates the blue location-dot
-            //Rerun every time locationGranted changes
+            // Activates the blue location-dot.
+            // Rerun every time locationGranted changes.
             MapEffect(locationGranted) { mapView ->
                 mapView.location.updateSettings {
                     locationPuck = createDefault2DPuck(withBearing = false)
                     enabled = locationGranted
                     pulsingEnabled = true
                 }
-                //Listens to locationchanges from Mapbox and updates userLocation in viewmodel
+                // Listens to locationchanges from MapBox
+                // and updates userLocation in ViewModel
                 if (locationGranted) {
                     mapView.location.addOnIndicatorPositionChangedListener { point ->
                         mapViewModel.updateUserLocation(point)
@@ -341,7 +353,11 @@ fun DataMap(
                 }
             }
 
-            //Listens to selectedLocation and reruns when moveToUserLocation() is called
+            // Listens to selectedLocation from ViewModel and
+            // reruns when moveToUserLocation() is called.
+            // The UI changes the camera when selectedLocation is set in ViewModel.
+            // The ViewModel decides what the selected posistion is,
+            // and the UI decides how to move there.
             LaunchedEffect(mapViewModel.selectedLocation) {
                 mapViewModel.selectedLocation?.let {
                     viewportState.easeTo(
@@ -360,6 +376,9 @@ fun DataMap(
                 if (mapView == null) {
                     onDispose { }
                 } else {
+                    // Reads the camera setting from MapBox,
+                    // calculates the visable area,
+                    // and asks ViewModel for new overlay-data.
                     fun updateFromCamera() {
                         if (currentMapWidth <= 0 || currentMapHeight <= 0) return
                         val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
@@ -372,7 +391,6 @@ fun DataMap(
                             bounds.northeast.latitude()
                         )
 
-                        // Changed this to take in the expanded bbox
                         val expandedBBox = expandBBox(bbox)
 
                         mapViewModel.updateOverlay(
@@ -382,6 +400,9 @@ fun DataMap(
                         )
                     }
 
+                    // Camera changes in the map dictates new overlay requests.
+                    // The UI observes the map, and the ViewModel decides
+                    // if a request should go ahead.
                     val listener = OnCameraChangeListener {
                         updateFromCamera()
                     }
@@ -393,7 +414,9 @@ fun DataMap(
                 }
             }
 
-            // Changed LaunchedEffect so it creates bitmaps as jobs
+            // When the ViewModel has a new overlayURL, the photo is downloaded
+            // to Bitmap. This is because image source + raster layer requires
+            // a Bitmap. This Bitmap can later be added as a raster layer on the map.
             LaunchedEffect(overlayURL) {
                 imageJob?.cancel()
 
@@ -404,6 +427,8 @@ fun DataMap(
                 }
             }
 
+            // When the bitmap and style is ready,
+            // a temporary overlay is built over the map.
             MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
                 val currentBitmap = bitmap ?: return@MapEffect
                 val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
@@ -444,7 +469,10 @@ fun DataMap(
         ) {
             TextField(
                 value = searchQuery,
-                onValueChange = { mapViewModel.updateSearchQuery(it) },
+                onValueChange = { mapViewModel.updateSearchQuery(it) }, // Continuous
+                // two way flow. User input gets sent to ViewModel, which updates searchQuery
+                // and starts an autocomplete search. Then the UI is updated based of results
+
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Search after place in Norway") },
                 singleLine = true,
@@ -492,7 +520,10 @@ fun DataMap(
                                         .clickable {
                                             mapViewModel.selectSuggestion(item) { point ->
                                                 moveToPoint(point, viewportState)
-                                            }
+                                            } // UI sends the selected suggested place to ViewModel.
+                                              // ViewModel calls select() which returns coordinates (+ more).
+                                              // ViewModel sends coordinates in it's callback.
+                                              // UI handles the movement to the selected place with moveToPoint.
                                         }
                                         .padding(horizontal = 16.dp, vertical = 12.dp)
                                 ) {
@@ -516,7 +547,10 @@ fun DataMap(
             }
         }
 
-        // Overlay type selector
+        // Overlay type selector.
+        // Selected overlay gets sent to the ViewModel.
+        // ViewModel is responsible for triggering the right
+        // new overlay-fetching from the repository.
         Row(
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -541,7 +575,8 @@ fun DataMap(
                 .padding(end = 16.dp, bottom = 80.dp)
         )
 
-        //Locationbutton
+        // Locationbutton (only UI).
+        // What happens on click is decided based on callbacks.
         SmallFloatingActionButton(
             onClick = onLocationClick,
             shape = CircleShape,
@@ -607,6 +642,8 @@ fun DataMap(
     }
 }
 
+// Makes Bitmap from the URL from the repository / datasource
+// so it can be showed as an overlay on the map.
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
     val request = ImageRequest.Builder(context)
         .data(imageURL)
@@ -643,6 +680,8 @@ fun expandBBox(bbox: List<Double>, factor: Double = 1.5): List<Double> {
     )
 }
 
+// MapBox ImageSource needs the corners for the picture in the correct order,
+// not just the bbox values. This function does this conversion for us.
 fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
     val minLon = bbox[0]
     val minLat = bbox[1]
@@ -657,6 +696,7 @@ fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
     )
 }
 
+// Composable to change map look when the selected theme changes
 @Composable
 fun MapThemeEffect(useDarkMap: Boolean){
     MapEffect(useDarkMap) { mapView ->
@@ -667,6 +707,8 @@ fun MapThemeEffect(useDarkMap: Boolean){
     }
 }
 
+// Function for zoom change. Limits duplication of code, and is used twice in the
+// parameter for MapZoomControls to decide what the zoom in and zoom out buttons do.
 private fun zoomMap(mapView: MapView?,
                     viewPortState: MapViewportState,
                     zoomChange: Double) {
@@ -680,6 +722,7 @@ private fun zoomMap(mapView: MapView?,
     viewPortState.easeTo(camera)
 }
 
+// Builds new camera configuration for the map
 private fun moveToPoint(
     point: Point,
     viewPortState: MapViewportState
