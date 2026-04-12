@@ -43,6 +43,13 @@ class StatisticViewModel(
     var searchQuery: String by mutableStateOf("")
         private set
 
+    var selectedPeriod: Int by mutableStateOf(30)
+        private set
+
+    fun updatePeriod(years: Int) {
+        selectedPeriod = years
+    }
+
     fun updateSearchQuery(query: String) {
         searchQuery = query
     }
