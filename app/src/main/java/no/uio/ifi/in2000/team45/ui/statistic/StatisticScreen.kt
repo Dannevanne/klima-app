@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilterChip
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
@@ -288,6 +289,8 @@ fun StatisticScreen(
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
+                        selectedPeriod = statisticViewModel.selectedPeriod,
+                        onPeriodChange = { statisticViewModel.updatePeriod(it) },
                         isFavorite = isFav,
                         onToggleFavorite = {
                             if (isFav) {
@@ -418,10 +421,14 @@ private fun StationList(
     }
 }
 
+private val PERIOD_OPTIONS = listOf(10, 30, 50)
+
 @Composable
 private fun ClimateDataView(
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
+    selectedPeriod: Int,
+    onPeriodChange: (Int) -> Unit,
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     onBack: () -> Unit
@@ -430,6 +437,21 @@ private fun ClimateDataView(
         item {
             TextButton(onClick = onBack) {
                 Text(stringResource(R.string.back_to_search))
+            }
+        }
+
+        item {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                PERIOD_OPTIONS.forEach { years ->
+                    FilterChip(
+                        selected = selectedPeriod == years,
+                        onClick = { onPeriodChange(years) },
+                        label = { Text("$years ar") }
+                    )
+                }
             }
         }
 
