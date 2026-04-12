@@ -11,10 +11,12 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
+import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import kotlinx.coroutines.Job
+import java.util.Calendar
 
 sealed interface StatisticUiState {
     object Idle : StatisticUiState
@@ -22,7 +24,8 @@ sealed interface StatisticUiState {
     data class StationResults(val stations: List<WeatherStation>) : StatisticUiState
     data class ClimateData(
         val station: WeatherStation,
-        val stats: List<MonthlyClimateStats>
+        val stats: List<MonthlyClimateStats>,
+        val annualData: List<AnnualObservation> = emptyList()
     ) : StatisticUiState
     data class Error(val message: String) : StatisticUiState
 }
@@ -90,11 +93,16 @@ class StatisticViewModel(
 
         climateJob = viewModelScope.launch {
             try {
+                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                val yearFrom = currentYear - selectedPeriod
                 val stats = repository.getClimateStats(station.id, clientId)
+                val annual = repository.getAnnualObservations(
+                    station.id, clientId, yearFrom, currentYear
+                )
                 uiState = if (stats.all { it.meanTemp == null && it.precipitation == null }) {
                     StatisticUiState.Error("Ingen klimadata tilgjengelig for ${station.name}")
                 } else {
-                    StatisticUiState.ClimateData(station, stats)
+                    StatisticUiState.ClimateData(station, stats, annual)
                 }
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Climate data failed", e)
