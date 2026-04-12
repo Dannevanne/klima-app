@@ -30,6 +30,15 @@ class StatisticRepository(
         return datasource.getLatestObservations(stationId, clientId)
     }
 
+    suspend fun getAnnualObservations(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): List<AnnualObservation> {
+        return datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+    }
+
     suspend fun getClimateStats(
         stationId: String,
         clientId: String
