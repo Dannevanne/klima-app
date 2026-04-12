@@ -207,49 +207,91 @@ fun StatisticScreen(
 
             when (val state = statisticViewModel.uiState) {
                 is StatisticUiState.Idle -> {
-                    if (favoriteStations.isNotEmpty()) {
-                        // Show pinned stations for quick access (like YR)
-                        Text(
-                            text = "Lagrede stasjoner",
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                    val history = statisticViewModel.searchHistory
+                    val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
+
+                    if (hasContent) {
                         LazyColumn {
-                            items(favoriteStations) { fav ->
-                                val station = WeatherStation(
-                                    id = fav.stationId,
-                                    name = fav.name,
-                                    latitude = 0.0, longitude = 0.0,
-                                    municipality = fav.municipality,
-                                    county = fav.county
-                                )
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
-                                        .clickable { statisticViewModel.selectStation(station) },
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                                ) {
-                                    Row(
+                            if (history.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Tidligere sok",
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                }
+                                items(history) { query ->
+                                    Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .padding(vertical = 2.dp)
+                                            .clickable {
+                                                statisticViewModel.updateSearchQuery(query)
+                                                statisticViewModel.searchStations()
+                                            },
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                                     ) {
-                                        Icon(
-                                            Icons.Filled.Star,
-                                            contentDescription = null,
-                                            tint = androidx.compose.ui.graphics.Color(0xFFFFC107),
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                                            if (fav.municipality.isNotBlank()) {
-                                                Text(
-                                                    "${fav.municipality}, ${fav.county}",
-                                                    fontSize = 13.sp,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
+                                        Row(
+                                            modifier = Modifier.padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Search,
+                                                contentDescription = null,
+                                                modifier = Modifier.padding(end = 8.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Text(query, fontSize = 15.sp)
+                                        }
+                                    }
+                                }
+                                item { Spacer(modifier = Modifier.height(12.dp)) }
+                            }
+
+                            if (favoriteStations.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Lagrede stasjoner",
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                }
+                                items(favoriteStations) { fav ->
+                                    val station = WeatherStation(
+                                        id = fav.stationId,
+                                        name = fav.name,
+                                        latitude = 0.0, longitude = 0.0,
+                                        municipality = fav.municipality,
+                                        county = fav.county
+                                    )
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                            .clickable { statisticViewModel.selectStation(station) },
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Star,
+                                                contentDescription = null,
+                                                tint = Color(0xFFFFC107),
+                                                modifier = Modifier.padding(end = 8.dp)
+                                            )
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                                if (fav.municipality.isNotBlank()) {
+                                                    Text(
+                                                        "${fav.municipality}, ${fav.county}",
+                                                        fontSize = 13.sp,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
                                             }
                                         }
                                     }
