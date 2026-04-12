@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
@@ -289,6 +290,7 @@ fun StatisticScreen(
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
+                        annualData = state.annualData,
                         selectedPeriod = statisticViewModel.selectedPeriod,
                         onPeriodChange = { statisticViewModel.updatePeriod(it) },
                         isFavorite = isFav,
@@ -427,6 +429,7 @@ private val PERIOD_OPTIONS = listOf(10, 30, 50)
 private fun ClimateDataView(
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
+    annualData: List<AnnualObservation>,
     selectedPeriod: Int,
     onPeriodChange: (Int) -> Unit,
     isFavorite: Boolean,
@@ -484,6 +487,13 @@ private fun ClimateDataView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
+            }
+        }
+
+        if (annualData.isNotEmpty()) {
+            item {
+                OverviewCards(annualData = annualData, selectedPeriod = selectedPeriod)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -548,6 +558,128 @@ private fun ClimateDataView(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+private fun OverviewCards(
+    annualData: List<AnnualObservation>,
+    selectedPeriod: Int
+) {
+    val avgPrecip = annualData.mapNotNull { it.totalPrecip }.average()
+        .takeIf { annualData.any { a -> a.totalPrecip != null } }
+    val avgTemp = annualData.mapNotNull { it.meanTemp }.average()
+        .takeIf { annualData.any { a -> a.meanTemp != null } }
+
+    // Trend: compare first half vs second half of the period
+    val precipTrend = computeTrend(annualData.mapNotNull { it.totalPrecip })
+    val tempTrend = computeTrend(annualData.mapNotNull { it.meanTemp })
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Oversikt siste $selectedPeriod ar",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                if (avgPrecip != null) {
+                    OverviewStat(
+                        label = "Nedbor snitt/ar",
+                        value = "${avgPrecip.toInt()} mm",
+                        trend = precipTrend,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                if (avgTemp != null) {
+                    OverviewStat(
+                        label = "Temperatur snitt",
+                        value = "${String.format("%.1f", avgTemp)} C",
+                        trend = tempTrend,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun OverviewStat(
+    label: String,
+    value: String,
+    trend: TrendInfo,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(8.dp)
+    ) {
+        Text(text = value, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            val trendColor = when (trend.direction) {
+                TrendDirection.UP -> Color(0xFFE53935)
+                TrendDirection.DOWN -> Color(0xFF43A047)
+                TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            val arrow = when (trend.direction) {
+                TrendDirection.UP -> "^"
+                TrendDirection.DOWN -> "v"
+                TrendDirection.STABLE -> "~"
+            }
+            Text(
+                text = arrow,
+                color = trendColor,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            if (trend.percentChange != null) {
+                Text(
+                    text = "${String.format("%+.0f", trend.percentChange)}%",
+                    color = trendColor,
+                    fontSize = 13.sp
+                )
+            }
+        }
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+data class TrendInfo(
+    val direction: TrendDirection,
+    val percentChange: Double?
+)
+
+enum class TrendDirection { UP, DOWN, STABLE }
+
+private fun computeTrend(values: List<Double>): TrendInfo {
+    if (values.size < 4) return TrendInfo(TrendDirection.STABLE, null)
+    val mid = values.size / 2
+    val firstHalf = values.subList(0, mid).average()
+    val secondHalf = values.subList(mid, values.size).average()
+
+    if (firstHalf == 0.0) return TrendInfo(TrendDirection.STABLE, null)
+
+    val change = ((secondHalf - firstHalf) / firstHalf) * 100.0
+    val direction = when {
+        change > 3.0 -> TrendDirection.UP
+        change < -3.0 -> TrendDirection.DOWN
+        else -> TrendDirection.STABLE
+    }
+    return TrendInfo(direction, change)
 }
 
 enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, SNOW, NONE }
