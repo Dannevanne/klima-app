@@ -9,6 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
+import com.mapbox.search.autocomplete.PlaceAutocomplete
+import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -31,6 +33,7 @@ class StatisticViewModel(
 
     private val repository = StatisticRepository()
     private val clientId: String = application.getString(R.string.frost_client_id)
+    private val placeAutocomplete = PlaceAutocomplete.create(locationProvider = null)
     private var searchJob: Job? = null
     private var climateJob: Job? = null
 
@@ -55,10 +58,17 @@ class StatisticViewModel(
         searchJob = viewModelScope.launch {
             try {
                 val stations = repository.searchStations(queryAtLaunch, clientId)
-                uiState = if (stations.isEmpty()) {
-                    StatisticUiState.Error("Ingen stasjoner funnet for \"$queryAtLaunch\"")
+                if (stations.isNotEmpty()) {
+                    uiState = StatisticUiState.StationResults(stations)
+                    return@launch
+                }
+
+                // No station name match -- geocode the query and find nearest
+                val nearest = geocodeAndFindNearest(queryAtLaunch)
+                uiState = if (nearest != null) {
+                    StatisticUiState.StationResults(listOf(nearest))
                 } else {
-                    StatisticUiState.StationResults(stations)
+                    StatisticUiState.Error("Ingen stasjoner funnet for \"$queryAtLaunch\"")
                 }
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Search failed", e)
@@ -90,14 +100,29 @@ class StatisticViewModel(
         uiState = StatisticUiState.Idle
     }
 
-    fun cancelStatisticScreenWork(){
+    fun cancelStatisticScreenWork() {
         searchJob?.cancel()
         climateJob?.cancel()
     }
 
-    override fun onCleared(){
+    override fun onCleared() {
         searchJob?.cancel()
         climateJob?.cancel()
         super.onCleared()
+    }
+
+    private suspend fun geocodeAndFindNearest(query: String): WeatherStation? {
+        val options = PlaceAutocompleteOptions(
+            limit = 1,
+            countries = listOf(PlaceAutocompleteOptions.Country.NORWAY)
+        )
+        val suggestions = placeAutocomplete.suggestions(query, options)
+            .getOrNull() ?: return null
+
+        val first = suggestions.firstOrNull() ?: return null
+        val result = placeAutocomplete.select(first).getOrNull() ?: return null
+        val coord = result.coordinate ?: return null
+
+        return repository.findNearestStation(coord.latitude(), coord.longitude(), clientId)
     }
 }
