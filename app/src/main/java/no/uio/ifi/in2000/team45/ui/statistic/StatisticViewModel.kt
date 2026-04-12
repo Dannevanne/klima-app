@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import com.mapbox.search.autocomplete.PlaceAutocomplete
@@ -55,6 +57,13 @@ class StatisticViewModel(
 
     fun updateSearchQuery(query: String) {
         searchQuery = query
+        searchJob?.cancel()
+        if (query.length >= 2) {
+            searchJob = viewModelScope.launch {
+                delay(400)
+                searchStations()
+            }
+        }
     }
 
     fun searchStations() {
