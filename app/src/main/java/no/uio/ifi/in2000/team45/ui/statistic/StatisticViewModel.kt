@@ -51,6 +51,9 @@ class StatisticViewModel(
     var selectedPeriod: Int by mutableStateOf(30)
         private set
 
+    var searchHistory: List<String> by mutableStateOf(emptyList())
+        private set
+
     fun updatePeriod(years: Int) {
         selectedPeriod = years
     }
@@ -78,6 +81,7 @@ class StatisticViewModel(
             try {
                 val stations = repository.searchStations(queryAtLaunch, clientId)
                 if (stations.isNotEmpty()) {
+                    addToHistory(searchQuery)
                     uiState = StatisticUiState.StationResults(stations)
                     return@launch
                 }
@@ -133,6 +137,12 @@ class StatisticViewModel(
         searchJob?.cancel()
         climateJob?.cancel()
         super.onCleared()
+    }
+
+    private fun addToHistory(query: String) {
+        val trimmed = query.trim()
+        if (trimmed.isBlank()) return
+        searchHistory = (listOf(trimmed) + searchHistory.filter { it != trimmed }).take(5)
     }
 
     private suspend fun geocodeAndFindNearest(query: String): WeatherStation? {
