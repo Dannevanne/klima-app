@@ -585,6 +585,11 @@ private fun ClimateDataView(
             UvIndexCard(latitude = station.latitude)
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        item {
+            StationInfoCard(station = station)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
@@ -708,6 +713,41 @@ private fun computeTrend(values: List<Double>): TrendInfo {
         else -> TrendDirection.STABLE
     }
     return TrendInfo(direction, change)
+}
+
+@Composable
+private fun StationInfoCard(station: WeatherStation) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Malestasjon",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(text = station.name, fontSize = 14.sp)
+            Text(
+                text = "Frost-ID: ${station.id}",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (station.municipality.isNotBlank()) {
+                Text(
+                    text = "${station.municipality}, ${station.county}",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Text(
+                text = "Pos: ${String.format("%.4f", station.latitude)}, ${String.format("%.4f", station.longitude)}",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
 }
 
 @Composable
