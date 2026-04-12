@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -497,6 +498,33 @@ private fun ClimateDataView(
             }
         }
 
+        if (annualData.any { it.totalPrecip != null }) {
+            item {
+                TrendChart(
+                    title = "Arlig nedbor (mm)",
+                    data = annualData.mapNotNull { a ->
+                        a.totalPrecip?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFF42A5F5)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if (annualData.any { it.meanTemp != null }) {
+            item {
+                TrendChart(
+                    title = "Arlig gjennomsnittstemperatur (C)",
+                    data = annualData.mapNotNull { a ->
+                        a.meanTemp?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFFEF5350),
+                    fillColor = Color(0x3042A5F5)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
         if (stats.any { it.meanTemp != null }) {
             item {
                 ClimateTable(
@@ -680,6 +708,93 @@ private fun computeTrend(values: List<Double>): TrendInfo {
         else -> TrendDirection.STABLE
     }
     return TrendInfo(direction, change)
+}
+
+@Composable
+private fun TrendChart(
+    title: String,
+    data: List<Pair<Int, Double>>,
+    lineColor: Color,
+    fillColor: Color? = null
+) {
+    if (data.size < 2) return
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            val minVal = data.minOf { it.second }
+            val maxVal = data.maxOf { it.second }
+            val range = (maxVal - minVal).coerceAtLeast(1.0)
+
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+            ) {
+                val w = size.width
+                val h = size.height
+                val padBottom = 20f
+                val chartH = h - padBottom
+                val step = w / (data.size - 1).coerceAtLeast(1)
+
+                val points = data.mapIndexed { i, (_, v) ->
+                    val x = i * step
+                    val y = chartH - ((v - minVal) / range * chartH).toFloat()
+                    Offset(x, y)
+                }
+
+                // Fill area under line
+                if (fillColor != null && points.size >= 2) {
+                    val path = Path().apply {
+                        moveTo(points.first().x, chartH)
+                        points.forEach { lineTo(it.x, it.y) }
+                        lineTo(points.last().x, chartH)
+                        close()
+                    }
+                    drawPath(path, color = Color(fillColor.value))
+                }
+
+                // Draw line
+                for (i in 0 until points.size - 1) {
+                    drawLine(
+                        color = lineColor,
+                        start = points[i],
+                        end = points[i + 1],
+                        strokeWidth = 3f
+                    )
+                }
+
+                // Draw dots
+                points.forEach { p ->
+                    drawCircle(color = lineColor, radius = 4f, center = p)
+                }
+            }
+
+            // Year labels
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val firstYear = data.first().first
+                val lastYear = data.last().first
+                Text(firstYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                if (data.size > 2) {
+                    val mid = data[data.size / 2].first
+                    Text(mid.toString(), fontSize = 10.sp, color = Color.Gray)
+                }
+                Text(lastYear.toString(), fontSize = 10.sp, color = Color.Gray)
+            }
+        }
+    }
 }
 
 enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, SNOW, NONE }
