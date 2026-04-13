@@ -28,7 +28,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
+
+        // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
 
         setContent {
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
                     themePreferenceRepository = themePreferenceRepository)
             )
 
+            // Collects the users theme preference to use for Theme45Theme
             val useDarkTheme = useDarkThemeFrom(
                 theme = mapViewModel.mapTheme,
                 systemIsDark = isSystemInDarkTheme()

@@ -4,10 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 
+// Factory is needed because our MapViewModel needs dependency.
+// The MapViewModel therefore can't be made automatically with Androids ViewModel system.
+// MainActivity can now create a repository once, and send it in to this factory.
+// The regular MapViewModel doesn't need to know how the repository was made.
 class MapViewModelFactory(
     private val themePreferenceRepository: ThemePreferenceRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        // Checks which ViewModel was requested.
+        // ViewModel is only created if a MapViewModel was requested.
+        // If requested, MapViewModel is created with correct dependency.
         if(modelClass.isAssignableFrom(MapViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
             return MapViewModel(

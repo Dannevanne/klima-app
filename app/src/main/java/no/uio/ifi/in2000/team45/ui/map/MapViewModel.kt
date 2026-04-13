@@ -25,6 +25,8 @@ sealed interface MapUiState {
     object Loading : MapUiState
 }
 
+// UI model. suggestion gives access to the original object so
+// it can be sent to placeAutocomplete.select()
 data class SearchSuggestionUi(
     val suggestion: PlaceAutocompleteSuggestion,
     val title: String,
@@ -42,6 +44,9 @@ class MapViewModel(
         private set
     var activeOverlay by mutableStateOf(OverlayType.FLOOD)
         private set
+
+    // Functions to avoid unneeded new overlay requests when the camera
+    // has changed too little or too often
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
     private var throttleMs = 300L
@@ -49,6 +54,9 @@ class MapViewModel(
     private var lastWidth = 0
     private var lastHeight = 0
 
+    // Entry point for MapBox Place Autocomplete API.
+    // This object is able to get suggestions with suggestions(),
+    // and get detailed results with select().
     private val placeAutocomplete = PlaceAutocomplete.create()
     private var searchJob: Job? = null
     private var selectJob: Job? = null
@@ -56,19 +64,21 @@ class MapViewModel(
     var searchQuery by mutableStateOf("")
         private set
 
+    // List of suggestions that shows under the searchbar.
     var searchSuggestions by mutableStateOf<List<SearchSuggestionUi>>(emptyList())
         private set
-
     var isSearching by mutableStateOf(false)
 
-    //User current location
+    // Last known current location from the location listener
     var userLocation by mutableStateOf<Point?>(null)
         private set
 
-    //Separated from userLocation so the camera does not continuously follow the user
+    // Own state for the selected posistion. Separated from userLocation
+    // so the camera does not continuously follow the user.
     var selectedLocation by mutableStateOf<Point?>(null)
         private set
 
+    // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
             themePreferenceRepository.mapThemeFlow.collect { savedTheme ->
@@ -130,16 +140,18 @@ class MapViewModel(
         mapTheme = theme
         viewModelScope.launch {
             themePreferenceRepository.saveMapTheme(theme)
-        }
+        } // The theme gets updated instantly and also
+          // saved in the theme repository
     }
 
-    //Is called by Mapbox's locationlistener in DataMap
-    //Updates the location without moving the camera
+    // Is called by Mapbox's locationlistener in DataMap.
+    // Updates the location without moving the camera.
     fun updateUserLocation(point: Point) {
         userLocation = point
     }
 
-    //Copies userLocation to selectedLocation which trigger the camera to move
+    // The UI can call this when the user click "my position".
+    // By copying userLocation to selectedLocation it triggers the camera to move.
     fun moveToUserLocation() {
         userLocation?.let { selectedLocation = it }
     }
@@ -147,7 +159,9 @@ class MapViewModel(
     fun setOverlay(type: OverlayType) {
         activeOverlay = type
         lastOverlayURL = null
-        // Re-fetch immediately using the last known bbox
+        // When the overlay type changes, the ViewModel will try to
+        // fetch a new overlay based on the previous bbox,
+        // so the user doesn't need to move around on the map to see the new overlay
         val bbox = lastBBox
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
@@ -158,6 +172,7 @@ class MapViewModel(
         }
     }
 
+    // Main search function. Saves query text and fetches suggestions.
     fun updateSearchQuery(query: String) {
         searchQuery = query
 
@@ -172,6 +187,7 @@ class MapViewModel(
         searchJob = viewModelScope.launch {
             isSearching = true
             try {
+                // API call, only results from Norway
                 val response = placeAutocomplete.suggestions(
                     query = query,
                     options = PlaceAutocompleteOptions(
@@ -206,6 +222,7 @@ class MapViewModel(
         }
     }
 
+    // Clear search for when user clicks X or selects a result
     fun clearSearch() {
         searchJob?.cancel()
         searchQuery = ""
@@ -220,6 +237,7 @@ class MapViewModel(
         isSearching = false
     }
 
+    // Select a suggested place and get its coordinates
     fun selectSuggestion(
         item: SearchSuggestionUi,
         onResult: (Point) -> Unit
@@ -245,6 +263,10 @@ class MapViewModel(
     }
 }
 
+// Function to say whether dark theme should be used or not.
+// If the user has selected to follow device settings, the boolean
+// that gets returned from the function will be the same as the boolean
+// which says if the device is in dark theme.
 fun useDarkThemeFrom(theme: MapTheme, systemIsDark: Boolean): Boolean{
     return when(theme) {
         MapTheme.DEVICE -> systemIsDark

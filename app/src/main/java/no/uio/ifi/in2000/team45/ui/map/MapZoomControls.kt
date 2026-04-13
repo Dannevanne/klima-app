@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// This composable doesn't know about MapBox, the camera or the ViewModel
+// it just sends the buttons to whoeever uses the component
 @Composable
 fun MapZoomControls(onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,
