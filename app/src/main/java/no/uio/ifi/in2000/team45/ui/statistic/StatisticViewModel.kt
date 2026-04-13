@@ -17,7 +17,6 @@ import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import kotlinx.coroutines.Job
 import java.util.Calendar
 
 sealed interface StatisticUiState {
