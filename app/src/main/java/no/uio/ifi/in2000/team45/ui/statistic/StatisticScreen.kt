@@ -61,6 +61,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.DisposableEffect
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -77,6 +78,13 @@ fun StatisticScreen(
     modifier: Modifier = Modifier
 ) {
     val favoriteStations by favoriteViewModel.stations.collectAsState()
+
+    DisposableEffect(Unit) {
+        onDispose {
+            statisticViewModel.cancelStatisticScreenWork()
+        }
+    }
+
     Scaffold(
         bottomBar = {
             BottomAppBar {
