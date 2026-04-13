@@ -56,6 +56,10 @@ class StatisticViewModel(
 
     fun updatePeriod(years: Int) {
         selectedPeriod = years
+        val current = uiState
+        if (current is StatisticUiState.ClimateData) {
+            selectStation(current.station)
+        }
     }
 
     fun updateSearchQuery(query: String) {
