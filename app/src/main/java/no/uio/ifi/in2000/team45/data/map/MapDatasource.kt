@@ -41,6 +41,31 @@ class MapDatasource {
         }
     }
 
+    // Check if coordinates fall inside NGU radon aktsomhet zone
+    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
+        val tolerance = 0.001
+        val url = buildString {
+            append("https://geo.ngu.no/mapserver/RadonWMS2")
+            append("?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo")
+            append("&LAYERS=Radon_aktsomhet")
+            append("&QUERY_LAYERS=Radon_aktsomhet")
+            append("&SRS=EPSG:4326")
+            append("&BBOX=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
+            append("&WIDTH=101&HEIGHT=101")
+            append("&X=50&Y=50")
+            append("&INFO_FORMAT=application/json")
+        }
+        return try {
+            val response = KtorClient.client.get(url)
+            val body: String = response.body()
+            body.contains("\"features\"") && !body.contains("\"features\":[]")
+                    && !body.contains("\"features\": []")
+        } catch (e: Exception) {
+            Log.e("MapDatasource", "Radon zone check failed", e)
+            false
+        }
+    }
+
     fun buildOverlayURL(
         type: OverlayType,
         bbox: List<Double>,
