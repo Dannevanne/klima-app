@@ -208,8 +208,8 @@ fun FavoriteScreen(
                 if (status?.inQuickClayZone == true) {
                     QuickClayZoneTips(name)
                 }
-                if (status?.inWindZone == true) {
-                    WindZoneTips(name)
+                status?.avgWindSpeed?.let { speed ->
+                    WindZoneTips(name, speed)
                 }
             }
 
@@ -514,7 +514,13 @@ private fun QuickClayZoneTips(locationName: String) {
 }
 
 @Composable
-private fun WindZoneTips(locationName: String) {
+private fun WindZoneTips(locationName: String, avgSpeed: Double) {
+    val level = when {
+        avgSpeed < 4.0 -> "lav"
+        avgSpeed < 6.0 -> "moderat"
+        avgSpeed < 8.0 -> "hoey"
+        else -> "svart hoey"
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -524,21 +530,23 @@ private fun WindZoneTips(locationName: String) {
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = "Vindeksponert omraade for $locationName",
+                text = "Vindforhold for $locationName",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
                 color = Color(0xFF006064)
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Denne posisjonen er i et vindeksponert omraade. Her er noen tips:",
+                text = "Gjennomsnittlig vindstyrke: %.1f m/s (%s)".format(avgSpeed, level),
                 fontSize = 13.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text("- Sikre lause gjenstander utendoors ved sterk vind", fontSize = 13.sp)
-            Text("- Sjekk at tak og kledning taaler vindbelastningen", fontSize = 13.sp)
+            if (avgSpeed >= 6.0) {
+                Text("- Sikre lause gjenstander utendoors ved sterk vind", fontSize = 13.sp)
+                Text("- Sjekk at tak og kledning taaler vindbelastningen", fontSize = 13.sp)
+                Text("- Planlegg levegg eller beplantning som vindskjerm", fontSize = 13.sp)
+            }
             Text("- Foelg med paa yr.no og varsom.no for vindvarsler", fontSize = 13.sp)
-            Text("- Planlegg levegg eller beplantning som vindskjerm", fontSize = 13.sp)
         }
     }
 }
