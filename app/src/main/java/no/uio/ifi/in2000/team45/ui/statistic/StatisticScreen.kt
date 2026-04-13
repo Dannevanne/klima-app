@@ -174,17 +174,20 @@ fun StatisticScreen(
                     NavBarItem(
                         onClick = onMapClick,
                         icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
-                        label = stringResource(R.string.nav_map)
+                        label = stringResource(R.string.nav_map),
+                        modifier = Modifier.weight(1f)
                     )
                     NavBarItem(
                         onClick = {},
                         icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) },
-                        label = stringResource(R.string.nav_statistics)
+                        label = stringResource(R.string.nav_statistics),
+                        modifier = Modifier.weight(1f)
                     )
                     NavBarItem(
                         onClick = onFavoritesClick,
                         icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
-                        label = stringResource(R.string.saved_places)
+                        label = stringResource(R.string.saved_places),
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
