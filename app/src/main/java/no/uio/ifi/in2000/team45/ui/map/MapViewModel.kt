@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
+import kotlinx.coroutines.Job
 sealed interface MapUiState {
     data class Success(
         val overlayURL: String,
@@ -49,6 +50,8 @@ class MapViewModel(
     private var lastHeight = 0
 
     private val placeAutocomplete = PlaceAutocomplete.create()
+    private var searchJob: Job? = null
+    private var selectJob: Job? = null
 
     var searchQuery by mutableStateOf("")
         private set
@@ -57,6 +60,7 @@ class MapViewModel(
         private set
 
     var isSearching by mutableStateOf(false)
+
     //User current location
     var userLocation by mutableStateOf<Point?>(null)
         private set
@@ -65,7 +69,7 @@ class MapViewModel(
     var selectedLocation by mutableStateOf<Point?>(null)
         private set
 
-    init{
+    init {
         viewModelScope.launch {
             themePreferenceRepository.mapThemeFlow.collect { savedTheme ->
                 mapTheme = savedTheme
@@ -73,9 +77,11 @@ class MapViewModel(
         }
     }
 
-    fun updateOverlay(bbox: List<Double>,
-                      width: Int,
-                      height: Int){
+    fun updateOverlay(
+        bbox: List<Double>,
+        width: Int,
+        height: Int
+    ) {
 
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
@@ -92,19 +98,19 @@ class MapViewModel(
         lastWidth = width
         lastHeight = height
 
-        if(bbox.size != 4 || width <= 0 || height <= 0) return
-        try{
+        if (bbox.size != 4 || width <= 0 || height <= 0) return
+        try {
             val url = mapRepository.getOverlayURL(
                 type = activeOverlay,
                 bbox = bbox,
                 width = width,
-                height = height)
-            if(url != lastOverlayURL){
+                height = height
+            )
+            if (url != lastOverlayURL) {
                 lastOverlayURL = url
                 mapUiState = MapUiState.Success(url, bbox)
             }
-        }
-        catch(e: Exception){
+        } catch (e: Exception) {
             mapUiState = MapUiState.Error
         }
     }
@@ -115,12 +121,12 @@ class MapViewModel(
         // moving threshold, can change but should be kept low I think
         val threshold = 0.01
         // calculates if new bbox is moved enough to trigger fetch
-        return (0..3).any {
-            i -> kotlin.math.abs(old[i] - newBBox[i]) > threshold
+        return (0..3).any { i ->
+            kotlin.math.abs(old[i] - newBBox[i]) > threshold
         }
     }
 
-    fun updateMapTheme(theme: MapTheme){
+    fun updateMapTheme(theme: MapTheme) {
         mapTheme = theme
         viewModelScope.launch {
             themePreferenceRepository.saveMapTheme(theme)
@@ -152,44 +158,64 @@ class MapViewModel(
         }
     }
 
-    fun updateSearchQuery(query: String){
+    fun updateSearchQuery(query: String) {
         searchQuery = query
 
-        if(query.isBlank()){
+        if (query.isBlank()) {
+            searchJob?.cancel()
             searchSuggestions = emptyList()
             isSearching = false
             return
         }
 
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             isSearching = true
-
-            val response = placeAutocomplete.suggestions(
-                query = query,
-                options = PlaceAutocompleteOptions(
-                    limit = 8,
-                    countries = listOf(IsoCountryCode.NORWAY)
-                )
-            )
-
-            response.onValue { suggestions ->
-                searchSuggestions = suggestions.map { suggestion ->
-                    SearchSuggestionUi(
-                        suggestion = suggestion,
-                        title = suggestion.name,
-                        subtitle = suggestion.formattedAddress
+            try {
+                val response = placeAutocomplete.suggestions(
+                    query = query,
+                    options = PlaceAutocompleteOptions(
+                        limit = 8,
+                        countries = listOf(IsoCountryCode.NORWAY)
                     )
+                )
+
+                response.onValue { suggestions ->
+                    if (searchQuery != query) return@onValue
+
+                    searchSuggestions = suggestions.map { suggestion ->
+                        SearchSuggestionUi(
+                            suggestion = suggestion,
+                            title = suggestion.name,
+                            subtitle = suggestion.formattedAddress
+                        )
+                    }
+                    isSearching = false
+                }.onError {
+                    if (searchQuery == query) {
+                        searchSuggestions = emptyList()
+                        isSearching = false
+                    }
                 }
-                isSearching = false
-            }.onError{
-                searchSuggestions = emptyList()
-                isSearching = false
+            } catch (_: Exception) {
+                if (searchQuery == query) {
+                    searchSuggestions = emptyList()
+                    isSearching = false
+                }
             }
         }
     }
 
-    fun clearSearch(){
+    fun clearSearch() {
+        searchJob?.cancel()
         searchQuery = ""
+        searchSuggestions = emptyList()
+        isSearching = false
+    }
+
+    fun cancelMapScreenWork() {
+        searchJob?.cancel()
+        selectJob?.cancel()
         searchSuggestions = emptyList()
         isSearching = false
     }
@@ -197,15 +223,25 @@ class MapViewModel(
     fun selectSuggestion(
         item: SearchSuggestionUi,
         onResult: (Point) -> Unit
-    ){
-        viewModelScope.launch {
-            val selectionResponse = placeAutocomplete.select(item.suggestion)
+    ) {
+        selectJob?.cancel()
+        selectJob = viewModelScope.launch {
+            try {
+                val selectionResponse = placeAutocomplete.select(item.suggestion)
 
-            selectionResponse.onValue { result ->
-                clearSearch()
-                onResult(result.coordinate)
-            }.onError{}
+                selectionResponse.onValue { result ->
+                    clearSearch()
+                    onResult(result.coordinate)
+                }.onError {}
+            } catch (_: Exception) {
+            }
         }
+    }
+
+    override fun onCleared() {
+        searchJob?.cancel()
+        selectJob?.cancel()
+        super.onCleared()
     }
 }
 

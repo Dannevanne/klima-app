@@ -12,6 +12,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import kotlinx.coroutines.Job
 
 sealed interface StatisticUiState {
     object Idle : StatisticUiState
@@ -30,6 +31,8 @@ class StatisticViewModel(
 
     private val repository = StatisticRepository()
     private val clientId: String = application.getString(R.string.frost_client_id)
+    private var searchJob: Job? = null
+    private var climateJob: Job? = null
 
     var uiState: StatisticUiState by mutableStateOf(StatisticUiState.Idle)
         private set
@@ -43,13 +46,17 @@ class StatisticViewModel(
 
     fun searchStations() {
         if (searchQuery.isBlank()) return
+
+        searchJob?.cancel()
         uiState = StatisticUiState.Loading
 
-        viewModelScope.launch {
+        val queryAtLaunch = searchQuery
+
+        searchJob = viewModelScope.launch {
             try {
-                val stations = repository.searchStations(searchQuery, clientId)
+                val stations = repository.searchStations(queryAtLaunch, clientId)
                 uiState = if (stations.isEmpty()) {
-                    StatisticUiState.Error("Ingen stasjoner funnet for \"$searchQuery\"")
+                    StatisticUiState.Error("Ingen stasjoner funnet for \"$queryAtLaunch\"")
                 } else {
                     StatisticUiState.StationResults(stations)
                 }
@@ -61,9 +68,10 @@ class StatisticViewModel(
     }
 
     fun selectStation(station: WeatherStation) {
+        climateJob?.cancel()
         uiState = StatisticUiState.Loading
 
-        viewModelScope.launch {
+        climateJob = viewModelScope.launch {
             try {
                 val stats = repository.getClimateStats(station.id, clientId)
                 uiState = if (stats.all { it.meanTemp == null && it.precipitation == null }) {
@@ -80,5 +88,16 @@ class StatisticViewModel(
 
     fun goBack() {
         uiState = StatisticUiState.Idle
+    }
+
+    fun cancelStatisticScreenWork(){
+        searchJob?.cancel()
+        climateJob?.cancel()
+    }
+
+    override fun onCleared(){
+        searchJob?.cancel()
+        climateJob?.cancel()
+        super.onCleared()
     }
 }

@@ -113,6 +113,12 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
+import com.mapbox.maps.plugin.gestures.OnMapClickListener
+import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
+import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
+import com.mapbox.maps.plugin.locationcomponent.
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
+
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
@@ -305,6 +311,13 @@ fun DataMap(
     // but this "DataMap" should have its own viewmodel for all of this state hosting
     var imageJob by remember {mutableStateOf<Job?>(null)}
 
+    DisposableEffect(Unit) {
+        onDispose {
+            imageJob?.cancel()
+            mapViewModel.cancelMapScreenWork()
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
             modifier = Modifier
@@ -317,26 +330,52 @@ fun DataMap(
         ){
             MapEffect(Unit) { mapView ->
                 mapViewRef = mapView
-                // Long-press opens naming dialog
-                mapView.mapboxMap.addOnMapLongClickListener { point ->
-                    pendingPoint = point
-                    locationName = ""
-                    true
+            }
+
+            DisposableEffect(mapViewRef) {
+                val mapView = mapViewRef
+                if (mapView == null) {
+                    onDispose {  }
+                }
+                else{
+                    val longClickListener = OnMapLongClickListener { point ->
+                        pendingPoint = point
+                        locationName = ""
+                        true
+                    }
+
+                    mapView.mapboxMap.addOnMapLongClickListener(longClickListener)
+
+                    onDispose {
+                        mapView.mapboxMap.removeOnMapLongClickListener(longClickListener)
+                    }
                 }
             }
 
             //Activates the blue location-dot
             //Rerun every time locationGranted changes
-            MapEffect(locationGranted) { mapView ->
-                mapView.location.updateSettings {
-                    locationPuck = createDefault2DPuck(withBearing = false)
-                    enabled = locationGranted
-                    pulsingEnabled = true
+            DisposableEffect(mapViewRef, locationGranted) {
+                val mapView = mapViewRef
+                if(mapView == null){
+                    onDispose {  }
                 }
-                //Listens to locationchanges from Mapbox and updates userLocation in viewmodel
-                if (locationGranted) {
-                    mapView.location.addOnIndicatorPositionChangedListener { point ->
+                else{
+                    mapView.location.updateSettings {
+                        locationPuck = createDefault2DPuck(withBearing = false)
+                        enabled = locationGranted
+                        pulsingEnabled = true
+                    }
+
+                    val locationListener = OnIndicatorPositionChangedListener { point ->
                         mapViewModel.updateUserLocation(point)
+                    }
+
+                    if(locationGranted) {
+                        mapView.location.addOnIndicatorPositionChangedListener(locationListener)
+                    }
+
+                    onDispose {
+                        mapView.location.removeOnIndicatorPositionChangedListener(locationListener)
                     }
                 }
             }
@@ -397,10 +436,13 @@ fun DataMap(
             LaunchedEffect(overlayURL) {
                 imageJob?.cancel()
 
+                if (overlayURL == null) {
+                    bitmap = null
+                    return@LaunchedEffect
+                }
+
                 imageJob = launch {
-                    bitmap = overlayURL?.let {
-                        makeBitmap(context = context, imageURL = it)
-                    }
+                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
                 }
             }
 
