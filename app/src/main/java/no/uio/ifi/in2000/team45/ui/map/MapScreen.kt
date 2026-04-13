@@ -305,6 +305,13 @@ fun DataMap(
     // but this "DataMap" should have its own viewmodel for all of this state hosting
     var imageJob by remember {mutableStateOf<Job?>(null)}
 
+    DisposableEffect(Unit) {
+        onDispose {
+            imageJob?.cancel()
+            mapViewModel.cancelMapScreenWork()
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         MapboxMap(
             modifier = Modifier
@@ -397,10 +404,13 @@ fun DataMap(
             LaunchedEffect(overlayURL) {
                 imageJob?.cancel()
 
+                if (overlayURL == null) {
+                    bitmap = null
+                    return@LaunchedEffect
+                }
+
                 imageJob = launch {
-                    bitmap = overlayURL?.let {
-                        makeBitmap(context = context, imageURL = it)
-                    }
+                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
                 }
             }
 
