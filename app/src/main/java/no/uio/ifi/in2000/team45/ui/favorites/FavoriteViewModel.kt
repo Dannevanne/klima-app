@@ -24,7 +24,7 @@ data class LocationStatus(
     val inFloodZone: Boolean = false,
     val inRadonZone: Boolean = false,
     val inQuickClayZone: Boolean = false,
-    val inWindZone: Boolean = false
+    val avgWindSpeed: Double? = null
 )
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
@@ -86,7 +86,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val floodZone = mapRepository.isInFloodZone(lat, lon)
                 val radonZone = mapRepository.isInRadonZone(lat, lon)
                 val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
-                val windZone = mapRepository.isInWindZone(lat, lon)
+                val avgWind = mapRepository.getWindSpeed(lat, lon)
 
                 if (station == null) {
                     locationStatuses[key] = LocationStatus(
@@ -94,7 +94,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                         inFloodZone = floodZone,
                         inRadonZone = radonZone,
                         inQuickClayZone = quickClayZone,
-                        inWindZone = windZone
+                        avgWindSpeed = avgWind
                     )
                     return@launch
                 }
@@ -110,7 +110,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                     inFloodZone = floodZone,
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
-                    inWindZone = windZone
+                    avgWindSpeed = avgWind
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)

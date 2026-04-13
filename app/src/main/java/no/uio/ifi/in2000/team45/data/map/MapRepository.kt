@@ -24,7 +24,7 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return mapDatasource.isInQuickClayZone(lat, lon)
     }
 
-    suspend fun isInWindZone(lat: Double, lon: Double): Boolean {
-        return mapDatasource.isInWindZone(lat, lon)
+    suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
+        return mapDatasource.getWindSpeed(lat, lon)
     }
 }
