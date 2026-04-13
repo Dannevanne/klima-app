@@ -53,6 +53,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -170,19 +171,24 @@ fun StatisticScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton(onClick = onMapClick) {
-                        Icon(Icons.Outlined.Place,
-                            contentDescription = stringResource(R.string.map))
-                    }
-                    IconButton({}) {
-                        Icon(painterResource(R.drawable.filled_analytics),
-                            contentDescription = "")
-                    }
-                    IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Outlined.FavoriteBorder,
-                            contentDescription = stringResource(R.string.favorites)
-                        )
-                    }
+                    NavBarItem(
+                        onClick = onMapClick,
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        label = stringResource(R.string.nav_map),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = {},
+                        icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) },
+                        label = stringResource(R.string.nav_statistics),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                        label = stringResource(R.string.saved_places),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }

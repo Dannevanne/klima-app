@@ -89,6 +89,7 @@ import com.mapbox.maps.CameraOptions
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
@@ -240,17 +241,24 @@ fun MapScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
                     ) {
-                        IconButton({}) {
-                            Icon(Icons.Filled.Place, contentDescription = "")
-                        }
-                        IconButton(onClick = onStatisticClick) {
-                            Icon(painter = painterResource(R.drawable.outline_analytics),
-                                contentDescription = stringResource(R.string.to_statistics))
-                        }
-                        IconButton(onClick = onFavoritesClick) {
-                            Icon(Icons.Outlined.FavoriteBorder,
-                                contentDescription = stringResource(R.string.favorites))
-                        }
+                        NavBarItem(
+                            onClick = {},
+                            icon = { Icon(Icons.Filled.Place, contentDescription = null) },
+                            label = stringResource(R.string.nav_map),
+                            modifier = Modifier.weight(1f)
+                        )
+                        NavBarItem(
+                            onClick = onStatisticClick,
+                            icon = { Icon(painter = painterResource(R.drawable.outline_analytics), contentDescription = null) },
+                            label = stringResource(R.string.nav_statistics),
+                            modifier = Modifier.weight(1f)
+                        )
+                        NavBarItem(
+                            onClick = onFavoritesClick,
+                            icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                            label = stringResource(R.string.saved_places),
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }

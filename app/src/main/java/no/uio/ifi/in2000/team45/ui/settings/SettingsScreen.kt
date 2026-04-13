@@ -36,6 +36,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.NavBarItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,21 +70,30 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton({}) {
-                        Icon(Icons.Filled.Settings, contentDescription = "")
-                    }
-                    IconButton(onClick = onMapClick) {
-                        Icon(Icons.Outlined.Place,
-                            contentDescription = stringResource(R.string.to_map))
-                    }
-                    IconButton(onClick = onStatisticClick) {
-                        Icon(Icons.Outlined.Info,
-                            contentDescription = stringResource(R.string.to_statistics))
-                    }
-                    IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Outlined.FavoriteBorder,
-                            contentDescription = "Favoritter")
-                    }
+                    NavBarItem(
+                        onClick = {},
+                        icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
+                        label = stringResource(R.string.settings),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = onMapClick,
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        label = stringResource(R.string.nav_map),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = onStatisticClick,
+                        icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        label = stringResource(R.string.nav_statistics),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                        label = stringResource(R.string.saved_places),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }
