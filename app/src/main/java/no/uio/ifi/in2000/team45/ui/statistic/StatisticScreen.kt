@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -57,21 +58,36 @@ import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.painterResource
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticScreen(
     statisticViewModel: StatisticViewModel,
     onSettingsClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onHelpClick: () -> Unit,
     onMapClick: () -> Unit,
     onFavoritesClick: () -> Unit,
     favoriteViewModel: FavoriteViewModel,
@@ -85,7 +101,66 @@ fun StatisticScreen(
         }
     }
 
+    var expanded by remember { mutableStateOf(false)}
     Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                navigationIcon = {
+                    Icon(
+                        painterResource(R.drawable.bar_chart),
+                        contentDescription = "")
+                },
+                title = {Text(
+                    text = stringResource(R.string.climate_statistics),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(8.dp)
+                )},
+                actions = {
+                    IconButton(onClick = {expanded = true}) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = stringResource(R.string.menu)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {expanded = false}
+                    ) {
+                        DropdownMenuItem(
+                            onClick = onSettingsClick,
+                            leadingIcon = { Icon(
+                                imageVector = Icons.Outlined.Settings,
+                                contentDescription = ""
+                            ) },
+                            text = { Text(text = stringResource(R.string.settings)) }
+                        )
+                        DropdownMenuItem(
+                            onClick = onInfoClick,
+                            leadingIcon = { Icon(
+                                    imageVector = Icons.Outlined.Info,
+                                contentDescription = ""
+                            ) },
+                            text = { Text(text = stringResource(R.string.info)) }
+                        )
+                        DropdownMenuItem(
+                            onClick = onHelpClick,
+                            leadingIcon = { Icon(
+                                painter = painterResource(R.drawable.outline_help),
+                                contentDescription = ""
+                            ) },
+                            text = { Text(text = stringResource(R.string.help)) }
+                        )
+                    }
+                }
+            )
+        },
         bottomBar = {
             BottomAppBar {
                 Row(
@@ -95,17 +170,18 @@ fun StatisticScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Outlined.Settings, contentDescription = "to settings")
-                    }
                     IconButton(onClick = onMapClick) {
-                        Icon(Icons.Outlined.Place, contentDescription = "to map")
+                        Icon(Icons.Outlined.Place,
+                            contentDescription = stringResource(R.string.map))
                     }
                     IconButton({}) {
-                        Icon(Icons.Filled.Info, contentDescription = "")
+                        Icon(painterResource(R.drawable.filled_analytics),
+                            contentDescription = "")
                     }
                     IconButton(onClick = onFavoritesClick) {
-                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favoritter")
+                        Icon(Icons.Outlined.FavoriteBorder,
+                            contentDescription = stringResource(R.string.favorites)
+                        )
                     }
                 }
             }
@@ -117,12 +193,6 @@ fun StatisticScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text(
-                text = stringResource(R.string.climate_statistics),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
 
             SearchBar(
                 query = statisticViewModel.searchQuery,

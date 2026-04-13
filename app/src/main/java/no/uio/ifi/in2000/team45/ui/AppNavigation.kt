@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteScreen
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.help.HelpScreen
+import no.uio.ifi.in2000.team45.ui.info.InfoScreen
 import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
@@ -51,6 +53,8 @@ fun AppNavigation(
                 StatisticScreen(
                     modifier = modifier,
                     onSettingsClick = { navigateTo("SettingsScreen") },
+                    onInfoClick = { navigateTo("InfoScreen") },
+                    onHelpClick = { navigateTo("HelpScreen") },
                     onMapClick = { navigateTo("MapScreen") },
                     onFavoritesClick = { navigateTo("FavoriteScreen") },
                     statisticViewModel = statisticViewModel,
@@ -70,8 +74,22 @@ fun AppNavigation(
                 FavoriteScreen(
                     favoriteViewModel = favoriteViewModel,
                     onSettingsClick = { navigateTo("SettingsScreen") },
+                    onInfoClick = { navigateTo("InfoScreen") },
+                    onHelpClick = { navigateTo("HelpScreen") },
                     onMapClick = { navigateTo("MapScreen") },
                     onStatisticClick = { navigateTo("StatisticScreen") },
+                    modifier = modifier
+                )
+            }
+            composable(route = "InfoScreen") {
+                InfoScreen(
+                    onClick = { navigateTo("StatisticScreen") },
+                    modifier = modifier
+                )
+            }
+            composable(route = "HelpScreen") {
+                HelpScreen(
+                    onClick = { navigateTo("StatisticScreen") },
                     modifier = modifier
                 )
             }
