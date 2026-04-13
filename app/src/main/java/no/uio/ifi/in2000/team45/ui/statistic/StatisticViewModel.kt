@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
+import com.mapbox.search.common.IsoCountryCode
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
@@ -147,15 +148,16 @@ class StatisticViewModel(
     private suspend fun geocodeAndFindNearest(query: String): WeatherStation? {
         val options = PlaceAutocompleteOptions(
             limit = 1,
-            countries = listOf(PlaceAutocompleteOptions.Country.NORWAY)
+            countries = listOf(IsoCountryCode.NORWAY)
         )
-        val suggestions = placeAutocomplete.suggestions(query, options)
-            .getOrNull() ?: return null
+        val response = placeAutocomplete.suggestions(query, options)
+        val suggestion = response.value?.firstOrNull() ?: return null
 
-        val first = suggestions.firstOrNull() ?: return null
-        val result = placeAutocomplete.select(first).getOrNull() ?: return null
-        val coord = result.coordinate ?: return null
+        val selectResponse = placeAutocomplete.select(suggestion)
+        val coord = selectResponse.value?.coordinate ?: return null
 
-        return repository.findNearestStation(coord.latitude(), coord.longitude(), clientId)
+        return repository.findNearestStation(
+            coord.latitude(), coord.longitude(), clientId
+        )
     }
 }
