@@ -21,7 +21,8 @@ data class WeatherStation(
     val latitude: Double,
     val longitude: Double,
     val municipality: String = "",
-    val county: String = ""
+    val county: String = "",
+    val distanceMeters: Int? = null
 )
 
 data class ClimateNormal(

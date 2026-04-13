@@ -91,9 +91,10 @@ class StatisticViewModel(
                 }
 
                 // No station name match -- geocode the query and find nearest
-                val nearest = geocodeAndFindNearest(queryAtLaunch)
-                uiState = if (nearest != null) {
-                    StatisticUiState.StationResults(listOf(nearest))
+                val nearby = geocodeAndFindNearest(queryAtLaunch)
+                uiState = if (nearby.isNotEmpty()) {
+                    addToHistory(searchQuery)
+                    StatisticUiState.StationResults(nearby)
                 } else {
                     StatisticUiState.Error("Ingen stasjoner funnet for \"$queryAtLaunch\"")
                 }
@@ -105,6 +106,10 @@ class StatisticViewModel(
     }
 
     fun selectStation(station: WeatherStation) {
+        // Get the full candidate list from StationResults if available
+        val candidates = (uiState as? StatisticUiState.StationResults)?.stations ?: listOf(station)
+        val startIndex = candidates.indexOfFirst { it.id == station.id }.coerceAtLeast(0)
+
         climateJob?.cancel()
         uiState = StatisticUiState.Loading
 
@@ -112,15 +117,24 @@ class StatisticViewModel(
             try {
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
                 val yearFrom = currentYear - selectedPeriod
-                val stats = repository.getClimateStats(station.id, clientId)
-                val annual = repository.getAnnualObservations(
-                    station.id, clientId, yearFrom, currentYear
-                )
-                uiState = if (stats.all { it.meanTemp == null && it.precipitation == null }) {
-                    StatisticUiState.Error("Ingen klimadata tilgjengelig for ${station.name}")
-                } else {
-                    StatisticUiState.ClimateData(station, stats, annual)
+
+                // Try this station and fall through to next if no data
+                for (i in startIndex until candidates.size) {
+                    val candidate = candidates[i]
+                    val stats = repository.getClimateStats(candidate.id, clientId)
+                    if (stats.all { it.meanTemp == null && it.precipitation == null }) {
+                        continue
+                    }
+                    val annual = repository.getAnnualObservations(
+                        candidate.id, clientId, yearFrom, currentYear
+                    )
+                    uiState = StatisticUiState.ClimateData(candidate, stats, annual)
+                    return@launch
                 }
+
+                uiState = StatisticUiState.Error(
+                    "Ingen klimadata tilgjengelig for stasjoner nær ${station.name}"
+                )
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Climate data failed", e)
                 uiState = StatisticUiState.Error("Feil ved henting av data: ${e.message}")
@@ -149,19 +163,34 @@ class StatisticViewModel(
         searchHistory = (listOf(trimmed) + searchHistory.filter { it != trimmed }).take(5)
     }
 
-    private suspend fun geocodeAndFindNearest(query: String): WeatherStation? {
+    private suspend fun geocodeAndFindNearest(query: String): List<WeatherStation> {
         val options = PlaceAutocompleteOptions(
             limit = 1,
             countries = listOf(IsoCountryCode.NORWAY)
         )
         val response = placeAutocomplete.suggestions(query = query, options = options)
-        val suggestion = response.value?.firstOrNull() ?: return null
+        val suggestion = response.value?.firstOrNull() ?: return emptyList()
 
         val selectResponse = placeAutocomplete.select(suggestion)
-        val coord = selectResponse.value?.coordinate ?: return null
+        val coord = selectResponse.value?.coordinate ?: return emptyList()
 
-        return repository.findNearestStation(
-            coord.latitude(), coord.longitude(), clientId
-        )
+        val lat = coord.latitude()
+        val lon = coord.longitude()
+        return repository.findNearestStations(lat, lon, clientId, count = 5).map { station ->
+            station.copy(distanceMeters = distanceInMeters(lat, lon, station.latitude, station.longitude))
+        }
+    }
+
+    private fun distanceInMeters(
+        lat1: Double, lon1: Double, lat2: Double, lon2: Double
+    ): Int {
+        val r = 6371000.0
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        return (r * c).toInt()
     }
 }
