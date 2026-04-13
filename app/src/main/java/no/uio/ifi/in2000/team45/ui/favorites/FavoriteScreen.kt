@@ -201,6 +201,9 @@ fun FavoriteScreen(
                 if (status?.inFloodZone == true) {
                     FloodZoneTips(location.label.ifBlank { "Kartposisjon" })
                 }
+                if (status?.inRadonZone == true) {
+                    RadonZoneTips(location.label.ifBlank { "Kartposisjon" })
+                }
             }
 
             // Advice section (mocked)
@@ -439,6 +442,36 @@ private fun FloodZoneTips(locationName: String) {
             Text("- Ha en beredskapsplan for flom", fontSize = 13.sp)
             Text("- Flytt verdisaker bort fra kjeller/underetasje", fontSize = 13.sp)
             Text("- Sjekk forsikringsdekningen din", fontSize = 13.sp)
+        }
+    }
+}
+
+@Composable
+private fun RadonZoneTips(locationName: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Radon-aktsomhet for $locationName",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = Color(0xFF283593)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Denne posisjonen ligger i en radon-aktsomhetssone. Her er noen tips:",
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("- Maal radonnivaaet i boligen din", fontSize = 13.sp)
+            Text("- Tiltaksgrensen er 200 Bq/m3 (Statens straalevern)", fontSize = 13.sp)
+            Text("- Installer radonbroenner eller ventilasjon ved hoye verdier", fontSize = 13.sp)
+            Text("- Sjekk NGU sin radonkartlegging for mer info", fontSize = 13.sp)
         }
     }
 }
