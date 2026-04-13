@@ -198,11 +198,18 @@ fun FavoriteScreen(
                     status = status,
                     onRemove = { favoriteViewModel.removeLocation(location) }
                 )
+                val name = location.label.ifBlank { "Kartposisjon" }
                 if (status?.inFloodZone == true) {
-                    FloodZoneTips(location.label.ifBlank { "Kartposisjon" })
+                    FloodZoneTips(name)
                 }
                 if (status?.inRadonZone == true) {
-                    RadonZoneTips(location.label.ifBlank { "Kartposisjon" })
+                    RadonZoneTips(name)
+                }
+                if (status?.inQuickClayZone == true) {
+                    QuickClayZoneTips(name)
+                }
+                if (status?.inWindZone == true) {
+                    WindZoneTips(name)
                 }
             }
 
@@ -472,6 +479,66 @@ private fun RadonZoneTips(locationName: String) {
             Text("- Tiltaksgrensen er 200 Bq/m3 (Statens straalevern)", fontSize = 13.sp)
             Text("- Installer radonbroenner eller ventilasjon ved hoye verdier", fontSize = 13.sp)
             Text("- Sjekk NGU sin radonkartlegging for mer info", fontSize = 13.sp)
+        }
+    }
+}
+
+@Composable
+private fun QuickClayZoneTips(locationName: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFCDD2)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Kvikkleireomraade for $locationName",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = Color(0xFFB71C1C)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Denne posisjonen ligger i et kvikkleireomraade. Her er noen tips:",
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("- Unngaa graving og terrenginngrep uten geoteknisk vurdering", fontSize = 13.sp)
+            Text("- Kontakt kommunen foer du gjor endringer paa tomten", fontSize = 13.sp)
+            Text("- Foelg med paa NVE sine varslinger for jordskred", fontSize = 13.sp)
+            Text("- Vurder grunnundersokelse ved bygging", fontSize = 13.sp)
+        }
+    }
+}
+
+@Composable
+private fun WindZoneTips(locationName: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Vindeksponert omraade for $locationName",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = Color(0xFF006064)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Denne posisjonen er i et vindeksponert omraade. Her er noen tips:",
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("- Sikre lause gjenstander utendoors ved sterk vind", fontSize = 13.sp)
+            Text("- Sjekk at tak og kledning taaler vindbelastningen", fontSize = 13.sp)
+            Text("- Foelg med paa yr.no og varsom.no for vindvarsler", fontSize = 13.sp)
+            Text("- Planlegg levegg eller beplantning som vindskjerm", fontSize = 13.sp)
         }
     }
 }
