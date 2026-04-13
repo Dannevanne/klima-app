@@ -451,6 +451,18 @@ private fun StationList(
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        station.distanceMeters?.let { dist ->
+                            val distText = if (dist >= 1000) {
+                                "%.1f km unna".format(dist / 1000.0)
+                            } else {
+                                "$dist m unna"
+                            }
+                            Text(
+                                text = distText,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
@@ -788,6 +800,18 @@ private fun StationInfoCard(station: WeatherStation) {
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            station.distanceMeters?.let { dist ->
+                val distText = if (dist >= 1000) {
+                    "%.1f km fra sokestedet".format(dist / 1000.0)
+                } else {
+                    "$dist m fra sokestedet"
+                }
+                Text(
+                    text = distText,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
