@@ -150,7 +150,7 @@ class StatisticViewModel(
             limit = 1,
             countries = listOf(IsoCountryCode.NORWAY)
         )
-        val response = placeAutocomplete.suggestions(query, options)
+        val response = placeAutocomplete.suggestions(query = query, options = options)
         val suggestion = response.value?.firstOrNull() ?: return null
 
         val selectResponse = placeAutocomplete.select(suggestion)
