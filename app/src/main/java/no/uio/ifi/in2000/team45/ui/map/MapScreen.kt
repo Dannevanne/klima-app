@@ -249,7 +249,7 @@ fun MapScreen(
                         }
                         IconButton(onClick = onFavoritesClick) {
                             Icon(Icons.Outlined.FavoriteBorder,
-                                contentDescription = stringResource(R.string.favorites))
+                                contentDescription = stringResource(R.string.saved_places))
                         }
                     }
                 }

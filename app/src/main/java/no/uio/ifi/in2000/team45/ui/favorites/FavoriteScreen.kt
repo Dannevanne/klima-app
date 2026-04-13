@@ -87,7 +87,7 @@ fun FavoriteScreen(
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.favorites),
+                        text = stringResource(R.string.saved_places),
                         modifier = Modifier.padding(8.dp),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
@@ -154,7 +154,7 @@ fun FavoriteScreen(
                     }
                     IconButton(onClick = {}) {
                         Icon(Icons.Filled.Favorite,
-                            contentDescription = stringResource(R.string.favorites))
+                            contentDescription = stringResource(R.string.saved_places))
                     }
                 }
             }
