@@ -14,11 +14,13 @@ enum class OverlayType(val label: String) {
 
 class MapDatasource {
 
-    // Check if coordinates fall inside an NVE flood zone
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
+    // NVE ArcGIS identify for a point against a given service
+    private suspend fun isInNveZone(
+        service: String, lat: Double, lon: Double
+    ): Boolean {
         val tolerance = 0.001
         val url = buildString {
-            append("https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/identify")
+            append("https://kart.nve.no/enterprise/rest/services/$service/MapServer/identify")
             append("?geometry=$lon,$lat")
             append("&geometryType=esriGeometryPoint")
             append("&sr=4326")
@@ -32,16 +34,26 @@ class MapDatasource {
         return try {
             val response = KtorClient.client.get(url)
             val body: String = response.body()
-            // If "results" array is non-empty, point is in a flood zone
             body.contains("\"results\"") && !body.contains("\"results\":[]")
                     && !body.contains("\"results\": []")
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Flood zone check failed", e)
+            Log.e("MapDatasource", "$service zone check failed", e)
             false
         }
     }
 
-    // Check if coordinates fall inside NGU radon aktsomhet zone
+    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
+        return isInNveZone("Flomsoner2", lat, lon)
+    }
+
+    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean {
+        return isInNveZone("SkredKvikkleire2", lat, lon)
+    }
+
+    suspend fun isInWindZone(lat: Double, lon: Double): Boolean {
+        return isInNveZone("Vindressurser", lat, lon)
+    }
+
     suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
         val tolerance = 0.001
         val url = buildString {
