@@ -15,4 +15,8 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
         return mapDatasource.isInFloodZone(lat, lon)
     }
+
+    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
+        return mapDatasource.isInRadonZone(lat, lon)
+    }
 }
