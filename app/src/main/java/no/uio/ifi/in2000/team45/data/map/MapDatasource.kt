@@ -3,6 +3,9 @@ package no.uio.ifi.in2000.team45.data.map
 import android.util.Log
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import no.uio.ifi.in2000.team45.network.KtorClient
 
 enum class OverlayType(val label: String) {
@@ -50,8 +53,37 @@ class MapDatasource {
         return isInNveZone("SkredKvikkleire2", lat, lon)
     }
 
-    suspend fun isInWindZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("Vindressurser", lat, lon)
+    // Returns average wind speed at 50m height (m/s), or null if no data
+    suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
+        val tolerance = 0.001
+        val url = buildString {
+            append("https://kart.nve.no/enterprise/rest/services/Vindressurser/MapServer/identify")
+            append("?geometry=$lon,$lat")
+            append("&geometryType=esriGeometryPoint")
+            append("&sr=4326")
+            append("&layers=all:3")
+            append("&tolerance=5")
+            append("&mapExtent=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
+            append("&imageDisplay=100,100,96")
+            append("&returnGeometry=false")
+            append("&f=json")
+        }
+        return try {
+            val response = KtorClient.client.get(url)
+            val body: String = response.body()
+            val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+            val root = json.parseToJsonElement(body).jsonObject
+            val results = root["results"]?.jsonArray ?: return null
+            for (result in results) {
+                val attrs = result.jsonObject["attributes"]?.jsonObject ?: continue
+                val pixelVal = attrs["Classify.Pixel Value"]?.jsonPrimitive?.content
+                pixelVal?.toDoubleOrNull()?.let { return it }
+            }
+            null
+        } catch (e: Exception) {
+            Log.e("MapDatasource", "Wind speed check failed", e)
+            null
+        }
     }
 
     suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
@@ -65,13 +97,12 @@ class MapDatasource {
             append("&BBOX=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
             append("&WIDTH=101&HEIGHT=101")
             append("&X=50&Y=50")
-            append("&INFO_FORMAT=application/json")
+            append("&INFO_FORMAT=text/plain")
         }
         return try {
             val response = KtorClient.client.get(url)
             val body: String = response.body()
-            body.contains("\"features\"") && !body.contains("\"features\":[]")
-                    && !body.contains("\"features\": []")
+            body.contains("Feature")
         } catch (e: Exception) {
             Log.e("MapDatasource", "Radon zone check failed", e)
             false
