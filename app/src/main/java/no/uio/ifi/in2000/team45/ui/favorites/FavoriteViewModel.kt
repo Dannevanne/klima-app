@@ -22,7 +22,9 @@ data class LocationStatus(
     val windSpeed: Double? = null,
     val precipitation: Double? = null,
     val inFloodZone: Boolean = false,
-    val inRadonZone: Boolean = false
+    val inRadonZone: Boolean = false,
+    val inQuickClayZone: Boolean = false,
+    val inWindZone: Boolean = false
 )
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
@@ -79,18 +81,20 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val station = statisticRepository.findNearestStation(
                     location.latitude, location.longitude, clientId
                 )
-                val floodZone = mapRepository.isInFloodZone(
-                    location.latitude, location.longitude
-                )
-                val radonZone = mapRepository.isInRadonZone(
-                    location.latitude, location.longitude
-                )
+                val lat = location.latitude
+                val lon = location.longitude
+                val floodZone = mapRepository.isInFloodZone(lat, lon)
+                val radonZone = mapRepository.isInRadonZone(lat, lon)
+                val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
+                val windZone = mapRepository.isInWindZone(lat, lon)
 
                 if (station == null) {
                     locationStatuses[key] = LocationStatus(
                         stationName = "Ingen stasjon funnet",
                         inFloodZone = floodZone,
-                        inRadonZone = radonZone
+                        inRadonZone = radonZone,
+                        inQuickClayZone = quickClayZone,
+                        inWindZone = windZone
                     )
                     return@launch
                 }
@@ -104,7 +108,9 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                         it.key.contains("precipitation")
                     }?.value,
                     inFloodZone = floodZone,
-                    inRadonZone = radonZone
+                    inRadonZone = radonZone,
+                    inQuickClayZone = quickClayZone,
+                    inWindZone = windZone
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
