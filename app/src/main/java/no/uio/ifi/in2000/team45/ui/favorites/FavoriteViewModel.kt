@@ -21,7 +21,8 @@ data class LocationStatus(
     val temperature: Double? = null,
     val windSpeed: Double? = null,
     val precipitation: Double? = null,
-    val inFloodZone: Boolean = false
+    val inFloodZone: Boolean = false,
+    val inRadonZone: Boolean = false
 )
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
@@ -81,11 +82,15 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val floodZone = mapRepository.isInFloodZone(
                     location.latitude, location.longitude
                 )
+                val radonZone = mapRepository.isInRadonZone(
+                    location.latitude, location.longitude
+                )
 
                 if (station == null) {
                     locationStatuses[key] = LocationStatus(
                         stationName = "Ingen stasjon funnet",
-                        inFloodZone = floodZone
+                        inFloodZone = floodZone,
+                        inRadonZone = radonZone
                     )
                     return@launch
                 }
@@ -98,7 +103,8 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                     precipitation = obs.entries.find {
                         it.key.contains("precipitation")
                     }?.value,
-                    inFloodZone = floodZone
+                    inFloodZone = floodZone,
+                    inRadonZone = radonZone
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
