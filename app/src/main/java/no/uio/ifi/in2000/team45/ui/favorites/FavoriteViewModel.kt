@@ -78,9 +78,6 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
 
         viewModelScope.launch {
             try {
-                val station = statisticRepository.findNearestStation(
-                    location.latitude, location.longitude, clientId
-                )
                 val lat = location.latitude
                 val lon = location.longitude
                 val floodZone = mapRepository.isInFloodZone(lat, lon)
@@ -88,7 +85,11 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
 
-                if (station == null) {
+                val stations = statisticRepository.findNearestStations(
+                    lat, lon, clientId, count = 5
+                )
+
+                if (stations.isEmpty()) {
                     locationStatuses[key] = LocationStatus(
                         stationName = "Ingen stasjon funnet",
                         inFloodZone = floodZone,
@@ -99,14 +100,38 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                val obs = statisticRepository.getLatestObservations(station.id, clientId)
+                // Try stations until we have temp, wind, and precip
+                var temp: Double? = null
+                var wind: Double? = null
+                var precip: Double? = null
+                var usedStation = stations.first().name
+
+                for (station in stations) {
+                    val obs = statisticRepository.getLatestObservations(
+                        station.id, clientId
+                    )
+                    if (temp == null) {
+                        obs["air_temperature"]?.let {
+                            temp = it
+                            usedStation = station.name
+                        }
+                    }
+                    if (wind == null) {
+                        obs["wind_speed"]?.let { wind = it }
+                    }
+                    if (precip == null) {
+                        obs.entries.find {
+                            it.key.contains("precipitation")
+                        }?.value?.let { precip = it }
+                    }
+                    if (temp != null && wind != null && precip != null) break
+                }
+
                 locationStatuses[key] = LocationStatus(
-                    stationName = station.name,
-                    temperature = obs["air_temperature"],
-                    windSpeed = obs["wind_speed"],
-                    precipitation = obs.entries.find {
-                        it.key.contains("precipitation")
-                    }?.value,
+                    stationName = usedStation,
+                    temperature = temp,
+                    windSpeed = wind,
+                    precipitation = precip,
                     inFloodZone = floodZone,
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
