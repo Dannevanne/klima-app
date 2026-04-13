@@ -29,6 +29,8 @@
     <string name="help">Help</string>
     <string name="menu">Menu</string>
     <string name="saved_places">Lagrede steder</string>
+    <string name="nav_map">Kart</string>
+    <string name="nav_statistics">Statistikk</string>
     <string name="need_location_permission">Needs location permission</string>
     <string name="permission_settings">"We need your permission to use your location. Go to settings to change permissions "</string>
     <string name="go_to_settings">Go to settings</string>
