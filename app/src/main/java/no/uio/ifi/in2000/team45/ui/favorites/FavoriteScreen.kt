@@ -269,7 +269,7 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
                 )
             }
             IconButton(onClick = onRemove) {
-                Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -329,7 +329,7 @@ private fun LocationCard(
                     )
                 }
                 IconButton(onClick = onRemove) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
@@ -401,7 +401,7 @@ private fun StatusChip(
             .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
         Column {
-            Text(label, fontSize = 10.sp, color = Color.DarkGray)
+            Text(label, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
         }
     }
