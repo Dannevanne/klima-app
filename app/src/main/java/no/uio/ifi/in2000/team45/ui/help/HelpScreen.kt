@@ -29,6 +29,7 @@ fun HelpScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
