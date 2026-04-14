@@ -438,7 +438,7 @@ private fun FloodZoneTips(locationName: String) {
                 text = "Flomsone-varsel for $locationName",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
-                color = Color(0xFFE65100)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
