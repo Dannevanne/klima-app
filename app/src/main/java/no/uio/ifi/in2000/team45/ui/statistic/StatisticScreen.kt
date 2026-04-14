@@ -978,11 +978,11 @@ private fun UvIndexCard(latitude: Double) {
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("0", fontSize = 10.sp, color = Color.Gray)
-                Text("3", fontSize = 10.sp, color = Color.Gray)
-                Text("6", fontSize = 10.sp, color = Color.Gray)
-                Text("8", fontSize = 10.sp, color = Color.Gray)
-                Text("11+", fontSize = 10.sp, color = Color.Gray)
+                Text("0", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("3", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("6", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("8", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("11+", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
