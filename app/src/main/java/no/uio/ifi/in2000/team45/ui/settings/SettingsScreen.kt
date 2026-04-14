@@ -35,9 +35,10 @@ import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import androidx.compose.material3.RadioButton
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -48,10 +49,21 @@ fun SettingsScreen(
     mapViewModel: MapViewModel
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(8.dp),
-                navigationIcon = { Icon(Icons.Filled.Settings, contentDescription = "") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                navigationIcon = {
+                    Icon(
+                        Icons.Filled.Settings,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    ) },
                 title = {
                     Text(
                         modifier = Modifier.padding(8.dp),
@@ -62,7 +74,10 @@ fun SettingsScreen(
             )
         },
         bottomBar = {
-            BottomAppBar{
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ){
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
