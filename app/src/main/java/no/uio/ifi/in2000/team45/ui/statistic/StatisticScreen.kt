@@ -272,7 +272,9 @@ fun StatisticScreen(
                 }
                 is StatisticUiState.Loading -> {
                     Box(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surface),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
