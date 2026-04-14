@@ -56,6 +56,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -249,7 +250,7 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
             Icon(
                 Icons.Filled.Star,
                 contentDescription = null,
-                tint = Color(0xFFFFC107),
+                tint = StarGold,
                 modifier = Modifier.padding(end = 8.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
