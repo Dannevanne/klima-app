@@ -18,7 +18,7 @@ class MapDatasource {
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
         val tolerance = 0.001
         val url = buildString {
-            append("https://kart.nve.no/enterprise/rest/services/Flomsoner2/MapServer/identify")
+            append("https://kart.nve.no/enterprise/rest/services/Flomaktsomhet/MapServer/identify")
             append("?geometry=$lon,$lat")
             append("&geometryType=esriGeometryPoint")
             append("&sr=4326")
@@ -54,8 +54,8 @@ class MapDatasource {
 
         return when (type) {
             OverlayType.FLOOD -> buildNveExportURL(
-                service = "Flomsoner2",
-                layers = "17",
+                service = "Flomaktsomhet",
+                layers = "1",
                 bbox = bbox, width = width, height = height
             )
             OverlayType.QUICK_CLAY -> buildNveExportURL(
