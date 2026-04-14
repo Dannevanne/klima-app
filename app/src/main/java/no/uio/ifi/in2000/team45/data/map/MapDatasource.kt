@@ -72,6 +72,11 @@ class MapDatasource {
             OverlayType.RADON -> buildRadonWmsURL(
                 bbox = bbox, width = width, height = height
             )
+            OverlayType.LANDSLIDE -> buildNveExportURL(
+                service = "JordFlomskredAktsomhet",
+                layers = "0,1", // getting both layers
+                bbox = bbox, width = width, height = height
+            )
         }
     }
 
