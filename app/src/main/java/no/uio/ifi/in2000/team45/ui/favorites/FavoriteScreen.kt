@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.favorites
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,6 +57,9 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.map.MapScreen
+import no.uio.ifi.in2000.team45.ui.map.MapTheme
+import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -408,7 +412,9 @@ private fun StatusChip(
 }
 
 @Composable
-private fun AdviceCard(text: String, backgroundColor: Color) {
+private fun AdviceCard(text: String,
+                       backgroundColor: Color
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -419,7 +425,8 @@ private fun AdviceCard(text: String, backgroundColor: Color) {
         Text(
             text = text,
             modifier = Modifier.padding(16.dp),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
     }
 }
