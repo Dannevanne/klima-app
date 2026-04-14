@@ -9,7 +9,8 @@ enum class OverlayType(val label: String) {
     FLOOD("Flom"),
     QUICK_CLAY("Kvikkleire"),
     RADON("Radon"),
-    WIND("Vind")
+    WIND("Vind"),
+    LANDSLIDE("Skred")
 }
 
 class MapDatasource {
