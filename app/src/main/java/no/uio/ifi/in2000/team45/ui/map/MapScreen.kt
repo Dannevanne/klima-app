@@ -208,6 +208,7 @@ fun MapScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -218,7 +219,8 @@ fun MapScreen(
                 ),
                 navigationIcon = {
                     Icon(Icons.Filled.Place,
-                        contentDescription = "") },
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.onSurface) },
                 title = {
                     Text(
                         modifier = Modifier.padding(8.dp),
