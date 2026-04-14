@@ -76,6 +76,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -248,7 +249,7 @@ fun StatisticScreen(
                                         Icon(
                                             Icons.Filled.Star,
                                             contentDescription = null,
-                                            tint = androidx.compose.ui.graphics.Color(0xFFFFC107),
+                                            tint = StarGold,
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         Column(modifier = Modifier.weight(1f)) {
@@ -420,7 +421,7 @@ private fun StationList(
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
                             contentDescription = if (isFav) "Fjern favoritt" else "Legg til favoritt",
-                            tint = if (isFav) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                            tint = if (isFav) StarGold
                                    else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -462,7 +463,7 @@ private fun ClimateDataView(
                     Icon(
                         imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
                         contentDescription = if (isFavorite) "Fjern favoritt" else "Legg til favoritt",
-                        tint = if (isFavorite) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                        tint = if (isFavorite) StarGold
                                else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
