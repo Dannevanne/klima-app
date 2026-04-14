@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 
@@ -87,7 +88,7 @@ fun FavoriteScreen(
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.favorites),
+                        text = stringResource(R.string.saved_places),
                         modifier = Modifier.padding(8.dp),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
@@ -144,18 +145,24 @@ fun FavoriteScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton(onClick = onMapClick) {
-                        Icon(Icons.Outlined.Place,
-                            contentDescription = stringResource(R.string.map))
-                    }
-                    IconButton(onClick = onStatisticClick) {
-                        Icon(painter = painterResource(R.drawable.outline_analytics),
-                            contentDescription = stringResource(R.string.to_statistics))
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Filled.Favorite,
-                            contentDescription = stringResource(R.string.favorites))
-                    }
+                    NavBarItem(
+                        onClick = onMapClick,
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        label = stringResource(R.string.nav_map),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = onStatisticClick,
+                        icon = { Icon(painter = painterResource(R.drawable.outline_analytics), contentDescription = null) },
+                        label = stringResource(R.string.nav_statistics),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = {},
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        label = stringResource(R.string.saved_places),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }

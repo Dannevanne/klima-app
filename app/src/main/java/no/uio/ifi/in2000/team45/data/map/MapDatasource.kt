@@ -12,7 +12,8 @@ enum class OverlayType(val label: String) {
     FLOOD("Flom"),
     QUICK_CLAY("Kvikkleire"),
     RADON("Radon"),
-    WIND("Vind")
+    WIND("Vind"),
+    LANDSLIDE("Skred")
 }
 
 class MapDatasource {
@@ -46,7 +47,7 @@ class MapDatasource {
     }
 
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("Flomsoner2", lat, lon)
+        return isInNveZone("Flomaktsomhet", lat, lon)
     }
 
     suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean {
@@ -122,8 +123,8 @@ class MapDatasource {
 
         return when (type) {
             OverlayType.FLOOD -> buildNveExportURL(
-                service = "Flomsoner2",
-                layers = "17",
+                service = "Flomaktsomhet",
+                layers = "1",
                 bbox = bbox, width = width, height = height
             )
             OverlayType.QUICK_CLAY -> buildNveExportURL(
@@ -137,6 +138,11 @@ class MapDatasource {
                 bbox = bbox, width = width, height = height
             )
             OverlayType.RADON -> buildRadonWmsURL(
+                bbox = bbox, width = width, height = height
+            )
+            OverlayType.LANDSLIDE -> buildNveExportURL(
+                service = "JordFlomskredAktsomhet",
+                layers = "0,1", // getting both layers
                 bbox = bbox, width = width, height = height
             )
         }
