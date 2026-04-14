@@ -73,6 +73,7 @@ fun FavoriteScreen(
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -83,7 +84,8 @@ fun FavoriteScreen(
                     Icon(
                         Icons.Filled.Favorite,
                         contentDescription = "",
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 title = {
@@ -103,7 +105,8 @@ fun FavoriteScreen(
                     }
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = {expanded = false}
+                        onDismissRequest = {expanded = false},
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         DropdownMenuItem(
                             onClick = onSettingsClick,
