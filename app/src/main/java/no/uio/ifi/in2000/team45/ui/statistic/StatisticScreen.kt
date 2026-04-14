@@ -900,6 +900,8 @@ private fun uvLabel(uv: Double): String = when {
 private fun UvIndexCard(latitude: Double) {
     val uvIndex = estimateUvIndex(latitude)
     val maxUv = 11.0
+    val indicatorColor = MaterialTheme.colorScheme.onSurface
+    val scaleLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -957,13 +959,13 @@ private fun UvIndexCard(latitude: Double) {
                     val x = size.width * fraction
                     // Triangle pointer at top
                     drawCircle(
-                        color = Color.Black,
+                        color = indicatorColor,
                         radius = 8f,
                         center = Offset(x, 6f)
                     )
                     // Line down to bar
                     drawLine(
-                        color = Color.Black,
+                        color = indicatorColor,
                         start = Offset(x, 10f),
                         end = Offset(x, size.height),
                         strokeWidth = 2f
@@ -978,11 +980,11 @@ private fun UvIndexCard(latitude: Double) {
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("0", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("3", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("6", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("8", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("11+", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("0", fontSize = 10.sp, color = scaleLabelColor)
+                Text("3", fontSize = 10.sp, color = scaleLabelColor)
+                Text("6", fontSize = 10.sp, color = scaleLabelColor)
+                Text("8", fontSize = 10.sp, color = scaleLabelColor)
+                Text("11+", fontSize = 10.sp, color = scaleLabelColor)
             }
         }
     }
