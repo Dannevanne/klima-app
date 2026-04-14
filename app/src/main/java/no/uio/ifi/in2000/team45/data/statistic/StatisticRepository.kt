@@ -26,8 +26,23 @@ class StatisticRepository(
         return datasource.findNearestStation(lat, lon, clientId)
     }
 
+    suspend fun findNearestStations(
+        lat: Double, lon: Double, clientId: String, count: Int = 5
+    ): List<WeatherStation> {
+        return datasource.findNearestStations(lat, lon, clientId, count)
+    }
+
     suspend fun getLatestObservations(stationId: String, clientId: String): Map<String, Double> {
         return datasource.getLatestObservations(stationId, clientId)
+    }
+
+    suspend fun getAnnualObservations(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): List<AnnualObservation> {
+        return datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
     }
 
     suspend fun getClimateStats(

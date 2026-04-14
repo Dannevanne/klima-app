@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -50,11 +51,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilterChip
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
@@ -210,49 +213,91 @@ fun StatisticScreen(
 
             when (val state = statisticViewModel.uiState) {
                 is StatisticUiState.Idle -> {
-                    if (favoriteStations.isNotEmpty()) {
-                        // Show pinned stations for quick access (like YR)
-                        Text(
-                            text = "Lagrede stasjoner",
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                    val history = statisticViewModel.searchHistory
+                    val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
+
+                    if (hasContent) {
                         LazyColumn {
-                            items(favoriteStations) { fav ->
-                                val station = WeatherStation(
-                                    id = fav.stationId,
-                                    name = fav.name,
-                                    latitude = 0.0, longitude = 0.0,
-                                    municipality = fav.municipality,
-                                    county = fav.county
-                                )
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
-                                        .clickable { statisticViewModel.selectStation(station) },
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                                ) {
-                                    Row(
+                            if (history.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Tidligere sok",
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                }
+                                items(history) { query ->
+                                    Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .padding(vertical = 2.dp)
+                                            .clickable {
+                                                statisticViewModel.updateSearchQuery(query)
+                                                statisticViewModel.searchStations()
+                                            },
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                                     ) {
-                                        Icon(
-                                            Icons.Filled.Star,
-                                            contentDescription = null,
-                                            tint = androidx.compose.ui.graphics.Color(0xFFFFC107),
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                                            if (fav.municipality.isNotBlank()) {
-                                                Text(
-                                                    "${fav.municipality}, ${fav.county}",
-                                                    fontSize = 13.sp,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
+                                        Row(
+                                            modifier = Modifier.padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Search,
+                                                contentDescription = null,
+                                                modifier = Modifier.padding(end = 8.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Text(query, fontSize = 15.sp)
+                                        }
+                                    }
+                                }
+                                item { Spacer(modifier = Modifier.height(12.dp)) }
+                            }
+
+                            if (favoriteStations.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Lagrede stasjoner",
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(bottom = 4.dp)
+                                    )
+                                }
+                                items(favoriteStations) { fav ->
+                                    val station = WeatherStation(
+                                        id = fav.stationId,
+                                        name = fav.name,
+                                        latitude = 0.0, longitude = 0.0,
+                                        municipality = fav.municipality,
+                                        county = fav.county
+                                    )
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                            .clickable { statisticViewModel.selectStation(station) },
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Star,
+                                                contentDescription = null,
+                                                tint = Color(0xFFFFC107),
+                                                modifier = Modifier.padding(end = 8.dp)
+                                            )
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                                if (fav.municipality.isNotBlank()) {
+                                                    Text(
+                                                        "${fav.municipality}, ${fav.county}",
+                                                        fontSize = 13.sp,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
                                             }
                                         }
                                     }
@@ -294,6 +339,9 @@ fun StatisticScreen(
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
+                        annualData = state.annualData,
+                        selectedPeriod = statisticViewModel.selectedPeriod,
+                        onPeriodChange = { statisticViewModel.updatePeriod(it) },
                         isFavorite = isFav,
                         onToggleFavorite = {
                             if (isFav) {
@@ -409,6 +457,18 @@ private fun StationList(
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        station.distanceMeters?.let { dist ->
+                            val distText = if (dist >= 1000) {
+                                "%.1f km unna".format(dist / 1000.0)
+                            } else {
+                                "$dist m unna"
+                            }
+                            Text(
+                                text = distText,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
@@ -424,10 +484,15 @@ private fun StationList(
     }
 }
 
+private val PERIOD_OPTIONS = listOf(10, 30, 50)
+
 @Composable
 private fun ClimateDataView(
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
+    annualData: List<AnnualObservation>,
+    selectedPeriod: Int,
+    onPeriodChange: (Int) -> Unit,
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     onBack: () -> Unit
@@ -436,6 +501,21 @@ private fun ClimateDataView(
         item {
             TextButton(onClick = onBack) {
                 Text(stringResource(R.string.back_to_search))
+            }
+        }
+
+        item {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                PERIOD_OPTIONS.forEach { years ->
+                    FilterChip(
+                        selected = selectedPeriod == years,
+                        onClick = { onPeriodChange(years) },
+                        label = { Text("$years ar") }
+                    )
+                }
             }
         }
 
@@ -468,6 +548,40 @@ private fun ClimateDataView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
+            }
+        }
+
+        if (annualData.isNotEmpty()) {
+            item {
+                OverviewCards(annualData = annualData, selectedPeriod = selectedPeriod)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if (annualData.any { it.totalPrecip != null }) {
+            item {
+                TrendChart(
+                    title = "Arlig nedbor (mm)",
+                    data = annualData.mapNotNull { a ->
+                        a.totalPrecip?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFF42A5F5)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if (annualData.any { it.meanTemp != null }) {
+            item {
+                TrendChart(
+                    title = "Arlig gjennomsnittstemperatur (C)",
+                    data = annualData.mapNotNull { a ->
+                        a.meanTemp?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFFEF5350),
+                    fillColor = Color(0x3042A5F5)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -530,6 +644,267 @@ private fun ClimateDataView(
         item {
             UvIndexCard(latitude = station.latitude)
             Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            StationInfoCard(station = station)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun OverviewCards(
+    annualData: List<AnnualObservation>,
+    selectedPeriod: Int
+) {
+    val avgPrecip = annualData.mapNotNull { it.totalPrecip }.average()
+        .takeIf { annualData.any { a -> a.totalPrecip != null } }
+    val avgTemp = annualData.mapNotNull { it.meanTemp }.average()
+        .takeIf { annualData.any { a -> a.meanTemp != null } }
+
+    // Trend: compare first half vs second half of the period
+    val precipTrend = computeTrend(annualData.mapNotNull { it.totalPrecip })
+    val tempTrend = computeTrend(annualData.mapNotNull { it.meanTemp })
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Oversikt siste $selectedPeriod ar",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                if (avgPrecip != null) {
+                    OverviewStat(
+                        label = "Nedbor snitt/ar",
+                        value = "${avgPrecip.toInt()} mm",
+                        trend = precipTrend,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                if (avgTemp != null) {
+                    OverviewStat(
+                        label = "Temperatur snitt",
+                        value = "${String.format("%.1f", avgTemp)} C",
+                        trend = tempTrend,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun OverviewStat(
+    label: String,
+    value: String,
+    trend: TrendInfo,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(8.dp)
+    ) {
+        Text(text = value, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            val trendColor = when (trend.direction) {
+                TrendDirection.UP -> Color(0xFFE53935)
+                TrendDirection.DOWN -> Color(0xFF43A047)
+                TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            val arrow = when (trend.direction) {
+                TrendDirection.UP -> "^"
+                TrendDirection.DOWN -> "v"
+                TrendDirection.STABLE -> "~"
+            }
+            Text(
+                text = arrow,
+                color = trendColor,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            if (trend.percentChange != null) {
+                Text(
+                    text = "${String.format("%+.0f", trend.percentChange)}%",
+                    color = trendColor,
+                    fontSize = 13.sp
+                )
+            }
+        }
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+data class TrendInfo(
+    val direction: TrendDirection,
+    val percentChange: Double?
+)
+
+enum class TrendDirection { UP, DOWN, STABLE }
+
+private fun computeTrend(values: List<Double>): TrendInfo {
+    if (values.size < 4) return TrendInfo(TrendDirection.STABLE, null)
+    val mid = values.size / 2
+    val firstHalf = values.subList(0, mid).average()
+    val secondHalf = values.subList(mid, values.size).average()
+
+    if (firstHalf == 0.0) return TrendInfo(TrendDirection.STABLE, null)
+
+    val change = ((secondHalf - firstHalf) / firstHalf) * 100.0
+    val direction = when {
+        change > 3.0 -> TrendDirection.UP
+        change < -3.0 -> TrendDirection.DOWN
+        else -> TrendDirection.STABLE
+    }
+    return TrendInfo(direction, change)
+}
+
+@Composable
+private fun StationInfoCard(station: WeatherStation) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Malestasjon",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(text = station.name, fontSize = 14.sp)
+            Text(
+                text = "Frost-ID: ${station.id}",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (station.municipality.isNotBlank()) {
+                Text(
+                    text = "${station.municipality}, ${station.county}",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Text(
+                text = "Pos: ${String.format("%.4f", station.latitude)}, ${String.format("%.4f", station.longitude)}",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            station.distanceMeters?.let { dist ->
+                val distText = if (dist >= 1000) {
+                    "%.1f km fra sokestedet".format(dist / 1000.0)
+                } else {
+                    "$dist m fra sokestedet"
+                }
+                Text(
+                    text = distText,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TrendChart(
+    title: String,
+    data: List<Pair<Int, Double>>,
+    lineColor: Color,
+    fillColor: Color? = null
+) {
+    if (data.size < 2) return
+
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            val minVal = data.minOf { it.second }
+            val maxVal = data.maxOf { it.second }
+            val range = (maxVal - minVal).coerceAtLeast(1.0)
+
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+            ) {
+                val w = size.width
+                val h = size.height
+                val padBottom = 20f
+                val chartH = h - padBottom
+                val step = w / (data.size - 1).coerceAtLeast(1)
+
+                val points = data.mapIndexed { i, (_, v) ->
+                    val x = i * step
+                    val y = chartH - ((v - minVal) / range * chartH).toFloat()
+                    Offset(x, y)
+                }
+
+                // Fill area under line
+                if (fillColor != null && points.size >= 2) {
+                    val path = Path().apply {
+                        moveTo(points.first().x, chartH)
+                        points.forEach { lineTo(it.x, it.y) }
+                        lineTo(points.last().x, chartH)
+                        close()
+                    }
+                    drawPath(path, color = Color(fillColor.value))
+                }
+
+                // Draw line
+                for (i in 0 until points.size - 1) {
+                    drawLine(
+                        color = lineColor,
+                        start = points[i],
+                        end = points[i + 1],
+                        strokeWidth = 3f
+                    )
+                }
+
+                // Draw dots
+                points.forEach { p ->
+                    drawCircle(color = lineColor, radius = 4f, center = p)
+                }
+            }
+
+            // Year labels
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val firstYear = data.first().first
+                val lastYear = data.last().first
+                Text(firstYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                if (data.size > 2) {
+                    val mid = data[data.size / 2].first
+                    Text(mid.toString(), fontSize = 10.sp, color = Color.Gray)
+                }
+                Text(lastYear.toString(), fontSize = 10.sp, color = Color.Gray)
+            }
         }
     }
 }
