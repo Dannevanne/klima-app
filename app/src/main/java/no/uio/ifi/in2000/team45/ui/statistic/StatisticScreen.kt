@@ -104,6 +104,7 @@ fun StatisticScreen(
 
     var expanded by remember { mutableStateOf(false)}
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,7 +116,8 @@ fun StatisticScreen(
                 navigationIcon = {
                     Icon(
                         painterResource(R.drawable.bar_chart),
-                        contentDescription = "")
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.onSurface)
                 },
                 title = {Text(
                     text = stringResource(R.string.climate_statistics),
@@ -132,7 +134,8 @@ fun StatisticScreen(
                     }
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = {expanded = false}
+                        onDismissRequest = {expanded = false},
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         DropdownMenuItem(
                             onClick = onSettingsClick,
@@ -163,7 +166,10 @@ fun StatisticScreen(
             )
         },
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ) {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
