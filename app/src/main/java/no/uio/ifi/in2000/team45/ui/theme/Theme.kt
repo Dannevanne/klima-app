@@ -43,6 +43,9 @@ private val LightColorScheme = lightColorScheme(
     surface = LightSurface,
     onBackground = LightOnSurface,
     onSurface = LightOnSurface,
+    surfaceContainerLow = LightBar,
+    surfaceContainerHigh = LightBar,
+    surfaceContainer = LightBox,
 
     primaryContainer = LightSurface,
     secondaryContainer = LightSurface,

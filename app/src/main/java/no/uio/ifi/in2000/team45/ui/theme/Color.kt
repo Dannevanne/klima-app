@@ -21,6 +21,8 @@ val DarkBox = Color(0xFF2C4F7C)
 val LightBackground = Color(0xFFC5D8EB)
 val LightSurface = Color(0xFFFFFFFF)
 val LightOnSurface = Color(0xFF000000)
+val LightBar = Color(0xFFFFFFFF)
+val LightBox = Color(0xFFFFFFFF)
 
 // Common
 val StarGold = Color(0xFFC97B00)
