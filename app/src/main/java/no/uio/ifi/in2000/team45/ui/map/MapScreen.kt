@@ -125,6 +125,8 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
+import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
+import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
 
 @Composable
 fun MapStateScreen(
@@ -481,7 +483,7 @@ fun DataMap(
 
                 // changed to so that the expanded box is rendered
                 val bbox = overlayBBox ?: return@MapEffect
-                val corners = cornersFromBBOX(bbox)
+                val corners = cornersFromBBox(bbox)
 
                 if (style.getLayer("overlaylayer") != null) {
                     style.removeStyleLayer("overlaylayer")

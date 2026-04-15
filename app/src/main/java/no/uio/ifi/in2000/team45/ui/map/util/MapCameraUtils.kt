@@ -7,7 +7,7 @@ import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 
 // Function for zoom change. Limits duplication of code, and is used twice in the
 // parameter for MapZoomControls to decide what the zoom in and zoom out buttons do.
-private fun zoomMap(mapView: MapView?,
+fun zoomMap(mapView: MapView?,
                     viewPortState: MapViewportState,
                     zoomChange: Double) {
     val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
@@ -21,7 +21,7 @@ private fun zoomMap(mapView: MapView?,
 }
 
 // Builds new camera configuration for the map
-private fun moveToPoint(
+fun moveToPoint(
     point: Point,
     viewPortState: MapViewportState
 ){
