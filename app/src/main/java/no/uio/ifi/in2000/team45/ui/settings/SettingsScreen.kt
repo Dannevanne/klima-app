@@ -86,12 +86,6 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     NavBarItem(
-                        onClick = {},
-                        icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
-                        label = stringResource(R.string.settings),
-                        modifier = Modifier.weight(1f)
-                    )
-                    NavBarItem(
                         onClick = onMapClick,
                         icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
                         label = stringResource(R.string.nav_map),
