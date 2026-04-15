@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.favorites
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,6 +57,10 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.map.MapScreen
+import no.uio.ifi.in2000.team45.ui.map.MapTheme
+import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
+import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,17 +78,19 @@ fun FavoriteScreen(
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     titleContentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Favorite,
                         contentDescription = "",
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 title = {
@@ -103,7 +110,8 @@ fun FavoriteScreen(
                     }
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = {expanded = false}
+                        onDismissRequest = {expanded = false},
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         DropdownMenuItem(
                             onClick = onSettingsClick,
@@ -135,7 +143,7 @@ fun FavoriteScreen(
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 contentColor = MaterialTheme.colorScheme.onSurface
             ) {
                 Row(
@@ -256,7 +264,7 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
             Icon(
                 Icons.Filled.Star,
                 contentDescription = null,
-                tint = Color(0xFFFFC107),
+                tint = StarGold,
                 modifier = Modifier.padding(end = 8.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -275,7 +283,7 @@ private fun StationCard(station: FavoriteStation, onRemove: () -> Unit) {
                 )
             }
             IconButton(onClick = onRemove) {
-                Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -310,7 +318,9 @@ private fun LocationCard(
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             // Header: name + coordinates + delete
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -335,7 +345,7 @@ private fun LocationCard(
                     )
                 }
                 IconButton(onClick = onRemove) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = Color.Gray)
+                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
@@ -407,14 +417,16 @@ private fun StatusChip(
             .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
         Column {
-            Text(label, fontSize = 10.sp, color = Color.DarkGray)
+            Text(label, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
 
 @Composable
-private fun AdviceCard(text: String, backgroundColor: Color) {
+private fun AdviceCard(text: String,
+                       backgroundColor: Color
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -425,7 +437,8 @@ private fun AdviceCard(text: String, backgroundColor: Color) {
         Text(
             text = text,
             modifier = Modifier.padding(16.dp),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
     }
 }
@@ -444,7 +457,7 @@ private fun FloodZoneTips(locationName: String) {
                 text = "Flomsone-varsel for $locationName",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
-                color = Color(0xFFE65100)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(

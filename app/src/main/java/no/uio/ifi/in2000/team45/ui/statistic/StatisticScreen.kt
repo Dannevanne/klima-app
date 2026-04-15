@@ -70,6 +70,8 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
@@ -79,6 +81,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val MONTH_NAMES = listOf(
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -107,18 +110,20 @@ fun StatisticScreen(
 
     var expanded by remember { mutableStateOf(false)}
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     titleContentColor = MaterialTheme.colorScheme.onSurface,
                     navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 navigationIcon = {
                     Icon(
                         painterResource(R.drawable.bar_chart),
-                        contentDescription = "")
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.onSurface)
                 },
                 title = {Text(
                     text = stringResource(R.string.climate_statistics),
@@ -135,7 +140,8 @@ fun StatisticScreen(
                     }
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = {expanded = false}
+                        onDismissRequest = {expanded = false},
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         DropdownMenuItem(
                             onClick = onSettingsClick,
@@ -166,7 +172,10 @@ fun StatisticScreen(
             )
         },
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ) {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
@@ -273,31 +282,24 @@ fun StatisticScreen(
                                     Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(vertical = 4.dp)
-                                            .clickable { statisticViewModel.selectStation(station) },
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                                            .padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(12.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                Icons.Filled.Star,
-                                                contentDescription = null,
-                                                tint = Color(0xFFFFC107),
-                                                modifier = Modifier.padding(end = 8.dp)
-                                            )
-                                            Column(modifier = Modifier.weight(1f)) {
-                                                Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                                                if (fav.municipality.isNotBlank()) {
-                                                    Text(
-                                                        "${fav.municipality}, ${fav.county}",
-                                                        fontSize = 13.sp,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                }
+                                        Icon(
+                                            Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = StarGold,
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                            if (fav.municipality.isNotBlank()) {
+                                                Text(
+                                                    "${fav.municipality}, ${fav.county}",
+                                                    fontSize = 13.sp,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
                                             }
                                         }
                                     }
@@ -310,7 +312,9 @@ fun StatisticScreen(
                 }
                 is StatisticUiState.Loading -> {
                     Box(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
@@ -380,6 +384,10 @@ private fun SearchBar(
                     contentDescription = stringResource(R.string.search))
             }
         },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+        ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
         singleLine = true,
@@ -436,6 +444,7 @@ private fun StationList(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -474,7 +483,7 @@ private fun StationList(
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
                             contentDescription = if (isFav) "Fjern favoritt" else "Legg til favoritt",
-                            tint = if (isFav) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                            tint = if (isFav) StarGold
                                    else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -536,7 +545,7 @@ private fun ClimateDataView(
                     Icon(
                         imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
                         contentDescription = if (isFavorite) "Fjern favoritt" else "Legg til favoritt",
-                        tint = if (isFavorite) androidx.compose.ui.graphics.Color(0xFFFFC107)
+                        tint = if (isFavorite) StarGold
                                else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -988,7 +997,9 @@ private fun ClimateTable(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
@@ -1266,12 +1277,16 @@ private fun uvLabel(uv: Double): String = when {
 private fun UvIndexCard(latitude: Double) {
     val uvIndex = estimateUvIndex(latitude)
     val maxUv = 11.0
+    val indicatorColor = MaterialTheme.colorScheme.onSurface
+    val scaleLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             Text(
                 text = "UV-indeks (estimat for denne maneden)",
                 fontWeight = FontWeight.Bold,
@@ -1323,13 +1338,13 @@ private fun UvIndexCard(latitude: Double) {
                     val x = size.width * fraction
                     // Triangle pointer at top
                     drawCircle(
-                        color = Color.Black,
+                        color = indicatorColor,
                         radius = 8f,
                         center = Offset(x, 6f)
                     )
                     // Line down to bar
                     drawLine(
-                        color = Color.Black,
+                        color = indicatorColor,
                         start = Offset(x, 10f),
                         end = Offset(x, size.height),
                         strokeWidth = 2f
@@ -1344,11 +1359,11 @@ private fun UvIndexCard(latitude: Double) {
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("0", fontSize = 10.sp, color = Color.Gray)
-                Text("3", fontSize = 10.sp, color = Color.Gray)
-                Text("6", fontSize = 10.sp, color = Color.Gray)
-                Text("8", fontSize = 10.sp, color = Color.Gray)
-                Text("11+", fontSize = 10.sp, color = Color.Gray)
+                Text("0", fontSize = 10.sp, color = scaleLabelColor)
+                Text("3", fontSize = 10.sp, color = scaleLabelColor)
+                Text("6", fontSize = 10.sp, color = scaleLabelColor)
+                Text("8", fontSize = 10.sp, color = scaleLabelColor)
+                Text("11+", fontSize = 10.sp, color = scaleLabelColor)
             }
         }
     }

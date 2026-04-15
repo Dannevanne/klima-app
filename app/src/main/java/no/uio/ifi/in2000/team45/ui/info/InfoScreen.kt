@@ -29,11 +29,12 @@ fun InfoScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
             modifier = Modifier.fillMaxWidth(),
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 titleContentColor = MaterialTheme.colorScheme.onSurface,
                 navigationIconContentColor = MaterialTheme.colorScheme.onSurface
             ),
@@ -41,7 +42,8 @@ fun InfoScreen(
                 IconButton(
                     onClick = onClick)
                 {Icon(Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.go_back)
+                    contentDescription = stringResource(R.string.go_back),
+                    tint = MaterialTheme.colorScheme.onSurface
                 )}
             },
             title = {
