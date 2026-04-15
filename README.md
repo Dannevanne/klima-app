@@ -1,4 +1,4 @@
-# Team 45 - Naturhendelser
+# Team 45 -- Naturhendelser
 
 Android-app for Case 3 (Naturhendelser) i IN2000 ved UiO.
 Appen lar huseiere og hytteeiere sjekke klimarisiko (flom, skred) og klimastatistikk for sitt omrade.
@@ -39,13 +39,3 @@ Krever:
 - **Mapbox access token** i `app/src/main/res/values/mapbox_access_token.xml`
 - **Frost client ID** i `app/src/main/res/values/frost_client_id.xml`
   - Registrer deg paa https://frost.met.no/auth/requestCredentials.html
-
-## Branching
-
-Branchen `statistics-feature` ble forgrenet fra `main` ved commit `79a70e8`.
-All apputvikling har skjedd paa denne branchen:
-
-1. MVP-skjelett og navigasjon
-2. Mapbox-integrasjon (merget inn fra `mapbox`-branchen)
-3. NVE flomsone-overlay
-4. Frost API klimastatistikk-skjerm
