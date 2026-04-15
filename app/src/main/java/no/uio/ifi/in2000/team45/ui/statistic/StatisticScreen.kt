@@ -282,24 +282,32 @@ fun StatisticScreen(
                                     Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                                            .padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .padding(vertical = 4.dp)
+                                            .clickable { statisticViewModel.selectStation(station) },
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                                     ) {
-                                        Icon(
-                                            Icons.Filled.Star,
-                                            contentDescription = null,
-                                            tint = StarGold,
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                                            if (fav.municipality.isNotBlank()) {
-                                                Text(
-                                                    "${fav.municipality}, ${fav.county}",
-                                                    fontSize = 13.sp,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(MaterialTheme.colorScheme.surfaceContainer)
+                                                .padding(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Star,
+                                                contentDescription = null,
+                                                tint = StarGold,
+                                                modifier = Modifier.padding(end = 8.dp)
+                                            )
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+                                                if (fav.municipality.isNotBlank()) {
+                                                    Text(
+                                                        "${fav.municipality}, ${fav.county}",
+                                                        fontSize = 13.sp,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
                                             }
                                         }
                                     }
