@@ -34,7 +34,7 @@ fun InfoScreen(
             TopAppBar(
             modifier = Modifier.fillMaxWidth(),
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 titleContentColor = MaterialTheme.colorScheme.onSurface,
                 navigationIconContentColor = MaterialTheme.colorScheme.onSurface
             ),

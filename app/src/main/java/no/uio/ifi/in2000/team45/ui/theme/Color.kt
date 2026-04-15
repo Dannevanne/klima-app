@@ -11,9 +11,11 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // Darkmode
-val DarkBackground = Color(0xFF1C3A5A)
+val DarkBar = Color(0xFF1C3A5A)
+val DarkBackground = Color(0xFF0F263E)
 val DarkSurface = Color(0xFF1E3A5F)
 val DarkOnSurface = Color(0xFFFFFFFF)
+val DarkBox = Color(0xFF2C4F7C)
 
 // Lightmode
 val LightBackground = Color(0xFFC5D8EB)
