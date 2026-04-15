@@ -10,6 +10,8 @@ class StatisticDatasourceTest {
 
     @Test
     fun testParseStationsShouldReturnListOfWeatherStation() {
+        val dummyDatasource = StatisticDatasource()
+
         val dummyData = """
             {
               "data": [
