@@ -16,20 +16,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 
 private val Context.favoritesDataStore by preferencesDataStore(name = "favorites")
-
-data class FavoriteStation(
-    val stationId: String,
-    val name: String,
-    val municipality: String = "",
-    val county: String = ""
-)
-
-data class FavoriteLocation(
-    val latitude: Double,
-    val longitude: Double,
-    val label: String = ""
-)
-
 class FavoriteRepository(private val context: Context) {
 
     companion object {
