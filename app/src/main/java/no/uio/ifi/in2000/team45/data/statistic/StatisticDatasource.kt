@@ -21,7 +21,8 @@ data class WeatherStation(
     val latitude: Double,
     val longitude: Double,
     val municipality: String = "",
-    val county: String = ""
+    val county: String = "",
+    val distanceMeters: Int? = null
 )
 
 data class ClimateNormal(
@@ -34,6 +35,12 @@ data class MonthlyObservation(
     val elementId: String,
     val month: Int,
     val value: Double
+)
+
+data class AnnualObservation(
+    val year: Int,
+    val meanTemp: Double?,
+    val totalPrecip: Double?
 )
 
 class StatisticDatasource {
@@ -227,24 +234,31 @@ class StatisticDatasource {
     suspend fun findNearestStation(
         lat: Double, lon: Double, clientId: String
     ): WeatherStation? {
+        return findNearestStations(lat, lon, clientId, count = 1).firstOrNull()
+    }
+
+    // Find N nearest stations to given coordinates
+    suspend fun findNearestStations(
+        lat: Double, lon: Double, clientId: String, count: Int = 5
+    ): List<WeatherStation> {
         val geometry = java.net.URLEncoder.encode("nearest(POINT($lon $lat))", "UTF-8")
         val url = "$FROST_BASE/sources/v0.jsonld" +
                 "?types=SensorSystem" +
                 "&geometry=$geometry" +
-                "&nearestmaxcount=1"
+                "&nearestmaxcount=$count"
         return try {
             val response = KtorClient.client.get(url) {
                 header("Authorization", authHeader(clientId))
             }
             val body: String = response.body()
             if (response.status.value != 200) {
-                Log.e(TAG, "Nearest station failed: ${response.status.value}")
-                return null
+                Log.e(TAG, "Nearest stations failed: ${response.status.value}")
+                return emptyList()
             }
-            parseStations(body).firstOrNull()
+            parseStations(body)
         } catch (e: Exception) {
-            Log.e(TAG, "Nearest station error", e)
-            null
+            Log.e(TAG, "Nearest stations error", e)
+            emptyList()
         }
     }
 
@@ -279,6 +293,67 @@ class StatisticDatasource {
         } catch (e: Exception) {
             Log.e(TAG, "Latest observations error", e)
             emptyMap()
+        }
+    }
+
+    suspend fun getAnnualObservations(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): List<AnnualObservation> {
+        val elements = listOf(
+            "mean(air_temperature P1Y)",
+            "sum(precipitation_amount P1Y)"
+        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
+                "&elements=$elements" +
+                "&timeresolutions=P1Y"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            val body: String = response.body()
+            if (response.status.value != 200) {
+                Log.e(TAG, "Annual observations failed: ${response.status.value}")
+                return emptyList()
+            }
+            parseAnnualObservations(body)
+        } catch (e: Exception) {
+            Log.e(TAG, "Annual observations error", e)
+            emptyList()
+        }
+    }
+
+    private fun parseAnnualObservations(body: String): List<AnnualObservation> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyList()
+
+        val byYear = mutableMapOf<Int, MutableMap<String, Double>>()
+
+        for (item in data) {
+            val obj = item.jsonObject
+            val refTime = obj["referenceTime"]?.jsonPrimitive?.content ?: continue
+            val year = refTime.substring(0, 4).toIntOrNull() ?: continue
+            val observations = obj["observations"]?.jsonArray ?: continue
+
+            val yearMap = byYear.getOrPut(year) { mutableMapOf() }
+            for (obs in observations) {
+                val obsObj = obs.jsonObject
+                val elementId = obsObj["elementId"]?.jsonPrimitive?.content ?: continue
+                val value = obsObj["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                yearMap[elementId] = value
+            }
+        }
+
+        return byYear.entries.sortedBy { it.key }.map { (year, values) ->
+            AnnualObservation(
+                year = year,
+                meanTemp = values.entries.find { it.key.contains("air_temperature") }?.value,
+                totalPrecip = values.entries.find { it.key.contains("precipitation") }?.value
+            )
         }
     }
 

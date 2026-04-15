@@ -628,8 +628,18 @@ fun DataMap(
         }
 
         MapZoomControls(
-            onZoomIn = { zoomMap(mapViewRef, viewportState, 1.0) },
-            onZoomOut = { zoomMap(mapViewRef, viewportState, -1.0) },
+            onZoomIn = {
+                zoomMap(mapViewRef, viewportState, 1.0)
+                // forcing update overlay after zoom
+                if (overlayBBox != null) {
+                    mapViewModel.updateOverlay(bbox = overlayBBox , width = mapWidth, height = mapHeight)
+                }},
+            onZoomOut = {
+                zoomMap(mapViewRef, viewportState, -1.0)
+                // forcing update overlay after zoom
+                if (overlayBBox != null) {
+                    mapViewModel.updateOverlay(bbox = overlayBBox , width = mapWidth, height = mapHeight)
+                }},
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)

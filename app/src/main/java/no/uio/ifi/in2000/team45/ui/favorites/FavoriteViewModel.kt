@@ -21,7 +21,10 @@ data class LocationStatus(
     val temperature: Double? = null,
     val windSpeed: Double? = null,
     val precipitation: Double? = null,
-    val inFloodZone: Boolean = false
+    val inFloodZone: Boolean = false,
+    val inRadonZone: Boolean = false,
+    val inQuickClayZone: Boolean = false,
+    val avgWindSpeed: Double? = null
 )
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
@@ -75,30 +78,64 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
 
         viewModelScope.launch {
             try {
-                val station = statisticRepository.findNearestStation(
-                    location.latitude, location.longitude, clientId
-                )
-                val floodZone = mapRepository.isInFloodZone(
-                    location.latitude, location.longitude
+                val lat = location.latitude
+                val lon = location.longitude
+                val floodZone = mapRepository.isInFloodZone(lat, lon)
+                val radonZone = mapRepository.isInRadonZone(lat, lon)
+                val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
+                val avgWind = mapRepository.getWindSpeed(lat, lon)
+
+                val stations = statisticRepository.findNearestStations(
+                    lat, lon, clientId, count = 5
                 )
 
-                if (station == null) {
+                if (stations.isEmpty()) {
                     locationStatuses[key] = LocationStatus(
                         stationName = "Ingen stasjon funnet",
-                        inFloodZone = floodZone
+                        inFloodZone = floodZone,
+                        inRadonZone = radonZone,
+                        inQuickClayZone = quickClayZone,
+                        avgWindSpeed = avgWind
                     )
                     return@launch
                 }
 
-                val obs = statisticRepository.getLatestObservations(station.id, clientId)
+                // Try stations until we have temp, wind, and precip
+                var temp: Double? = null
+                var wind: Double? = null
+                var precip: Double? = null
+                var usedStation = stations.first().name
+
+                for (station in stations) {
+                    val obs = statisticRepository.getLatestObservations(
+                        station.id, clientId
+                    )
+                    if (temp == null) {
+                        obs["air_temperature"]?.let {
+                            temp = it
+                            usedStation = station.name
+                        }
+                    }
+                    if (wind == null) {
+                        obs["wind_speed"]?.let { wind = it }
+                    }
+                    if (precip == null) {
+                        obs.entries.find {
+                            it.key.contains("precipitation")
+                        }?.value?.let { precip = it }
+                    }
+                    if (temp != null && wind != null && precip != null) break
+                }
+
                 locationStatuses[key] = LocationStatus(
-                    stationName = station.name,
-                    temperature = obs["air_temperature"],
-                    windSpeed = obs["wind_speed"],
-                    precipitation = obs.entries.find {
-                        it.key.contains("precipitation")
-                    }?.value,
-                    inFloodZone = floodZone
+                    stationName = usedStation,
+                    temperature = temp,
+                    windSpeed = wind,
+                    precipitation = precip,
+                    inFloodZone = floodZone,
+                    inRadonZone = radonZone,
+                    inQuickClayZone = quickClayZone,
+                    avgWindSpeed = avgWind
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
