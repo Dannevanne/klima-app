@@ -39,6 +39,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
+import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -51,25 +53,14 @@ fun SettingsScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                modifier = Modifier.padding(8.dp),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            AppTopBar(
+                title = stringResource(R.string.settings),
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Settings,
-                        contentDescription = "",
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
-                    ) },
-                title = {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.settings),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold)
+                    )
                 }
             )
         },

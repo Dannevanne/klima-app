@@ -121,6 +121,10 @@ import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
+import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
 
 @Composable
 fun MapStateScreen(
@@ -212,23 +216,14 @@ fun MapScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            AppTopBar(
+                title = stringResource(R.string.map),
                 navigationIcon = {
-                    Icon(Icons.Filled.Place,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.onSurface) },
-                title = {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.map),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold)
+                    Icon(
+                        Icons.Filled.Place,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             )
         },

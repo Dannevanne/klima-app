@@ -81,6 +81,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
@@ -114,25 +115,16 @@ fun StatisticScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            AppTopBar(
+                title = stringResource(R.string.climate_statistics),
+                titleFontSize = 24.sp,
                 navigationIcon = {
                     Icon(
                         painterResource(R.drawable.bar_chart),
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 },
-                title = {Text(
-                    text = stringResource(R.string.climate_statistics),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(8.dp)
-                )},
                 actions = {
                     OverflowMenuButton(onClick = { expanded = true } )
 

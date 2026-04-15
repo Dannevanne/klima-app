@@ -57,6 +57,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.MapScreen
@@ -82,25 +83,14 @@ fun FavoriteScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            AppTopBar(
+                title = stringResource(R.string.saved_places),
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Favorite,
-                        contentDescription = "",
+                        contentDescription = null,
                         modifier = Modifier.padding(start = 8.dp),
                         tint = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                title = {
-                    Text(
-                        text = stringResource(R.string.saved_places),
-                        modifier = Modifier.padding(8.dp),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold
                     )
                 },
                 actions = {
