@@ -712,60 +712,6 @@ fun DataMap(
     }
 }
 
-// Makes Bitmap from the URL from the repository / datasource
-// so it can be showed as an overlay on the map.
-suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
-    val request = ImageRequest.Builder(context)
-        .data(imageURL)
-        .allowHardware(false)
-        .build()
-
-    val result = ImageLoader(context).execute(request)
-
-    return if(result is SuccessResult){
-        result.drawable.toBitmap()
-    }
-    else{
-        null
-    }
-}
-
-// Function that should just expand the current bbox on the map
-// factor is the expanding number, 1.5 might be good
-fun expandBBox(bbox: List<Double>, factor: Double = 1.5): List<Double> {
-    val minLon = bbox[0]
-    val minLat = bbox[1]
-    val maxLon = bbox[2]
-    val maxLat = bbox[3]
-
-    // expanding the bbox
-    val lonExpand = (maxLon - minLon) * factor
-    val latExpand = (maxLat - minLat) * factor
-
-    return listOf(
-        minLon - lonExpand,
-        minLat - latExpand,
-        maxLon + lonExpand,
-        maxLat + latExpand
-    )
-}
-
-// MapBox ImageSource needs the corners for the picture in the correct order,
-// not just the bbox values. This function does this conversion for us.
-fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
-    val minLon = bbox[0]
-    val minLat = bbox[1]
-    val maxLon = bbox[2]
-    val maxLat = bbox[3]
-
-    return listOf(
-        listOf(minLon, maxLat),
-        listOf(maxLon, maxLat),
-        listOf(maxLon, minLat),
-        listOf(minLon, minLat)
-    )
-}
-
 // Composable to change map look when the selected theme changes
 @Composable
 fun MapThemeEffect(useDarkMap: Boolean){
@@ -775,32 +721,4 @@ fun MapThemeEffect(useDarkMap: Boolean){
             else Style.STANDARD
         )
     }
-}
-
-// Function for zoom change. Limits duplication of code, and is used twice in the
-// parameter for MapZoomControls to decide what the zoom in and zoom out buttons do.
-private fun zoomMap(mapView: MapView?,
-                    viewPortState: MapViewportState,
-                    zoomChange: Double) {
-    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
-
-    val camera = CameraOptions.Builder().zoom(
-        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
-    )
-        .build()
-
-    viewPortState.easeTo(camera)
-}
-
-// Builds new camera configuration for the map
-private fun moveToPoint(
-    point: Point,
-    viewPortState: MapViewportState
-){
-    val camera = CameraOptions.Builder()
-        .center(point)
-        .zoom(13.5)
-        .build()
-
-    viewPortState.easeTo(camera)
 }
