@@ -57,7 +57,9 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.MapScreen
@@ -107,37 +109,30 @@ fun FavoriteScreen(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    NavBarItem(
-                        onClick = onMapClick,
-                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+            AppBottomBar(
+                items = listOf(
+                    BottomBarItemData(
                         label = stringResource(R.string.nav_map),
-                        modifier = Modifier.weight(1f)
-                    )
-                    NavBarItem(
-                        onClick = onStatisticClick,
-                        icon = { Icon(painter = painterResource(R.drawable.outline_analytics), contentDescription = null) },
+                        onClick = onMapClick,
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) }
+                    ),
+                    BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
-                        modifier = Modifier.weight(1f)
-                    )
-                    NavBarItem(
-                        onClick = {},
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        onClick = onStatisticClick,
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_analytics),
+                                contentDescription = null
+                            )
+                        }
+                    ),
+                    BottomBarItemData(
                         label = stringResource(R.string.saved_places),
-                        modifier = Modifier.weight(1f)
+                        onClick = {},
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) }
                     )
-                }
-            }
+                )
+            )
         }
     ) { innerPadding ->
         LazyColumn(

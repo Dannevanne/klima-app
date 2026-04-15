@@ -115,13 +115,16 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.TextFieldDefaults
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
@@ -230,39 +233,31 @@ fun MapScreen(
             )
         },
         bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ){
-                    Row(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-
-                    ) {
-                        NavBarItem(
-                            onClick = {},
-                            icon = { Icon(Icons.Filled.Place, contentDescription = null) },
-                            label = stringResource(R.string.nav_map),
-                            modifier = Modifier.weight(1f)
-                        )
-                        NavBarItem(
-                            onClick = onStatisticClick,
-                            icon = { Icon(painter = painterResource(R.drawable.outline_analytics), contentDescription = null) },
-                            label = stringResource(R.string.nav_statistics),
-                            modifier = Modifier.weight(1f)
-                        )
-                        NavBarItem(
-                            onClick = onFavoritesClick,
-                            icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
-                            label = stringResource(R.string.saved_places),
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
+            AppBottomBar(
+                items = listOf(
+                    BottomBarItemData(
+                        label = stringResource(R.string.nav_map),
+                        onClick = {},
+                        icon = { Icon(Icons.Filled.Place, contentDescription = null) }
+                    ),
+                    BottomBarItemData(
+                        label = stringResource(R.string.nav_statistics),
+                        onClick = onStatisticClick,
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_analytics),
+                                contentDescription = null
+                            )
+                        }
+                    ),
+                    BottomBarItemData(
+                        label = stringResource(R.string.saved_places),
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
+                    )
+                )
+            )
+        }
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
