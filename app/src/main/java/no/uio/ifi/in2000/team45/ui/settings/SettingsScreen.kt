@@ -62,7 +62,7 @@ fun SettingsScreen(
             )
         },
         bottomBar = {
-            BottomAppBar{
+            BottomAppBar {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
@@ -70,12 +70,6 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    NavBarItem(
-                        onClick = {},
-                        icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
-                        label = stringResource(R.string.settings),
-                        modifier = Modifier.weight(1f)
-                    )
                     NavBarItem(
                         onClick = onMapClick,
                         icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
