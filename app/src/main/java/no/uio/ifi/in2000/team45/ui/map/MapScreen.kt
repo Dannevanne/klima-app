@@ -94,6 +94,7 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.AlertDialog
@@ -114,6 +115,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.TextFieldDefaults
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
@@ -522,7 +524,14 @@ fun DataMap(
                 // two way flow. User input gets sent to ViewModel, which updates searchQuery
                 // and starts an autocomplete search. Then the UI is updated based of results
 
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
                 placeholder = { Text("Search after place in Norway") },
                 singleLine = true,
                 leadingIcon = {
@@ -555,6 +564,7 @@ fun DataMap(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
                                 .padding(16.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -566,6 +576,7 @@ fun DataMap(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.background)
                                         .clickable {
                                             mapViewModel.selectSuggestion(item) { point ->
                                                 moveToPoint(point, viewportState)

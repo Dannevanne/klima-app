@@ -243,6 +243,7 @@ fun StatisticScreen(
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
+                                            .background(MaterialTheme.colorScheme.surfaceContainer)
                                             .padding(12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -274,7 +275,7 @@ fun StatisticScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.surface),
+                            .background(MaterialTheme.colorScheme.background),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
@@ -397,6 +398,7 @@ private fun StationList(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -622,7 +624,9 @@ private fun ClimateTable(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
@@ -907,7 +911,9 @@ private fun UvIndexCard(latitude: Double) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             Text(
                 text = "UV-indeks (estimat for denne maneden)",
                 fontWeight = FontWeight.Bold,

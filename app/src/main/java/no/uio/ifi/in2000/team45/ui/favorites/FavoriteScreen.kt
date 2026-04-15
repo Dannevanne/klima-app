@@ -308,7 +308,9 @@ private fun LocationCard(
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(12.dp)) {
             // Header: name + coordinates + delete
             Row(
                 modifier = Modifier.fillMaxWidth(),
