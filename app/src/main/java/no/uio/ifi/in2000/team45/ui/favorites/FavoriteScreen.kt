@@ -57,6 +57,8 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
+import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.MapScreen
 import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
@@ -102,42 +104,15 @@ fun FavoriteScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = {expanded = true}) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = stringResource(R.string.menu)
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = {expanded = false},
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ) {
-                        DropdownMenuItem(
-                            onClick = onSettingsClick,
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.Settings,
-                                contentDescription = ""
-                            ) },
-                            text = { Text(text = stringResource(R.string.settings)) }
-                        )
-                        DropdownMenuItem(
-                            onClick = onInfoClick,
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = ""
-                            ) },
-                            text = { Text(text = stringResource(R.string.info)) }
-                        )
-                        DropdownMenuItem(
-                            onClick = onHelpClick,
-                            leadingIcon = { Icon(
-                                painter = painterResource(R.drawable.outline_help),
-                                contentDescription = ""
-                            ) },
-                            text = { Text(text = stringResource(R.string.help)) }
-                        )
-                    }
+                    OverflowMenuButton(onClick = { expanded = true } )
+
+                    OverflowMenu(
+                        expanded =  expanded,
+                        onDismissRequest = { expanded = false },
+                        onSettingsClick = onSettingsClick,
+                        onInfoClick = onInfoClick,
+                        onHelpClick = onHelpClick
+                    )
                 }
             )
         },
