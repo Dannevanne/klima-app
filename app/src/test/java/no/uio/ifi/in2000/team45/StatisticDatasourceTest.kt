@@ -6,12 +6,10 @@ import org.junit.Assert.*
 
 class StatisticDatasourceTest {
 
-    // You can notice that the naming convention for the tests is different than
-    // the one they use from "ukesoppgaver", because in the lecture they named liked this.
+    private val datasource = StatisticDatasource()
+
     @Test
     fun testParseStationsShouldReturnListOfWeatherStation() {
-        val datasource = StatisticDatasource()
-
         val dummyData = """
             {
               "data": [
@@ -32,5 +30,63 @@ class StatisticDatasourceTest {
 
         assertEquals(1, result.size)
         assertEquals("Oslo", result[0].name)
+    }
+
+    @Test
+    fun testParseStationsMultipleResults() {
+        val dummyData = """
+            {
+              "data": [
+                {
+                  "id": "SN1",
+                  "name": "Oslo",
+                  "geometry": { "coordinates": [10.75, 59.91] },
+                  "municipality": "Oslo",
+                  "county": "Oslo"
+                },
+                {
+                  "id": "SN2",
+                  "name": "Bergen",
+                  "geometry": { "coordinates": [5.33, 60.39] },
+                  "municipality": "Bergen",
+                  "county": "Vestland"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        val result = datasource.parseStations(dummyData)
+
+        assertEquals(2, result.size)
+        assertEquals("SN2", result[1].id)
+        assertEquals(60.39, result[1].latitude, 0.01)
+    }
+
+    @Test
+    fun testParseStationsEmptyDataReturnsEmptyList() {
+        val dummyData = """{ "data": [] }"""
+        val result = datasource.parseStations(dummyData)
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun testParseStationsSkipsMalformedEntries() {
+        val dummyData = """
+            {
+              "data": [
+                {
+                  "id": "SN1",
+                  "name": "Oslo",
+                  "geometry": { "coordinates": [10.75, 59.91] }
+                },
+                {
+                  "name": "Missing ID"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        val result = datasource.parseStations(dummyData)
+        assertEquals(1, result.size)
     }
 }
