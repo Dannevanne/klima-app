@@ -1,19 +1,5 @@
 package no.uio.ifi.in2000.team45.data.statistic
 
-data class MonthlyClimateStats(
-    val month: Int,
-    val meanTemp: Double?,
-    val maxTemp: Double?,
-    val minTemp: Double?,
-    val precipitation: Double?,
-    val windSpeed: Double?,
-    val recordHigh: Double? = null,
-    val recordLow: Double? = null,
-    val snowDepth: Double? = null,
-    val windGust: Double? = null,
-    val cloudCover: Double? = null
-)
-
 class StatisticRepository(
     private val datasource: StatisticDatasource = StatisticDatasource()
 ) {
