@@ -115,12 +115,21 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.mapbox.maps.extension.style.style
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.TextFieldDefaults
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import androidx.compose.ui.res.painterResource
+import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
+import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
+import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
+import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
+import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
+import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
 
 @Composable
 fun MapStateScreen(
@@ -212,60 +221,43 @@ fun MapScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            AppTopBar(
+                title = stringResource(R.string.map),
                 navigationIcon = {
-                    Icon(Icons.Filled.Place,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.onSurface) },
-                title = {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.map),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold)
+                    Icon(
+                        Icons.Filled.Place,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             )
         },
         bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ){
-                    Row(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-
-                    ) {
-                        NavBarItem(
-                            onClick = {},
-                            icon = { Icon(Icons.Filled.Place, contentDescription = null) },
-                            label = stringResource(R.string.nav_map),
-                            modifier = Modifier.weight(1f)
-                        )
-                        NavBarItem(
-                            onClick = onStatisticClick,
-                            icon = { Icon(painter = painterResource(R.drawable.outline_analytics), contentDescription = null) },
-                            label = stringResource(R.string.nav_statistics),
-                            modifier = Modifier.weight(1f)
-                        )
-                        NavBarItem(
-                            onClick = onFavoritesClick,
-                            icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
-                            label = stringResource(R.string.saved_places),
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
+            AppBottomBar(
+                items = listOf(
+                    BottomBarItemData(
+                        label = stringResource(R.string.nav_map),
+                        onClick = {},
+                        icon = { Icon(Icons.Filled.Place, contentDescription = null) }
+                    ),
+                    BottomBarItemData(
+                        label = stringResource(R.string.nav_statistics),
+                        onClick = onStatisticClick,
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_analytics),
+                                contentDescription = null
+                            )
+                        }
+                    ),
+                    BottomBarItemData(
+                        label = stringResource(R.string.saved_places),
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
+                    )
+                )
+            )
+        }
     ) { innerPadding ->
         DataMap(
             mapViewModel = mapViewModel,
@@ -486,7 +478,7 @@ fun DataMap(
 
                 // changed to so that the expanded box is rendered
                 val bbox = overlayBBox ?: return@MapEffect
-                val corners = cornersFromBBOX(bbox)
+                val corners = cornersFromBBox(bbox)
 
                 if (style.getLayer("overlaylayer") != null) {
                     style.removeStyleLayer("overlaylayer")
@@ -712,60 +704,6 @@ fun DataMap(
     }
 }
 
-// Makes Bitmap from the URL from the repository / datasource
-// so it can be showed as an overlay on the map.
-suspend fun makeBitmap(context: Context, imageURL: String): Bitmap?{
-    val request = ImageRequest.Builder(context)
-        .data(imageURL)
-        .allowHardware(false)
-        .build()
-
-    val result = ImageLoader(context).execute(request)
-
-    return if(result is SuccessResult){
-        result.drawable.toBitmap()
-    }
-    else{
-        null
-    }
-}
-
-// Function that should just expand the current bbox on the map
-// factor is the expanding number, 1.5 might be good
-fun expandBBox(bbox: List<Double>, factor: Double = 1.5): List<Double> {
-    val minLon = bbox[0]
-    val minLat = bbox[1]
-    val maxLon = bbox[2]
-    val maxLat = bbox[3]
-
-    // expanding the bbox
-    val lonExpand = (maxLon - minLon) * factor
-    val latExpand = (maxLat - minLat) * factor
-
-    return listOf(
-        minLon - lonExpand,
-        minLat - latExpand,
-        maxLon + lonExpand,
-        maxLat + latExpand
-    )
-}
-
-// MapBox ImageSource needs the corners for the picture in the correct order,
-// not just the bbox values. This function does this conversion for us.
-fun cornersFromBBOX(bbox: List<Double>): List<List<Double>>{
-    val minLon = bbox[0]
-    val minLat = bbox[1]
-    val maxLon = bbox[2]
-    val maxLat = bbox[3]
-
-    return listOf(
-        listOf(minLon, maxLat),
-        listOf(maxLon, maxLat),
-        listOf(maxLon, minLat),
-        listOf(minLon, minLat)
-    )
-}
-
 // Composable to change map look when the selected theme changes
 @Composable
 fun MapThemeEffect(useDarkMap: Boolean){
@@ -775,32 +713,4 @@ fun MapThemeEffect(useDarkMap: Boolean){
             else Style.STANDARD
         )
     }
-}
-
-// Function for zoom change. Limits duplication of code, and is used twice in the
-// parameter for MapZoomControls to decide what the zoom in and zoom out buttons do.
-private fun zoomMap(mapView: MapView?,
-                    viewPortState: MapViewportState,
-                    zoomChange: Double) {
-    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
-
-    val camera = CameraOptions.Builder().zoom(
-        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
-    )
-        .build()
-
-    viewPortState.easeTo(camera)
-}
-
-// Builds new camera configuration for the map
-private fun moveToPoint(
-    point: Point,
-    viewPortState: MapViewportState
-){
-    val camera = CameraOptions.Builder()
-        .center(point)
-        .zoom(13.5)
-        .build()
-
-    viewPortState.easeTo(camera)
 }

@@ -14,35 +14,6 @@ import kotlinx.serialization.json.intOrNull
 
 private const val TAG = "StatisticDatasource"
 private const val FROST_BASE = "https://frost.met.no"
-
-data class WeatherStation(
-    val id: String,
-    val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val municipality: String = "",
-    val county: String = "",
-    val distanceMeters: Int? = null
-)
-
-data class ClimateNormal(
-    val elementId: String,
-    val month: Int,
-    val normal: Double
-)
-
-data class MonthlyObservation(
-    val elementId: String,
-    val month: Int,
-    val value: Double
-)
-
-data class AnnualObservation(
-    val year: Int,
-    val meanTemp: Double?,
-    val totalPrecip: Double?
-)
-
 class StatisticDatasource {
 
     private val json = Json { ignoreUnknownKeys = true }

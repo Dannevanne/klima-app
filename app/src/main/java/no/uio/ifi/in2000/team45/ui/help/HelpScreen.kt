@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,26 +32,10 @@ fun HelpScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                navigationIcon = {
-                    IconButton(
-                        onClick = onClick)
-                    {Icon(Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.go_back)
-                    )}
-                },
-                title = {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.help),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold) })
+            BackButtonTopBar(
+                title = stringResource(R.string.help),
+                onBackClick = onClick
+            )
         },
     ) { innerpadding ->
         Box(
