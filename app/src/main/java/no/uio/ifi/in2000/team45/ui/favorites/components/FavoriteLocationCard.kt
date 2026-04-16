@@ -138,6 +138,12 @@ fun FavoriteLocationCard(
                     modifier = Modifier.weight(1f)
                 )
             }
+
+            WhatCanIDoSection(
+                floodLevel = floodLevel,
+                landslideLevel = landslideLevel,
+                windLevel = windLevel
+            )
         }
     }
 }
