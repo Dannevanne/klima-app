@@ -127,6 +127,9 @@ private fun PopulatedFavoritesContent(
                 onRemove = { favoriteViewModel.removeLocation(location) }
             )
         }
+        item {
+            WhatCanIDoSection()
+        }
         item { Spacer(modifier = Modifier.height(16.dp)) }
     }
 }
