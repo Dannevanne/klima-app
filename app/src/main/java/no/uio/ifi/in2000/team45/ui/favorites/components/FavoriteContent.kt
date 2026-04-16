@@ -118,7 +118,7 @@ private fun EmptyFavoritesContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Ingen lagrede steder enda",
+                text = "No saved places yet",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -126,7 +126,7 @@ private fun EmptyFavoritesContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Ga til kartet, trykk pa et omrade og lagre det for a se risikoanalyse og klimadata her.",
+                text = "Go to the map, tap an area and save it to see risk analysis and climate data here.",
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -140,7 +140,7 @@ private fun EmptyFavoritesContent(
                     contentColor = MaterialTheme.colorScheme.onSurface
                 )
             ) {
-                Text("Apne kart")
+                Text("Open map")
             }
         }
         }

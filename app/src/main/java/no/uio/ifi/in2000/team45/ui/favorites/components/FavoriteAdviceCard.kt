@@ -52,37 +52,37 @@ data class AdviceCategory(
 
 val adviceCategories = listOf(
     AdviceCategory(
-        title = "Flomtiltak for huseiere",
+        title = "Flood measures for homeowners",
         dotColor = RiskHigh,
         bullets = listOf(
-            "Installer tilbakeslagsventil pa avlop for a hindre kloakk inn i huset under flom.",
-            "Hev terskelen til kjeller og kryprom.",
-            "Sorg for at overflatevann ledes bort fra husveggene.",
-            "Sjekk forsikringsdekningen din for flomskade."
+            "Install a backflow valve on your drainage to prevent sewage from entering the house during flooding.",
+            "Raise the threshold to the basement and crawl space.",
+            "Ensure drainage around the house directs water away from house walls.",
+            "Check your insurance coverage for flood damage."
         ),
-        linkText = "Les mer hos NVE sin flomhandbok",
+        linkText = "Read more at NVE flood protection handbook",
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
     ),
     AdviceCategory(
-        title = "Jordskredforebygging",
+        title = "Landslide prevention",
         dotColor = RiskModerate,
         bullets = listOf(
-            "Sjekk NVE sine faresoner for a se om eiendommen din er i et risikomrade.",
-            "Unnga a endre skraninger eller fjerne vegetasjon uten faglig vurdering.",
-            "Kontakt geotekniker hvis du ser bevegelse i grunnen eller sprekker i vegger."
+            "Check NVE's hazard zone maps to identify if your property is in a risk area.",
+            "Avoid altering slopes or removing vegetation near the home without assessment.",
+            "Contact a geotechnical engineer if you notice ground movement or cracks in walls."
         ),
-        linkText = "Les mer hos NVE sin skredhandbok",
+        linkText = "Read more at NVE landslide handbook",
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
     ),
     AdviceCategory(
-        title = "Vindbeskyttelse",
+        title = "Wind protection",
         dotColor = RiskLow,
         bullets = listOf(
-            "Sikre lause gjenstander i hagen og pa balkonger for stormer.",
-            "Inspiser takstein og takrenner arlig for skade.",
-            "Trim store traer naer huset for a redusere vindbelastning."
+            "Secure loose items in the garden and on balconies before storms.",
+            "Inspect roof tiles and gutters annually for damage.",
+            "Trim large trees close to the house to reduce wind load."
         ),
-        linkText = "Les mer hos NVE sin flomsikringshandbok",
+        linkText = "Read more at NVE flood protection handbook",
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
     )
 )
@@ -92,7 +92,7 @@ fun WhatCanIDoSection() {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
 
     Text(
-        text = "HVA KAN JEG GJORE?",
+        text = "WHAT CAN I DO?",
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -153,7 +153,7 @@ private fun AdviceAccordionCard(
                         Icons.Filled.KeyboardArrowUp
                     else
                         Icons.Filled.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Lukk" else "Utvid",
+                    contentDescription = if (isExpanded) "Collapse" else "Expand",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

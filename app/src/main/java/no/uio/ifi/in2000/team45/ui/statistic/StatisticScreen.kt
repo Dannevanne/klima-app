@@ -186,7 +186,7 @@ fun StatisticScreen(
                                                 .padding(end = 4.dp)
                                         )
                                         Text(
-                                            text = "I naerheten",
+                                            text = "Nearby",
                                             fontSize = 14.sp,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
@@ -444,9 +444,9 @@ private fun StationList(
                         )
                         station.distanceMeters?.let { dist ->
                             val distText = if (dist >= 1000) {
-                                "%.1f km unna".format(dist / 1000.0)
+                                "%.1f km away".format(dist / 1000.0)
                             } else {
-                                "$dist m unna"
+                                "$dist m away"
                             }
                             Text(
                                 text = distText,
@@ -458,7 +458,7 @@ private fun StationList(
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                            contentDescription = if (isFav) "Fjern favoritt" else "Legg til favoritt",
+                            contentDescription = if (isFav) "Remove favorite" else "Add favorite",
                             tint = if (isFav) StarGold
                                    else MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -501,7 +501,7 @@ private fun ClimateDataView(
                     FilterChip(
                         selected = selectedPeriod == years,
                         onClick = { onPeriodChange(years) },
-                        label = { Text("$years ar") }
+                        label = { Text("$years years") }
                     )
                 }
             }
@@ -523,7 +523,7 @@ private fun ClimateDataView(
                 IconButton(onClick = onToggleFavorite) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
-                        contentDescription = if (isFavorite) "Fjern favoritt" else "Legg til favoritt",
+                        contentDescription = if (isFavorite) "Remove favorite" else "Add favorite",
                         tint = if (isFavorite) StarGold
                                else MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -549,7 +549,7 @@ private fun ClimateDataView(
         if (annualData.any { it.totalPrecip != null }) {
             item {
                 TrendChart(
-                    title = "ARLIG NEDBOR - TREND (MM)",
+                    title = "ANNUAL PRECIPITATION - TREND (MM)",
                     data = annualData.mapNotNull { a ->
                         a.totalPrecip?.let { a.year to it }
                     },
@@ -563,7 +563,7 @@ private fun ClimateDataView(
         if (annualData.any { it.meanTemp != null }) {
             item {
                 TrendChart(
-                    title = "ARLIG GJENNOMSNITTSTEMPERATUR (C)",
+                    title = "AVERAGE ANNUAL TEMPERATURE (C)",
                     data = annualData.mapNotNull { a ->
                         a.meanTemp?.let { a.year to it }
                     },
@@ -603,7 +603,7 @@ private fun OverviewCards(
     val extremeTrend = TrendInfo(TrendDirection.STABLE, null)
 
     Text(
-        text = "OVERSIKT $fromYear-$currentYear",
+        text = "OVERVIEW $fromYear-$currentYear",
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -617,13 +617,13 @@ private fun OverviewCards(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
-                label = "Nedbor, snitt/ar",
+                label = "Precipitation, avg/year",
                 value = if (avgPrecip != null) "${avgPrecip.toInt()} mm" else "-",
                 trend = precipTrend,
                 modifier = Modifier.weight(1f)
             )
             OverviewStatCard(
-                label = "Maks vindkast",
+                label = "Max wind gust",
                 value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
                 trend = windTrend,
                 modifier = Modifier.weight(1f)
@@ -634,14 +634,14 @@ private fun OverviewCards(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
-                label = "Snodager/ar",
-                value = if (avgSnowMonths > 0) "$avgSnowMonths mnd" else "-",
+                label = "Snow days/year",
+                value = if (avgSnowMonths > 0) "$avgSnowMonths months" else "-",
                 trend = snowTrend,
                 modifier = Modifier.weight(1f)
             )
             OverviewStatCard(
-                label = "Ekstrem nedbor",
-                value = if (extremePrecipDays > 0) "$extremePrecipDays ar" else "-",
+                label = "Extreme precipitation",
+                value = if (extremePrecipDays > 0) "$extremePrecipDays years" else "-",
                 trend = extremeTrend,
                 modifier = Modifier.weight(1f)
             )
@@ -730,7 +730,7 @@ private fun StationsUsedCard(
     val obsCount = annualData.size
 
     Text(
-        text = "MALESTASJONER BRUKT",
+        text = "WEATHER STATIONS USED",
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -772,7 +772,7 @@ private fun StationsUsedCard(
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "Nedbor + temperatur",
+                    text = "Precipitation + temperature",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

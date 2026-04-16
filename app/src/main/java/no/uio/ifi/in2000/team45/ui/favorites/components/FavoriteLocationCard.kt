@@ -37,19 +37,19 @@ private val RiskLow = Color(0xFF22C55E)
 private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
     if (isWind) {
         return when {
-            windSpeed == null -> "Lav"
-            windSpeed >= 8.0 -> "Hoy"
-            windSpeed >= 5.0 -> "Moderat"
-            else -> "Lav"
+            windSpeed == null -> "Low"
+            windSpeed >= 8.0 -> "High"
+            windSpeed >= 5.0 -> "Moderate"
+            else -> "Low"
         }
     }
-    return if (isInZone) "Hoy" else "Lav"
+    return if (isInZone) "High" else "Low"
 }
 
 private fun riskColor(level: String): Color {
     return when (level) {
-        "Hoy" -> RiskHigh
-        "Moderat" -> RiskModerate
+        "High" -> RiskHigh
+        "Moderate" -> RiskModerate
         else -> RiskLow
     }
 }
@@ -57,9 +57,9 @@ private fun riskColor(level: String): Color {
 private fun overallRisk(flood: String, landslide: String, wind: String): String {
     val levels = listOf(flood, landslide, wind)
     return when {
-        levels.any { it == "Hoy" } -> "Hoy"
-        levels.any { it == "Moderat" } -> "Moderat"
-        else -> "Lav"
+        levels.any { it == "High" } -> "High"
+        levels.any { it == "Moderate" } -> "Moderate"
+        else -> "Low"
     }
 }
 
@@ -90,7 +90,7 @@ fun FavoriteLocationCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = location.label.ifBlank { "Kartposisjon" },
+                    text = location.label.ifBlank { "Map location" },
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     modifier = Modifier.weight(1f)
@@ -98,7 +98,7 @@ fun FavoriteLocationCard(
                 IconButton(onClick = onRemove) {
                     Icon(
                         Icons.Filled.Star,
-                        contentDescription = "Fjern",
+                        contentDescription = "Remove",
                         tint = StarGold
                     )
                 }
@@ -107,7 +107,7 @@ fun FavoriteLocationCard(
             // Overall risk
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Samlet risiko",
+                    text = "Overall risk",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(end = 8.dp)
@@ -123,17 +123,17 @@ fun FavoriteLocationCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 RiskCategoryBox(
-                    label = "Flom",
+                    label = "Flood",
                     level = floodLevel,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
-                    label = "Jordskred",
+                    label = "Landslide",
                     level = landslideLevel,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
-                    label = "Vind",
+                    label = "Wind",
                     level = windLevel,
                     modifier = Modifier.weight(1f)
                 )
