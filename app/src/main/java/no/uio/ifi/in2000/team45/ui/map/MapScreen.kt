@@ -241,6 +241,11 @@ fun MapScreen(
                         icon = { Icon(Icons.Filled.Place, contentDescription = null) }
                     ),
                     BottomBarItemData(
+                        label = stringResource(R.string.saved_places),
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
+                    ),
+                    BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
                         onClick = onStatisticClick,
                         icon = {
@@ -249,11 +254,6 @@ fun MapScreen(
                                 contentDescription = null
                             )
                         }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.saved_places),
-                        onClick = onFavoritesClick,
-                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
                     )
                 )
             )
