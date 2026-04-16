@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
@@ -47,11 +48,11 @@ fun FavoriteScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.saved_places),
+                titleFontSize = 24.sp,
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Favorite,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 8.dp),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
