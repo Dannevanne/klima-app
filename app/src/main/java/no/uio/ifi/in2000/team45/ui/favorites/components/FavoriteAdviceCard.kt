@@ -51,46 +51,111 @@ data class AdviceCategory(
     val linkUrl: String
 )
 
-val adviceCategories = listOf(
-    AdviceCategory(
-        title = "Flood measures for homeowners",
-        dotColor = RiskHigh,
-        bullets = listOf(
-            "Install a backflow valve on your drainage to prevent sewage from entering the house during flooding.",
+private fun riskColor(level: String): Color = when (level) {
+    "High" -> RiskHigh
+    "Moderate" -> RiskModerate
+    else -> RiskLow
+}
+
+private fun floodAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            "Install a backflow valve on your drainage to prevent sewage from entering the house.",
             "Raise the threshold to the basement and crawl space.",
-            "Ensure drainage around the house directs water away from house walls.",
+            "Ensure drainage around the house directs water away from walls.",
             "Check your insurance coverage for flood damage."
-        ),
-        linkText = "Read more at NVE flood protection handbook",
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
-    ),
-    AdviceCategory(
-        title = "Landslide prevention",
-        dotColor = RiskModerate,
-        bullets = listOf(
-            "Check NVE's hazard zone maps to identify if your property is in a risk area.",
-            "Avoid altering slopes or removing vegetation near the home without assessment.",
-            "Contact a geotechnical engineer if you notice ground movement or cracks in walls."
-        ),
-        linkText = "Read more at NVE landslide handbook",
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
-    ),
-    AdviceCategory(
-        title = "Wind protection",
-        dotColor = RiskLow,
-        bullets = listOf(
-            "Secure loose items in the garden and on balconies before storms.",
-            "Inspect roof tiles and gutters annually for damage.",
-            "Trim large trees close to the house to reduce wind load."
-        ),
+        )
+        "Moderate" -> listOf(
+            "Ensure drainage around the house directs water away from walls.",
+            "Check your insurance coverage for flood damage.",
+            "Keep gutters and downspouts clear of debris."
+        )
+        else -> listOf(
+            "Keep gutters and downspouts clear of debris.",
+            "Know your nearest evacuation routes in case of unexpected flooding."
+        )
+    }
+    return AdviceCategory(
+        title = "Flood measures",
+        dotColor = riskColor(level),
+        bullets = bullets,
         linkText = "Read more at NVE flood protection handbook",
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
     )
+}
+
+private fun landslideAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            "Check NVE's hazard zone maps to confirm if your property is in a risk area.",
+            "Contact a geotechnical engineer if you notice ground movement or cracks in walls.",
+            "Avoid altering slopes or removing vegetation near the home without assessment.",
+            "Have an evacuation plan ready for your household."
+        )
+        "Moderate" -> listOf(
+            "Check NVE's hazard zone maps for your property.",
+            "Avoid altering slopes or removing vegetation near the home without assessment.",
+            "Monitor walls and foundations for new cracks after heavy rain."
+        )
+        else -> listOf(
+            "Avoid removing vegetation on slopes near the home.",
+            "Stay aware of NVE warnings during periods of heavy rain."
+        )
+    }
+    return AdviceCategory(
+        title = "Landslide prevention",
+        dotColor = riskColor(level),
+        bullets = bullets,
+        linkText = "Read more at NVE landslide handbook",
+        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
+    )
+}
+
+private fun windAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            "Secure loose items in the garden and on balconies before storms.",
+            "Inspect roof tiles and gutters annually for damage.",
+            "Trim large trees close to the house to reduce wind load.",
+            "Consider wind-resistant fencing and structures."
+        )
+        "Moderate" -> listOf(
+            "Secure loose items in the garden and on balconies before storms.",
+            "Inspect roof tiles and gutters annually for damage.",
+            "Trim large trees close to the house to reduce wind load."
+        )
+        else -> listOf(
+            "Inspect roof tiles and gutters annually for damage.",
+            "Secure lightweight garden furniture during storm warnings."
+        )
+    }
+    return AdviceCategory(
+        title = "Wind protection",
+        dotColor = riskColor(level),
+        bullets = bullets,
+        linkText = "Read more at DSB storm preparedness",
+        linkUrl = "https://www.dsb.no/"
+    )
+}
+
+fun adviceForRiskLevels(
+    floodLevel: String,
+    landslideLevel: String,
+    windLevel: String
+): List<AdviceCategory> = listOf(
+    floodAdvice(floodLevel),
+    landslideAdvice(landslideLevel),
+    windAdvice(windLevel)
 )
 
 @Composable
-fun WhatCanIDoSection() {
+fun WhatCanIDoSection(
+    floodLevel: String,
+    landslideLevel: String,
+    windLevel: String
+) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
+    val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)
 
     Text(
         text = "WHAT CAN I DO?",
@@ -98,10 +163,10 @@ fun WhatCanIDoSection() {
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         letterSpacing = 1.sp,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
     )
 
-    adviceCategories.forEachIndexed { index, category ->
+    categories.forEachIndexed { index, category ->
         AdviceAccordionCard(
             category = category,
             isExpanded = expandedIndex == index,
@@ -124,13 +189,12 @@ private fun AdviceAccordionCard(
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
-            // Header row (always visible)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,7 +222,6 @@ private fun AdviceAccordionCard(
                 )
             }
 
-            // Expandable content
             AnimatedVisibility(visible = isExpanded) {
                 Column(
                     modifier = Modifier.padding(
