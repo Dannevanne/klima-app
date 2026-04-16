@@ -661,45 +661,13 @@ fun DataMap(
         }
     }
 
-    // Naming dialog for saved location
     pendingPoint?.let { point ->
-        AlertDialog(
-            onDismissRequest = { pendingPoint = null },
-            title = { Text("Lagre posisjon") },
-            text = {
-                Column {
-                    Text(
-                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = locationName,
-                        onValueChange = { locationName = it },
-                        label = { Text("Navn") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    favoriteViewModel.addLocation(
-                        lat = point.latitude(),
-                        lng = point.longitude(),
-                        label = locationName.trim()
-                    )
-                    pendingPoint = null
-                }) {
-                    Text("Lagre")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { pendingPoint = null }) {
-                    Text("Avbryt")
-                }
-            }
+        MapSaveLocationDialog(
+            point = point,
+            locationName = locationName,
+            onLocationNameChange = { locationName = it },
+            onDismiss = { pendingPoint = null },
+            favoriteViewModel = favoriteViewModel
         )
     }
 }
