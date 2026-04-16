@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.foundation.lazy.LazyColumn
@@ -815,48 +816,75 @@ private fun TrendChart(
             val minVal = data.minOf { it.second }
             val maxVal = data.maxOf { it.second }
             val range = (maxVal - minVal).coerceAtLeast(1.0)
+            val midVal = (minVal + maxVal) / 2.0
 
-            Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-            ) {
-                val w = size.width
-                val h = size.height
-                val padBottom = 20f
-                val chartH = h - padBottom
-                val step = w / (data.size - 1).coerceAtLeast(1)
-
-                val points = data.mapIndexed { i, (_, v) ->
-                    val x = i * step
-                    val y = chartH - ((v - minVal) / range * chartH).toFloat()
-                    Offset(x, y)
-                }
-
-                // Fill area under line
-                if (fillColor != null && points.size >= 2) {
-                    val path = Path().apply {
-                        moveTo(points.first().x, chartH)
-                        points.forEach { lineTo(it.x, it.y) }
-                        lineTo(points.last().x, chartH)
-                        close()
-                    }
-                    drawPath(path, color = Color(fillColor.value))
-                }
-
-                // Draw line
-                for (i in 0 until points.size - 1) {
-                    drawLine(
-                        color = lineColor,
-                        start = points[i],
-                        end = points[i + 1],
-                        strokeWidth = 3f
+            Row {
+                // Y-axis labels
+                Column(
+                    modifier = Modifier
+                        .height(150.dp)
+                        .width(40.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = String.format("%.0f", maxVal),
+                        fontSize = 10.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = String.format("%.0f", midVal),
+                        fontSize = 10.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = String.format("%.0f", minVal),
+                        fontSize = 10.sp,
+                        color = Color.Gray
                     )
                 }
 
-                // Draw dots
-                points.forEach { p ->
-                    drawCircle(color = lineColor, radius = 4f, center = p)
+                Canvas(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(150.dp)
+                ) {
+                    val w = size.width
+                    val h = size.height
+                    val padBottom = 20f
+                    val chartH = h - padBottom
+                    val step = w / (data.size - 1).coerceAtLeast(1)
+
+                    val points = data.mapIndexed { i, (_, v) ->
+                        val x = i * step
+                        val y = chartH - ((v - minVal) / range * chartH).toFloat()
+                        Offset(x, y)
+                    }
+
+                    // Fill area under line
+                    if (fillColor != null && points.size >= 2) {
+                        val path = Path().apply {
+                            moveTo(points.first().x, chartH)
+                            points.forEach { lineTo(it.x, it.y) }
+                            lineTo(points.last().x, chartH)
+                            close()
+                        }
+                        drawPath(path, color = Color(fillColor.value))
+                    }
+
+                    // Draw line
+                    for (i in 0 until points.size - 1) {
+                        drawLine(
+                            color = lineColor,
+                            start = points[i],
+                            end = points[i + 1],
+                            strokeWidth = 3f
+                        )
+                    }
+
+                    // Draw dots
+                    points.forEach { p ->
+                        drawCircle(color = lineColor, radius = 4f, center = p)
+                    }
                 }
             }
 
