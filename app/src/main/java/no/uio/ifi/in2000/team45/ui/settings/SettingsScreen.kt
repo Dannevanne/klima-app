@@ -84,7 +84,7 @@ fun SettingsScreen(
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
-                        onClick = {},
+                        onClick = onStatisticClick,
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.filled_analytics),
