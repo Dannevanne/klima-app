@@ -338,7 +338,7 @@ private fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        label = { Text(stringResource(R.string.place_or_station)) },
+        placeholder = { Text(stringResource(R.string.place_or_station)) },
         trailingIcon = {
             IconButton(onClick = onSearch) {
                 Icon(Icons.Filled.Search,
@@ -346,9 +346,10 @@ private fun SearchBar(
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
         ),
+        shape = RoundedCornerShape(24.dp),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
         singleLine = true,
