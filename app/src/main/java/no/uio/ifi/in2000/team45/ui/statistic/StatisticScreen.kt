@@ -483,6 +483,9 @@ private fun ClimateDataView(
 ) {
     LazyColumn {
         item {
+            missingData(annualData, selectedPeriod)
+        }
+        item {
             TextButton(onClick = onBack) {
                 Text(stringResource(R.string.back_to_search))
             }
@@ -1341,5 +1344,23 @@ private fun UvIndexCard(latitude: Double) {
                 Text("11+", fontSize = 10.sp, color = scaleLabelColor)
             }
         }
+    }
+}
+// If selected place dont have data for all years in chosen periode,
+// a warning-message appear telling this
+@Composable
+fun missingData(
+    annualData: List<AnnualObservation>,
+    selectedPeriod: Int
+){
+    val years = annualData.map { it.year }.distinct().count()
+    val missingData = years < selectedPeriod
+    if (missingData){
+            Text(
+                text = stringResource(R.string.this_place_is_missing_some_data),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 13.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
     }
 }
