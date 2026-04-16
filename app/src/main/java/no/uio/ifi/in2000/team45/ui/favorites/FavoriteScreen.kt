@@ -141,6 +141,7 @@ fun FavoriteScreen(
             stations = stations,
             locations = locations,
             favoriteViewModel = favoriteViewModel,
+            onMapClick = onMapClick,
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
