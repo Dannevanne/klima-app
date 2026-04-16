@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Place
@@ -28,11 +26,14 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,10 +62,13 @@ fun FavoriteContent(
 }
 
 @Composable
-private fun FavoritesSearchBar() {
+private fun FavoritesSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = query,
+        onValueChange = onQueryChange,
         placeholder = { Text(stringResource(R.string.place_or_station)) },
         trailingIcon = {
             IconButton(onClick = {}) {
@@ -81,7 +85,6 @@ private fun FavoritesSearchBar() {
         ),
         shape = RoundedCornerShape(24.dp),
         singleLine = true,
-        readOnly = true,
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -92,7 +95,7 @@ private fun EmptyFavoritesContent(
     modifier: Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        FavoritesSearchBar()
+        FavoritesSearchBar(query = "", onQueryChange = {})
         Spacer(modifier = Modifier.height(12.dp))
         Box(
             modifier = Modifier
@@ -155,12 +158,16 @@ private fun PopulatedFavoritesContent(
     favoriteViewModel: FavoriteViewModel,
     modifier: Modifier
 ) {
+    var searchQuery by remember { mutableStateOf("") }
+    val filtered = if (searchQuery.isBlank()) locations
+    else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
+
     LazyColumn(modifier = modifier) {
         item {
-            FavoritesSearchBar()
+            FavoritesSearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
             Spacer(modifier = Modifier.height(12.dp))
         }
-        items(locations) { location ->
+        items(filtered) { location ->
             LaunchedEffect(location) {
                 favoriteViewModel.fetchStatusForLocation(location)
             }
@@ -171,9 +178,6 @@ private fun PopulatedFavoritesContent(
                 status = status,
                 onRemove = { favoriteViewModel.removeLocation(location) }
             )
-        }
-        item {
-            WhatCanIDoSection()
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
     }
