@@ -52,7 +52,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
@@ -117,6 +116,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.Alignment
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
@@ -518,25 +518,11 @@ fun DataMap(
             modifier = Modifier.align(Alignment.TopCenter)
         )
 
-        // Overlay type selector.
-        // Selected overlay gets sent to the ViewModel.
-        // ViewModel is responsible for triggering the right
-        // new overlay-fetching from the repository.
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 8.dp, top = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            OverlayType.entries.forEach { type ->
-                FilterChip(
-                    selected = mapViewModel.activeOverlay == type,
-                    onClick = { mapViewModel.setOverlay(type) },
-                    label = { Text(type.label, fontSize = 12.sp) }
-                )
-            }
-        }
+        MapOverlaySelector(
+            activeOverlay = mapViewModel.activeOverlay,
+            onOverlaySelected = { type -> mapViewModel.setOverlay(type) },
+            modifier = Modifier.align(Alignment.TopStart)
+        )
 
         MapZoomControls(
             onZoomIn = {
