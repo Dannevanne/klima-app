@@ -117,6 +117,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.Alignment
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
@@ -504,100 +505,19 @@ fun DataMap(
             }
         }
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            TextField(
-                value = searchQuery,
-                onValueChange = { mapViewModel.updateSearchQuery(it) }, // Continuous
-                // two way flow. User input gets sent to ViewModel, which updates searchQuery
-                // and starts an autocomplete search. Then the UI is updated based of results
-
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                placeholder = { Text("Search after place in Norway") },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search"
-                    )
-                },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { mapViewModel.clearSearch() }) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = "Empty search"
-                            )
-                        }
-                    }
-                },
-                shape = RoundedCornerShape(28.dp)
-            )
-            if (isSearching || searchSuggestions.isNotEmpty()) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                ) {
-                    if (isSearching) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        LazyColumn {
-                            items(searchSuggestions) { item ->
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.background)
-                                        .clickable {
-                                            mapViewModel.selectSuggestion(item) { point ->
-                                                moveToPoint(point, viewportState)
-                                            } // UI sends the selected suggested place to ViewModel.
-                                              // ViewModel calls select() which returns coordinates (+ more).
-                                              // ViewModel sends coordinates in it's callback.
-                                              // UI handles the movement to the selected place with moveToPoint.
-                                        }
-                                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                                ) {
-                                    Text(
-                                        text = item.title,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    item.subtitle?.let {
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = it,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
+        MapSearchSection(
+            searchQuery = searchQuery,
+            searchSuggestions = searchSuggestions,
+            isSearching = isSearching,
+            onSearchQueryChange = { mapViewModel.updateSearchQuery(it) },
+            onClearSearch = { mapViewModel.clearSearch() },
+            onSuggestionClick = { item ->
+                mapViewModel.selectSuggestion(item) { point ->
+                    moveToPoint(point, viewportState)
                 }
-            }
-        }
+            },
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
 
         // Overlay type selector.
         // Selected overlay gets sent to the ViewModel.
