@@ -483,6 +483,9 @@ private fun ClimateDataView(
 ) {
     LazyColumn {
         item {
+            missingData(annualData, selectedPeriod)
+        }
+        item {
             TextButton(onClick = onBack) {
                 Text(stringResource(R.string.back_to_search))
             }
