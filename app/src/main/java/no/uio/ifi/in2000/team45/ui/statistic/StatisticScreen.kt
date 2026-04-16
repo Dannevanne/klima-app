@@ -65,6 +65,7 @@ import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Star
@@ -195,49 +196,26 @@ fun StatisticScreen(
 
                     if (hasContent) {
                         LazyColumn {
-                            if (history.isNotEmpty()) {
-                                item {
-                                    Text(
-                                        text = "Tidligere sok",
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.padding(bottom = 4.dp)
-                                    )
-                                }
-                                items(history) { query ->
-                                    Card(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 2.dp)
-                                            .clickable {
-                                                statisticViewModel.updateSearchQuery(query)
-                                                statisticViewModel.searchStations()
-                                            },
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(12.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                Icons.Filled.Search,
-                                                contentDescription = null,
-                                                modifier = Modifier.padding(end = 8.dp),
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                            Text(query, fontSize = 15.sp)
-                                        }
-                                    }
-                                }
-                                item { Spacer(modifier = Modifier.height(12.dp)) }
-                            }
-
                             if (favoriteStations.isNotEmpty()) {
                                 item {
-                                    Text(
-                                        text = "Lagrede stasjoner",
-                                        fontWeight = FontWeight.SemiBold,
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.padding(bottom = 4.dp)
-                                    )
+                                    ) {
+                                        Icon(
+                                            Icons.Outlined.Place,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .padding(end = 4.dp)
+                                        )
+                                        Text(
+                                            text = "I naerheten",
+                                            fontSize = 14.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                                 items(favoriteStations) { fav ->
                                     val station = WeatherStation(
@@ -250,33 +228,65 @@ fun StatisticScreen(
                                     Card(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(vertical = 4.dp)
+                                            .padding(vertical = 3.dp)
                                             .clickable { statisticViewModel.selectStation(station) },
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                                        ),
+                                        shape = RoundedCornerShape(12.dp)
                                     ) {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(MaterialTheme.colorScheme.surfaceContainer)
-                                                .padding(12.dp),
+                                                .padding(horizontal = 16.dp, vertical = 12.dp),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Icon(
                                                 Icons.Filled.Star,
                                                 contentDescription = null,
                                                 tint = StarGold,
-                                                modifier = Modifier.padding(end = 8.dp)
+                                                modifier = Modifier.padding(end = 12.dp)
                                             )
-                                            Column(modifier = Modifier.weight(1f)) {
-                                                Text(fav.name, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                                                if (fav.municipality.isNotBlank()) {
-                                                    Text(
-                                                        "${fav.municipality}, ${fav.county}",
-                                                        fontSize = 13.sp,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                }
-                                            }
+                                            Text(
+                                                fav.name,
+                                                fontWeight = FontWeight.Medium,
+                                                fontSize = 15.sp,
+                                                modifier = Modifier.weight(1f)
+                                            )
+                                        }
+                                    }
+                                }
+                                item { Spacer(modifier = Modifier.height(12.dp)) }
+                            }
+
+                            if (history.isNotEmpty()) {
+                                items(history) { query ->
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 3.dp)
+                                            .clickable {
+                                                statisticViewModel.updateSearchQuery(query)
+                                                statisticViewModel.searchStations()
+                                            },
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                                        ),
+                                        shape = RoundedCornerShape(12.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.Schedule,
+                                                contentDescription = null,
+                                                modifier = Modifier.padding(end = 12.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Text(query, fontSize = 15.sp)
                                         }
                                     }
                                 }
