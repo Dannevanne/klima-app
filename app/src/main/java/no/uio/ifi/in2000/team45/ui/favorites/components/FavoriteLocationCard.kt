@@ -11,11 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,9 +28,40 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.ui.favorites.LocationStatus
-import no.uio.ifi.in2000.team45.ui.favorites.tempColor
-import no.uio.ifi.in2000.team45.ui.favorites.windColor
+import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
+private val RiskHigh = Color(0xFFEF4444)
+private val RiskModerate = Color(0xFFF97316)
+private val RiskLow = Color(0xFF22C55E)
+
+private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
+    if (isWind) {
+        return when {
+            windSpeed == null -> "Lav"
+            windSpeed >= 8.0 -> "Hoy"
+            windSpeed >= 5.0 -> "Moderat"
+            else -> "Lav"
+        }
+    }
+    return if (isInZone) "Hoy" else "Lav"
+}
+
+private fun riskColor(level: String): Color {
+    return when (level) {
+        "Hoy" -> RiskHigh
+        "Moderat" -> RiskModerate
+        else -> RiskLow
+    }
+}
+
+private fun overallRisk(flood: String, landslide: String, wind: String): String {
+    val levels = listOf(flood, landslide, wind)
+    return when {
+        levels.any { it == "Hoy" } -> "Hoy"
+        levels.any { it == "Moderat" } -> "Moderat"
+        else -> "Lav"
+    }
+}
 
 @Composable
 fun FavoriteLocationCard(
@@ -39,92 +69,73 @@ fun FavoriteLocationCard(
     status: LocationStatus?,
     onRemove: () -> Unit
 ) {
+    val floodLevel = riskLevel(status?.inFloodZone == true)
+    val landslideLevel = riskLevel(status?.inQuickClayZone == true)
+    val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
+    val overall = overallRisk(floodLevel, landslideLevel, windLevel)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .padding(vertical = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Column(modifier = Modifier
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(12.dp)) {
-            // Header: name + coordinates + delete
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Header: name + star
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    Icons.Outlined.Place,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(end = 8.dp)
+                Text(
+                    text = location.label.ifBlank { "Kartposisjon" },
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.weight(1f)
                 )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = location.label.ifBlank { "Kartposisjon" },
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                    Text(
-                        text = "%.4f, %.4f".format(location.latitude, location.longitude),
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
                 IconButton(onClick = onRemove) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Fjern", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(
+                        Icons.Filled.Star,
+                        contentDescription = "Fjern",
+                        tint = StarGold
+                    )
                 }
             }
 
-            // Current conditions from nearest station
-            if (status != null) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
+            // Overall risk
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Stasjon: ${status.stationName}",
-                    fontSize = 12.sp,
+                    text = "Samlet risiko",
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 6.dp)
+                    modifier = Modifier.padding(end = 8.dp)
                 )
+                RiskPill(level = overall)
+            }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Temperature chip
-                    status.temperature?.let { temp ->
-                        StatusChip(
-                            label = "Temperatur",
-                            value = "${String.format("%.1f", temp)} C",
-                            color = tempColor(temp),
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                    // Wind chip
-                    status.windSpeed?.let { wind ->
-                        StatusChip(
-                            label = "Vind",
-                            value = "${String.format("%.1f", wind)} m/s",
-                            color = windColor(wind),
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                    // Precipitation chip
-                    status.precipitation?.let { precip ->
-                        StatusChip(
-                            label = "Nedbor",
-                            value = "${String.format("%.1f", precip)} mm/t",
-                            color = Color(0xFFE3F2FD),
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            } else {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Henter vaerdata...",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Risk categories row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                RiskCategoryBox(
+                    label = "Flom",
+                    level = floodLevel,
+                    modifier = Modifier.weight(1f)
+                )
+                RiskCategoryBox(
+                    label = "Jordskred",
+                    level = landslideLevel,
+                    modifier = Modifier.weight(1f)
+                )
+                RiskCategoryBox(
+                    label = "Vind",
+                    level = windLevel,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -132,20 +143,48 @@ fun FavoriteLocationCard(
 }
 
 @Composable
-fun StatusChip(
+private fun RiskPill(level: String) {
+    Box(
+        modifier = Modifier
+            .background(riskColor(level), RoundedCornerShape(12.dp))
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = level,
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun RiskCategoryBox(
     label: String,
-    value: String,
-    color: Color,
+    level: String,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            .background(color, RoundedCornerShape(8.dp))
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .background(
+                MaterialTheme.colorScheme.surface,
+                RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
         Column {
-            Text(label, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = level,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = riskColor(level)
+            )
         }
     }
 }
