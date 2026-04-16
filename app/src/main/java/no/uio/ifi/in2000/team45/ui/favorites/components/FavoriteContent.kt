@@ -13,21 +13,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
@@ -52,14 +61,43 @@ fun FavoriteContent(
 }
 
 @Composable
+private fun FavoritesSearchBar() {
+    OutlinedTextField(
+        value = "",
+        onValueChange = {},
+        placeholder = { Text(stringResource(R.string.place_or_station)) },
+        trailingIcon = {
+            Icon(
+                Icons.Filled.Search,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        ),
+        shape = RoundedCornerShape(24.dp),
+        singleLine = true,
+        readOnly = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 private fun EmptyFavoritesContent(
     onMapClick: () -> Unit,
     modifier: Modifier
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
+        FavoritesSearchBar()
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -105,6 +143,7 @@ private fun EmptyFavoritesContent(
                 Text("Apne kart")
             }
         }
+        }
     }
 }
 
@@ -115,6 +154,10 @@ private fun PopulatedFavoritesContent(
     modifier: Modifier
 ) {
     LazyColumn(modifier = modifier) {
+        item {
+            FavoritesSearchBar()
+            Spacer(modifier = Modifier.height(12.dp))
+        }
         items(locations) { location ->
             LaunchedEffect(location) {
                 favoriteViewModel.fetchStatusForLocation(location)

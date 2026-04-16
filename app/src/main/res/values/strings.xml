@@ -37,5 +37,5 @@
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
     <string name="my_position">My position</string>
-    <string name="this_place_is_missing_some_data">⚠ This place do miss some data for chosen periode </string>
+    <string name="this_place_is_missing_some_data">Dette stedet mangler noe data for valgt periode</string>
 </resources>
