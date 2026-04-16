@@ -493,7 +493,7 @@ private fun StationList(
     }
 }
 
-private val PERIOD_OPTIONS = listOf(10, 30, 50)
+private val PERIOD_OPTIONS = listOf(10, 20, 30, 50)
 
 @Composable
 private fun ClimateDataView(
@@ -565,7 +565,7 @@ private fun ClimateDataView(
 
         if (annualData.isNotEmpty()) {
             item {
-                OverviewCards(annualData = annualData, selectedPeriod = selectedPeriod)
+                OverviewCards(annualData = annualData, stats = stats, selectedPeriod = selectedPeriod)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -668,98 +668,117 @@ private fun ClimateDataView(
 @Composable
 private fun OverviewCards(
     annualData: List<AnnualObservation>,
+    stats: List<MonthlyClimateStats>,
     selectedPeriod: Int
 ) {
+    val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+    val fromYear = currentYear - selectedPeriod
+
     val avgPrecip = annualData.mapNotNull { it.totalPrecip }.average()
         .takeIf { annualData.any { a -> a.totalPrecip != null } }
-    val avgTemp = annualData.mapNotNull { it.meanTemp }.average()
-        .takeIf { annualData.any { a -> a.meanTemp != null } }
+    val maxWindGust = stats.mapNotNull { it.windGust }.maxOrNull()
+    val avgSnowMonths = stats.count { (it.snowDepth ?: 0.0) > 0.0 }
+    val extremePrecipDays = annualData.mapNotNull { it.totalPrecip }
+        .count { it > (avgPrecip ?: Double.MAX_VALUE) * 1.3 }
 
-    // Trend: compare first half vs second half of the period
     val precipTrend = computeTrend(annualData.mapNotNull { it.totalPrecip })
-    val tempTrend = computeTrend(annualData.mapNotNull { it.meanTemp })
+    val windTrend = if (maxWindGust != null) TrendInfo(TrendDirection.STABLE, null) else TrendInfo(TrendDirection.STABLE, null)
+    val snowTrend = TrendInfo(TrendDirection.STABLE, null)
+    val extremeTrend = TrendInfo(TrendDirection.STABLE, null)
 
-    Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = "Oversikt siste $selectedPeriod ar",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
+    Text(
+        text = "OVERSIKT $fromYear-$currentYear",
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        letterSpacing = 1.sp,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OverviewStatCard(
+                label = "Nedbor, snitt/ar",
+                value = if (avgPrecip != null) "${avgPrecip.toInt()} mm" else "-",
+                trend = precipTrend,
+                modifier = Modifier.weight(1f)
             )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                if (avgPrecip != null) {
-                    OverviewStat(
-                        label = "Nedbor snitt/ar",
-                        value = "${avgPrecip.toInt()} mm",
-                        trend = precipTrend,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (avgTemp != null) {
-                    OverviewStat(
-                        label = "Temperatur snitt",
-                        value = "${String.format("%.1f", avgTemp)} C",
-                        trend = tempTrend,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
+            OverviewStatCard(
+                label = "Maks vindkast",
+                value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
+                trend = windTrend,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OverviewStatCard(
+                label = "Snodager/ar",
+                value = if (avgSnowMonths > 0) "$avgSnowMonths mnd" else "-",
+                trend = snowTrend,
+                modifier = Modifier.weight(1f)
+            )
+            OverviewStatCard(
+                label = "Ekstrem nedbor",
+                value = if (extremePrecipDays > 0) "$extremePrecipDays ar" else "-",
+                trend = extremeTrend,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
 @Composable
-private fun OverviewStat(
+private fun OverviewStatCard(
     label: String,
     value: String,
     trend: TrendInfo,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(8.dp)
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Text(text = value, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val trendColor = when (trend.direction) {
-                TrendDirection.UP -> Color(0xFFE53935)
-                TrendDirection.DOWN -> Color(0xFF43A047)
-                TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
-            }
-            val arrow = when (trend.direction) {
-                TrendDirection.UP -> "^"
-                TrendDirection.DOWN -> "v"
-                TrendDirection.STABLE -> "~"
-            }
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = arrow,
-                color = trendColor,
+                text = label,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(end = 4.dp)
+                fontSize = 20.sp
             )
             if (trend.percentChange != null) {
+                Spacer(modifier = Modifier.height(2.dp))
+                val trendColor = when (trend.direction) {
+                    TrendDirection.UP -> Color(0xFFEF4444)
+                    TrendDirection.DOWN -> Color(0xFF22C55E)
+                    TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+                val arrow = when (trend.direction) {
+                    TrendDirection.UP -> "^"
+                    TrendDirection.DOWN -> "v"
+                    TrendDirection.STABLE -> "~"
+                }
                 Text(
-                    text = "${String.format("%+.0f", trend.percentChange)}%",
+                    text = "$arrow ${String.format("%+.0f", trend.percentChange)}% vs norm",
                     color = trendColor,
-                    fontSize = 13.sp
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
     }
 }
 
