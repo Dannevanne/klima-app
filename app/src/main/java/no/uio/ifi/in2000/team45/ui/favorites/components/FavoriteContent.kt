@@ -69,7 +69,7 @@ private fun FavoritesSearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text(stringResource(R.string.place_or_station)) },
+        placeholder = { Text(stringResource(R.string.search_your_locations)) },
         trailingIcon = {
             IconButton(onClick = {}) {
                 Icon(
