@@ -542,28 +542,13 @@ fun DataMap(
                 .padding(end = 16.dp, bottom = 80.dp)
         )
 
-        // Locationbutton (only UI).
-        // What happens on click is decided based on callbacks.
-        SmallFloatingActionButton(
+        MapLocationButton(
+            locationGranted = locationGranted,
             onClick = onLocationClick,
-            shape = CircleShape,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp),
-            containerColor = MaterialTheme.colorScheme.surface
-        ) {
-            Icon(
-                imageVector = if (locationGranted)
-                    Icons.Filled.LocationOn
-                else
-                    Icons.Outlined.Lock,
-                contentDescription = stringResource(R.string.my_position),
-                tint = if (locationGranted)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+                .padding(end = 16.dp, bottom = 16.dp)
+        )
     }
 
     pendingPoint?.let { point ->
