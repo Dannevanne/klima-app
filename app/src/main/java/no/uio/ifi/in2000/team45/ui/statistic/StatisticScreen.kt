@@ -415,7 +415,8 @@ private fun StationList(
 ) {
     Text(
         text = stringResource(R.string.choose_station),
-        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(bottom = 8.dp)
     )
     LazyColumn {
@@ -426,19 +427,21 @@ private fun StationList(
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable { onStationClick(station) },
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .padding(12.dp),
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = station.name,
-                            fontWeight = FontWeight.Medium,
+                            fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
                         if (station.municipality.isNotBlank()) {
