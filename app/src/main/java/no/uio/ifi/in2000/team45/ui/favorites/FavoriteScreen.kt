@@ -103,7 +103,7 @@ fun FavoriteScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
         )
     }
 }
