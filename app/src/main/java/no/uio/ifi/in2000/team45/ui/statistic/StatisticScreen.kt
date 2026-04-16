@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.BottomAppBar
@@ -156,16 +157,58 @@ fun StatisticScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            val currentState = statisticViewModel.uiState
 
-            SearchBar(
-                query = statisticViewModel.searchQuery,
-                onQueryChange = { statisticViewModel.updateSearchQuery(it) },
-                onSearch = { statisticViewModel.searchStations() }
-            )
+            if (currentState is StatisticUiState.ClimateData) {
+                val isFav = favoriteStations.any { it.stationId == currentState.station.id }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_to_search),
+                        modifier = Modifier
+                            .clickable { statisticViewModel.goBack() }
+                            .padding(end = 12.dp)
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = currentState.station.name,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (currentState.station.municipality.isNotBlank()) {
+                            Text(
+                                text = "${currentState.station.municipality}, ${currentState.station.county}",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    IconButton(onClick = {
+                        if (isFav) favoriteViewModel.removeStation(currentState.station.id)
+                        else favoriteViewModel.addStation(currentState.station)
+                    }) {
+                        Icon(
+                            imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                            contentDescription = if (isFav) "Remove favorite" else "Add favorite",
+                            tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            } else {
+                SearchBar(
+                    query = statisticViewModel.searchQuery,
+                    onQueryChange = { statisticViewModel.updateSearchQuery(it) },
+                    onSearch = { statisticViewModel.searchStations() }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            when (val state = statisticViewModel.uiState) {
+            when (val state = currentState) {
                 is StatisticUiState.Idle -> {
                     val history = statisticViewModel.searchHistory
                     val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
@@ -301,22 +344,12 @@ fun StatisticScreen(
                     )
                 }
                 is StatisticUiState.ClimateData -> {
-                    val isFav = favoriteStations.any { it.stationId == state.station.id }
                     ClimateDataView(
                         station = state.station,
                         stats = state.stats,
                         annualData = state.annualData,
                         selectedPeriod = statisticViewModel.selectedPeriod,
-                        onPeriodChange = { statisticViewModel.updatePeriod(it) },
-                        isFavorite = isFav,
-                        onToggleFavorite = {
-                            if (isFav) {
-                                favoriteViewModel.removeStation(state.station.id)
-                            } else {
-                                favoriteViewModel.addStation(state.station)
-                            }
-                        },
-                        onBack = { statisticViewModel.goBack() }
+                        onPeriodChange = { statisticViewModel.updatePeriod(it) }
                     )
                 }
                 is StatisticUiState.Error -> {
@@ -478,19 +511,11 @@ private fun ClimateDataView(
     stats: List<MonthlyClimateStats>,
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
-    onPeriodChange: (Int) -> Unit,
-    isFavorite: Boolean,
-    onToggleFavorite: () -> Unit,
-    onBack: () -> Unit
+    onPeriodChange: (Int) -> Unit
 ) {
     LazyColumn {
         item {
             missingData(annualData, selectedPeriod)
-        }
-        item {
-            TextButton(onClick = onBack) {
-                Text(stringResource(R.string.back_to_search))
-            }
         }
 
         item {
@@ -508,37 +533,6 @@ private fun ClimateDataView(
             }
         }
 
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = station.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 4.dp)
-                )
-                IconButton(onClick = onToggleFavorite) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
-                        contentDescription = if (isFavorite) "Remove favorite" else "Add favorite",
-                        tint = if (isFavorite) StarGold
-                               else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            if (station.municipality.isNotBlank()) {
-                Text(
-                    text = "${station.municipality}, ${station.county}",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
-        }
 
         if (annualData.isNotEmpty()) {
             item {
