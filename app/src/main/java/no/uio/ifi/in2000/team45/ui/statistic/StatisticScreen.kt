@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +52,6 @@ import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -256,7 +256,7 @@ fun StatisticScreen(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Icon(
-                                                Icons.Filled.Schedule,
+                                                Icons.Filled.Search,
                                                 contentDescription = null,
                                                 modifier = Modifier.padding(end = 12.dp),
                                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
