@@ -78,6 +78,11 @@ fun SettingsScreen(
                         icon = { Icon(Icons.Filled.Place, contentDescription = null) }
                     ),
                     BottomBarItemData(
+                        label = stringResource(R.string.saved_places),
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Filled.FavoriteBorder, contentDescription = null) }
+                    ),
+                    BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
                         onClick = {},
                         icon = {
@@ -86,11 +91,6 @@ fun SettingsScreen(
                                 contentDescription = null
                             )
                         }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.saved_places),
-                        onClick = onFavoritesClick,
-                        icon = { Icon(Icons.Filled.FavoriteBorder, contentDescription = null) }
                     )
                 )
             )
