@@ -216,13 +216,6 @@ fun StatisticScreen(
             )
 }
 
-data class TrendInfo(
-    val direction: TrendDirection,
-    val percentChange: Double?
-)
-
-enum class TrendDirection { UP, DOWN, STABLE }
-
 private fun computeTrend(values: List<Double>): TrendInfo {
     if (values.size < 4) return TrendInfo(TrendDirection.STABLE, null)
     val mid = values.size / 2
