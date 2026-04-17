@@ -327,66 +327,36 @@ fun DataMap(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        MapboxMap(
-            modifier = Modifier
-                .fillMaxSize()
-                .onSizeChanged {
-                    mapWidth = it.width
-                    mapHeight = it.height // The maps size is needed
-                                         // when the overlayURL is being built
-                                        // because the backend service returns
-                                        // a photo depending on the shown map window
-                },
-            mapViewportState = viewportState
-        ){
-            MapEffect(Unit) { mapView ->
-                mapViewRef = mapView
-            }
 
-            MapLongPressEffect(
-                mapView = mapViewRef,
-                onMapLongClick = { point ->
-                    pendingPoint = point
-                    locationName = ""
-                }
-            )
+        MapContent(
+            viewportState = viewportState,
+            mapViewRef = mapViewRef,
+            onMapViewReady = { mapViewRef = it },
+            onMapSizeChanged = { width, height ->
+                mapWidth = width
+                mapHeight = height
+            },
+            pendingBitmap = bitmap,
+            overlayBBox = overlayBBox,
+            useDarkMap = useDarkMap,
+            currentMapWidth = currentMapWidth,
+            currentMapHeight = currentMapHeight,
+            locationGranted = locationGranted,
+            mapViewModel = mapViewModel,
+            onMapLongClick = { point ->
+                pendingPoint = point
+                locationName = ""
+            },
+            modifier = Modifier.fillMaxSize()
+        )
 
-            MapUserLocationEffect(
-                mapView = mapViewRef,
-                locationGranted = locationGranted,
-                onUserLocationChanged = { point ->
-                    mapViewModel.updateUserLocation(point)
-                }
-            )
-
-            MapSelectedLocationEffect(
-                selectedLocation = mapViewModel.selectedLocation,
-                viewportState = viewportState
-            )
-
-            MapThemeEffect(useDarkMap)
-
-            MapCameraOverlayEffect(
-                mapView = mapViewRef,
-                mapWidth = currentMapWidth,
-                mapHeight = currentMapHeight,
-                mapViewModel = mapViewModel
-            )
-
-            MapOverlayBitmapEffect(
-                overlayURL = overlayURL,
-                context = context,
-                imageJob = imageJob,
-                onImageJobChange = { imageJob = it },
-                onBitmapLoaded = { bitmap = it }
-            )
-
-            MapOverlayEffect(
-                bitmap = bitmap,
-                overlayBBox = overlayBBox,
-                useDarkMap = useDarkMap
-            )
-        }
+        MapOverlayBitmapEffect(
+            overlayURL = overlayURL,
+            context = context,
+            imageJob = imageJob,
+            onImageJobChange = { imageJob = it },
+            onBitmapLoaded = { bitmap = it }
+        )
 
         MapSearchSection(
             searchQuery = searchQuery,
