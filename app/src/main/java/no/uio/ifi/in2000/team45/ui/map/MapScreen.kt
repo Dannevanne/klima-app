@@ -359,21 +359,10 @@ fun DataMap(
                 }
             )
 
-            // Listens to selectedLocation from ViewModel and
-            // reruns when moveToUserLocation() is called.
-            // The UI changes the camera when selectedLocation is set in ViewModel.
-            // The ViewModel decides what the selected posistion is,
-            // and the UI decides how to move there.
-            LaunchedEffect(mapViewModel.selectedLocation) {
-                mapViewModel.selectedLocation?.let {
-                    viewportState.easeTo(
-                        CameraOptions.Builder()
-                            .center(it)
-                            .zoom(13.0)
-                            .build()
-                    )
-                }
-            }
+            MapSelectedLocationEffect(
+                selectedLocation = mapViewModel.selectedLocation,
+                viewportState = viewportState
+            )
 
             MapThemeEffect(useDarkMap)
 
