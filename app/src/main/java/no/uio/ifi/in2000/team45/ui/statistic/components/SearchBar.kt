@@ -36,7 +36,11 @@ fun SearchBar(
         onValueChange = onQueryChange,
         placeholder = { Text(stringResource(R.string.place_or_station)) },
         trailingIcon = {
-            IconButton(onClick = onSearch) {
+            IconButton(onClick = {
+                onSearch()
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }) {
                 Icon(Icons.Filled.Search,
                     contentDescription = stringResource(R.string.search))
             }
@@ -47,7 +51,11 @@ fun SearchBar(
         ),
         shape = RoundedCornerShape(24.dp),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+        keyboardActions = KeyboardActions(onSearch = {
+            onSearch()
+            keyboardController?.hide()
+            focusManager.clearFocus()
+        }),
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
