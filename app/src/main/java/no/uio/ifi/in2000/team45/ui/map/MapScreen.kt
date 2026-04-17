@@ -343,25 +343,13 @@ fun DataMap(
                 mapViewRef = mapView
             }
 
-            DisposableEffect(mapViewRef) {
-                val mapView = mapViewRef
-                if (mapView == null) {
-                    onDispose {  }
+            MapLongPressEffect(
+                mapView = mapViewRef,
+                onMapLongClick = { point ->
+                    pendingPoint = point
+                    locationName = ""
                 }
-                else{
-                    val longClickListener = OnMapLongClickListener { point ->
-                        pendingPoint = point
-                        locationName = ""
-                        true
-                    }
-
-                    mapView.mapboxMap.addOnMapLongClickListener(longClickListener)
-
-                    onDispose {
-                        mapView.mapboxMap.removeOnMapLongClickListener(longClickListener)
-                    }
-                }
-            }
+            )
 
             // Activates the blue location-dot.
             // Rerun every time locationGranted changes.
