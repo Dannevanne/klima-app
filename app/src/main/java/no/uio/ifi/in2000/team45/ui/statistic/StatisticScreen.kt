@@ -198,13 +198,6 @@ fun StatisticScreen(
     }
 }
 
-data class TrendInfo(
-    val direction: TrendDirection,
-    val percentChange: Double?
-)
-
-enum class TrendDirection { UP, DOWN, STABLE }
-
 private fun computeTrend(values: List<Double>): TrendInfo {
     if (values.size < 4) return TrendInfo(TrendDirection.STABLE, null)
     val mid = values.size / 2
@@ -221,16 +214,6 @@ private fun computeTrend(values: List<Double>): TrendInfo {
     }
     return TrendInfo(direction, change)
 }
-
-enum class ColorScale { TEMPERATURE, PRECIPITATION, WIND, SNOW, NONE }
-
-data class TableRow(
-    val label: String,
-    val unit: String,
-    val values: List<String>,
-    val rawValues: List<Double?> = emptyList(),
-    val colorScale: ColorScale = ColorScale.NONE
-)
 
 // Blue (cold) -> white (mild) -> red (hot)
 private fun temperatureColor(value: Double?): Color {
