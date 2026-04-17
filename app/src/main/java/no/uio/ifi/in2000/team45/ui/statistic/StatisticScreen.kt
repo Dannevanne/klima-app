@@ -869,30 +869,6 @@ private fun ClimateTable(
     }
 }
 
-@Composable
-private fun ErrorContent(
-    message: String,
-    onRetry: () -> Unit
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = message,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(onClick = onRetry) {
-                Text(stringResource(R.string.try_again))
-            }
-        }
-    }
-}
-
 private fun formatValue(value: Double?): String {
     if (value == null) return "-"
     return if (value == value.toLong().toDouble()) {
