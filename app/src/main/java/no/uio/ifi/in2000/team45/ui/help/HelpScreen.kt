@@ -47,6 +47,18 @@ fun HelpScreen(
     }
 }
 
+// Structure for section-title
+@Composable
+private fun HelpSectionTitle(title: String){
+    Text(
+        text = title,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
 // Structure for help-cards in help-screen
 @Composable
 private fun HelpItem(
