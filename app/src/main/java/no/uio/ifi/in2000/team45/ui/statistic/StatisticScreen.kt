@@ -84,6 +84,7 @@ import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
+import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val MONTH_NAMES = listOf(
@@ -195,33 +196,6 @@ fun StatisticScreen(
             )
         }
     }
-}
-
-@Composable
-private fun SearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit
-) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        label = { Text(stringResource(R.string.place_or_station)) },
-        trailingIcon = {
-            IconButton(onClick = onSearch) {
-                Icon(Icons.Filled.Search,
-                    contentDescription = stringResource(R.string.search))
-            }
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-        ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
 }
 
 @Composable
