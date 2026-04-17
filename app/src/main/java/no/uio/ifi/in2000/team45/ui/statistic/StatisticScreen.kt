@@ -357,15 +357,6 @@ private fun ClimateTable(
     }
 }
 
-private fun formatValue(value: Double?): String {
-    if (value == null) return "-"
-    return if (value == value.toLong().toDouble()) {
-        value.toLong().toString()
-    } else {
-        String.format("%.1f", value)
-    }
-}
-
 private fun buildTemperatureRows(stats: List<MonthlyClimateStats>): List<TableRow> {
     val rows = mutableListOf<TableRow>()
 
