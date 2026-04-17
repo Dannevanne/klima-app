@@ -373,21 +373,13 @@ fun DataMap(
                 mapViewModel = mapViewModel
             )
 
-            // When the ViewModel has a new overlayURL, the photo is downloaded
-            // to Bitmap. This is because image source + raster layer requires
-            // a Bitmap. This Bitmap can later be added as a raster layer on the map.
-            LaunchedEffect(overlayURL) {
-                imageJob?.cancel()
-
-                if (overlayURL == null) {
-                    bitmap = null
-                    return@LaunchedEffect
-                }
-
-                imageJob = launch {
-                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
-                }
-            }
+            MapOverlayBitmapEffect(
+                overlayURL = overlayURL,
+                context = context,
+                imageJob = imageJob,
+                onImageJobChange = { imageJob = it },
+                onBitmapLoaded = { bitmap = it }
+            )
 
             MapOverlayEffect(
                 bitmap = bitmap,
