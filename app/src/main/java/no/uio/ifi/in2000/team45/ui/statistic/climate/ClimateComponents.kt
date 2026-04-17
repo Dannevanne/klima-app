@@ -28,12 +28,9 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.statistic.OverviewStat
-import no.uio.ifi.in2000.team45.ui.statistic.TrendDirection
-import no.uio.ifi.in2000.team45.ui.statistic.TrendInfo
-import no.uio.ifi.in2000.team45.ui.statistic.computeTrend
-import no.uio.ifi.in2000.team45.ui.statistic.estimateUvIndex
-import no.uio.ifi.in2000.team45.ui.statistic.uvLabel
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.computeTrend
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.estimateUvIndex
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.uvLabel
 
 @Composable
 fun OverviewCards(
@@ -365,7 +362,7 @@ fun UvIndexCard(latitude: Double) {
 // If selected place dont have data for all years in chosen periode,
 // a warning-message appear telling this
 @Composable
-fun missingData(
+fun MissingData(
     annualData: List<AnnualObservation>,
     selectedPeriod: Int
 ){

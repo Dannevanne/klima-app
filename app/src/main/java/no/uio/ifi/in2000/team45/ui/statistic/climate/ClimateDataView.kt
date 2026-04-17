@@ -28,18 +28,11 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.statistic.ClimateTable
-import no.uio.ifi.in2000.team45.ui.statistic.OverviewCards
-import no.uio.ifi.in2000.team45.ui.statistic.PERIOD_OPTIONS
-import no.uio.ifi.in2000.team45.ui.statistic.StationInfoCard
-import no.uio.ifi.in2000.team45.ui.statistic.TrendChart
-import no.uio.ifi.in2000.team45.ui.statistic.UvIndexCard
-import no.uio.ifi.in2000.team45.ui.statistic.buildCloudRows
-import no.uio.ifi.in2000.team45.ui.statistic.buildPrecipitationRows
-import no.uio.ifi.in2000.team45.ui.statistic.buildSnowRows
-import no.uio.ifi.in2000.team45.ui.statistic.buildTemperatureRows
-import no.uio.ifi.in2000.team45.ui.statistic.buildWindRows
-import no.uio.ifi.in2000.team45.ui.statistic.missingData
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.buildCloudRows
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.buildPrecipitationRows
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.buildSnowRows
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.buildTemperatureRows
+import no.uio.ifi.in2000.team45.ui.statistic.climate.utils.buildWindRows
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val PERIOD_OPTIONS = listOf(10, 30, 50)
@@ -57,7 +50,7 @@ fun ClimateDataView(
 ) {
     LazyColumn {
         item {
-            missingData(annualData, selectedPeriod)
+            MissingData(annualData, selectedPeriod)
         }
         item {
             TextButton(onClick = onBack) {
