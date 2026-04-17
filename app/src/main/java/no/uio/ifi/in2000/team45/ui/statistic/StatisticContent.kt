@@ -30,6 +30,10 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
+import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
+import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
+import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @Composable
