@@ -15,10 +15,12 @@
     <string name="darkmode">Dark mode</string>
     <string name="climate_statistics">Climate Statistics</string>
     <string name="place_or_station">Search by location or weather station</string>
+    <string name="search_your_locations">Search your saved locations</string>
     <string name="search">Search</string>
-    <string name="search_to_see_stats">Search for a location to see climate statistics</string>
-    <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsø\"</string>
-    <string name="choose_station">Choose a station:</string>
+    <string name="search_to_see_stats">Start by searching for a location</string>
+    <string name="search_to_see_stats_subtitle">Enter a place name or station ID above to explore temperature, precipitation, and risk trends over time.</string>
+    <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsoe\"</string>
+    <string name="choose_station">Choose a station</string>
     <string name="back_to_search">Back to search</string>
     <string name="temperature">Temperature</string>
     <string name="precipitation">Precipitation</string>
@@ -28,13 +30,13 @@
     <string name="go_back">Go back</string>
     <string name="help">Help</string>
     <string name="menu">Menu</string>
-    <string name="saved_places">Lagrede steder</string>
-    <string name="nav_map">Kart</string>
-    <string name="nav_statistics">Statistikk</string>
+    <string name="saved_places">Saved places</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_statistics">Statistics</string>
     <string name="need_location_permission">Needs location permission</string>
     <string name="permission_settings">"We need your permission to use your location. Go to settings to change permissions "</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
     <string name="my_position">My position</string>
-    <string name="this_place_is_missing_some_data">⚠ This place do miss some data for chosen periode </string>
+    <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
 </resources>
