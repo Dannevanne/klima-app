@@ -199,30 +199,6 @@ fun StatisticScreen(
 }
 
 @Composable
-private fun IdleContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = stringResource(R.string.search_to_see_stats),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.ex_oslo_bergen_troms),
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
 private fun StationList(
     stations: List<WeatherStation>,
     favoriteIds: Set<String>,
