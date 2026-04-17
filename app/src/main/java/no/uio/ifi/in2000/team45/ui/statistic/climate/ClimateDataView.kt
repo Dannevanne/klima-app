@@ -28,7 +28,7 @@ fun ClimateDataView(
 ) {
     LazyColumn {
         item {
-            missingData(annualData, selectedPeriod)
+            MissingData(annualData, selectedPeriod)
         }
 
         item {
