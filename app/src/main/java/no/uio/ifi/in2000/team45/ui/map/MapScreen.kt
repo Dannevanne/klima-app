@@ -351,35 +351,13 @@ fun DataMap(
                 }
             )
 
-            // Activates the blue location-dot.
-            // Rerun every time locationGranted changes.
-            DisposableEffect(mapViewRef, locationGranted) {
-                val mapView = mapViewRef
-                if(mapView == null){
-                    onDispose {  }
+            MapUserLocationEffect(
+                mapView = mapViewRef,
+                locationGranted = locationGranted,
+                onUserLocationChanged = { point ->
+                    mapViewModel.updateUserLocation(point)
                 }
-                else{
-                    mapView.location.updateSettings {
-                        locationPuck = createDefault2DPuck(withBearing = false)
-                        enabled = locationGranted
-                        pulsingEnabled = true
-                    }
-
-                    // Listens to location changes from MapBox
-                    // and updates userLocation in ViewModel
-                    val locationListener = OnIndicatorPositionChangedListener { point ->
-                        mapViewModel.updateUserLocation(point)
-                    }
-
-                    if(locationGranted) {
-                        mapView.location.addOnIndicatorPositionChangedListener(locationListener)
-                    }
-
-                    onDispose {
-                        mapView.location.removeOnIndicatorPositionChangedListener(locationListener)
-                    }
-                }
-            }
+            )
 
             // Listens to selectedLocation from ViewModel and
             // reruns when moveToUserLocation() is called.
