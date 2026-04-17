@@ -411,48 +411,12 @@ fun DataMap(
 
             MapThemeEffect(useDarkMap)
 
-            DisposableEffect(mapViewRef) {
-                val mapView = mapViewRef
-                if (mapView == null) {
-                    onDispose { }
-                } else {
-                    // Reads the camera setting from MapBox,
-                    // calculates the visable area,
-                    // and asks ViewModel for new overlay-data.
-                    fun updateFromCamera() {
-                        if (currentMapWidth <= 0 || currentMapHeight <= 0) return
-                        val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                            mapView.mapboxMap.cameraState.toCameraOptions()
-                        )
-                        val bbox = listOf(
-                            bounds.southwest.longitude(),
-                            bounds.southwest.latitude(),
-                            bounds.northeast.longitude(),
-                            bounds.northeast.latitude()
-                        )
-
-                        val expandedBBox = expandBBox(bbox)
-
-                        mapViewModel.updateOverlay(
-                            bbox = expandedBBox,
-                            width = currentMapWidth,
-                            height = currentMapHeight
-                        )
-                    }
-
-                    // Camera changes in the map dictates new overlay requests.
-                    // The UI observes the map, and the ViewModel decides
-                    // if a request should go ahead.
-                    val listener = OnCameraChangeListener {
-                        updateFromCamera()
-                    }
-                    mapView.mapboxMap.addOnCameraChangeListener(listener)
-                    updateFromCamera()
-                    onDispose {
-                        mapView.mapboxMap.removeOnCameraChangeListener(listener)
-                    }
-                }
-            }
+            MapCameraOverlayEffect(
+                mapView = mapViewRef,
+                mapWidth = currentMapWidth,
+                mapHeight = currentMapHeight,
+                mapViewModel = mapViewModel
+            )
 
             // When the ViewModel has a new overlayURL, the photo is downloaded
             // to Bitmap. This is because image source + raster layer requires
