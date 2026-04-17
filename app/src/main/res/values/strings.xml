@@ -37,4 +37,24 @@
     <string name="cancel">Cancel</string>
     <string name="my_position">My position</string>
     <string name="this_place_is_missing_some_data">⚠ This place do miss some data for chosen periode </string>
+    <string name="select_an_overlay_by_pushing_the_bottom_left_button">Select an overlay by pushing the bottom-left button</string>
+    <string name="select_overlay">Select overlay</string>
+    <string name="search_for_places">Search for places</string>
+    <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Paste a placename in the searchbar to navigate on the map</string>
+    <string name="save_location">Save location</string>
+    <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_favorites">Tap and hold on a location on the map to save it to your saved places</string>
+    <string name="my_location">My location</string>
+    <string name="button_to_see_location_or_give_permission">Press the locationbutton in the left button to see your location or to accept sharing location</string>
+    <string name="statistics">Statistics</string>
+    <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate-statistics</string>
+    <string name="save_area">Save area</string>
+    <string name="press_the_star_to_save_an_area">Press the star to save an area</string>
+    <string name="select_a_time_period">Select a time period</string>
+    <string name="use_10_30_or_50_years_to_see_climate_trends">Use 10, 30 or 50 years to see climate-trends</string>
+    <string name="missing_data">Missing data</string>
+    <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning is appearing under the searchbar</string>
+    <string name="section_for_your_saved_places_for_quick_access">Section for your saved places for quick access and relevant info</string>
+    <string name="save_place">Save place</string>
+    <string name="overlay_explanation">Overlay explanation</string>
+    <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
 </resources>
