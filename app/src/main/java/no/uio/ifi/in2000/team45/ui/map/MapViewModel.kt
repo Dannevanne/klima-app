@@ -78,6 +78,12 @@ class MapViewModel(
     var selectedLocation by mutableStateOf<Point?>(null)
         private set
 
+    // Holds a map-camera-position
+    var lastCameraCenter by mutableStateOf(Point.fromLngLat(11.05, 60.5))
+        private set
+    var lastCameraZoom by mutableStateOf(11.5)
+        private set
+
     // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
@@ -260,6 +266,17 @@ class MapViewModel(
         searchJob?.cancel()
         selectJob?.cancel()
         super.onCleared()
+    }
+
+    // Saves map-camera
+    fun saveCamera(center: Point, zoom: Double){
+        lastCameraCenter = center
+        lastCameraZoom = zoom
+    }
+
+    // Resets SelectedLocation
+    fun clearSelectedLocation(){
+        selectedLocation = null
     }
 }
 
