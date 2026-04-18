@@ -10,8 +10,11 @@ fun applyAppLanguage(language: LanguageOption) {
         LanguageOption.NYNORSK -> "nn"
         LanguageOption.ENGLISH -> "en"
     }
+    val desired = LocaleListCompat.forLanguageTags(localeTag)
 
-    AppCompatDelegate.setApplicationLocales(
-        LocaleListCompat.forLanguageTags(localeTag)
-    )
+    // Skip when already set, otherwise setApplicationLocales would
+    // trigger an activity recreation for no reason
+    if (AppCompatDelegate.getApplicationLocales() == desired) return
+
+    AppCompatDelegate.setApplicationLocales(desired)
 }
