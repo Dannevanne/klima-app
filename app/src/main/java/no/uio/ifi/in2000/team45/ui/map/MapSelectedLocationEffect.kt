@@ -9,7 +9,8 @@ import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 @Composable
 fun MapSelectedLocationEffect(
     selectedLocation: Point?,
-    viewportState: MapViewportState
+    viewportState: MapViewportState,
+    onScreenSwitch: () -> Unit
 ) {
     // Listens to selectedLocation from ViewModel and
     // reruns when moveToUserLocation() is called.
@@ -24,6 +25,7 @@ fun MapSelectedLocationEffect(
                     .zoom(13.0)
                     .build()
             )
+            onScreenSwitch()
         }
     }
 }
