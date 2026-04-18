@@ -46,3 +46,22 @@ fun InfoScreen(
         }
     }
 }
+
+@Composable
+private fun InfoSection(
+    title: String,
+){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = title.uppercase(),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+    }
+}
