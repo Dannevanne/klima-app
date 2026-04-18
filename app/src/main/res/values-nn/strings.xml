@@ -2,9 +2,9 @@
 <resources>
     <string name="app_name">Team45</string>
     <string name="map">Kart</string>
-    <string name="to_settings">til instillingar</string>
+    <string name="to_settings">til innstillingar</string>
     <string name="to_statistics">til statistikk</string>
-    <string name="settings">Instillingar</string>
+    <string name="settings">Innstillingar</string>
     <string name="to_map">til kart</string>
     <string name="theme">Tema</string>
     <string name="filter_climate_hazard">Filtrer etter klimafare</string>
