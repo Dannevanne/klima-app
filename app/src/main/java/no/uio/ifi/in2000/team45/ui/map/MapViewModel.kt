@@ -17,7 +17,7 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
-import no.uio.ifi.in2000.team45.ui.settings.LanguageOption
+import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 
 sealed interface MapUiState {
     data class Success(

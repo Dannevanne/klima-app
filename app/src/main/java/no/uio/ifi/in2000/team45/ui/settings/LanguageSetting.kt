@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 
 @Composable
 fun LanguageSetting(
