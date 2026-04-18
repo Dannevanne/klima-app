@@ -121,4 +121,8 @@
     <string name="precipitation_plus_temperature">Precipitation + temperature</string>
     <string name="annual_precipitation_trend">ANNUAL PRECIPITATION - TREND (MM)</string>
     <string name="average_annual_temperature">AVERAGE ANNUAL TEMPERATURE (C)</string>
+    <string name="error_no_stations_found">No stations found for \"%1$s\"</string>
+    <string name="error_search_failed">Search failed: %1$s</string>
+    <string name="error_no_climate_data">No climate data available for stations near %1$s</string>
+    <string name="error_fetch_data">Error fetching data: %1$s</string>
 </resources>
