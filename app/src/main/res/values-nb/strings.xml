@@ -100,4 +100,5 @@
     <string name="wind_advice_garden_furniture">Sikre lette hagemøbler ved stormvarsel.</string>
     <string name="station_not_found">Ingen stasjon funnet</string>
     <string name="fetch_error">Feil ved henting</string>
+    <string name="nearby">I nærheten</string>
 </resources>
