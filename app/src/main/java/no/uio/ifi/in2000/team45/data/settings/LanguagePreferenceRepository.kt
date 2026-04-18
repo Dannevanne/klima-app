@@ -17,7 +17,7 @@ class LanguagePreferenceRepository(private val context: Context) {
     }
 
     val languageFlow: Flow<LanguageOption> = context.languageDataStore.data.map { preferences ->
-        when (preferences.[LANGUAGE_KEY]) {
+        when (preferences[LANGUAGE_KEY]) {
             LanguageOption.BOKMÅL.name -> LanguageOption.BOKMÅL
             LanguageOption.NYNORSK.name -> LanguageOption.NYNORSK
             LanguageOption.ENGLISH.name -> LanguageOption.ENGLISH
