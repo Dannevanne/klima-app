@@ -103,4 +103,6 @@
     <string name="station_not_found">No station found</string>
     <string name="fetch_error">Failed to fetch data</string>
     <string name="nearby">Nearby</string>
+    <string name="remove_favorite">Remove favorite</string>
+    <string name="add_favorite">Add favorite</string>
 </resources>

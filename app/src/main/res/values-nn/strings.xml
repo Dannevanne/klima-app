@@ -101,4 +101,6 @@
     <string name="station_not_found">Ingen stasjon funnen</string>
     <string name="fetch_error">Feil ved henting</string>
     <string name="nearby">I nærleiken</string>
+    <string name="remove_favorite">Fjern favoritt</string>
+    <string name="add_favorite">Legg til favoritt</string>
 </resources>
