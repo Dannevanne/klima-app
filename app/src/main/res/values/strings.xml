@@ -60,7 +60,7 @@
     <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
     <string name="language">Language</string>
-    <string name="language_bokmal" translatable="false">Norsk Bokmål</string>
-    <string name="language_nynorsk" translatable="false">Norsk Nynorsk</string>
+    <string name="language_bokmal" translatable="false">Norsk bokmål</string>
+    <string name="language_nynorsk" translatable="false">Norsk nynorsk</string>
     <string name="language_english">English</string>
 </resources>
