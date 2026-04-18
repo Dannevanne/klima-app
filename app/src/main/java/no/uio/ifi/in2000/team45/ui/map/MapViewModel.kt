@@ -16,6 +16,10 @@ import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
+import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
+import no.uio.ifi.in2000.team45.ui.settings.LanguageOption
+import org.intellij.lang.annotations.Language
+
 sealed interface MapUiState {
     data class Success(
         val overlayURL: String,
@@ -35,12 +39,15 @@ data class SearchSuggestionUi(
 
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
-    private val themePreferenceRepository: ThemePreferenceRepository)
-    : ViewModel() {
+    private val themePreferenceRepository: ThemePreferenceRepository,
+    private val languagePreferenceRepository: LanguagePreferenceRepository
+) : ViewModel() {
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
 
     var mapTheme by mutableStateOf(MapTheme.DEVICE)
+        private set
+    var selectedLanguage by mutableStateOf(LanguageOption.ENGLISH)
         private set
     var activeOverlay by mutableStateOf(OverlayType.FLOOD)
         private set
@@ -83,6 +90,11 @@ class MapViewModel(
         viewModelScope.launch {
             themePreferenceRepository.mapThemeFlow.collect { savedTheme ->
                 mapTheme = savedTheme
+            }
+        }
+        viewModelScope.launch {
+            languagePreferenceRepository.languageFlow.collect { savedLanguage ->
+                selectedLanguage = savedLanguage
             }
         }
     }
@@ -142,6 +154,13 @@ class MapViewModel(
             themePreferenceRepository.saveMapTheme(theme)
         } // The theme gets updated instantly and also
           // saved in the theme repository
+    }
+
+    fun updateLanguage(language: LanguageOption) {
+        selectedLanguage = language
+        viewModelScope.launch {
+            languagePreferenceRepository.saveLanguage(language)
+        }
     }
 
     // Is called by Mapbox's locationlistener in DataMap.
