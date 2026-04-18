@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
@@ -24,6 +25,7 @@ import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
+import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,10 @@ class MainActivity : AppCompatActivity() {
                     themePreferenceRepository = themePreferenceRepository,
                     languagePreferenceRepository = languagePreferenceRepository)
             )
+
+            LaunchedEffect(mapViewModel.selectedLanguage) {
+                applyAppLanguage(mapViewModel.selectedLanguage)
+            }
 
             // Collects the users theme preference to use for Theme45Theme
             val useDarkTheme = useDarkThemeFrom(
