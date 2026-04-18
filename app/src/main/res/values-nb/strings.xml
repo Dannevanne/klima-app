@@ -2,15 +2,15 @@
 <resources>
     <string name="app_name">Team45</string>
     <string name="map">Kart</string>
-    <string name="to_settings">til instillinger</string>
+    <string name="to_settings">til innstillinger</string>
     <string name="to_statistics">til statistikk</string>
-    <string name="settings">Instillinger</string>
+    <string name="settings">Innstillinger</string>
     <string name="to_map">til kart</string>
     <string name="theme">Tema</string>
     <string name="filter_climate_hazard">Filtrer etter klimafare</string>
     <string name="flood">Flom</string>
     <string name="landslide">Skred</string>
-    <string name="device_settings">Bruk enhetsinstillinger</string>
+    <string name="device_settings">Bruk enhetsinnstillinger</string>
     <string name="lightmode">Lys modus</string>
     <string name="darkmode">Mørk modus</string>
     <string name="climate_statistics">Klima statistikk</string>
