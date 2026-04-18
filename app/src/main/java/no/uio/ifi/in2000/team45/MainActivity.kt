@@ -22,6 +22,7 @@ import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
+import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,13 +32,17 @@ class MainActivity : ComponentActivity() {
         // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
 
+        // Creates LanguagePreferenceRepository for the MapViewModelFactory
+        val languagePreferenceRepository = LanguagePreferenceRepository(applicationContext)
+
         // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
 
         setContent {
             val mapViewModel: MapViewModel = viewModel(
                 factory = MapViewModelFactory(
-                    themePreferenceRepository = themePreferenceRepository)
+                    themePreferenceRepository = themePreferenceRepository,
+                    languagePreferenceRepository = languagePreferenceRepository)
             )
 
             // Collects the users theme preference to use for Theme45Theme
