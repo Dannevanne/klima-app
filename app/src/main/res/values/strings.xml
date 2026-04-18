@@ -59,4 +59,8 @@
     <string name="overlay_explanation">Overlay explanation</string>
     <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
+    <string name="language">Language</string>
+    <string name="language_bokmal">Norsk Bokmål</string>
+    <string name="language_nynorsk">Norsk Nynorsk</string>
+    <string name="language_english">English</string>
 </resources>
