@@ -57,7 +57,8 @@ fun MapContent(
 
         MapSelectedLocationEffect(
             selectedLocation = mapViewModel.selectedLocation,
-            viewportState = viewportState
+            viewportState = viewportState,
+            onScreenSwitch = {mapViewModel.clearSelectedLocation()}
         )
 
         MapThemeEffect(useDarkMap)
