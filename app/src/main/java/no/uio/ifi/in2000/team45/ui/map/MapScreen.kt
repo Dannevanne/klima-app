@@ -301,8 +301,8 @@ fun DataMap(
     // Sets the cameras start position
     val viewportState = rememberMapViewportState {
         setCameraOptions {
-            center(Point.fromLngLat(11.05, 60.5))
-            zoom(11.5)
+            center(mapViewModel.lastCameraCenter)
+            zoom(mapViewModel.lastCameraZoom)
             pitch(0.0)
             bearing(0.0)
         }
