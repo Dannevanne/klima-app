@@ -51,7 +51,7 @@ fun OverviewCards(
     val extremeTrend = TrendInfo(TrendDirection.STABLE, null)
 
     Text(
-        text = "OVERVIEW $fromYear-$currentYear",
+        text = stringResource(R.string.overview_period, fromYear, currentYear),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -65,13 +65,13 @@ fun OverviewCards(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
-                label = "Precipitation, avg/year",
+                label = stringResource(R.string.precipitation_avg_year),
                 value = if (avgPrecip != null) "${avgPrecip.toInt()} mm" else "-",
                 trend = precipTrend,
                 modifier = Modifier.weight(1f)
             )
             OverviewStatCard(
-                label = "Max wind gust",
+                label = stringResource(R.string.max_wind_gust),
                 value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
                 trend = windTrend,
                 modifier = Modifier.weight(1f)
@@ -82,14 +82,14 @@ fun OverviewCards(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
-                label = "Snow days/year",
-                value = if (avgSnowMonths > 0) "$avgSnowMonths months" else "-",
+                label = stringResource(R.string.snow_days_year),
+                value = if (avgSnowMonths > 0) stringResource(R.string.months_count, avgSnowMonths) else "-",
                 trend = snowTrend,
                 modifier = Modifier.weight(1f)
             )
             OverviewStatCard(
-                label = "Extreme precipitation",
-                value = if (extremePrecipDays > 0) "$extremePrecipDays years" else "-",
+                label = stringResource(R.string.extreme_precipitation),
+                value = if (extremePrecipDays > 0) stringResource(R.string.years_count, extremePrecipDays) else "-",
                 trend = extremeTrend,
                 modifier = Modifier.weight(1f)
             )
@@ -135,8 +135,9 @@ fun OverviewStatCard(
                     TrendDirection.DOWN -> "v"
                     TrendDirection.STABLE -> "~"
                 }
+                val vsNorm = stringResource(R.string.trend_vs_norm)
                 Text(
-                    text = "$arrow ${String.format("%+.0f", trend.percentChange)}% vs norm",
+                    text = "$arrow ${String.format("%+.0f", trend.percentChange)}% $vsNorm",
                     color = trendColor,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
@@ -273,7 +274,7 @@ fun StationsUsedCard(
     val obsCount = annualData.size
 
     Text(
-        text = "WEATHER STATIONS USED",
+        text = stringResource(R.string.weather_stations_used),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -301,7 +302,7 @@ fun StationsUsedCard(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = "Frost ID: ${station.id}",
+                    text = stringResource(R.string.frost_id_prefix, station.id),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -315,7 +316,7 @@ fun StationsUsedCard(
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "Precipitation + temperature",
+                    text = stringResource(R.string.precipitation_plus_temperature),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
