@@ -5,6 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import com.mapbox.maps.MapView
 import com.mapbox.common.Cancelable
 import com.mapbox.maps.CameraChangedCallback
+import com.mapbox.maps.extension.style.expressions.dsl.generated.zoom
 import com.mapbox.maps.toCameraOptions
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 
