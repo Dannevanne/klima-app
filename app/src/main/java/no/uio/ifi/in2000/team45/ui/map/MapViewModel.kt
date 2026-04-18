@@ -48,6 +48,10 @@ class MapViewModel(
         private set
     var selectedLanguage by mutableStateOf(LanguageOption.ENGLISH)
         private set
+    // Stays false until the DataStore flow emits the stored value.
+    // Used to avoid applying the placeholder language on first launch.
+    var isLanguageInitialized by mutableStateOf(false)
+        private set
     var activeOverlay by mutableStateOf(OverlayType.FLOOD)
         private set
 
@@ -94,6 +98,7 @@ class MapViewModel(
         viewModelScope.launch {
             languagePreferenceRepository.languageFlow.collect { savedLanguage ->
                 selectedLanguage = savedLanguage
+                isLanguageInitialized = true
             }
         }
     }

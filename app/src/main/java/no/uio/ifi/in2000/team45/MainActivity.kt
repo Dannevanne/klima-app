@@ -48,8 +48,10 @@ class MainActivity : AppCompatActivity() {
                     languagePreferenceRepository = languagePreferenceRepository)
             )
 
-            LaunchedEffect(mapViewModel.selectedLanguage) {
-                applyAppLanguage(mapViewModel.selectedLanguage)
+            LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
+                if (mapViewModel.isLanguageInitialized) {
+                    applyAppLanguage(mapViewModel.selectedLanguage)
+                }
             }
 
             // Collects the users theme preference to use for Theme45Theme
