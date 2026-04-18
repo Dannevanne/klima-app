@@ -6,7 +6,7 @@
     <string name="settings">Settings</string>
     <string name="to_map">to map</string>
     <string name="theme">Theme</string>
-    <string name="trygg_eiendom">Trygg Eiendom</string>
+    <string name="trygg_eiendom" translatable="false">Trygg Eiendom</string>
     <string name="filter_climate_hazard">Filter by climate hazard</string>
     <string name="flood">Flood</string>
     <string name="landslide">Landslide</string>
@@ -60,7 +60,7 @@
     <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
     <string name="language">Language</string>
-    <string name="language_bokmal">Norsk Bokmål</string>
-    <string name="language_nynorsk">Norsk Nynorsk</string>
+    <string name="language_bokmal" translatable="false">Norsk Bokmål</string>
+    <string name="language_nynorsk" translatable="false">Norsk Nynorsk</string>
     <string name="language_english">English</string>
 </resources>
