@@ -98,4 +98,6 @@
     <string name="wind_advice_trim_trees">Beskjer store tre nær huset for å redusere vindlast.</string>
     <string name="wind_advice_fencing">Vurder vindbestandige gjerde og konstruksjonar.</string>
     <string name="wind_advice_garden_furniture">Sikra lette hagemøblar ved stormvarsel.</string>
+    <string name="station_not_found">Ingen stasjon funnen</string>
+    <string name="fetch_error">Feil ved henting</string>
 </resources>

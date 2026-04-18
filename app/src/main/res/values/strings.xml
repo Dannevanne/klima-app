@@ -100,4 +100,6 @@
     <string name="wind_advice_trim_trees">Trim large trees close to the house to reduce wind load.</string>
     <string name="wind_advice_fencing">Consider wind-resistant fencing and structures.</string>
     <string name="wind_advice_garden_furniture">Secure lightweight garden furniture during storm warnings.</string>
+    <string name="station_not_found">No station found</string>
+    <string name="fetch_error">Failed to fetch data</string>
 </resources>
