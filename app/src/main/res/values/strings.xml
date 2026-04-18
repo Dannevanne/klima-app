@@ -63,4 +63,7 @@
     <string name="language_bokmal" translatable="false">Norsk bokmål</string>
     <string name="language_nynorsk" translatable="false">Norsk nynorsk</string>
     <string name="language_english">English</string>
+    <string name="no_saved_places_yet">No saved places yet</string>
+    <string name="no_saved_places_hint">Go to the map, tap an area and save it to see risk analysis and climate data here.</string>
+    <string name="open_map">Open map</string>
 </resources>
