@@ -41,6 +41,12 @@ fun MapCameraOverlayEffect(
                     width = mapWidth,
                     height = mapHeight
                 )
+
+                // Saves where the camera is pointing on the map
+                mapViewModel.saveCamera(
+                    center = mapView.mapboxMap.cameraState.center,
+                    zoom = mapView.mapboxMap.cameraState.zoom
+                )
             }
 
             // Camera changes in the map dictates new overlay requests.
