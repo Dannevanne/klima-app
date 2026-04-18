@@ -52,7 +52,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
@@ -117,6 +116,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.Alignment
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapLongClickListener
@@ -327,379 +327,85 @@ fun DataMap(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        MapboxMap(
-            modifier = Modifier
-                .fillMaxSize()
-                .onSizeChanged {
-                    mapWidth = it.width
-                    mapHeight = it.height // The maps size is needed
-                                         // when the overlayURL is being built
-                                        // because the backend service returns
-                                        // a photo depending on the shown map window
-                },
-            mapViewportState = viewportState
-        ){
-            MapEffect(Unit) { mapView ->
-                mapViewRef = mapView
-            }
 
-            DisposableEffect(mapViewRef) {
-                val mapView = mapViewRef
-                if (mapView == null) {
-                    onDispose {  }
+        MapContent(
+            viewportState = viewportState,
+            mapViewRef = mapViewRef,
+            onMapViewReady = { mapViewRef = it },
+            onMapSizeChanged = { width, height ->
+                mapWidth = width
+                mapHeight = height
+            },
+            pendingBitmap = bitmap,
+            overlayBBox = overlayBBox,
+            useDarkMap = useDarkMap,
+            currentMapWidth = currentMapWidth,
+            currentMapHeight = currentMapHeight,
+            locationGranted = locationGranted,
+            mapViewModel = mapViewModel,
+            onMapLongClick = { point ->
+                pendingPoint = point
+                locationName = ""
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+
+        MapOverlayBitmapEffect(
+            overlayURL = overlayURL,
+            context = context,
+            imageJob = imageJob,
+            onImageJobChange = { imageJob = it },
+            onBitmapLoaded = { bitmap = it }
+        )
+
+        MapSearchSection(
+            searchQuery = searchQuery,
+            searchSuggestions = searchSuggestions,
+            isSearching = isSearching,
+            onSearchQueryChange = { mapViewModel.updateSearchQuery(it) },
+            onClearSearch = { mapViewModel.clearSearch() },
+            onSuggestionClick = { item ->
+                mapViewModel.selectSuggestion(item) { point ->
+                    moveToPoint(point, viewportState)
                 }
-                else{
-                    val longClickListener = OnMapLongClickListener { point ->
-                        pendingPoint = point
-                        locationName = ""
-                        true
-                    }
+            },
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
 
-                    mapView.mapboxMap.addOnMapLongClickListener(longClickListener)
+        MapOverlaySelector(
+            activeOverlay = mapViewModel.activeOverlay,
+            onOverlaySelected = { type -> mapViewModel.setOverlay(type) },
+            modifier = Modifier.align(Alignment.TopStart)
+        )
 
-                    onDispose {
-                        mapView.mapboxMap.removeOnMapLongClickListener(longClickListener)
-                    }
-                }
-            }
-
-            // Activates the blue location-dot.
-            // Rerun every time locationGranted changes.
-            DisposableEffect(mapViewRef, locationGranted) {
-                val mapView = mapViewRef
-                if(mapView == null){
-                    onDispose {  }
-                }
-                else{
-                    mapView.location.updateSettings {
-                        locationPuck = createDefault2DPuck(withBearing = false)
-                        enabled = locationGranted
-                        pulsingEnabled = true
-                    }
-
-                    // Listens to location changes from MapBox
-                    // and updates userLocation in ViewModel
-                    val locationListener = OnIndicatorPositionChangedListener { point ->
-                        mapViewModel.updateUserLocation(point)
-                    }
-
-                    if(locationGranted) {
-                        mapView.location.addOnIndicatorPositionChangedListener(locationListener)
-                    }
-
-                    onDispose {
-                        mapView.location.removeOnIndicatorPositionChangedListener(locationListener)
-                    }
-                }
-            }
-
-            // Listens to selectedLocation from ViewModel and
-            // reruns when moveToUserLocation() is called.
-            // The UI changes the camera when selectedLocation is set in ViewModel.
-            // The ViewModel decides what the selected posistion is,
-            // and the UI decides how to move there.
-            LaunchedEffect(mapViewModel.selectedLocation) {
-                mapViewModel.selectedLocation?.let {
-                    viewportState.easeTo(
-                        CameraOptions.Builder()
-                            .center(it)
-                            .zoom(13.0)
-                            .build()
-                    )
-                }
-            }
-
-            MapThemeEffect(useDarkMap)
-
-            DisposableEffect(mapViewRef) {
-                val mapView = mapViewRef
-                if (mapView == null) {
-                    onDispose { }
-                } else {
-                    // Reads the camera setting from MapBox,
-                    // calculates the visable area,
-                    // and asks ViewModel for new overlay-data.
-                    fun updateFromCamera() {
-                        if (currentMapWidth <= 0 || currentMapHeight <= 0) return
-                        val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
-                            mapView.mapboxMap.cameraState.toCameraOptions()
-                        )
-                        val bbox = listOf(
-                            bounds.southwest.longitude(),
-                            bounds.southwest.latitude(),
-                            bounds.northeast.longitude(),
-                            bounds.northeast.latitude()
-                        )
-
-                        val expandedBBox = expandBBox(bbox)
-
-                        mapViewModel.updateOverlay(
-                            bbox = expandedBBox,
-                            width = currentMapWidth,
-                            height = currentMapHeight
-                        )
-                    }
-
-                    // Camera changes in the map dictates new overlay requests.
-                    // The UI observes the map, and the ViewModel decides
-                    // if a request should go ahead.
-                    val listener = OnCameraChangeListener {
-                        updateFromCamera()
-                    }
-                    mapView.mapboxMap.addOnCameraChangeListener(listener)
-                    updateFromCamera()
-                    onDispose {
-                        mapView.mapboxMap.removeOnCameraChangeListener(listener)
-                    }
-                }
-            }
-
-            // When the ViewModel has a new overlayURL, the photo is downloaded
-            // to Bitmap. This is because image source + raster layer requires
-            // a Bitmap. This Bitmap can later be added as a raster layer on the map.
-            LaunchedEffect(overlayURL) {
-                imageJob?.cancel()
-
-                if (overlayURL == null) {
-                    bitmap = null
-                    return@LaunchedEffect
-                }
-
-                imageJob = launch {
-                    bitmap = makeBitmap(context = context, imageURL = overlayURL)
-                }
-            }
-
-            // When the bitmap and style is ready,
-            // a temporary overlay is built over the map.
-            MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
-                val currentBitmap = bitmap ?: return@MapEffect
-                val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
-
-                // changed to so that the expanded box is rendered
-                val bbox = overlayBBox ?: return@MapEffect
-                val corners = cornersFromBBox(bbox)
-
-                if (style.getLayer("overlaylayer") != null) {
-                    style.removeStyleLayer("overlaylayer")
-                }
-
-                if (style.getSource("overlaysource") != null) {
-                    style.removeStyleSource("overlaysource")
-                }
-
-                val source = ImageSource.Builder("overlaysource")
-                    .coordinates(corners)
-                    .build()
-
-                style.addSource(source)
-                style.getSourceAs<ImageSource>("overlaysource")?.updateImage(currentBitmap)
-
-
-                if (style.getLayer("overlaylayer") == null) {
-                    style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
-                        rasterOpacity(0.5)
-                    })
-                }
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            TextField(
-                value = searchQuery,
-                onValueChange = { mapViewModel.updateSearchQuery(it) }, // Continuous
-                // two way flow. User input gets sent to ViewModel, which updates searchQuery
-                // and starts an autocomplete search. Then the UI is updated based of results
-
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                placeholder = { Text("Search after place in Norway") },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search"
-                    )
-                },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { mapViewModel.clearSearch() }) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = "Empty search"
-                            )
-                        }
-                    }
-                },
-                shape = RoundedCornerShape(28.dp)
-            )
-            if (isSearching || searchSuggestions.isNotEmpty()) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                ) {
-                    if (isSearching) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        LazyColumn {
-                            items(searchSuggestions) { item ->
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.background)
-                                        .clickable {
-                                            mapViewModel.selectSuggestion(item) { point ->
-                                                moveToPoint(point, viewportState)
-                                            } // UI sends the selected suggested place to ViewModel.
-                                              // ViewModel calls select() which returns coordinates (+ more).
-                                              // ViewModel sends coordinates in it's callback.
-                                              // UI handles the movement to the selected place with moveToPoint.
-                                        }
-                                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                                ) {
-                                    Text(
-                                        text = item.title,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    item.subtitle?.let {
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = it,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Overlay type selector.
-        // Selected overlay gets sent to the ViewModel.
-        // ViewModel is responsible for triggering the right
-        // new overlay-fetching from the repository.
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 8.dp, top = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            OverlayType.entries.forEach { type ->
-                FilterChip(
-                    selected = mapViewModel.activeOverlay == type,
-                    onClick = { mapViewModel.setOverlay(type) },
-                    label = { Text(type.label, fontSize = 12.sp) }
-                )
-            }
-        }
-
-        MapZoomControls(
-            onZoomIn = {
-                zoomMap(mapViewRef, viewportState, 1.0)
-                // forcing update overlay after zoom
-                if (overlayBBox != null) {
-                    mapViewModel.updateOverlay(bbox = overlayBBox , width = mapWidth, height = mapHeight)
-                }},
-            onZoomOut = {
-                zoomMap(mapViewRef, viewportState, -1.0)
-                // forcing update overlay after zoom
-                if (overlayBBox != null) {
-                    mapViewModel.updateOverlay(bbox = overlayBBox , width = mapWidth, height = mapHeight)
-                }},
+        MapZoomControlsSection(
+            mapView = mapViewRef,
+            viewportState = viewportState,
+            overlayBBox = overlayBBox,
+            mapWidth = mapWidth,
+            mapHeight = mapHeight,
+            mapViewModel = mapViewModel,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
         )
 
-        // Locationbutton (only UI).
-        // What happens on click is decided based on callbacks.
-        SmallFloatingActionButton(
+        MapLocationButton(
+            locationGranted = locationGranted,
             onClick = onLocationClick,
-            shape = CircleShape,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp),
-            containerColor = MaterialTheme.colorScheme.surface
-        ) {
-            Icon(
-                imageVector = if (locationGranted)
-                    Icons.Filled.LocationOn
-                else
-                    Icons.Outlined.Lock,
-                contentDescription = stringResource(R.string.my_position),
-                tint = if (locationGranted)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+                .padding(end = 16.dp, bottom = 16.dp)
+        )
     }
 
-    // Naming dialog for saved location
     pendingPoint?.let { point ->
-        AlertDialog(
-            onDismissRequest = { pendingPoint = null },
-            title = { Text("Lagre posisjon") },
-            text = {
-                Column {
-                    Text(
-                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = locationName,
-                        onValueChange = { locationName = it },
-                        label = { Text("Navn") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    favoriteViewModel.addLocation(
-                        lat = point.latitude(),
-                        lng = point.longitude(),
-                        label = locationName.trim()
-                    )
-                    pendingPoint = null
-                }) {
-                    Text("Lagre")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { pendingPoint = null }) {
-                    Text("Avbryt")
-                }
-            }
+        MapSaveLocationDialog(
+            point = point,
+            locationName = locationName,
+            onLocationNameChange = { locationName = it },
+            onDismiss = { pendingPoint = null },
+            favoriteViewModel = favoriteViewModel
         )
     }
 }
