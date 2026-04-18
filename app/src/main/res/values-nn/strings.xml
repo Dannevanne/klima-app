@@ -117,4 +117,6 @@
     <string name="weather_stations_used">BRUKTE VÊRSTASJONAR</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Nedbør + temperatur</string>
+    <string name="annual_precipitation_trend">ÅRLEG NEDBØR - TREND (MM)</string>
+    <string name="average_annual_temperature">ÅRLEG SNITTEMPERATUR (C)</string>
 </resources>

@@ -119,4 +119,6 @@
     <string name="weather_stations_used">WEATHER STATIONS USED</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Precipitation + temperature</string>
+    <string name="annual_precipitation_trend">ANNUAL PRECIPITATION - TREND (MM)</string>
+    <string name="average_annual_temperature">AVERAGE ANNUAL TEMPERATURE (C)</string>
 </resources>
