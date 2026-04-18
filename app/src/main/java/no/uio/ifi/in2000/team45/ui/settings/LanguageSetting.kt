@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.intellij.lang.annotations.Language
 import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.res.stringResource
+import no.uio.ifi.in2000.team45.R
 
 @Composable
 fun LanguageSetting(
@@ -25,7 +27,7 @@ fun LanguageSetting(
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
-            text = "Language",
+            text = stringResource(R.string.language),
             fontSize = 18.sp
         )
 
@@ -39,7 +41,7 @@ fun LanguageSetting(
                 onClick = { onLanguageSelected(LanguageOption.BOKMÅL) }
             )
             Text(
-                text = "Norsk Bokmål",
+                text = stringResource(R.string.language_bokmal),
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
@@ -54,7 +56,7 @@ fun LanguageSetting(
                 onClick = { onLanguageSelected(LanguageOption.NYNORSK) }
             )
             Text(
-                text = "Norsk Nynorsk",
+                text = stringResource(R.string.language_nynorsk),
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
@@ -69,7 +71,7 @@ fun LanguageSetting(
                 onClick = { onLanguageSelected(LanguageOption.ENGLISH) }
             )
             Text(
-                text = "English",
+                text = stringResource(R.string.language_english),
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
