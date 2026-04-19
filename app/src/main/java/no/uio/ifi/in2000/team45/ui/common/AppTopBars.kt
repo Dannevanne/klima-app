@@ -63,7 +63,7 @@ fun BackButtonTopBar(
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back"
+                    contentDescription = stringResource(R.string.go_back)
                 )
             }
         }

@@ -91,7 +91,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
 
                 if (stations.isEmpty()) {
                     locationStatuses[key] = LocationStatus(
-                        stationName = "Ingen stasjon funnet",
+                        stationName = getApplication<Application>().getString(R.string.station_not_found),
                         inFloodZone = floodZone,
                         inRadonZone = radonZone,
                         inQuickClayZone = quickClayZone,
@@ -139,7 +139,9 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 )
             } catch (e: Exception) {
                 Log.e("FavoriteVM", "Failed to fetch status", e)
-                locationStatuses[key] = LocationStatus(stationName = "Feil ved henting")
+                locationStatuses[key] = LocationStatus(
+                    stationName = getApplication<Application>().getString(R.string.fetch_error)
+                )
             }
         }
     }

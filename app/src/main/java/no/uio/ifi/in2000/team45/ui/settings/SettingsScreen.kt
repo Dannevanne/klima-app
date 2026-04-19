@@ -101,10 +101,25 @@ fun SettingsScreen(
             .padding(innerPadding)
             .padding(8.dp)) {
             item {
-                MapThemeSetting(selectedTheme = mapViewModel.mapTheme,
+                MapThemeSetting(
+                    selectedTheme = mapViewModel.mapTheme,
                     onThemeSelected = { theme ->
                         mapViewModel.updateMapTheme(theme)
-                    })
+                    }
+                )
+            }
+
+            item {
+                HorizontalDivider()
+            }
+
+            item {
+                LanguageSetting(
+                    selectedLanguage = mapViewModel.selectedLanguage,
+                    onLanguageSelected = { language ->
+                        mapViewModel.updateLanguage(language)
+                    }
+                )
             }
             item {
                 HorizontalDivider()

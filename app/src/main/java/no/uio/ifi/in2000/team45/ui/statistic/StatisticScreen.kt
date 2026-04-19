@@ -169,7 +169,7 @@ fun StatisticScreen(
                     }) {
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                            contentDescription = if (isFav) "Remove favorite" else "Add favorite",
+                            contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
                             tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
