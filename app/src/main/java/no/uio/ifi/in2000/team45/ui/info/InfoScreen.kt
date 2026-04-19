@@ -83,7 +83,7 @@ private fun InfoDataCard(
             .fillMaxWidth()
             .padding(bottom = 8.dp)
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10.dp)
             )
             .border(
