@@ -142,3 +142,16 @@ private fun InfoPrivacySection(
         )
     }
 }
+
+@Composable
+fun versionSection(){
+    Text(
+        text = stringResource(R.string.versjon_1_0_0),
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
+    )
+}
