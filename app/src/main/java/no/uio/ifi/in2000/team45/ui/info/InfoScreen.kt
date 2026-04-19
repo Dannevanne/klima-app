@@ -156,3 +156,46 @@ fun versionSection(){
             .padding(vertical = 12.dp)
     )
 }
+
+@Composable
+fun teamSection(){
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(start = 16.dp, end = 16.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(99.dp)
+            )
+            .border(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                shape = RoundedCornerShape(99.dp)
+            )
+            .padding(start = 6.dp, end = 14.dp, top = 6.dp, bottom = 6.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(28.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.t45),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(R.string.team_45_in2000_uio_2026),
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
