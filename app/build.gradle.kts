@@ -59,6 +59,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -87,6 +88,9 @@ dependencies {
     implementation("com.mapbox.search:offline-ndk27:2.21.0")
     implementation("com.mapbox.search:mapbox-search-android-ndk27:2.21.0")
     implementation("com.mapbox.search:mapbox-search-android-ui-ndk27:2.21.0")
+
+    // Icons-extension
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Appcompat
     implementation("androidx.appcompat:appcompat:1.7.1")
