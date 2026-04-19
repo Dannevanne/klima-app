@@ -6,12 +6,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.DeviceThermostat
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.NoAccounts
+import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.material.icons.outlined.Water
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,10 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,11 +60,75 @@ fun InfoScreen(
             )
         },
     ) { innerpadding ->
-        Box(
-            modifier = modifier.padding(innerpadding),
-            contentAlignment = Alignment.Center
+        LazyColumn(
+            modifier = modifier.padding(innerpadding)
         ) {
-            Text("Sources")
+            item {
+                appRepresentation()
+            }
+            // Data and API sources
+            item { InfoSectionName(title = stringResource(R.string.datasources)) }
+            item {
+                InfoDataCard(
+                    name = stringResource(R.string.nve),
+                    description = stringResource(R.string.flood_landslides_quick_clay_wind),
+                    containerColor = Color(0xFFE3F2FD),
+                    iconColor = Color(0xFF1565C0),
+                    icon = Icons.Outlined.Water,
+                )
+            }
+            item {
+                InfoDataCard(
+                    name = stringResource(R.string.frost_api_v0),
+                    description = stringResource(R.string.climate_statistics),
+                    containerColor = Color(0xFFE8F5E9),
+                    iconColor = Color(0xFF388E3C),
+                    icon = Icons.Outlined.DeviceThermostat
+                )
+            }
+            item {
+                InfoDataCard(
+                    name = stringResource(R.string.mapbox),
+                    description = stringResource(R.string.map_and_search),
+                    containerColor = Color(0xFFEDE7F6),
+                    iconColor = Color(0xFF6A1B9A),
+                    icon = Icons.Outlined.TravelExplore
+                )
+            }
+            item {
+                InfoDataCard(
+                    name = stringResource(R.string.ngu_radonwms),
+                    description = stringResource(R.string.radon_gas),
+                    containerColor = Color(0xFFFFF3E0),
+                    iconColor = Color(0xFFE65100),
+                    icon = Icons.Outlined.Cloud
+                )
+            }
+
+            // Privacy
+            item { InfoSectionName(stringResource(R.string.privacy)) }
+            item {
+                InfoPrivacySection(
+                    icon = Icons.Outlined.Lock,
+                    text = stringResource(R.string.location_data_is_used_only_locally_and_is_not_shared_with_third_parties)
+                )
+            }
+            item {
+                InfoPrivacySection(
+                    icon = Icons.Outlined.NoAccounts,
+                    text = stringResource(R.string.the_app_does_not_require_a_login_or_account)
+                )
+            }
+            // The team
+            item { InfoSectionName(stringResource(R.string.the_team)) }
+            item {
+                teamSection()
+            }
+
+            // Version
+            item {
+                versionSection()
+            }
         }
     }
 }
