@@ -56,6 +56,19 @@ fun InfoScreen(
     }
 }
 
+@Composable
+private fun InfoSectionName(
+    title: String
+) {
+    Text(
+        text = title.uppercase(),
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 12.dp)
+    )
+}
+
 // Structure for info-cards
 @Composable
 private fun InfoDataCard(
