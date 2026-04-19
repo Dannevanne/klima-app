@@ -74,15 +74,15 @@ fun StationList(
                             )
                         }
                         Text(
-                            text = "ID: ${station.id}",
+                            text = stringResource(R.string.station_id_prefix, station.id),
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         station.distanceMeters?.let { dist ->
                             val distText = if (dist >= 1000) {
-                                "%.1f km away".format(dist / 1000.0)
+                                stringResource(R.string.distance_km_away, "%.1f".format(dist / 1000.0))
                             } else {
-                                "$dist m away"
+                                stringResource(R.string.distance_m_away, dist)
                             }
                             Text(
                                 text = distText,
@@ -94,7 +94,7 @@ fun StationList(
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                            contentDescription = if (isFav) "Remove favorite" else "Add favorite",
+                            contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
                             tint = if (isFav) StarGold
                             else MaterialTheme.colorScheme.onSurfaceVariant
                         )

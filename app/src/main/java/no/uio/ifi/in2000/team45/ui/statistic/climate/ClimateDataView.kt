@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -40,7 +42,7 @@ fun ClimateDataView(
                     FilterChip(
                         selected = selectedPeriod == years,
                         onClick = { onPeriodChange(years) },
-                        label = { Text("$years years") }
+                        label = { Text(stringResource(R.string.years_count, years)) }
                     )
                 }
             }
@@ -57,7 +59,7 @@ fun ClimateDataView(
         if (annualData.any { it.totalPrecip != null }) {
             item {
                 TrendChart(
-                    title = "ANNUAL PRECIPITATION - TREND (MM)",
+                    title = stringResource(R.string.annual_precipitation_trend),
                     data = annualData.mapNotNull { a ->
                         a.totalPrecip?.let { a.year to it }
                     },
@@ -71,7 +73,7 @@ fun ClimateDataView(
         if (annualData.any { it.meanTemp != null }) {
             item {
                 TrendChart(
-                    title = "AVERAGE ANNUAL TEMPERATURE (C)",
+                    title = stringResource(R.string.average_annual_temperature),
                     data = annualData.mapNotNull { a ->
                         a.meanTemp?.let { a.year to it }
                     },

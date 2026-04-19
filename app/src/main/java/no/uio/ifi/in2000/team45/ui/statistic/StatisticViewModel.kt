@@ -96,11 +96,19 @@ class StatisticViewModel(
                     addToHistory(searchQuery)
                     StatisticUiState.StationResults(nearby)
                 } else {
-                    StatisticUiState.Error("Ingen stasjoner funnet for \"$queryAtLaunch\"")
+                    StatisticUiState.Error(
+                        getApplication<Application>().getString(
+                            R.string.error_no_stations_found, queryAtLaunch
+                        )
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Search failed", e)
-                uiState = StatisticUiState.Error("Feil ved sok: ${e.message}")
+                uiState = StatisticUiState.Error(
+                    getApplication<Application>().getString(
+                        R.string.error_search_failed, e.message ?: ""
+                    )
+                )
             }
         }
     }
@@ -133,11 +141,17 @@ class StatisticViewModel(
                 }
 
                 uiState = StatisticUiState.Error(
-                    "Ingen klimadata tilgjengelig for stasjoner nær ${station.name}"
+                    getApplication<Application>().getString(
+                        R.string.error_no_climate_data, station.name
+                    )
                 )
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Climate data failed", e)
-                uiState = StatisticUiState.Error("Feil ved henting av data: ${e.message}")
+                uiState = StatisticUiState.Error(
+                    getApplication<Application>().getString(
+                        R.string.error_fetch_data, e.message ?: ""
+                    )
+                )
             }
         }
     }

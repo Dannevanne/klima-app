@@ -34,9 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.uio.ifi.in2000.team45.R
 
 private val RiskHigh = Color(0xFFEF4444)
 private val RiskModerate = Color(0xFFF97316)
@@ -57,87 +59,91 @@ private fun riskColor(level: String): Color = when (level) {
     else -> RiskLow
 }
 
+@Composable
 private fun floodAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
         "High" -> listOf(
-            "Install a backflow valve on your drainage to prevent sewage from entering the house.",
-            "Raise the threshold to the basement and crawl space.",
-            "Ensure drainage around the house directs water away from walls.",
-            "Check your insurance coverage for flood damage."
+            stringResource(R.string.flood_advice_backflow_valve),
+            stringResource(R.string.flood_advice_raise_threshold),
+            stringResource(R.string.flood_advice_drainage_direction),
+            stringResource(R.string.flood_advice_insurance)
         )
         "Moderate" -> listOf(
-            "Ensure drainage around the house directs water away from walls.",
-            "Check your insurance coverage for flood damage.",
-            "Keep gutters and downspouts clear of debris."
+            stringResource(R.string.flood_advice_drainage_direction),
+            stringResource(R.string.flood_advice_insurance),
+            stringResource(R.string.flood_advice_gutters)
         )
         else -> listOf(
-            "Keep gutters and downspouts clear of debris.",
-            "Know your nearest evacuation routes in case of unexpected flooding."
+            stringResource(R.string.flood_advice_gutters),
+            stringResource(R.string.flood_advice_evacuation_routes)
         )
     }
     return AdviceCategory(
-        title = "Flood measures",
+        title = stringResource(R.string.flood_measures),
         dotColor = riskColor(level),
         bullets = bullets,
-        linkText = "Read more at NVE flood protection handbook",
+        linkText = stringResource(R.string.nve_flood_link),
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
     )
 }
 
+@Composable
 private fun landslideAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
         "High" -> listOf(
-            "Check NVE's hazard zone maps to confirm if your property is in a risk area.",
-            "Contact a geotechnical engineer if you notice ground movement or cracks in walls.",
-            "Avoid altering slopes or removing vegetation near the home without assessment.",
-            "Have an evacuation plan ready for your household."
+            stringResource(R.string.landslide_advice_hazard_maps_high),
+            stringResource(R.string.landslide_advice_geotechnical),
+            stringResource(R.string.landslide_advice_slopes_vegetation),
+            stringResource(R.string.landslide_advice_evacuation_plan)
         )
         "Moderate" -> listOf(
-            "Check NVE's hazard zone maps for your property.",
-            "Avoid altering slopes or removing vegetation near the home without assessment.",
-            "Monitor walls and foundations for new cracks after heavy rain."
+            stringResource(R.string.landslide_advice_hazard_maps_moderate),
+            stringResource(R.string.landslide_advice_slopes_vegetation),
+            stringResource(R.string.landslide_advice_monitor_cracks)
         )
         else -> listOf(
-            "Avoid removing vegetation on slopes near the home.",
-            "Stay aware of NVE warnings during periods of heavy rain."
+            stringResource(R.string.landslide_advice_remove_vegetation),
+            stringResource(R.string.landslide_advice_nve_warnings)
         )
     }
     return AdviceCategory(
-        title = "Landslide prevention",
+        title = stringResource(R.string.landslide_prevention),
         dotColor = riskColor(level),
         bullets = bullets,
-        linkText = "Read more at NVE landslide handbook",
+        linkText = stringResource(R.string.nve_landslide_link),
         linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
     )
 }
 
+@Composable
 private fun windAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
         "High" -> listOf(
-            "Secure loose items in the garden and on balconies before storms.",
-            "Inspect roof tiles and gutters annually for damage.",
-            "Trim large trees close to the house to reduce wind load.",
-            "Consider wind-resistant fencing and structures."
+            stringResource(R.string.wind_advice_secure_loose),
+            stringResource(R.string.wind_advice_inspect_roof),
+            stringResource(R.string.wind_advice_trim_trees),
+            stringResource(R.string.wind_advice_fencing)
         )
         "Moderate" -> listOf(
-            "Secure loose items in the garden and on balconies before storms.",
-            "Inspect roof tiles and gutters annually for damage.",
-            "Trim large trees close to the house to reduce wind load."
+            stringResource(R.string.wind_advice_secure_loose),
+            stringResource(R.string.wind_advice_inspect_roof),
+            stringResource(R.string.wind_advice_trim_trees)
         )
         else -> listOf(
-            "Inspect roof tiles and gutters annually for damage.",
-            "Secure lightweight garden furniture during storm warnings."
+            stringResource(R.string.wind_advice_inspect_roof),
+            stringResource(R.string.wind_advice_garden_furniture)
         )
     }
     return AdviceCategory(
-        title = "Wind protection",
+        title = stringResource(R.string.wind_protection),
         dotColor = riskColor(level),
         bullets = bullets,
-        linkText = "Read more at DSB storm preparedness",
+        linkText = stringResource(R.string.dsb_storm_link),
         linkUrl = "https://www.dsb.no/"
     )
 }
 
+@Composable
 fun adviceForRiskLevels(
     floodLevel: String,
     landslideLevel: String,
@@ -158,7 +164,7 @@ fun WhatCanIDoSection(
     val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)
 
     Text(
-        text = "WHAT CAN I DO?",
+        text = stringResource(R.string.what_can_i_do),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -216,7 +222,7 @@ private fun AdviceAccordionCard(
                 )
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand",
+                    contentDescription = if (isExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.rotate(rotation)
                 )

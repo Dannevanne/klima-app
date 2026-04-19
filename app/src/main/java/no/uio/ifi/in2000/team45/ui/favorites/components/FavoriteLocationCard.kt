@@ -23,9 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
 import no.uio.ifi.in2000.team45.ui.favorites.LocationStatus
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
@@ -51,6 +53,15 @@ private fun riskColor(level: String): Color {
         "High" -> RiskHigh
         "Moderate" -> RiskModerate
         else -> RiskLow
+    }
+}
+
+@Composable
+private fun riskLevelLabel(level: String): String {
+    return when (level) {
+        "High" -> stringResource(R.string.risk_high)
+        "Moderate" -> stringResource(R.string.risk_moderate)
+        else -> stringResource(R.string.risk_low)
     }
 }
 
@@ -90,7 +101,7 @@ fun FavoriteLocationCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = location.label.ifBlank { "Map location" },
+                    text = location.label.ifBlank { stringResource(R.string.map_location_placeholder) },
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     modifier = Modifier.weight(1f)
@@ -98,7 +109,7 @@ fun FavoriteLocationCard(
                 IconButton(onClick = onRemove) {
                     Icon(
                         Icons.Filled.Star,
-                        contentDescription = "Remove",
+                        contentDescription = stringResource(R.string.remove),
                         tint = StarGold
                     )
                 }
@@ -107,7 +118,7 @@ fun FavoriteLocationCard(
             // Overall risk
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Overall risk",
+                    text = stringResource(R.string.overall_risk),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(end = 8.dp)
@@ -123,17 +134,17 @@ fun FavoriteLocationCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 RiskCategoryBox(
-                    label = "Flood",
+                    label = stringResource(R.string.flood),
                     level = floodLevel,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
-                    label = "Landslide",
+                    label = stringResource(R.string.landslide),
                     level = landslideLevel,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
-                    label = "Wind",
+                    label = stringResource(R.string.wind),
                     level = windLevel,
                     modifier = Modifier.weight(1f)
                 )
@@ -156,7 +167,7 @@ private fun RiskPill(level: String) {
             .padding(horizontal = 12.dp, vertical = 4.dp)
     ) {
         Text(
-            text = level,
+            text = riskLevelLabel(level),
             color = Color.White,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
@@ -186,7 +197,7 @@ private fun RiskCategoryBox(
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = level,
+                text = riskLevelLabel(level),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = riskColor(level)

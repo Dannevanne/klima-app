@@ -123,7 +123,7 @@ private fun EmptyFavoritesContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "No saved places yet",
+                text = stringResource(R.string.no_saved_places_yet),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -131,7 +131,7 @@ private fun EmptyFavoritesContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Go to the map, tap an area and save it to see risk analysis and climate data here.",
+                text = stringResource(R.string.no_saved_places_hint),
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -145,7 +145,7 @@ private fun EmptyFavoritesContent(
                     contentColor = MaterialTheme.colorScheme.onSurface
                 )
             ) {
-                Text("Open map")
+                Text(stringResource(R.string.open_map))
             }
         }
         }
