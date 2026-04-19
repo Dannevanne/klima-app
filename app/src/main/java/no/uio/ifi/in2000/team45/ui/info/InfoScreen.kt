@@ -64,7 +64,7 @@ fun InfoScreen(
             modifier = modifier.padding(innerpadding)
         ) {
             item {
-                appRepresentation()
+                AppRepresentation()
             }
             // Data and API sources
             item { InfoSectionName(title = stringResource(R.string.datasources)) }
@@ -122,12 +122,12 @@ fun InfoScreen(
             // The team
             item { InfoSectionName(stringResource(R.string.the_team)) }
             item {
-                teamSection()
+                TeamSection()
             }
 
             // Version
             item {
-                versionSection()
+                VersionSection()
             }
         }
     }
@@ -222,7 +222,7 @@ private fun InfoPrivacySection(
 }
 
 @Composable
-fun versionSection(){
+fun VersionSection(){
     Text(
         text = stringResource(R.string.versjon_1_0_0),
         fontSize = 12.sp,
@@ -235,7 +235,7 @@ fun versionSection(){
 }
 
 @Composable
-fun teamSection(){
+fun TeamSection(){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -278,7 +278,7 @@ fun teamSection(){
 }
 
 @Composable
-fun appRepresentation(){
+fun AppRepresentation(){
     Box(
         modifier = Modifier
             .fillMaxWidth()
