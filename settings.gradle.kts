@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.com.fasterxml.jackson.databind.introspect.TypeResolutionContext
-
 pluginManagement {
     repositories {
         google {
