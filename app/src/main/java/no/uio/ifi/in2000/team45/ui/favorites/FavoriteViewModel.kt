@@ -85,6 +85,14 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                 val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
 
+                // emit zones first so risk chips update before frost finishes
+                locationStatuses[key] = LocationStatus(
+                    inFloodZone = floodZone,
+                    inRadonZone = radonZone,
+                    inQuickClayZone = quickClayZone,
+                    avgWindSpeed = avgWind
+                )
+
                 val stations = statisticRepository.findNearestStations(
                     lat, lon, clientId, count = 5
                 )
