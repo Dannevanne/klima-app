@@ -20,12 +20,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 
@@ -44,27 +43,16 @@ fun MapSearchSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        TextField(
+        OutlinedTextField(
             value = searchQuery,
-            onValueChange = onSearchQueryChange, // Continuous
-            // two way flow. User input gets sent to ViewModel, which updates searchQuery
-            // and starts an autocomplete search. Then the UI is updated based of results
-
+            onValueChange = onSearchQueryChange,
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
             ),
             placeholder = { Text("Search after place in Norway") },
             singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search"
-                )
-            },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
                     IconButton(onClick = onClearSearch) {
@@ -73,9 +61,14 @@ fun MapSearchSection(
                             contentDescription = "Empty search"
                         )
                     }
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
                 }
             },
-            shape = RoundedCornerShape(28.dp)
+            shape = RoundedCornerShape(24.dp)
         )
         if (isSearching || searchSuggestions.isNotEmpty()) {
             Card(
@@ -102,10 +95,7 @@ fun MapSearchSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(MaterialTheme.colorScheme.background)
-                                    .clickable { onSuggestionClick(item) } // UI sends the selected suggested place to ViewModel.
-                                        // ViewModel calls select() which returns coordinates (+ more).
-                                        // ViewModel sends coordinates in it's callback.
-                                        // UI handles the movement to the selected place with moveToPoint.
+                                    .clickable { onSuggestionClick(item) }
                                     .padding(horizontal = 16.dp, vertical = 12.dp)
                             ) {
                                 Text(
