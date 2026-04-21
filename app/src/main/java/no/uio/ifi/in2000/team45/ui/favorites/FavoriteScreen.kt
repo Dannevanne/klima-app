@@ -103,8 +103,8 @@ fun FavoriteScreen(
             onMapClick = onMapClick,
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
+                .padding(top = innerPadding.calculateTopPadding())
+                .padding(horizontal = 16.dp)
         )
     }
 }
