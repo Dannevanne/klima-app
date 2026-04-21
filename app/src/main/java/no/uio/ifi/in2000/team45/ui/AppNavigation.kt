@@ -43,6 +43,8 @@ fun AppNavigation(
                 MapStateScreen(
                     modifier = modifier,
                     onSettingsClick = { navigateTo("SettingsScreen") },
+                    onInfoClick = { navigateTo("InfoScreen") },
+                    onHelpClick = { navigateTo("HelpScreen") },
                     onStatisticClick = { navigateTo("StatisticScreen") },
                     onFavoritesClick = { navigateTo("FavoriteScreen") },
                     mapViewModel = mapViewModel,
