@@ -1,12 +1,12 @@
 package no.uio.ifi.in2000.team45.ui.map
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,12 +22,13 @@ fun MapLocationButton(
 ) {
     val container = MaterialTheme.colorScheme.surfaceContainerLow
     val content = MaterialTheme.colorScheme.onSurface
-    SmallFloatingActionButton(
+    FilledIconButton(
         onClick = onClick,
-        shape = CircleShape,
         modifier = modifier,
-        containerColor = container,
-        contentColor = content
+        colors = IconButtonDefaults.filledIconButtonColors(
+            containerColor = container,
+            contentColor = content
+        )
     ) {
         Icon(
             imageVector = if (locationGranted) {
