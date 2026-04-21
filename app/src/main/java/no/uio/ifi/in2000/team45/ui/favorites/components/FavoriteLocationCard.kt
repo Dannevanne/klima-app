@@ -13,8 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +82,7 @@ fun FavoriteLocationCard(
     status: LocationStatus?,
     onRemove: () -> Unit
 ) {
+    val loading = status == null
     val floodLevel = riskLevel(status?.inFloodZone == true)
     val landslideLevel = riskLevel(status?.inQuickClayZone == true)
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
@@ -123,7 +126,7 @@ fun FavoriteLocationCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(end = 8.dp)
                 )
-                RiskPill(level = overall)
+                if (loading) RiskSpinner() else RiskPill(level = overall)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -136,25 +139,30 @@ fun FavoriteLocationCard(
                 RiskCategoryBox(
                     label = stringResource(R.string.flood),
                     level = floodLevel,
+                    loading = loading,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.landslide),
                     level = landslideLevel,
+                    loading = loading,
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.wind),
                     level = windLevel,
+                    loading = loading,
                     modifier = Modifier.weight(1f)
                 )
             }
 
-            WhatCanIDoSection(
-                floodLevel = floodLevel,
-                landslideLevel = landslideLevel,
-                windLevel = windLevel
-            )
+            if (!loading) {
+                WhatCanIDoSection(
+                    floodLevel = floodLevel,
+                    landslideLevel = landslideLevel,
+                    windLevel = windLevel
+                )
+            }
         }
     }
 }
@@ -179,6 +187,7 @@ private fun RiskPill(level: String) {
 private fun RiskCategoryBox(
     label: String,
     level: String,
+    loading: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -196,12 +205,29 @@ private fun RiskCategoryBox(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = riskLevelLabel(level),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = riskColor(level)
-            )
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(14.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                Text(
+                    text = riskLevelLabel(level),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = riskColor(level)
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun RiskSpinner() {
+    CircularProgressIndicator(
+        modifier = Modifier.size(16.dp),
+        strokeWidth = 2.dp,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
 }
