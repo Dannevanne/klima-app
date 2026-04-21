@@ -58,7 +58,23 @@ class StatisticViewModel(
         selectedPeriod = years
         val current = uiState
         if (current is StatisticUiState.ClimateData) {
-            selectStation(current.station)
+            refreshAnnual(current)
+        }
+    }
+
+    private fun refreshAnnual(current: StatisticUiState.ClimateData) {
+        climateJob?.cancel()
+        climateJob = viewModelScope.launch {
+            try {
+                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                val yearFrom = currentYear - selectedPeriod
+                val annual = repository.getAnnualObservations(
+                    current.station.id, clientId, yearFrom, currentYear
+                )
+                uiState = current.copy(annualData = annual)
+            } catch (e: Exception) {
+                Log.e("StatisticVM", "Annual refresh failed", e)
+            }
         }
     }
 
