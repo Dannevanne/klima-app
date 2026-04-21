@@ -44,7 +44,7 @@ fun FavoriteScreen(
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.saved_places),

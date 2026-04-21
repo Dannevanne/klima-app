@@ -1,10 +1,13 @@
 package no.uio.ifi.in2000.team45.ui.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,11 +26,17 @@ fun AppBottomBar(
     items: List<BottomBarItemData>,
     modifier: Modifier = Modifier
 ) {
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
+        if (!isSystemInDarkTheme()) {
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant,
+                thickness = 0.5.dp
+            )
+        }
+        BottomAppBar(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ) {
         Row(
             modifier = Modifier
                 .padding(8.dp)
@@ -44,5 +53,6 @@ fun AppBottomBar(
                 )
             }
         }
+    }
     }
 }
