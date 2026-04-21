@@ -125,6 +125,8 @@ import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
+import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
+import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
@@ -135,6 +137,8 @@ import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
 fun MapStateScreen(
     mapViewModel: MapViewModel,
     onSettingsClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onFavoritesClick: () -> Unit,
     favoriteViewModel: FavoriteViewModel,
@@ -193,6 +197,8 @@ fun MapStateScreen(
                     }
                 },
                 onSettingsClick = onSettingsClick,
+                onInfoClick = onInfoClick,
+                onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onFavoritesClick = onFavoritesClick,
                 modifier = modifier
@@ -213,11 +219,14 @@ fun MapScreen(
     locationGranted: Boolean,
     onLocationClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onFavoritesClick: () -> Unit,
     favoriteViewModel: FavoriteViewModel,
     modifier: Modifier = Modifier
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -228,6 +237,25 @@ fun MapScreen(
                         Icons.Filled.Place,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                actions = {
+                    OverflowMenuButton(onClick = { menuExpanded = true })
+                    OverflowMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        onSettingsClick = {
+                            menuExpanded = false
+                            onSettingsClick()
+                        },
+                        onInfoClick = {
+                            menuExpanded = false
+                            onInfoClick()
+                        },
+                        onHelpClick = {
+                            menuExpanded = false
+                            onHelpClick()
+                        }
                     )
                 }
             )
