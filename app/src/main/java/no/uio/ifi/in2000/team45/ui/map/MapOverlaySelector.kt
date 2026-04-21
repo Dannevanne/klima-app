@@ -126,8 +126,10 @@ private fun OverlayOptionRow(
             .fillMaxWidth()
             .clickable { onClick() }
             .background(
-                if (selected) MaterialTheme.colorScheme.surfaceContainerHighest
-                else MaterialTheme.colorScheme.surfaceContainerLow
+                if (selected) {
+                    if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceContainer
+                    else MaterialTheme.colorScheme.background
+                } else MaterialTheme.colorScheme.surfaceContainerLow
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
