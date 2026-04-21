@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Place
@@ -39,19 +37,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.NavBarItem
-import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
-import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onMapClick: () -> Unit,
-    onStatisticClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel
 ) {
@@ -67,32 +58,6 @@ fun SettingsScreen(
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            )
-        },
-        bottomBar = {
-            AppBottomBar(
-                items = listOf(
-                    BottomBarItemData(
-                        label = stringResource(R.string.nav_map),
-                        onClick = onMapClick,
-                        icon = { Icon(Icons.Filled.Place, contentDescription = null) }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.saved_places),
-                        onClick = onFavoritesClick,
-                        icon = { Icon(Icons.Filled.FavoriteBorder, contentDescription = null) }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.nav_statistics),
-                        onClick = onStatisticClick,
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.filled_analytics),
-                                contentDescription = null
-                            )
-                        }
-                    )
-                )
             )
         }
     ) {
