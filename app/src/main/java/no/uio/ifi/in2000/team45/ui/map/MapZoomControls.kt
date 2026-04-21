@@ -2,13 +2,12 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -19,26 +18,27 @@ fun MapZoomControls(onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,
     modifier: Modifier = Modifier
 ){
+    val container = MaterialTheme.colorScheme.surfaceContainerLow
+    val content = MaterialTheme.colorScheme.onSurface
     Column(modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         FilledIconButton(
             onClick = onZoomIn,
-            colors = IconButtonColors(
-                Color.LightGray,
-                Color.White,
-                Color.LightGray,
-                Color.LightGray)
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = container,
+                contentColor = content
+            )
         ) {
             Text(text = "+",
                 fontSize = 20.sp)
         }
         FilledIconButton(
             onClick = onZoomOut,
-            colors = IconButtonColors(
-                Color.LightGray,
-                Color.White,
-                Color.LightGray,
-                Color.LightGray)) {
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = container,
+                contentColor = content
+            )
+        ) {
             Text(text = "-",
                 fontSize = 20.sp)
         }
