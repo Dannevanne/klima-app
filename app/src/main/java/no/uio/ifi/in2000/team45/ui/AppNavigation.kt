@@ -66,7 +66,8 @@ fun AppNavigation(
             composable(route = "SettingsScreen") {
                 SettingsScreen(
                     mapViewModel = mapViewModel,
-                    modifier = modifier
+                    modifier = modifier,
+                    onClick = { navigateTo("MapScreen") }
                 )
             }
             composable(route = "FavoriteScreen") {

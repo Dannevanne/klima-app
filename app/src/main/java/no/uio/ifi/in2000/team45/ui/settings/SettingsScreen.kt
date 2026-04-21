@@ -39,25 +39,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
+import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    onClick: () -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            AppTopBar(
+            BackButtonTopBar(
                 title = stringResource(R.string.settings),
-                navigationIcon = {
-                    Icon(
-                        Icons.Filled.Settings,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                onBackClick = onClick
             )
         }
     ) {
