@@ -28,7 +28,6 @@ fun AppNavigation(
 ) {
     fun navigateTo(route: String) {
         navController.navigate(route) {
-            popUpTo("MapScreen") { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
@@ -66,7 +65,8 @@ fun AppNavigation(
             composable(route = "SettingsScreen") {
                 SettingsScreen(
                     mapViewModel = mapViewModel,
-                    modifier = modifier
+                    modifier = modifier,
+                    onClick = { navController.popBackStack() }
                 )
             }
             composable(route = "FavoriteScreen") {
@@ -82,13 +82,13 @@ fun AppNavigation(
             }
             composable(route = "InfoScreen") {
                 InfoScreen(
-                    onClick = { navigateTo("StatisticScreen") },
+                    onClick = { navController.popBackStack() },
                     modifier = modifier
                 )
             }
             composable(route = "HelpScreen") {
                 HelpScreen(
-                    onClick = { navigateTo("StatisticScreen") },
+                    onClick = { navController.popBackStack()},
                     modifier = modifier
                 )
             }
