@@ -36,7 +36,9 @@ fun MapContent(
                            // because the backend service returns
                            // a photo depending on the shown map window
             },
-        mapViewportState = viewportState
+        mapViewportState = viewportState,
+        // Overrides the default MapboxMap scalebar slot so nothing renders there.
+        scaleBar = {}
     ){
         MapEffect(Unit) { mapView ->
             onMapViewReady(mapView)
