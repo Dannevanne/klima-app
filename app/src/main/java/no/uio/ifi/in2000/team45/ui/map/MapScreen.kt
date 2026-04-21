@@ -232,6 +232,7 @@ fun MapScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.map),
+                titleFontSize = 24.sp,
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Place,
@@ -400,30 +401,34 @@ fun DataMap(
             modifier = Modifier.align(Alignment.TopCenter)
         )
 
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 30.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            MapZoomControlsSection(
+                mapView = mapViewRef,
+                viewportState = viewportState,
+                overlayBBox = overlayBBox,
+                mapWidth = mapWidth,
+                mapHeight = mapHeight,
+                mapViewModel = mapViewModel,
+            )
+
+            MapLocationButton(
+                locationGranted = locationGranted,
+                onClick = onLocationClick,
+            )
+        }
+
         MapOverlaySelector(
             activeOverlay = mapViewModel.activeOverlay,
             onOverlaySelected = { type -> mapViewModel.setOverlay(type) },
-            modifier = Modifier.align(Alignment.TopStart)
-        )
-
-        MapZoomControlsSection(
-            mapView = mapViewRef,
-            viewportState = viewportState,
-            overlayBBox = overlayBBox,
-            mapWidth = mapWidth,
-            mapHeight = mapHeight,
-            mapViewModel = mapViewModel,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 80.dp)
-        )
-
-        MapLocationButton(
-            locationGranted = locationGranted,
-            onClick = onLocationClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .padding(bottom = 30.dp)
         )
     }
 

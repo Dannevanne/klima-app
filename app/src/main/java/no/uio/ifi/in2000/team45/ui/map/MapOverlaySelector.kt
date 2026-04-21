@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +41,7 @@ fun MapOverlaySelector(
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         AnimatedVisibility(
             visible = expanded,
@@ -50,10 +51,13 @@ fun MapOverlaySelector(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                modifier = Modifier.padding(bottom = 8.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp)
             ) {
                 Column {
                     OverlayType.entries.forEach { type ->
@@ -73,7 +77,8 @@ fun MapOverlaySelector(
         OverlayPillButton(
             activeOverlay = activeOverlay,
             expanded = expanded,
-            onClick = { expanded = !expanded }
+            onClick = { expanded = !expanded },
+            modifier = Modifier.padding(start = 16.dp)
         )
     }
 }
@@ -82,15 +87,16 @@ fun MapOverlaySelector(
 private fun OverlayPillButton(
     activeOverlay: OverlayType,
     expanded: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        modifier = Modifier.clickable { onClick() }
+        modifier = modifier.clickable { onClick() }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
@@ -120,8 +126,8 @@ private fun OverlayOptionRow(
             .fillMaxWidth()
             .clickable { onClick() }
             .background(
-                if (selected) MaterialTheme.colorScheme.secondaryContainer
-                else MaterialTheme.colorScheme.surfaceContainer
+                if (selected) MaterialTheme.colorScheme.surfaceContainerHighest
+                else MaterialTheme.colorScheme.surfaceContainerLow
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
