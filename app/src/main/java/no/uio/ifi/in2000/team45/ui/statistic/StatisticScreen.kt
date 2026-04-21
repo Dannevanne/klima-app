@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Place
-import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
-import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -68,7 +67,7 @@ fun StatisticScreen(
 
     var expanded by remember { mutableStateOf(false)}
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.climate_statistics),
@@ -94,25 +93,37 @@ fun StatisticScreen(
             )
         },
         bottomBar = {
-            AppBottomBar(
-                items = listOf(
-                    BottomBarItemData(
-                        label = stringResource(R.string.nav_map),
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    NavBarItem(
                         onClick = onMapClick,
-                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.saved_places),
-                        onClick = onFavoritesClick,
-                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
-                    ),
-                    BottomBarItemData(
-                        label = stringResource(R.string.nav_statistics),
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) }
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        label = stringResource(R.string.nav_map),
+                        modifier = Modifier.weight(1f)
                     )
-                )
-            )
+                    NavBarItem(
+                        onClick = onFavoritesClick,
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                        label = stringResource(R.string.saved_places),
+                        modifier = Modifier.weight(1f)
+                    )
+                    NavBarItem(
+                        onClick = {},
+                        icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) },
+                        label = stringResource(R.string.nav_statistics),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         Column(
