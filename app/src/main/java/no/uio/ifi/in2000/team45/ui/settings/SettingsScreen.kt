@@ -101,28 +101,6 @@ fun SettingsScreen(
                 HorizontalDivider()
             }
             item {
-                Row(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = "Something something 2",
-                        fontSize = 18.sp)
-                    Switch(
-                        modifier = Modifier.padding(8.dp),
-                        checked = false,
-                        onCheckedChange = {}
-                    )
-                }
-            }
-            item {
-                HorizontalDivider()
-            }
-            item {
                 ResetAppDataSection(
                     onResetConfirmed = {
                         favoriteViewModel.removeAllFavorites()
