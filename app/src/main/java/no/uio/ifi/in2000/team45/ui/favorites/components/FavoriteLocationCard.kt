@@ -193,7 +193,7 @@ private fun RiskCategoryBox(
     Box(
         modifier = modifier
             .background(
-                MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.background,
                 RoundedCornerShape(12.dp)
             )
             .padding(horizontal = 12.dp, vertical = 10.dp)
