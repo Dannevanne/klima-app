@@ -1,12 +1,9 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
@@ -35,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
-import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,27 +114,14 @@ fun StatisticScreen(
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
-                .padding(16.dp)
-        ) {
-            if (statisticViewModel.uiState !is StatisticUiState.ClimateData) {
-                SearchBar(
-                    query = statisticViewModel.searchQuery,
-                    onQueryChange = { statisticViewModel.updateSearchQuery(it) },
-                    onSearch = { statisticViewModel.searchStations() }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            StatisticContent(
-                state = statisticViewModel.uiState,
-                favoriteStations = favoriteStations,
-                statisticViewModel = statisticViewModel,
-                favoriteViewModel = favoriteViewModel
-            )
-        }
+        StatisticContent(
+            state = statisticViewModel.uiState,
+            favoriteStations = favoriteStations,
+            statisticViewModel = statisticViewModel,
+            favoriteViewModel = favoriteViewModel,
+            topInset = innerPadding.calculateTopPadding(),
+            bottomInset = innerPadding.calculateBottomPadding(),
+            modifier = modifier.fillMaxSize()
+        )
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
@@ -41,6 +43,7 @@ import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
+import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
@@ -49,15 +52,27 @@ fun StatisticContent(
     state: StatisticUiState,
     favoriteStations: List<FavoriteStation>,
     statisticViewModel: StatisticViewModel,
-    favoriteViewModel: FavoriteViewModel
+    favoriteViewModel: FavoriteViewModel,
+    topInset: Dp,
+    bottomInset: Dp,
+    modifier: Modifier = Modifier
 ) {
+    val listPadding = PaddingValues(
+        top = topInset + 16.dp,
+        bottom = bottomInset + 16.dp,
+        start = 16.dp,
+        end = 16.dp
+    )
+
     when (state) {
         is StatisticUiState.Idle -> {
             val history = statisticViewModel.searchHistory
             val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
 
             if (hasContent) {
-                LazyColumn {
+                LazyColumn(modifier = modifier, contentPadding = listPadding) {
+                    item { SearchBarHeader(statisticViewModel) }
+
                     if (favoriteStations.isNotEmpty()) {
                         item {
                             Row(
@@ -155,17 +170,34 @@ fun StatisticContent(
                     }
                 }
             } else {
-                IdleContent()
+                Column(
+                    modifier = modifier
+                        .padding(top = topInset, bottom = bottomInset)
+                        .padding(16.dp)
+                ) {
+                    SearchBarHeader(statisticViewModel)
+                    Box(modifier = Modifier.weight(1f)) {
+                        IdleContent()
+                    }
+                }
             }
         }
         is StatisticUiState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(top = topInset, bottom = bottomInset)
+                    .padding(16.dp)
             ) {
-                CircularProgressIndicator()
+                SearchBarHeader(statisticViewModel)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
         is StatisticUiState.StationResults -> {
@@ -183,7 +215,10 @@ fun StatisticContent(
                     } else {
                         favoriteViewModel.addStation(station)
                     }
-                }
+                },
+                header = { SearchBarHeader(statisticViewModel) },
+                contentPadding = listPadding,
+                modifier = modifier
             )
         }
         is StatisticUiState.ClimateData -> {
@@ -194,6 +229,8 @@ fun StatisticContent(
                 annualData = state.annualData,
                 selectedPeriod = statisticViewModel.selectedPeriod,
                 onPeriodChange = { statisticViewModel.updatePeriod(it) },
+                contentPadding = listPadding,
+                modifier = modifier,
                 header = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -237,10 +274,29 @@ fun StatisticContent(
             )
         }
         is StatisticUiState.Error -> {
-            ErrorContent(
-                message = state.message,
-                onRetry = { statisticViewModel.goBack() }
-            )
+            Column(
+                modifier = modifier
+                    .padding(top = topInset, bottom = bottomInset)
+                    .padding(16.dp)
+            ) {
+                SearchBarHeader(statisticViewModel)
+                Box(modifier = Modifier.weight(1f)) {
+                    ErrorContent(
+                        message = state.message,
+                        onRetry = { statisticViewModel.goBack() }
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
+    SearchBar(
+        query = statisticViewModel.searchQuery,
+        onQueryChange = { statisticViewModel.updateSearchQuery(it) },
+        onSearch = { statisticViewModel.searchStations() }
+    )
+    Spacer(modifier = Modifier.height(12.dp))
 }

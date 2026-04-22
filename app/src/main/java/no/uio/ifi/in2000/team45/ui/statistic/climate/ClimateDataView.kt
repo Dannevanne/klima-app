@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.statistic.climate
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -27,9 +28,11 @@ fun ClimateDataView(
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
     onPeriodChange: (Int) -> Unit,
-    header: @Composable () -> Unit = {}
+    header: @Composable () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(),
+    modifier: Modifier = Modifier
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         item { header() }
 
         item {
