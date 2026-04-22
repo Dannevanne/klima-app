@@ -8,10 +8,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -341,11 +345,22 @@ fun MissingData(
     val years = annualData.map { it.year }.distinct().count()
     val missingData = years < selectedPeriod
     if (missingData){
-        Text(
-            text = stringResource(R.string.this_place_is_missing_some_data),
-            color = MaterialTheme.colorScheme.error,
-            fontSize = 13.sp,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier.padding(bottom = 8.dp)
-        )
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(16.dp)
+            )
+            Text(
+                text = stringResource(R.string.this_place_is_missing_some_data),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 13.sp
+            )
+        }
     }
 }
