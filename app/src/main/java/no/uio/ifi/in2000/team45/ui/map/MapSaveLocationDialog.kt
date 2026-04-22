@@ -46,14 +46,17 @@ fun MapSaveLocationDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                favoriteViewModel.addLocation(
-                    lat = point.latitude(),
-                    lng = point.longitude(),
-                    label = locationName.trim()
-                )
-                onDismiss()
-            }) {
+            TextButton(
+                onClick = {
+                    favoriteViewModel.addLocation(
+                        lat = point.latitude(),
+                        lng = point.longitude(),
+                        label = locationName.trim()
+                    )
+                    onDismiss()
+                },
+                enabled = locationName.trim().isNotBlank()
+            ) {
                 Text("Lagre")
             }
         },
