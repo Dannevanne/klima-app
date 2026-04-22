@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.team45.ui.statistic
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -183,12 +187,53 @@ fun StatisticContent(
             )
         }
         is StatisticUiState.ClimateData -> {
+            val isFav = favoriteStations.any { it.stationId == state.station.id }
             ClimateDataView(
                 station = state.station,
                 stats = state.stats,
                 annualData = state.annualData,
                 selectedPeriod = statisticViewModel.selectedPeriod,
-                onPeriodChange = { statisticViewModel.updatePeriod(it) }
+                onPeriodChange = { statisticViewModel.updatePeriod(it) },
+                header = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_to_search),
+                            modifier = Modifier
+                                .clickable { statisticViewModel.goBack() }
+                                .padding(end = 12.dp)
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = state.station.name,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (state.station.municipality.isNotBlank()) {
+                                Text(
+                                    text = "${state.station.municipality}, ${state.station.county}",
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        IconButton(onClick = {
+                            if (isFav) favoriteViewModel.removeStation(state.station.id)
+                            else favoriteViewModel.addStation(state.station)
+                        }) {
+                            Icon(
+                                imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                                contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
+                                tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
             )
         }
         is StatisticUiState.Error -> {

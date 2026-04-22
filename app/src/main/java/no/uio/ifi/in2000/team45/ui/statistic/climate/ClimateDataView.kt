@@ -26,9 +26,12 @@ fun ClimateDataView(
     stats: List<MonthlyClimateStats>,
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
-    onPeriodChange: (Int) -> Unit
+    onPeriodChange: (Int) -> Unit,
+    header: @Composable () -> Unit = {}
 ) {
     LazyColumn {
+        item { header() }
+
         item {
             MissingData(annualData, selectedPeriod)
         }

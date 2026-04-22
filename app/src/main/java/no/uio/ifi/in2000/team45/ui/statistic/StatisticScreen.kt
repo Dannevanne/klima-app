@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team45.ui.statistic
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,27 +9,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.NavBarItem
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,7 +36,6 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
-import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,49 +124,7 @@ fun StatisticScreen(
                 .padding(top = innerPadding.calculateTopPadding())
                 .padding(16.dp)
         ) {
-            val currentState = statisticViewModel.uiState
-
-            if (currentState is StatisticUiState.ClimateData) {
-                val isFav = favoriteStations.any { it.stationId == currentState.station.id }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_to_search),
-                        modifier = Modifier
-                            .clickable { statisticViewModel.goBack() }
-                            .padding(end = 12.dp)
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = currentState.station.name,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        if (currentState.station.municipality.isNotBlank()) {
-                            Text(
-                                text = "${currentState.station.municipality}, ${currentState.station.county}",
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    IconButton(onClick = {
-                        if (isFav) favoriteViewModel.removeStation(currentState.station.id)
-                        else favoriteViewModel.addStation(currentState.station)
-                    }) {
-                        Icon(
-                            imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                            contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
-                            tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            } else {
+            if (statisticViewModel.uiState !is StatisticUiState.ClimateData) {
                 SearchBar(
                     query = statisticViewModel.searchQuery,
                     onQueryChange = { statisticViewModel.updateSearchQuery(it) },
