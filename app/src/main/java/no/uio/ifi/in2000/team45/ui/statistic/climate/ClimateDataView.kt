@@ -92,7 +92,6 @@ fun ClimateDataView(
 
         item {
             StationsUsedCard(station = station, annualData = annualData)
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

@@ -186,7 +186,7 @@ private fun PopulatedFavoritesContent(
         modifier = modifier,
         contentPadding = PaddingValues(
             top = topInset + 16.dp,
-            bottom = bottomInset + 16.dp,
+            bottom = bottomInset + 10.dp,
             start = 16.dp,
             end = 16.dp
         )
