@@ -40,13 +40,17 @@ import androidx.compose.material3.TopAppBarDefaults
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
+import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    statisticViewModel: StatisticViewModel,
+    favoriteViewModel: FavoriteViewModel
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
