@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
@@ -48,14 +50,16 @@ fun FavoriteContent(
     locations: List<FavoriteLocation>,
     favoriteViewModel: FavoriteViewModel,
     onMapClick: () -> Unit,
+    topInset: Dp,
     modifier: Modifier
 ) {
     if (locations.isEmpty() && stations.isEmpty()) {
-        EmptyFavoritesContent(onMapClick = onMapClick, modifier = modifier)
+        EmptyFavoritesContent(onMapClick = onMapClick, topInset = topInset, modifier = modifier)
     } else {
         PopulatedFavoritesContent(
             locations = locations,
             favoriteViewModel = favoriteViewModel,
+            topInset = topInset,
             modifier = modifier
         )
     }
@@ -92,9 +96,10 @@ private fun FavoritesSearchBar(
 @Composable
 private fun EmptyFavoritesContent(
     onMapClick: () -> Unit,
+    topInset: Dp,
     modifier: Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().padding(top = topInset).padding(16.dp)) {
         FavoritesSearchBar(query = "", onQueryChange = {})
         Spacer(modifier = Modifier.height(12.dp))
         Box(
@@ -156,13 +161,22 @@ private fun EmptyFavoritesContent(
 private fun PopulatedFavoritesContent(
     locations: List<FavoriteLocation>,
     favoriteViewModel: FavoriteViewModel,
+    topInset: Dp,
     modifier: Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val filtered = if (searchQuery.isBlank()) locations
     else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(
+            top = topInset + 16.dp,
+            bottom = 16.dp,
+            start = 16.dp,
+            end = 16.dp
+        )
+    ) {
         item {
             FavoritesSearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
             Spacer(modifier = Modifier.height(12.dp))
