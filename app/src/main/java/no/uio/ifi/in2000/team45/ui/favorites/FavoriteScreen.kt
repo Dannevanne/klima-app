@@ -102,6 +102,7 @@ fun FavoriteScreen(
             favoriteViewModel = favoriteViewModel,
             onMapClick = onMapClick,
             topInset = innerPadding.calculateTopPadding(),
+            bottomInset = innerPadding.calculateBottomPadding(),
             modifier = modifier.fillMaxSize()
         )
     }

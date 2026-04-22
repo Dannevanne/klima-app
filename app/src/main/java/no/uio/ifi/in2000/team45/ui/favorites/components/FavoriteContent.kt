@@ -51,15 +51,22 @@ fun FavoriteContent(
     favoriteViewModel: FavoriteViewModel,
     onMapClick: () -> Unit,
     topInset: Dp,
+    bottomInset: Dp,
     modifier: Modifier
 ) {
     if (locations.isEmpty() && stations.isEmpty()) {
-        EmptyFavoritesContent(onMapClick = onMapClick, topInset = topInset, modifier = modifier)
+        EmptyFavoritesContent(
+            onMapClick = onMapClick,
+            topInset = topInset,
+            bottomInset = bottomInset,
+            modifier = modifier
+        )
     } else {
         PopulatedFavoritesContent(
             locations = locations,
             favoriteViewModel = favoriteViewModel,
             topInset = topInset,
+            bottomInset = bottomInset,
             modifier = modifier
         )
     }
@@ -97,9 +104,15 @@ private fun FavoritesSearchBar(
 private fun EmptyFavoritesContent(
     onMapClick: () -> Unit,
     topInset: Dp,
+    bottomInset: Dp,
     modifier: Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize().padding(top = topInset).padding(16.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = topInset, bottom = bottomInset)
+            .padding(16.dp)
+    ) {
         FavoritesSearchBar(query = "", onQueryChange = {})
         Spacer(modifier = Modifier.height(12.dp))
         Box(
@@ -162,6 +175,7 @@ private fun PopulatedFavoritesContent(
     locations: List<FavoriteLocation>,
     favoriteViewModel: FavoriteViewModel,
     topInset: Dp,
+    bottomInset: Dp,
     modifier: Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -172,7 +186,7 @@ private fun PopulatedFavoritesContent(
         modifier = modifier,
         contentPadding = PaddingValues(
             top = topInset + 16.dp,
-            bottom = 16.dp,
+            bottom = bottomInset + 16.dp,
             start = 16.dp,
             end = 16.dp
         )
@@ -193,6 +207,5 @@ private fun PopulatedFavoritesContent(
                 onRemove = { favoriteViewModel.removeLocation(location) }
             )
         }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
     }
 }
