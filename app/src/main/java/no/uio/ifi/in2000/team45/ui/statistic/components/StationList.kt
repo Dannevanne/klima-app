@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.statistic.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,15 +34,21 @@ fun StationList(
     stations: List<WeatherStation>,
     favoriteIds: Set<String>,
     onStationClick: (WeatherStation) -> Unit,
-    onToggleFavorite: (WeatherStation) -> Unit
+    onToggleFavorite: (WeatherStation) -> Unit,
+    header: @Composable () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(),
+    modifier: Modifier = Modifier
 ) {
-    Text(
-        text = stringResource(R.string.choose_station),
-        fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(bottom = 8.dp)
-    )
-    LazyColumn {
+    LazyColumn(modifier = modifier, contentPadding = contentPadding) {
+        item { header() }
+        item {
+            Text(
+                text = stringResource(R.string.choose_station),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
         items(stations.take(20)) { station ->
             val isFav = station.id in favoriteIds
             Card(

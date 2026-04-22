@@ -3,6 +3,8 @@ package no.uio.ifi.in2000.team45.ui.statistic
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +16,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
@@ -37,6 +43,7 @@ import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
+import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
@@ -45,15 +52,27 @@ fun StatisticContent(
     state: StatisticUiState,
     favoriteStations: List<FavoriteStation>,
     statisticViewModel: StatisticViewModel,
-    favoriteViewModel: FavoriteViewModel
+    favoriteViewModel: FavoriteViewModel,
+    topInset: Dp,
+    bottomInset: Dp,
+    modifier: Modifier = Modifier
 ) {
+    val listPadding = PaddingValues(
+        top = topInset + 16.dp,
+        bottom = bottomInset + 16.dp,
+        start = 16.dp,
+        end = 16.dp
+    )
+
     when (state) {
         is StatisticUiState.Idle -> {
             val history = statisticViewModel.searchHistory
             val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
 
             if (hasContent) {
-                LazyColumn {
+                LazyColumn(modifier = modifier, contentPadding = listPadding) {
+                    item { SearchBarHeader(statisticViewModel) }
+
                     if (favoriteStations.isNotEmpty()) {
                         item {
                             Row(
@@ -151,17 +170,34 @@ fun StatisticContent(
                     }
                 }
             } else {
-                IdleContent()
+                Column(
+                    modifier = modifier
+                        .padding(top = topInset, bottom = bottomInset)
+                        .padding(16.dp)
+                ) {
+                    SearchBarHeader(statisticViewModel)
+                    Box(modifier = Modifier.weight(1f)) {
+                        IdleContent()
+                    }
+                }
             }
         }
         is StatisticUiState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(top = topInset, bottom = bottomInset)
+                    .padding(16.dp)
             ) {
-                CircularProgressIndicator()
+                SearchBarHeader(statisticViewModel)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
         is StatisticUiState.StationResults -> {
@@ -179,23 +215,88 @@ fun StatisticContent(
                     } else {
                         favoriteViewModel.addStation(station)
                     }
-                }
+                },
+                header = { SearchBarHeader(statisticViewModel) },
+                contentPadding = listPadding,
+                modifier = modifier
             )
         }
         is StatisticUiState.ClimateData -> {
+            val isFav = favoriteStations.any { it.stationId == state.station.id }
             ClimateDataView(
                 station = state.station,
                 stats = state.stats,
                 annualData = state.annualData,
                 selectedPeriod = statisticViewModel.selectedPeriod,
-                onPeriodChange = { statisticViewModel.updatePeriod(it) }
+                onPeriodChange = { statisticViewModel.updatePeriod(it) },
+                contentPadding = listPadding,
+                modifier = modifier,
+                header = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_to_search),
+                            modifier = Modifier
+                                .clickable { statisticViewModel.goBack() }
+                                .padding(end = 12.dp)
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = state.station.name,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (state.station.municipality.isNotBlank()) {
+                                Text(
+                                    text = "${state.station.municipality}, ${state.station.county}",
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        IconButton(onClick = {
+                            if (isFav) favoriteViewModel.removeStation(state.station.id)
+                            else favoriteViewModel.addStation(state.station)
+                        }) {
+                            Icon(
+                                imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                                contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
+                                tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
             )
         }
         is StatisticUiState.Error -> {
-            ErrorContent(
-                message = state.message,
-                onRetry = { statisticViewModel.goBack() }
-            )
+            Column(
+                modifier = modifier
+                    .padding(top = topInset, bottom = bottomInset)
+                    .padding(16.dp)
+            ) {
+                SearchBarHeader(statisticViewModel)
+                Box(modifier = Modifier.weight(1f)) {
+                    ErrorContent(
+                        message = state.message,
+                        onRetry = { statisticViewModel.goBack() }
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
+    SearchBar(
+        query = statisticViewModel.searchQuery,
+        onQueryChange = { statisticViewModel.updateSearchQuery(it) },
+        onSearch = { statisticViewModel.searchStations() }
+    )
+    Spacer(modifier = Modifier.height(12.dp))
 }

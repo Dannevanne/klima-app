@@ -101,10 +101,9 @@ fun FavoriteScreen(
             locations = locations,
             favoriteViewModel = favoriteViewModel,
             onMapClick = onMapClick,
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
-                .padding(16.dp)
+            topInset = innerPadding.calculateTopPadding(),
+            bottomInset = innerPadding.calculateBottomPadding(),
+            modifier = modifier.fillMaxSize()
         )
     }
 }
