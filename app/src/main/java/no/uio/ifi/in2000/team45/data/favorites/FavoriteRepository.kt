@@ -69,6 +69,13 @@ class FavoriteRepository(private val context: Context) {
         }
     }
 
+    suspend fun removeAll() {
+        context.favoritesDataStore.edit { prefs ->
+            prefs.remove(STATIONS_KEY)
+            prefs.remove(LOCATIONS_KEY)
+        }
+    }
+
     // Manual JSON - no serialization compiler plugin needed
     private fun parseStations(raw: String): List<FavoriteStation> {
         return try {
