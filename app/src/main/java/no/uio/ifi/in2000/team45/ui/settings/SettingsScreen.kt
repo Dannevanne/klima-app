@@ -35,13 +35,24 @@ import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import androidx.compose.material3.RadioButton
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
+import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
+import com.mapbox.maps.extension.style.expressions.dsl.generated.color
+import no.uio.ifi.in2000.team45.ui.map.MapUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,6 +121,14 @@ fun SettingsScreen(
             }
             item {
                 HorizontalDivider()
+            }
+            item {
+                ResetAppDataSection(
+                    onResetConfirmed = {
+                        favoriteViewModel.removeAllFavorites()
+                        statisticViewModel.resetAllStatisticData()
+                    }
+                )
             }
         }
     }
