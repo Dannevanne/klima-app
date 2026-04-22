@@ -129,7 +129,7 @@ fun StatisticScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .padding(16.dp)
         ) {
             val currentState = statisticViewModel.uiState

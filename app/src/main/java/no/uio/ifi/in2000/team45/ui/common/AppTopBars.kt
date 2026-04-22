@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.common
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,7 +39,11 @@ fun AppTopBar(
             actionIconContentColor = MaterialTheme.colorScheme.onSurface
         ),
         navigationIcon = {
-            navigationIcon?.invoke()
+            if (navigationIcon != null) {
+                Box(modifier = Modifier.padding(start = 12.dp)) {
+                    navigationIcon()
+                }
+            }
         },
         title = {
             Text(

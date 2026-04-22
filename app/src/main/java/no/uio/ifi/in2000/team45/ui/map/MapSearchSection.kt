@@ -41,7 +41,7 @@ fun MapSearchSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(16.dp)
     ) {
         OutlinedTextField(
             value = searchQuery,

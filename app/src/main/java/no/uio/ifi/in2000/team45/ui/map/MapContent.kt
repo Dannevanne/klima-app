@@ -1,15 +1,15 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import com.mapbox.geojson.Point
+import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
-import android.graphics.Bitmap
-import com.mapbox.maps.MapView
-import com.mapbox.geojson.Point
 
 @Composable
 fun MapContent(
@@ -37,7 +37,6 @@ fun MapContent(
                            // a photo depending on the shown map window
             },
         mapViewportState = viewportState,
-        // Overrides the default MapboxMap scalebar slot so nothing renders there.
         scaleBar = {}
     ){
         MapEffect(Unit) { mapView ->
