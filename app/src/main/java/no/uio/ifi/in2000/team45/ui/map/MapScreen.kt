@@ -379,14 +379,6 @@ fun DataMap(
             modifier = Modifier.fillMaxSize()
         )
 
-        MapOverlayBitmapEffect(
-            overlayURL = overlayURL,
-            context = context,
-            imageJob = imageJob,
-            onImageJobChange = { imageJob = it },
-            onBitmapLoaded = { bitmap = it }
-        )
-
         MapSearchSection(
             searchQuery = searchQuery,
             searchSuggestions = searchSuggestions,
