@@ -10,22 +10,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getSystemService
 
 @Composable
 fun IsOnline(): Boolean {
 
-    // Bring Android-context to get ConnectivityManager later
+    // Retrieves the Android context needed to access system services
     val context = LocalContext.current
 
-    var isOnline by remember { mutableStateOf(true) }
+    // Retrieves the ConnectivityManager from the Android system
+    // This is the class that provides access to network information
+    val connectivityManager = context.getSystemService(
+        Context.CONNECTIVITY_SERVICE
+    ) as ConnectivityManager
+
+
+    var isOnline by remember {
+
+        // Retrieves the active network at startup
+        // Returns null if no network is available
+        val currentNetwork = connectivityManager.activeNetwork
+        mutableStateOf(currentNetwork != null) }
 
     DisposableEffect(Unit) {
-
-        // Retrieves ConnectivityManager from the Android-system
-        // so we are able to see internettinformation
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
 
         // A callback when internettconnection changes
         val callback = object : ConnectivityManager.NetworkCallback() {
