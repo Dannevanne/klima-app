@@ -215,7 +215,7 @@ class MapViewModel(
         userLocation?.let { selectedLocation = it }
     }
 
-    fun setOverlay(type: OverlayType) {
+    fun setOverlay(type: OverlayType, context: Context) {
         activeOverlay = type
         lastOverlayURL = null
         // When the overlay type changes, the ViewModel will try to
@@ -225,7 +225,7 @@ class MapViewModel(
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
             lastUpdateTime = 0L
-            updateOverlay(bbox, lastWidth, lastHeight)
+            updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
         }

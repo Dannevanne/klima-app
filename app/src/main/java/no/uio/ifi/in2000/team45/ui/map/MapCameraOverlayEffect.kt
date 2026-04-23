@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import com.mapbox.maps.MapView
@@ -13,7 +14,8 @@ fun MapCameraOverlayEffect(
     mapView: MapView?,
     mapWidth: Int,
     mapHeight: Int,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    context: Context
 ) {
     DisposableEffect(mapView, mapWidth, mapHeight) {
         if (mapView == null) {
@@ -37,7 +39,8 @@ fun MapCameraOverlayEffect(
                 mapViewModel.updateOverlay(
                     bbox = bbox,
                     width = mapWidth,
-                    height = mapHeight
+                    height = mapHeight,
+                    context = context,
                 )
 
                 // Saves where the camera is pointing on the map

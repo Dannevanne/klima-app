@@ -376,6 +376,7 @@ fun DataMap(
                 pendingPoint = point
                 locationName = ""
             },
+            context = context,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -416,7 +417,7 @@ fun DataMap(
 
         MapOverlaySelector(
             activeOverlay = mapViewModel.activeOverlay,
-            onOverlaySelected = { type -> mapViewModel.setOverlay(type) },
+            onOverlaySelected = { type -> mapViewModel.setOverlay(type, context) },
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
