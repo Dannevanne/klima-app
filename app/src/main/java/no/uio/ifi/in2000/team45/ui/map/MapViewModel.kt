@@ -103,6 +103,7 @@ class MapViewModel(
     private var fetchOverlayJob: Job? = null
 
     private var lastExpandedBBox: List<Double>? = null
+    private var lastExpandedBitmap: Bitmap? = null
 
     // On creation, connect to the saved theme from the theme repository.
     init {
@@ -161,6 +162,10 @@ class MapViewModel(
                     val overlayBitmap = makeBitmap(context, url) ?: return@launch
 
                     mapUiState = MapUiState.Success(overlayBitmap, bbox)
+                } else {
+                    if (mapUiState !is MapUiState.Success || (mapUiState as? MapUiState.Success)?.bitmap != lastExpandedBitmap) {
+                        mapUiState = MapUiState.Success(lastExpandedBitmap!!, lastExpandedBBox!!)
+                    }
                 }
 
 
@@ -176,6 +181,7 @@ class MapViewModel(
                 if (expandedBitmap != null) {
                     mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
                     lastExpandedBBox = expandedBBox
+                    lastExpandedBitmap = expandedBitmap
                 }
 
             } catch (e: Exception) {}
