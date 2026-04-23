@@ -6,6 +6,7 @@ import androidx.compose.runtime.DisposableEffect
 import com.mapbox.maps.MapView
 import com.mapbox.common.Cancelable
 import com.mapbox.maps.CameraChangedCallback
+import com.mapbox.maps.MapIdleCallback
 import com.mapbox.maps.toCameraOptions
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 
@@ -21,10 +22,7 @@ fun MapCameraOverlayEffect(
         if (mapView == null) {
             onDispose { }
         } else {
-            // Reads the camera setting from MapBox,
-            // calculates the visable area,
-            // and asks ViewModel for new overlay-data.
-            fun updateFromCamera() {
+            fun triggerOverlayUpdate() {
                 if (mapWidth <= 0 || mapHeight <= 0) return
                 val bounds = mapView.mapboxMap.coordinateBoundsForCamera(
                     mapView.mapboxMap.cameraState.toCameraOptions()
@@ -42,28 +40,30 @@ fun MapCameraOverlayEffect(
                     height = mapHeight,
                     context = context,
                 )
-
-                // Saves where the camera is pointing on the map
-                mapViewModel.saveCamera(
-                    center = mapView.mapboxMap.cameraState.center,
-                    zoom = mapView.mapboxMap.cameraState.zoom
-                )
             }
 
             // Camera changes in the map dictates new overlay requests.
             // The UI observes the map, and the ViewModel decides
             // if a request should go ahead.
             val cameraChangedCallback = CameraChangedCallback {
-                updateFromCamera()
+                mapViewModel.saveCamera(
+                    center = mapView.mapboxMap.cameraState.center,
+                    zoom = mapView.mapboxMap.cameraState.zoom
+                )
             }
 
-            val cancelable: Cancelable =
-                mapView.mapboxMap.subscribeCameraChanged(cameraChangedCallback)
+            val cameraIdleCallback = MapIdleCallback {
+                triggerOverlayUpdate()
+            }
 
-            updateFromCamera()
+            val changeCancelable = mapView.mapboxMap.subscribeCameraChanged(cameraChangedCallback)
+            val idleCancelable = mapView.mapboxMap.subscribeMapIdle(cameraIdleCallback)
+
+            triggerOverlayUpdate()
 
             onDispose {
-                cancelable.cancel()
+                changeCancelable.cancel()
+                idleCancelable.cancel()
             }
         }
     }
