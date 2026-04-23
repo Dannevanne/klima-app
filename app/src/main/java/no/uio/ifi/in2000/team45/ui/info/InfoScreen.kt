@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.info
 
 import android.content.Intent
 import android.net.Uri
+import androidx.collection.objectFloatMap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +48,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.lazy.items
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,9 +74,24 @@ fun InfoScreen(
                 AppRepresentation()
             }
             // Data and API sources
-            item { InfoSectionName(title = stringResource(R.string.datasources)) }
-
-
+            item {
+                InfoSectionName(title = stringResource(R.string.datasources))
+            }
+            items(infoDatasources) { datasource ->
+                InfoDataCard(
+                    name = datasource.title,
+                    description = stringResource(datasource.descriptionId),
+                    containerColor = datasource.containerColor,
+                    iconColor = datasource.iconColor,
+                    icon = datasource.icon,
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW,
+                                Uri.parse(datasource.url))
+                        )
+                    }
+                )
+            }
             // Privacy
             item { InfoSectionName(stringResource(R.string.privacy)) }
             item {
