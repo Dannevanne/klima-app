@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
+import androidx.compose.foundation.clickable
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +76,7 @@ fun InfoScreen(
                     containerColor = Color(0xFFE3F2FD),
                     iconColor = Color(0xFF1565C0),
                     icon = Icons.Outlined.Water,
+                    onClick = {}
                 )
             }
             item {
@@ -83,7 +85,8 @@ fun InfoScreen(
                     description = stringResource(R.string.climate_statistics),
                     containerColor = Color(0xFFE8F5E9),
                     iconColor = Color(0xFF388E3C),
-                    icon = Icons.Outlined.DeviceThermostat
+                    icon = Icons.Outlined.DeviceThermostat,
+                    onClick = {}
                 )
             }
             item {
@@ -92,7 +95,8 @@ fun InfoScreen(
                     description = stringResource(R.string.map_and_search),
                     containerColor = Color(0xFFEDE7F6),
                     iconColor = Color(0xFF6A1B9A),
-                    icon = Icons.Outlined.TravelExplore
+                    icon = Icons.Outlined.TravelExplore,
+                    onClick = {}
                 )
             }
             item {
@@ -101,7 +105,8 @@ fun InfoScreen(
                     description = stringResource(R.string.radon_gas),
                     containerColor = Color(0xFFFFF3E0),
                     iconColor = Color(0xFFE65100),
-                    icon = Icons.Outlined.Cloud
+                    icon = Icons.Outlined.Cloud,
+                    onClick = {}
                 )
             }
 
@@ -153,12 +158,15 @@ private fun InfoDataCard(
     description: String,
     containerColor: Color,
     iconColor: Color,
-    icon: ImageVector
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+            .clickable { onClick() }
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10.dp)
