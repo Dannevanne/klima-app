@@ -206,7 +206,8 @@ private fun PopulatedFavoritesContent(
             FavoriteLocationCard(
                 location = location,
                 status = status,
-                onRemove = { favoriteViewModel.removeLocation(location) }
+                onRemove = { favoriteViewModel.removeLocation(location) },
+                savedPlacesCount = savedPlacesCount
             )
         }
     }
