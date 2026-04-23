@@ -182,6 +182,8 @@ private fun PopulatedFavoritesContent(
     val filtered = if (searchQuery.isBlank()) locations
     else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
 
+    val savedPlacesCount = locations.size
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
@@ -204,7 +206,8 @@ private fun PopulatedFavoritesContent(
             FavoriteLocationCard(
                 location = location,
                 status = status,
-                onRemove = { favoriteViewModel.removeLocation(location) }
+                onRemove = { favoriteViewModel.removeLocation(location) },
+                savedPlacesCount = savedPlacesCount
             )
         }
     }
