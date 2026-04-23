@@ -34,10 +34,8 @@ fun MapCameraOverlayEffect(
                     bounds.northeast.latitude()
                 )
 
-                val expandedBBox = expandBBox(bbox)
-
                 mapViewModel.updateOverlay(
-                    bbox = expandedBBox,
+                    bbox = bbox,
                     width = mapWidth,
                     height = mapHeight
                 )
