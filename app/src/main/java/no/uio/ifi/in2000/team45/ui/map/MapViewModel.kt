@@ -19,6 +19,7 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
@@ -148,11 +149,9 @@ class MapViewModel(
                     width = width,
                     height = height
                 )
-                val overlayBitmap = makeBitmap(context, url)
+                val overlayBitmap = makeBitmap(context, url) ?: return@launch
 
-                if (overlayBitmap != null) {
-                    mapUiState = MapUiState.Success(overlayBitmap, bbox)
-                }
+                mapUiState = MapUiState.Success(overlayBitmap, bbox)
 
                 val factor = 1.5
                 val expandedBBox = expandBBox(bbox, factor)
