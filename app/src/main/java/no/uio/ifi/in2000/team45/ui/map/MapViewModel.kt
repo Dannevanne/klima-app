@@ -143,6 +143,10 @@ class MapViewModel(
             return
         }
 
+        if (lastBBox == bbox) {
+            return
+        }
+
         lastBBox = bbox
         lastWidth = width
         lastHeight = height
@@ -185,10 +189,11 @@ class MapViewModel(
                     mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
                     lastExpandedBBox = expandedBBox
                     lastExpandedBitmap = expandedBitmap
-                    lastZoom = currentZoom
                 }
 
-            } catch (e: Exception) {}
+            } catch (e: Exception) {} finally {
+                lastZoom = currentZoom
+            }
         }
 
     }
