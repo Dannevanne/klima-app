@@ -72,6 +72,13 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun removeAllFavorites() {
+        viewModelScope.launch {
+            repository.removeAll()
+            locationStatuses.clear()
+        }
+    }
+
     fun fetchStatusForLocation(location: FavoriteLocation) {
         val key = "${location.latitude},${location.longitude}"
         if (locationStatuses.containsKey(key)) return

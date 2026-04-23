@@ -66,7 +66,9 @@ fun AppNavigation(
                 SettingsScreen(
                     mapViewModel = mapViewModel,
                     modifier = modifier,
-                    onClick = { navController.popBackStack() }
+                    onClick = { navController.popBackStack() },
+                    statisticViewModel = statisticViewModel,
+                    favoriteViewModel = favoriteViewModel
                 )
             }
             composable(route = "FavoriteScreen") {

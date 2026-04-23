@@ -54,6 +54,15 @@ class StatisticViewModel(
     var searchHistory: List<String> by mutableStateOf(emptyList())
         private set
 
+    fun resetAllStatisticData() {
+        searchJob?.cancel()
+        climateJob?.cancel()
+        searchQuery = ""
+        searchHistory = emptyList()
+        selectedPeriod = 30
+        uiState = StatisticUiState.Idle
+    }
+
     fun updatePeriod(years: Int) {
         selectedPeriod = years
         val current = uiState
