@@ -24,6 +24,7 @@ import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import kotlin.math.abs
 
 sealed interface MapUiState {
     data class Success(
@@ -104,6 +105,7 @@ class MapViewModel(
 
     private var lastExpandedBBox: List<Double>? = null
     private var lastExpandedBitmap: Bitmap? = null
+    private var lastZoom: Double? = null
 
     // On creation, connect to the saved theme from the theme repository.
     init {
@@ -184,13 +186,26 @@ class MapViewModel(
                     lastExpandedBitmap = expandedBitmap
                 }
 
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+
+            } finally {
+                lastZoom = lastCameraZoom
+            }
         }
 
     }
 
     private fun isBBoxContained(inner: List<Double>, outer: List<Double>?): Boolean {
-        if (outer == null || outer.size < 4) return false
+        if (outer == null || lastExpandedBitmap == null) return false
+
+        val threshold = 0.15
+        lastZoom?.let {
+            if (abs(lastCameraZoom - it) > threshold) {
+                return false
+            }
+        }
+
+
         return inner[0] >= outer[0] && // Southwest Lon
                 inner[1] >= outer[1] && // Southwest Lat
                 inner[2] <= outer[2] && // Northeast Lon
@@ -200,10 +215,14 @@ class MapViewModel(
     // Helper function to decide if it should fetch
     private fun hasMovedEnough(newBBox: List<Double>): Boolean {
         val old = lastBBox ?: return true
+
+        var zoomChanged = false
+        lastZoom?.let { zoomChanged = abs(lastCameraZoom - it) > 0.15 }
+
         // moving threshold, can change but should be kept low I think
         val threshold = 0.01
         // calculates if new bbox is moved enough to trigger fetch
-        return (0..3).any { i ->
+        return zoomChanged || (0..3).any { i ->
             kotlin.math.abs(old[i] - newBBox[i]) > threshold
         }
     }
