@@ -64,8 +64,6 @@ class MapViewModel(
     // Functions to avoid unneeded new overlay requests when the camera
     // has changed too little or too often
     private var lastOverlayURL: String? = null
-    private var lastUpdateTime = 0L
-    private var throttleMs = 300L
     private var lastBBox: List<Double>? = null
     private var lastWidth = 0
     private var lastHeight = 0
@@ -123,18 +121,6 @@ class MapViewModel(
         height: Int,
         context: Context
     ) {
-
-        // Throttling, so it updates every X ms, not constantly
-        val now = System.currentTimeMillis()
-        if (now - lastUpdateTime < throttleMs) {
-            return
-        }
-        lastUpdateTime = now
-
-        // Check if user has moved the camera enough to trigger new fetch
-        if (!hasMovedEnough(bbox)) {
-            return
-        }
         lastBBox = bbox
         lastWidth = width
         lastHeight = height
@@ -174,17 +160,6 @@ class MapViewModel(
 
     }
 
-    // Helper function to decide if it should fetch
-    private fun hasMovedEnough(newBBox: List<Double>): Boolean {
-        val old = lastBBox ?: return true
-        // moving threshold, can change but should be kept low I think
-        val threshold = 0.01
-        // calculates if new bbox is moved enough to trigger fetch
-        return (0..3).any { i ->
-            kotlin.math.abs(old[i] - newBBox[i]) > threshold
-        }
-    }
-
     fun updateMapTheme(theme: MapTheme) {
         mapTheme = theme
         viewModelScope.launch {
@@ -221,7 +196,6 @@ class MapViewModel(
         val bbox = lastBBox
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
-            lastUpdateTime = 0L
             updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
