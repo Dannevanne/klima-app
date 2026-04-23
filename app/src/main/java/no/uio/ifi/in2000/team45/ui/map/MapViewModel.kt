@@ -223,7 +223,7 @@ class MapViewModel(
         val threshold = 0.01
         // calculates if new bbox is moved enough to trigger fetch
         return zoomChanged || (0..3).any { i ->
-            kotlin.math.abs(old[i] - newBBox[i]) > threshold
+            abs(old[i] - newBBox[i]) > threshold
         }
     }
 

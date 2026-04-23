@@ -6,6 +6,7 @@ import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.style.layers.addLayer
 import com.mapbox.maps.extension.style.layers.generated.rasterLayer
 import com.mapbox.maps.extension.style.layers.getLayer
+import com.mapbox.maps.extension.style.layers.properties.generated.RasterResampling
 import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
@@ -43,6 +44,7 @@ fun MapOverlayEffect(
                 style.addLayer(rasterLayer(layerId, sourceId) {
                     rasterOpacity(0.6)
                     rasterFadeDuration(0.0)
+                    rasterResampling(RasterResampling.LINEAR)
                 })
             }
         } else {
