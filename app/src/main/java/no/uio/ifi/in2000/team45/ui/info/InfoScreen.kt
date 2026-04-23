@@ -1,5 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.info
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +55,7 @@ fun InfoScreen(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -76,7 +80,11 @@ fun InfoScreen(
                     containerColor = Color(0xFFE3F2FD),
                     iconColor = Color(0xFF1565C0),
                     icon = Icons.Outlined.Water,
-                    onClick = {}
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.nve.no/"))
+                        )
+                    }
                 )
             }
             item {
@@ -86,7 +94,11 @@ fun InfoScreen(
                     containerColor = Color(0xFFE8F5E9),
                     iconColor = Color(0xFF388E3C),
                     icon = Icons.Outlined.DeviceThermostat,
-                    onClick = {}
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse("https://frost.met.no/index.html"))
+                        )
+                    }
                 )
             }
             item {
@@ -96,7 +108,11 @@ fun InfoScreen(
                     containerColor = Color(0xFFEDE7F6),
                     iconColor = Color(0xFF6A1B9A),
                     icon = Icons.Outlined.TravelExplore,
-                    onClick = {}
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.mapbox.com/"))
+                        )
+                    }
                 )
             }
             item {
@@ -106,7 +122,11 @@ fun InfoScreen(
                     containerColor = Color(0xFFFFF3E0),
                     iconColor = Color(0xFFE65100),
                     icon = Icons.Outlined.Cloud,
-                    onClick = {}
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ngu.no/"))
+                        )
+                    }
                 )
             }
 
