@@ -25,7 +25,7 @@ import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
 @Composable
 fun LogoScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -33,21 +33,13 @@ fun LogoScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.tryggeiendom_sort),
+                painter = painterResource(R.drawable.safeproperty_logo_sharp),
                 contentDescription = stringResource(R.string.trygg_eiendom),
-                modifier = Modifier.size(220.dp)
+                modifier = Modifier.size(275.dp)
             )
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LogoScreenPreview() {
-    Surface{
-        LogoScreen()
     }
 }
