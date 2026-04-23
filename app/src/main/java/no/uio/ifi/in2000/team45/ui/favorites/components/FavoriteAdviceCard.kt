@@ -164,7 +164,7 @@ fun WhatCanIDoSection(
     savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
-    var menuExpanded by remember { mutableStateOf(false) }
+    var adviceExpanded by remember { mutableStateOf(false) }
     val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)
 
     Row(
@@ -183,40 +183,34 @@ fun WhatCanIDoSection(
         )
 
         if (savedPlacesCount > 2) {
-            Box{
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = stringResource(R.string.expand),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.clickable { menuExpanded = true }
-                )
-
-                DropdownMenu(
-                    expanded = menuExpanded,
-                    onDismissRequest = { menuExpanded = false }
-                ) {
-                    categories.forEach { category ->
-                        DropdownMenuItem(
-                            text = { Text(category.title) },
-                            onClick = {
-                                menuExpanded = false
-                            }
-                        )
-                    }
-                }
-            }
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = if (adviceExpanded) {
+                    stringResource(R.string.collapse)
+                } else {
+                    stringResource(R.string.expand)
+                       },
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .rotate(if (adviceExpanded) 180f else 0f)
+                    .clickable { adviceExpanded = !adviceExpanded }
+            )
         }
     }
 
-    categories.forEachIndexed { index, category ->
-        AdviceAccordionCard(
-            category = category,
-            isExpanded = expandedIndex == index,
-            onToggle = {
-                expandedIndex = if (expandedIndex == index) null else index
-            }
-        )
-        Spacer(modifier = Modifier.height(6.dp))
+    val showAdvice = savedPlacesCount <= 2 || adviceExpanded
+
+    if (showAdvice) {
+        categories.forEachIndexed { index, category ->
+            AdviceAccordionCard(
+                category = category,
+                isExpanded = expandedIndex == index,
+                onToggle = {
+                    expandedIndex = if (expandedIndex == index) null else index
+                }
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+        }
     }
 }
 
