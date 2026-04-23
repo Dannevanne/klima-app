@@ -317,7 +317,6 @@ fun DataMap(
         theme = mapViewModel.mapTheme,
         systemIsDark = isSystemInDarkTheme()
     )
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     // Long-press save dialog state
     var pendingPoint by remember { mutableStateOf<Point?>(null) }
     var locationName by remember { mutableStateOf("") }
@@ -336,7 +335,8 @@ fun DataMap(
             bearing(0.0)
         }
     }
-    val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
+
+    val bitmap = (uiState as? MapUiState.Success)?.bitmap
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
 
     // Compose state from MapViewModel
