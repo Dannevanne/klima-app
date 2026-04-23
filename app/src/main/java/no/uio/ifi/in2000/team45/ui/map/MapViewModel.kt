@@ -143,35 +143,33 @@ class MapViewModel(
         fetchOverlayJob?.cancel()
         fetchOverlayJob = viewModelScope.launch {
             try {
+                val factor = 1.5
+                val multiplier = 1.0 + (2.0 * factor)
+
                 val url = mapRepository.getOverlayURL(
                     type = activeOverlay,
                     bbox = bbox,
-                    width = width,
-                    height = height
+                    width = (width / multiplier).toInt(),
+                    height = (height / multiplier).toInt()
                 )
                 val overlayBitmap = makeBitmap(context, url) ?: return@launch
 
                 mapUiState = MapUiState.Success(overlayBitmap, bbox)
 
-                val factor = 1.5
                 val expandedBBox = expandBBox(bbox, factor)
-                val expandedWidth = (width*factor).toInt()
-                val expandedHeight = (width*factor).toInt()
 
                 val expandedUrl = mapRepository.getOverlayURL(
                     type = activeOverlay,
                     bbox = expandedBBox,
-                    width = expandedWidth,
-                    height = expandedHeight
+                    width = width,
+                    height = height
                 )
                 val expandedBitmap = makeBitmap(context, expandedUrl)
                 if (expandedBitmap != null) {
                     mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
                 }
 
-            } catch (e: Exception) {
-                mapUiState = MapUiState.Error
-            }
+            } catch (e: Exception) {}
         }
 
     }
