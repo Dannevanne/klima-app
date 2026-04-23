@@ -123,6 +123,7 @@
     <string name="error_search_failed">Feil ved søk: %1$s</string>
     <string name="error_no_climate_data">Ingen klimadata tilgjengelig for stasjoner nær %1$s</string>
     <string name="error_fetch_data">Feil ved henting av data: %1$s</string>
+    <string name="no_internettconnection">Ingen internettforbindelse</string>
     <string name="reset_app_data_title">Tilbakestill appdata</string>
     <string name="reset_app_data_description">Dette vil slette alle lagrede steder, søkehistorikken din, og all klimastatistikk.</string>
     <string name="reset_app_data_section_title">Appdata</string>
