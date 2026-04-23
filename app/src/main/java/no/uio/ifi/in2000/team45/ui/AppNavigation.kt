@@ -123,7 +123,7 @@ fun AppNavigation(
                 Box(modifier = Modifier.fillMaxSize()) {
                     Snackbar(
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
+                            .align(Alignment.TopCenter)
                             .padding(16.dp),
                         dismissAction = {
                             IconButton(onClick = {dismissed = true}) {
