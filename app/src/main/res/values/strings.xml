@@ -142,4 +142,5 @@
     <string name="error_no_climate_data">No climate data available for stations near %1$s</string>
     <string name="error_fetch_data">Error fetching data: %1$s</string>
     <string name="close">Close</string>
+    <string name="no_internettconnection">No internettconnection</string>
 </resources>
