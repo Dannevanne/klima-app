@@ -129,4 +129,5 @@
     <string name="reset_app_data_section_description">Sletter lagrede steder, søkehistorikken din, og all klimastatistikk.</string>
     <string name="reset_button">Tilbakestill</string>
     <string name="cancel_button">Avbryt</string>
+    <string name="remove_recent_search">Fjern nylig søk</string>
 </resources>
