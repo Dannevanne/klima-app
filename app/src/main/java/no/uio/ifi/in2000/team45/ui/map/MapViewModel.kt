@@ -16,6 +16,7 @@ import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 
@@ -94,6 +95,8 @@ class MapViewModel(
     var lastCameraZoom by mutableStateOf(11.5)
         private set
 
+    private var fetchOverlayJob: Job? = null
+
     // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
@@ -131,20 +134,24 @@ class MapViewModel(
         lastHeight = height
 
         if (bbox.size != 4 || width <= 0 || height <= 0) return
-        try {
-            val url = mapRepository.getOverlayURL(
-                type = activeOverlay,
-                bbox = bbox,
-                width = width,
-                height = height
-            )
-            if (url != lastOverlayURL) {
-                lastOverlayURL = url
-                mapUiState = MapUiState.Success(url, bbox)
+        fetchOverlayJob?.cancel()
+        fetchOverlayJob = viewModelScope.launch {
+            try {
+                val url = mapRepository.getOverlayURL(
+                    type = activeOverlay,
+                    bbox = bbox,
+                    width = width,
+                    height = height
+                )
+                if (url != lastOverlayURL) {
+                    lastOverlayURL = url
+                    mapUiState = MapUiState.Success(url, bbox)
+                }
+            } catch (e: Exception) {
+                mapUiState = MapUiState.Error
             }
-        } catch (e: Exception) {
-            mapUiState = MapUiState.Error
         }
+
     }
 
     // Helper function to decide if it should fetch
