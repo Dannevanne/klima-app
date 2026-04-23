@@ -158,7 +158,8 @@ fun adviceForRiskLevels(
 fun WhatCanIDoSection(
     floodLevel: String,
     landslideLevel: String,
-    windLevel: String
+    windLevel: String,
+    savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)

@@ -80,7 +80,8 @@ private fun overallRisk(flood: String, landslide: String, wind: String): String 
 fun FavoriteLocationCard(
     location: FavoriteLocation,
     status: LocationStatus?,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    savedPlacesCount: Int
 ) {
     val loading = status == null
     val floodLevel = riskLevel(status?.inFloodZone == true)
@@ -160,7 +161,8 @@ fun FavoriteLocationCard(
                 WhatCanIDoSection(
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
-                    windLevel = windLevel
+                    windLevel = windLevel,
+                    savedPlacesCount = savedPlacesCount
                 )
             }
         }
