@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
+import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,7 @@ suspend fun makeBitmap(context: Context, imageURL: String): Bitmap? = withContex
         .allowHardware(false)
         .build()
 
-    val result = ImageLoader(context).execute(request)
+    val result = context.imageLoader.execute(request)
 
     if(result is SuccessResult){
         result.drawable.toBitmap()
