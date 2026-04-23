@@ -19,6 +19,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
+import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 
 sealed interface MapUiState {
     data class Success(
@@ -147,6 +148,23 @@ class MapViewModel(
                     lastOverlayURL = url
                     mapUiState = MapUiState.Success(url, bbox)
                 }
+
+                val factor = 1.5
+                val expandedBBox = expandBBox(bbox, factor)
+                val expandedWidth = (width*factor).toInt()
+                val expandedHeight = (width*factor).toInt()
+
+                val expandedUrl = mapRepository.getOverlayURL(
+                    type = activeOverlay,
+                    bbox = expandedBBox,
+                    width = expandedWidth,
+                    height = expandedHeight
+                )
+                if (expandedUrl != lastOverlayURL) {
+                    lastOverlayURL = expandedUrl
+                    mapUiState = MapUiState.Success(expandedUrl, expandedBBox)
+                }
+
             } catch (e: Exception) {
                 mapUiState = MapUiState.Error
             }
