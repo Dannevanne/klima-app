@@ -64,6 +64,8 @@ class MapViewModel(
     // Functions to avoid unneeded new overlay requests when the camera
     // has changed too little or too often
     private var lastOverlayURL: String? = null
+    private var lastUpdateTime = 0L
+    private var throttleMs = 500L
     private var lastBBox: List<Double>? = null
     private var lastWidth = 0
     private var lastHeight = 0
@@ -100,6 +102,8 @@ class MapViewModel(
 
     private var fetchOverlayJob: Job? = null
 
+    private var lastExpandedBBox: List<Double>? = null
+
     // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
@@ -121,6 +125,19 @@ class MapViewModel(
         height: Int,
         context: Context
     ) {
+
+        // Throttling, so it updates every X ms, not constantly
+        val now = System.currentTimeMillis()
+        if (now - lastUpdateTime < throttleMs) {
+            return
+        }
+        lastUpdateTime = now
+
+        // Check if user has moved the camera enough to trigger new fetch
+        if (!hasMovedEnough(bbox)) {
+            return
+        }
+
         lastBBox = bbox
         lastWidth = width
         lastHeight = height
@@ -130,17 +147,22 @@ class MapViewModel(
         fetchOverlayJob = viewModelScope.launch {
             try {
                 val factor = 1.5
-                val multiplier = 1.0 + (2.0 * factor)
 
-                val url = mapRepository.getOverlayURL(
-                    type = activeOverlay,
-                    bbox = bbox,
-                    width = (width / multiplier).toInt(),
-                    height = (height / multiplier).toInt()
-                )
-                val overlayBitmap = makeBitmap(context, url) ?: return@launch
+                // No point in getting new overlay if we are in the expanded
+                if (!isBBoxContained(inner = bbox, outer = lastExpandedBBox)) {
+                    val multiplier = 1.0 + (2.0 * factor)
 
-                mapUiState = MapUiState.Success(overlayBitmap, bbox)
+                    val url = mapRepository.getOverlayURL(
+                        type = activeOverlay,
+                        bbox = bbox,
+                        width = (width / multiplier).toInt(),
+                        height = (height / multiplier).toInt()
+                    )
+                    val overlayBitmap = makeBitmap(context, url) ?: return@launch
+
+                    mapUiState = MapUiState.Success(overlayBitmap, bbox)
+                }
+
 
                 val expandedBBox = expandBBox(bbox, factor)
 
@@ -153,11 +175,31 @@ class MapViewModel(
                 val expandedBitmap = makeBitmap(context, expandedUrl)
                 if (expandedBitmap != null) {
                     mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
+                    lastExpandedBBox = expandedBBox
                 }
 
             } catch (e: Exception) {}
         }
 
+    }
+
+    private fun isBBoxContained(inner: List<Double>, outer: List<Double>?): Boolean {
+        if (outer == null || outer.size < 4) return false
+        return inner[0] >= outer[0] && // Southwest Lon
+                inner[1] >= outer[1] && // Southwest Lat
+                inner[2] <= outer[2] && // Northeast Lon
+                inner[3] <= outer[3]    // Northeast Lat
+    }
+
+    // Helper function to decide if it should fetch
+    private fun hasMovedEnough(newBBox: List<Double>): Boolean {
+        val old = lastBBox ?: return true
+        // moving threshold, can change but should be kept low I think
+        val threshold = 0.01
+        // calculates if new bbox is moved enough to trigger fetch
+        return (0..3).any { i ->
+            kotlin.math.abs(old[i] - newBBox[i]) > threshold
+        }
     }
 
     fun updateMapTheme(theme: MapTheme) {
@@ -196,6 +238,7 @@ class MapViewModel(
         val bbox = lastBBox
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
+            lastUpdateTime = 0L
             updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
