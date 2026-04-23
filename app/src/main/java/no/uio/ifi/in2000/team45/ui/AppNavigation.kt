@@ -134,7 +134,7 @@ fun AppNavigation(
                             }
                         }
                     ) {
-                        Text("No internettconnection")
+                        Text(stringResource(R.string.no_internettconnection))
                     }
                 }
             }
