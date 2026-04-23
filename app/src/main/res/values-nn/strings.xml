@@ -124,4 +124,10 @@
     <string name="error_no_climate_data">Ingen klimadata tilgjengeleg for stasjonar nær %1$s</string>
     <string name="error_fetch_data">Feil ved henting av data: %1$s</string>
     <string name="no_internettconnection">Ingen internettsamband</string>
+    <string name="reset_app_data_title">Tilbakestill appdata</string>
+    <string name="reset_app_data_description">Dette vil slette alle lagra stader, din søkjehistorikk, og all klimastatistikk.</string>
+    <string name="reset_app_data_section_title">Appdata</string>
+    <string name="reset_app_data_section_description">Slettar lagra stader, din søkjehistorikk, og all klimastatistikk.</string>
+    <string name="reset_button">Tilbakestill</string>
+    <string name="cancel_button">Avbryt</string>
 </resources>
