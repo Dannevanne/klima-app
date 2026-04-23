@@ -1,5 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,10 +22,11 @@ import kotlinx.coroutines.cancel
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
+import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
 
 sealed interface MapUiState {
     data class Success(
-        val overlayURL: String,
+        val bitmap: Bitmap,
         val bbox: List<Double>
     ): MapUiState
     object Error : MapUiState
@@ -116,7 +119,8 @@ class MapViewModel(
     fun updateOverlay(
         bbox: List<Double>,
         width: Int,
-        height: Int
+        height: Int,
+        context: Context
     ) {
 
         // Throttling, so it updates every X ms, not constantly
@@ -144,9 +148,10 @@ class MapViewModel(
                     width = width,
                     height = height
                 )
-                if (url != lastOverlayURL) {
-                    lastOverlayURL = url
-                    mapUiState = MapUiState.Success(url, bbox)
+                val overlayBitmap = makeBitmap(context, url)
+
+                if (overlayBitmap != null) {
+                    mapUiState = MapUiState.Success(overlayBitmap, bbox)
                 }
 
                 val factor = 1.5
@@ -160,9 +165,9 @@ class MapViewModel(
                     width = expandedWidth,
                     height = expandedHeight
                 )
-                if (expandedUrl != lastOverlayURL) {
-                    lastOverlayURL = expandedUrl
-                    mapUiState = MapUiState.Success(expandedUrl, expandedBBox)
+                val expandedBitmap = makeBitmap(context, expandedUrl)
+                if (expandedBitmap != null) {
+                    mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
                 }
 
             } catch (e: Exception) {
