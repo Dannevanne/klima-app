@@ -220,7 +220,7 @@ class MapViewModel(
         lastZoom?.let { zoomChanged = abs(lastCameraZoom - it) > 0.15 }
 
         // moving threshold, can change but should be kept low I think
-        val threshold = 0.01
+        val threshold = 0.005
         // calculates if new bbox is moved enough to trigger fetch
         return zoomChanged || (0..3).any { i ->
             abs(old[i] - newBBox[i]) > threshold
