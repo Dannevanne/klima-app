@@ -22,25 +22,9 @@ fun MapZoomControlsSection(
     MapZoomControls(
         onZoomIn = {
             zoomMap(mapView, viewportState, 1.0)
-            // forcing update overlay after zoom
-            if (overlayBBox != null) {
-                mapViewModel.updateOverlay(
-                    bbox = overlayBBox,
-                    width = mapWidth,
-                    height = mapHeight
-                )
-            }
         },
         onZoomOut = {
             zoomMap(mapView, viewportState, -1.0)
-            // forcing update overlay after zoom
-            if (overlayBBox != null) {
-                mapViewModel.updateOverlay(
-                    bbox = overlayBBox,
-                    width = mapWidth,
-                    height = mapHeight
-                )
-            }
         },
         modifier = modifier
     )
