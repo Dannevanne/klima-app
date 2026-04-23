@@ -403,10 +403,6 @@ fun DataMap(
             MapZoomControlsSection(
                 mapView = mapViewRef,
                 viewportState = viewportState,
-                overlayBBox = overlayBBox,
-                mapWidth = mapWidth,
-                mapHeight = mapHeight,
-                mapViewModel = mapViewModel,
             )
 
             MapLocationButton(

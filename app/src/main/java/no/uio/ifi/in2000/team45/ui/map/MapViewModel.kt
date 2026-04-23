@@ -129,6 +129,8 @@ class MapViewModel(
         context: Context
     ) {
 
+        val currentZoom = lastCameraZoom
+
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
         if (now - lastUpdateTime < throttleMs) {
@@ -170,7 +172,6 @@ class MapViewModel(
                     }
                 }
 
-
                 val expandedBBox = expandBBox(bbox, factor)
 
                 val expandedUrl = mapRepository.getOverlayURL(
@@ -184,13 +185,10 @@ class MapViewModel(
                     mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
                     lastExpandedBBox = expandedBBox
                     lastExpandedBitmap = expandedBitmap
+                    lastZoom = currentZoom
                 }
 
-            } catch (e: Exception) {
-
-            } finally {
-                lastZoom = lastCameraZoom
-            }
+            } catch (e: Exception) {}
         }
 
     }
@@ -198,13 +196,12 @@ class MapViewModel(
     private fun isBBoxContained(inner: List<Double>, outer: List<Double>?): Boolean {
         if (outer == null || lastExpandedBitmap == null) return false
 
-        val threshold = 0.15
+        val threshold = 0.05
         lastZoom?.let {
             if (abs(lastCameraZoom - it) > threshold) {
                 return false
             }
         }
-
 
         return inner[0] >= outer[0] && // Southwest Lon
                 inner[1] >= outer[1] && // Southwest Lat
@@ -217,7 +214,7 @@ class MapViewModel(
         val old = lastBBox ?: return true
 
         var zoomChanged = false
-        lastZoom?.let { zoomChanged = abs(lastCameraZoom - it) > 0.15 }
+        lastZoom?.let { zoomChanged = abs(lastCameraZoom - it) > 0.05 }
 
         // moving threshold, can change but should be kept low I think
         val threshold = 0.005

@@ -13,10 +13,6 @@ import com.mapbox.maps.MapView
 fun MapZoomControlsSection(
     mapView: MapView?,
     viewportState: MapViewportState,
-    overlayBBox: List<Double>?,
-    mapWidth: Int,
-    mapHeight: Int,
-    mapViewModel: MapViewModel,
     modifier: Modifier = Modifier
 ) {
     MapZoomControls(
