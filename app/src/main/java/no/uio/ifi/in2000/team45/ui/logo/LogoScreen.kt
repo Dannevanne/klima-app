@@ -33,9 +33,9 @@ fun LogoScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.safeproperty_logo_sharp),
+                painter = painterResource(R.drawable.safeproperty_logo_v6),
                 contentDescription = stringResource(R.string.trygg_eiendom),
-                modifier = Modifier.size(275.dp)
+                modifier = Modifier.size(350.dp)
             )
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary
