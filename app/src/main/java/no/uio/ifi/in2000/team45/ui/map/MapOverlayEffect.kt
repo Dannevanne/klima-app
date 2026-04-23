@@ -21,7 +21,7 @@ fun MapOverlayEffect(
     overlayBBox: List<Double>?,
     useDarkMap: Boolean
 ) {
-    MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
+    MapEffect(bitmap, overlayBBox, useDarkMap) { mapView ->
         val currentBitmap = bitmap ?: return@MapEffect
         val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
 
