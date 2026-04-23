@@ -73,62 +73,7 @@ fun InfoScreen(
             }
             // Data and API sources
             item { InfoSectionName(title = stringResource(R.string.datasources)) }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.nve),
-                    description = stringResource(R.string.flood_landslides_quick_clay_wind),
-                    containerColor = Color(0xFFE3F2FD),
-                    iconColor = Color(0xFF1565C0),
-                    icon = Icons.Outlined.Water,
-                    onClick = {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.nve.no/"))
-                        )
-                    }
-                )
-            }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.frost_api_v0),
-                    description = stringResource(R.string.climate_statistics),
-                    containerColor = Color(0xFFE8F5E9),
-                    iconColor = Color(0xFF388E3C),
-                    icon = Icons.Outlined.DeviceThermostat,
-                    onClick = {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://frost.met.no/index.html"))
-                        )
-                    }
-                )
-            }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.mapbox),
-                    description = stringResource(R.string.map_and_search),
-                    containerColor = Color(0xFFEDE7F6),
-                    iconColor = Color(0xFF6A1B9A),
-                    icon = Icons.Outlined.TravelExplore,
-                    onClick = {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.mapbox.com/"))
-                        )
-                    }
-                )
-            }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.ngu_radonwms),
-                    description = stringResource(R.string.radon_gas),
-                    containerColor = Color(0xFFFFF3E0),
-                    iconColor = Color(0xFFE65100),
-                    icon = Icons.Outlined.Cloud,
-                    onClick = {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ngu.no/"))
-                        )
-                    }
-                )
-            }
+
 
             // Privacy
             item { InfoSectionName(stringResource(R.string.privacy)) }
