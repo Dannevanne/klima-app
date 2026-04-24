@@ -128,7 +128,6 @@ class MapViewModel(
         height: Int,
         context: Context
     ) {
-
         val currentZoom = lastCameraZoom
 
         // Throttling, so it updates every X ms, not constantly
@@ -137,12 +136,6 @@ class MapViewModel(
             return
         }
         lastUpdateTime = now
-
-        // Check if user has moved the camera enough to trigger new fetch
-        if (!hasMovedEnough(bbox)) {
-            return
-        }
-
         if (lastBBox == bbox) {
             return
         }
@@ -214,21 +207,6 @@ class MapViewModel(
                 inner[3] <= outer[3]    // Northeast Lat
     }
 
-    // Helper function to decide if it should fetch
-    private fun hasMovedEnough(newBBox: List<Double>): Boolean {
-        val old = lastBBox ?: return true
-
-        var zoomChanged = false
-        lastZoom?.let { zoomChanged = abs(lastCameraZoom - it) > 0.05 }
-
-        // moving threshold, can change but should be kept low I think
-        val threshold = 0.005
-        // calculates if new bbox is moved enough to trigger fetch
-        return zoomChanged || (0..3).any { i ->
-            abs(old[i] - newBBox[i]) > threshold
-        }
-    }
-
     fun updateMapTheme(theme: MapTheme) {
         mapTheme = theme
         viewModelScope.launch {
@@ -266,6 +244,8 @@ class MapViewModel(
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
             lastUpdateTime = 0L
+            lastExpandedBBox = null
+            lastExpandedBitmap = null
             updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
@@ -335,6 +315,10 @@ class MapViewModel(
         selectJob?.cancel()
         searchSuggestions = emptyList()
         isSearching = false
+
+        lastBBox = null
+        lastExpandedBBox = null
+        lastExpandedBitmap = null
     }
 
     // Select a suggested place and get its coordinates
