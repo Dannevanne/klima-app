@@ -38,7 +38,7 @@
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
     <string name="my_position">My position</string>
-    <string name="select_an_overlay_by_pushing_the_bottom_left_button">Select an overlay by pushing the bottom-left button</string>
+    <string name="select_an_overlay_by_pushing_the_bottom_left_button">Select an overlay by pushing the bottom-left button. Some overlays only appear at certain zoom levels, depending on what the data source provides.</string>
     <string name="select_overlay">Select overlay</string>
     <string name="search_for_places">Search for places</string>
     <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Paste a placename in the searchbar to navigate on the map</string>
