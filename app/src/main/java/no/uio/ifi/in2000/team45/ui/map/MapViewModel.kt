@@ -26,6 +26,7 @@ sealed interface MapUiState {
     ): MapUiState
     object Error : MapUiState
     object Loading : MapUiState
+    object NoOverlay : MapUiState
 }
 
 // UI model. suggestion gives access to the original object so
