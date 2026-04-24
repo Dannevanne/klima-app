@@ -24,32 +24,34 @@ fun MapOverlayEffect(
 ) {
     MapEffect(bitmap, overlayBBox, useDarkMap) { mapView ->
         val currentBitmap = bitmap ?: return@MapEffect
-        val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
         val bbox = overlayBBox ?: return@MapEffect
         val corners = cornersFromBBox(bbox)
 
-        val sourceId = "overlaysource"
-        val layerId = "overlaylayer"
+        mapView.mapboxMap.getStyle { style ->
+            val sourceId = "overlaysource"
+            val layerId = "overlaylayer"
 
-        val source = style.getSourceAs<ImageSource>(sourceId)
+            val source = style.getSourceAs<ImageSource>(sourceId)
 
-        if (source == null) {
-            val newSource = ImageSource.Builder(sourceId)
-                .coordinates(corners)
-                .build()
-            style.addSource(newSource)
-            style.getSourceAs<ImageSource>(sourceId)?.updateImage(currentBitmap)
+            if (source == null) {
+                val newSource = ImageSource.Builder(sourceId)
+                    .coordinates(corners)
+                    .build()
+                style.addSource(newSource)
 
-            if (style.getLayer(layerId) == null) {
-                style.addLayer(rasterLayer(layerId, sourceId) {
-                    rasterOpacity(0.6)
-                    rasterFadeDuration(0.0)
-                    rasterResampling(RasterResampling.LINEAR)
-                })
+                style.getSourceAs<ImageSource>(sourceId)?.updateImage(currentBitmap)
+
+                if (style.getLayer(layerId) == null) {
+                    style.addLayer(rasterLayer(layerId, sourceId) {
+                        rasterOpacity(0.6)
+                        rasterFadeDuration(0.0)
+                        rasterResampling(RasterResampling.LINEAR)
+                    })
+                }
+            } else {
+                source.coordinates(corners)
+                source.updateImage(currentBitmap)
             }
-        } else {
-            source.coordinates(corners)
-            source.updateImage(currentBitmap)
         }
     }
 }
