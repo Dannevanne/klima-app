@@ -22,20 +22,19 @@ fun MapOverlayEffect(
     useDarkMap: Boolean
 ) {
     MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
-        val currentBitmap = bitmap ?: return@MapEffect
         val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
 
-        // changed to so that the expanded box is rendered
-        val bbox = overlayBBox ?: return@MapEffect
-        val corners = cornersFromBBox(bbox)
-
+        // Clear any existing overlay so switching to no-overlay really removes it
         if (style.getLayer("overlaylayer") != null) {
             style.removeStyleLayer("overlaylayer")
         }
-
         if (style.getSource("overlaysource") != null) {
             style.removeStyleSource("overlaysource")
         }
+
+        val currentBitmap = bitmap ?: return@MapEffect
+        val bbox = overlayBBox ?: return@MapEffect
+        val corners = cornersFromBBox(bbox)
 
         val source = ImageSource.Builder("overlaysource")
             .coordinates(corners)
@@ -44,11 +43,8 @@ fun MapOverlayEffect(
         style.addSource(source)
         style.getSourceAs<ImageSource>("overlaysource")?.updateImage(currentBitmap)
 
-
-        if (style.getLayer("overlaylayer") == null) {
-            style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
-                rasterOpacity(0.5)
-            })
-        }
+        style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
+            rasterOpacity(0.5)
+        })
     }
 }
