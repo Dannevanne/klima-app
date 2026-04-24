@@ -150,4 +150,5 @@
     <string name="reset_button">Reset</string>
     <string name="cancel_button">Cancel</string>
     <string name="remove_recent_search">Remove recent search</string>
+    <string name="place_name">Place name</string>
 </resources>
