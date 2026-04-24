@@ -9,6 +9,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import no.uio.ifi.in2000.team45.network.KtorClient
 
 enum class OverlayType(val label: String) {
+    NONE("Ingen lag"),
     FLOOD("Flom"),
     QUICK_CLAY("Kvikkleire"),
     RADON("Radon"),
