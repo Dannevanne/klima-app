@@ -115,6 +115,8 @@ class MapViewModel(
         width: Int,
         height: Int
     ) {
+        // No fetching when the user has chosen no overlay
+        if (activeOverlay == OverlayType.NONE) return
 
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
@@ -189,6 +191,10 @@ class MapViewModel(
     fun setOverlay(type: OverlayType) {
         activeOverlay = type
         lastOverlayURL = null
+        if (type == OverlayType.NONE) {
+            mapUiState = MapUiState.NoOverlay
+            return
+        }
         // When the overlay type changes, the ViewModel will try to
         // fetch a new overlay based on the previous bbox,
         // so the user doesn't need to move around on the map to see the new overlay
