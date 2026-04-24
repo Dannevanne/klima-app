@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
+import no.uio.ifi.in2000.team45.R
 
 @Composable
 fun MapSearchSection(
@@ -51,7 +52,7 @@ fun MapSearchSection(
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
             ),
-            placeholder = { Text("Search after place in Norway") },
+            placeholder = { Text(R.string.search_after_place_norway) },
             singleLine = true,
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
