@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Place
@@ -29,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,6 +48,7 @@ import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
+import androidx.compose.runtime.getValue
 
 @Composable
 fun StatisticContent(
@@ -66,7 +69,7 @@ fun StatisticContent(
 
     when (state) {
         is StatisticUiState.Idle -> {
-            val history = statisticViewModel.searchHistory
+            val history by statisticViewModel.searchHistory.collectAsState()
             val hasContent = favoriteStations.isNotEmpty() || history.isNotEmpty()
 
             if (hasContent) {
@@ -163,7 +166,21 @@ fun StatisticContent(
                                         modifier = Modifier.padding(end = 12.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    Text(query, fontSize = 15.sp)
+                                    Text(
+                                        text = query,
+                                        fontSize = 15.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+
+                                    IconButton(
+                                        onClick = { statisticViewModel.removeRecentSearch(query) }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = stringResource(R.string.remove_recent_search),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
