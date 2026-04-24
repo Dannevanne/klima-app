@@ -131,4 +131,5 @@
     <string name="reset_button">Tilbakestill</string>
     <string name="cancel_button">Avbryt</string>
     <string name="remove_recent_search">Fjern nyleg søk</string>
+    <string name="search_after_place_norway">Søk etter stad i Noreg</string>
 </resources>
