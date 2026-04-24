@@ -25,6 +25,7 @@ import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
+import no.uio.ifi.in2000.team45.ui.AppRoot
 import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
 
 class MainActivity : AppCompatActivity() {
@@ -62,8 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             Team45Theme(darkTheme = useDarkTheme) {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavigation(
-                        modifier = Modifier.fillMaxSize(),
+                    AppRoot(
                         mapViewModel = mapViewModel
                     )
                 }
