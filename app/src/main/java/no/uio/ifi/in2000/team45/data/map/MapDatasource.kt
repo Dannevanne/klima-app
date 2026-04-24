@@ -10,12 +10,12 @@ import kotlinx.serialization.json.jsonPrimitive
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
-enum class OverlayType(val label: String, @StringRes val labelRes: Int) {
-    FLOOD("Flom", R.string.flood),
-    QUICK_CLAY("Kvikkleire", R.string.quick_clay),
-    RADON("Radon", R.string.radon),
-    WIND("Vind", R.string.wind),
-    LANDSLIDE("Skred", R.string.landslide)
+enum class OverlayType(@StringRes val labelRes: Int) {
+    FLOOD(R.string.flood),
+    QUICK_CLAY(R.string.quick_clay),
+    RADON(R.string.radon),
+    WIND(R.string.wind),
+    LANDSLIDE(R.string.landslide)
 }
 
 class MapDatasource {
