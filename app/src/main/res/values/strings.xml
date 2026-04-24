@@ -19,7 +19,7 @@
     <string name="search">Search</string>
     <string name="search_to_see_stats">Start by searching for a location</string>
     <string name="search_to_see_stats_subtitle">Enter a place name or station ID above to explore temperature, precipitation, and risk trends over time.</string>
-    <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsoe\"</string>
+    <string name="ex_oslo_bergen_troms">Ex. \"Oslo\", \"Bergen\" or \"Tromsø\"</string>
     <string name="choose_station">Choose a station</string>
     <string name="back_to_search">Back to search</string>
     <string name="temperature">Temperature</string>
@@ -76,8 +76,8 @@
     <string name="t45">T45</string>
     <string name="team_45_in2000_uio_2026">Team 45 — IN2000, UiO 2026</string>
     <string name="language">Language</string>
-    <string name="language_bokmal" translatable="false">Norwegian bokmaal</string>
-    <string name="language_nynorsk" translatable="false">Norwegian nynorsk</string>
+    <string name="language_bokmal" translatable="false">Norwegian Bokmål</string>
+    <string name="language_nynorsk" translatable="false">Norwegian Nynorsk</string>
     <string name="language_english">English</string>
     <string name="no_saved_places_yet">No saved places yet</string>
     <string name="no_saved_places_hint">Go to the map, tap an area and save it to see risk analysis and climate data here.</string>
