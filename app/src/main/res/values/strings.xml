@@ -10,6 +10,7 @@
     <string name="filter_climate_hazard">Filter by climate hazard</string>
     <string name="flood">Flood</string>
     <string name="landslide">Landslide</string>
+    <string name="no_overlay">No overlay</string>
     <string name="device_settings">Use device settings</string>
     <string name="lightmode">Light mode</string>
     <string name="darkmode">Dark mode</string>

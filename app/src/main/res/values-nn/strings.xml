@@ -10,6 +10,7 @@
     <string name="filter_climate_hazard">Filtrer etter klimafare</string>
     <string name="flood">Flom</string>
     <string name="landslide">Skred</string>
+    <string name="no_overlay">Ingen lag</string>
     <string name="device_settings">Bruk einingsinnstillingar</string>
     <string name="lightmode">Lys modus</string>
     <string name="darkmode">Mørk modus</string>
