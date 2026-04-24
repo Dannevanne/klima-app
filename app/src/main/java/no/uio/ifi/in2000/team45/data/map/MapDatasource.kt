@@ -123,6 +123,7 @@ class MapDatasource {
         val maxLat = bbox[3]
 
         return when (type) {
+            OverlayType.NONE -> error("buildOverlayURL should not be called for NONE")
             OverlayType.FLOOD -> buildNveExportURL(
                 service = "Flomaktsomhet",
                 layers = "1",
