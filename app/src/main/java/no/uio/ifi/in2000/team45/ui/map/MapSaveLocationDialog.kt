@@ -29,7 +29,7 @@ fun MapSaveLocationDialog(
 ){
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.save_location) },
+        title = { Text(text = stringResource(R.string.save_location)) },
         text = {
             Column {
                 Text(
@@ -41,7 +41,7 @@ fun MapSaveLocationDialog(
                 OutlinedTextField(
                     value = locationName,
                     onValueChange = onLocationNameChange,
-                    label = { Text(text = stringResource(R.string.place_name) },
+                    label = { Text(text = stringResource(R.string.place_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
