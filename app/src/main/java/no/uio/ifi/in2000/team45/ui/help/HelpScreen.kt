@@ -100,7 +100,7 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.save_place),
-                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_favorites)
+                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places)
                 )
             }
             item {

@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.data.favorites
+package no.uio.ifi.in2000.team45.data.savedplaces
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -15,12 +15,12 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 
-private val Context.favoritesDataStore by preferencesDataStore(name = "favorites")
-class FavoriteRepository(private val context: Context) {
+private val Context.favoritesDataStore by preferencesDataStore(name = "savedplaces")
+class SavedPlacesRepository(private val context: Context) {
 
     companion object {
-        private val STATIONS_KEY = stringPreferencesKey("favorite_stations")
-        private val LOCATIONS_KEY = stringPreferencesKey("favorite_locations")
+        private val STATIONS_KEY = stringPreferencesKey("savedplaces_stations")
+        private val LOCATIONS_KEY = stringPreferencesKey("savedplaces_locations")
     }
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -30,7 +30,7 @@ class FavoriteRepository(private val context: Context) {
             prefs[STATIONS_KEY]?.let { parseStations(it) } ?: emptyList()
         }
 
-    val favoriteLocationsFlow: Flow<List<FavoriteLocation>> =
+    val savedPlacesLocationsFlow: Flow<List<SavedPlacesLocation>> =
         context.favoritesDataStore.data.map { prefs ->
             prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
         }
@@ -51,14 +51,14 @@ class FavoriteRepository(private val context: Context) {
         }
     }
 
-    suspend fun addLocation(location: FavoriteLocation) {
+    suspend fun addLocation(location: SavedPlacesLocation) {
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
             prefs[LOCATIONS_KEY] = encodeLocations(current + location)
         }
     }
 
-    suspend fun removeLocation(location: FavoriteLocation) {
+    suspend fun removeLocation(location: SavedPlacesLocation) {
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
             prefs[LOCATIONS_KEY] = encodeLocations(
@@ -104,11 +104,11 @@ class FavoriteRepository(private val context: Context) {
         }.toString()
     }
 
-    private fun parseLocations(raw: String): List<FavoriteLocation> {
+    private fun parseLocations(raw: String): List<SavedPlacesLocation> {
         return try {
             json.parseToJsonElement(raw).jsonArray.map { el ->
                 val obj = el.jsonObject
-                FavoriteLocation(
+                SavedPlacesLocation(
                     latitude = obj["latitude"]!!.jsonPrimitive.double,
                     longitude = obj["longitude"]!!.jsonPrimitive.double,
                     label = obj["label"]?.jsonPrimitive?.content ?: ""
@@ -117,7 +117,7 @@ class FavoriteRepository(private val context: Context) {
         } catch (_: Exception) { emptyList() }
     }
 
-    private fun encodeLocations(list: List<FavoriteLocation>): String {
+    private fun encodeLocations(list: List<SavedPlacesLocation>): String {
         return buildJsonArray {
             list.forEach { l ->
                 add(buildJsonObject {
