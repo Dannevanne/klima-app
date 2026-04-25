@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
@@ -55,7 +55,7 @@ fun StatisticContent(
     state: StatisticUiState,
     favoriteStations: List<FavoriteStation>,
     statisticViewModel: StatisticViewModel,
-    favoriteViewModel: FavoriteViewModel,
+    savedPlacesViewModel: SavedPlacesViewModel,
     topInset: Dp,
     bottomInset: Dp,
     modifier: Modifier = Modifier
@@ -228,9 +228,9 @@ fun StatisticContent(
                 onToggleFavorite = { station ->
                     val isFav = station.id in favIds
                     if (isFav) {
-                        favoriteViewModel.removeStation(station.id)
+                        savedPlacesViewModel.removeStation(station.id)
                     } else {
-                        favoriteViewModel.addStation(station)
+                        savedPlacesViewModel.addStation(station)
                     }
                 },
                 header = { SearchBarHeader(statisticViewModel) },
@@ -277,12 +277,12 @@ fun StatisticContent(
                             }
                         }
                         IconButton(onClick = {
-                            if (isFav) favoriteViewModel.removeStation(state.station.id)
-                            else favoriteViewModel.addStation(state.station)
+                            if (isFav) savedPlacesViewModel.removeStation(state.station.id)
+                            else savedPlacesViewModel.addStation(state.station)
                         }) {
                             Icon(
                                 imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                                contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
+                                contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_to_favorites),
                                 tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }

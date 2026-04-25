@@ -26,8 +26,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.IsOnline
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteScreen
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesScreen
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.help.HelpScreen
 import no.uio.ifi.in2000.team45.ui.info.InfoScreen
 import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
@@ -35,7 +35,6 @@ import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
-import java.nio.file.WatchEvent
 
 @Composable
 fun AppNavigation(
@@ -43,7 +42,7 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     mapViewModel: MapViewModel,
     statisticViewModel: StatisticViewModel = viewModel(),
-    favoriteViewModel: FavoriteViewModel = viewModel()
+    savedPlacesViewModel: SavedPlacesViewModel = viewModel()
 ) {
 
     val isOnline = IsOnline()
@@ -67,9 +66,9 @@ fun AppNavigation(
                     onInfoClick = { navigateTo("InfoScreen") },
                     onHelpClick = { navigateTo("HelpScreen") },
                     onStatisticClick = { navigateTo("StatisticScreen") },
-                    onFavoritesClick = { navigateTo("FavoriteScreen") },
+                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
                     mapViewModel = mapViewModel,
-                    favoriteViewModel = favoriteViewModel
+                    savedPlacesViewModel = savedPlacesViewModel
                 )
             }
             composable(route = "StatisticScreen") {
@@ -79,9 +78,9 @@ fun AppNavigation(
                     onInfoClick = { navigateTo("InfoScreen") },
                     onHelpClick = { navigateTo("HelpScreen") },
                     onMapClick = { navigateTo("MapScreen") },
-                    onFavoritesClick = { navigateTo("FavoriteScreen") },
+                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
                     statisticViewModel = statisticViewModel,
-                    favoriteViewModel = favoriteViewModel
+                    savedPlacesViewModel = savedPlacesViewModel
                 )
             }
             composable(route = "SettingsScreen") {
@@ -90,12 +89,12 @@ fun AppNavigation(
                     modifier = modifier,
                     onClick = { navController.popBackStack() },
                     statisticViewModel = statisticViewModel,
-                    favoriteViewModel = favoriteViewModel
+                    savedPlacesViewModel = savedPlacesViewModel
                 )
             }
-            composable(route = "FavoriteScreen") {
-                FavoriteScreen(
-                    favoriteViewModel = favoriteViewModel,
+            composable(route = "SavedPlacesScreen") {
+                SavedPlacesScreen(
+                    savedPlacesViewModel = savedPlacesViewModel,
                     onSettingsClick = { navigateTo("SettingsScreen") },
                     onInfoClick = { navigateTo("InfoScreen") },
                     onHelpClick = { navigateTo("HelpScreen") },

@@ -14,9 +14,6 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 fun MapZoomControlsSection(
     mapView: MapView?,
     viewportState: MapViewportState,
-    overlayBBox: List<Double>?,
-    mapWidth: Int,
-    mapHeight: Int,
     mapViewModel: MapViewModel,
     activeOverlay: OverlayType,
     modifier: Modifier = Modifier
@@ -24,25 +21,9 @@ fun MapZoomControlsSection(
     MapZoomControls(
         onZoomIn = {
             zoomMap(mapView, viewportState, 1.0, activeOverlay)
-            // forcing update overlay after zoom
-            if (overlayBBox != null) {
-                mapViewModel.updateOverlay(
-                    bbox = overlayBBox,
-                    width = mapWidth,
-                    height = mapHeight
-                )
-            }
         },
         onZoomOut = {
             zoomMap(mapView, viewportState, -1.0, activeOverlay)
-            // forcing update overlay after zoom
-            if (overlayBBox != null) {
-                mapViewModel.updateOverlay(
-                    bbox = overlayBBox,
-                    width = mapWidth,
-                    height = mapHeight
-                )
-            }
         },
         modifier = modifier
     )

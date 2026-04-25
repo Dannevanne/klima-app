@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.favorites
+package no.uio.ifi.in2000.team45.ui.savedplaces
 
 import android.app.Application
 import android.util.Log
@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteRepository
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesRepository
+import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -27,9 +27,9 @@ data class LocationStatus(
     val avgWindSpeed: Double? = null
 )
 
-class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
+class SavedPlacesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = FavoriteRepository(application)
+    private val repository = SavedPlacesRepository(application)
     private val statisticRepository = StatisticRepository()
     private val mapRepository = MapRepository()
     private val clientId: String = application.getString(R.string.frost_client_id)
@@ -38,7 +38,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    val locations = repository.favoriteLocationsFlow.stateIn(
+    val locations = repository.savedPlacesLocationsFlow.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
@@ -62,24 +62,24 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch { repository.removeStation(stationId) }
     }
 
-    fun removeLocation(location: FavoriteLocation) {
+    fun removeLocation(location: SavedPlacesLocation) {
         viewModelScope.launch { repository.removeLocation(location) }
     }
 
     fun addLocation(lat: Double, lng: Double, label: String) {
         viewModelScope.launch {
-            repository.addLocation(FavoriteLocation(lat, lng, label))
+            repository.addLocation(SavedPlacesLocation(lat, lng, label))
         }
     }
 
-    fun removeAllFavorites() {
+    fun removeAllSavedPlaces() {
         viewModelScope.launch {
             repository.removeAll()
             locationStatuses.clear()
         }
     }
 
-    fun fetchStatusForLocation(location: FavoriteLocation) {
+    fun fetchStatusForLocation(location: SavedPlacesLocation) {
         val key = "${location.latitude},${location.longitude}"
         if (locationStatuses.containsKey(key)) return
 
@@ -153,7 +153,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
                     avgWindSpeed = avgWind
                 )
             } catch (e: Exception) {
-                Log.e("FavoriteVM", "Failed to fetch status", e)
+                Log.e("SavedPlacesVM", "Failed to fetch status", e)
                 locationStatuses[key] = LocationStatus(
                     stationName = getApplication<Application>().getString(R.string.fetch_error)
                 )

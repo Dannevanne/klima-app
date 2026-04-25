@@ -1,12 +1,13 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
-import com.mapbox.maps.renderer.widget.Widget
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
@@ -18,14 +19,18 @@ import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
+import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
+import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import kotlin.math.abs
 
 sealed interface MapUiState {
     data class Success(
-        val overlayURL: String,
+        val bitmap: Bitmap,
         val bbox: List<Double>
     ): MapUiState
     object Error : MapUiState
     object Loading : MapUiState
+    object Idle : MapUiState
 }
 
 // UI model. suggestion gives access to the original object so
@@ -59,7 +64,7 @@ class MapViewModel(
     // has changed too little or too often
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
-    private var throttleMs = 300L
+    private var throttleMs = 500L
     private var lastBBox: List<Double>? = null
     private var lastWidth = 0
     private var lastHeight = 0
@@ -94,6 +99,12 @@ class MapViewModel(
     var lastCameraZoom by mutableStateOf(3.75)
         private set
 
+    private var fetchOverlayJob: Job? = null
+
+    private var lastExpandedBBox: List<Double>? = null
+    private var lastExpandedBitmap: Bitmap? = null
+    private var lastZoom: Double? = null
+
     // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
@@ -112,19 +123,15 @@ class MapViewModel(
     fun updateOverlay(
         bbox: List<Double>,
         width: Int,
-        height: Int
+        height: Int,
+        context: Context
     ) {
-        if (bbox.size != 4 || width <= 0 || height <= 0) return
+        val currentZoom = lastCameraZoom
 
-        // Don't update overlay if the map is too zoomed out
-        val lonSpan = kotlin.math.abs(bbox[2] - bbox[0])
-        val latSpan = kotlin.math.abs(bbox[3] - bbox[1])
-
-        if (lonSpan > 20 || latSpan > 20) {
-            mapUiState = MapUiState.Success(
-                overlayURL = "",
-                bbox
-            )
+        // No overlay under this zoom level
+        val minimum_zoom = 5.0
+        if (currentZoom < minimum_zoom) {
+            mapUiState = MapUiState.Idle
             return
         }
 
@@ -134,41 +141,75 @@ class MapViewModel(
             return
         }
         lastUpdateTime = now
-
-        // Check if user has moved the camera enough to trigger new fetch
-        if (!hasMovedEnough(bbox)) {
+        if (lastBBox == bbox) {
             return
         }
+
         lastBBox = bbox
         lastWidth = width
         lastHeight = height
 
         if (bbox.size != 4 || width <= 0 || height <= 0) return
-        try {
-            val url = mapRepository.getOverlayURL(
-                type = activeOverlay,
-                bbox = bbox,
-                width = width,
-                height = height
-            )
-            if (url != lastOverlayURL) {
-                lastOverlayURL = url
-                mapUiState = MapUiState.Success(url, bbox)
+        fetchOverlayJob?.cancel()
+        fetchOverlayJob = viewModelScope.launch {
+            try {
+                val factor = 1.5
+
+                // No point in getting new overlay if we are in the expanded
+                if (!isBBoxContained(inner = bbox, outer = lastExpandedBBox)) {
+                    val multiplier = 1.0 + (2.0 * factor)
+
+                    val url = mapRepository.getOverlayURL(
+                        type = activeOverlay,
+                        bbox = bbox,
+                        width = (width / multiplier).toInt(),
+                        height = (height / multiplier).toInt()
+                    )
+                    val overlayBitmap = makeBitmap(context, url) ?: return@launch
+
+                    mapUiState = MapUiState.Success(overlayBitmap, bbox)
+                } else {
+                    if (mapUiState !is MapUiState.Success || (mapUiState as? MapUiState.Success)?.bitmap != lastExpandedBitmap) {
+                        mapUiState = MapUiState.Success(lastExpandedBitmap!!, lastExpandedBBox!!)
+                    }
+                }
+
+                val expandedBBox = expandBBox(bbox, factor)
+
+                val expandedUrl = mapRepository.getOverlayURL(
+                    type = activeOverlay,
+                    bbox = expandedBBox,
+                    width = width,
+                    height = height
+                )
+                val expandedBitmap = makeBitmap(context, expandedUrl)
+                if (expandedBitmap != null) {
+                    mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
+                    lastExpandedBBox = expandedBBox
+                    lastExpandedBitmap = expandedBitmap
+                }
+
+            } catch (e: Exception) {} finally {
+                lastZoom = currentZoom
             }
-        } catch (e: Exception) {
-            mapUiState = MapUiState.Error
         }
+
     }
 
-    // Helper function to decide if it should fetch
-    private fun hasMovedEnough(newBBox: List<Double>): Boolean {
-        val old = lastBBox ?: return true
-        // moving threshold, can change but should be kept low I think
-        val threshold = 0.01
-        // calculates if new bbox is moved enough to trigger fetch
-        return (0..3).any { i ->
-            kotlin.math.abs(old[i] - newBBox[i]) > threshold
+    private fun isBBoxContained(inner: List<Double>, outer: List<Double>?): Boolean {
+        if (outer == null || lastExpandedBitmap == null) return false
+
+        val threshold = 0.05
+        lastZoom?.let {
+            if (abs(lastCameraZoom - it) > threshold) {
+                return false
+            }
         }
+
+        return inner[0] >= outer[0] && // Southwest Lon
+                inner[1] >= outer[1] && // Southwest Lat
+                inner[2] <= outer[2] && // Northeast Lon
+                inner[3] <= outer[3]    // Northeast Lat
     }
 
     fun updateMapTheme(theme: MapTheme) {
@@ -198,7 +239,7 @@ class MapViewModel(
         userLocation?.let { selectedLocation = it }
     }
 
-    fun setOverlay(type: OverlayType) {
+    fun setOverlay(type: OverlayType, context: Context) {
         activeOverlay = type
         lastOverlayURL = null
         // When the overlay type changes, the ViewModel will try to
@@ -208,7 +249,9 @@ class MapViewModel(
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastBBox = null
             lastUpdateTime = 0L
-            updateOverlay(bbox, lastWidth, lastHeight)
+            lastExpandedBBox = null
+            lastExpandedBitmap = null
+            updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
         }
@@ -277,6 +320,10 @@ class MapViewModel(
         selectJob?.cancel()
         searchSuggestions = emptyList()
         isSearching = false
+
+        lastBBox = null
+        lastExpandedBBox = null
+        lastExpandedBitmap = null
     }
 
     // Select a suggested place and get its coordinates

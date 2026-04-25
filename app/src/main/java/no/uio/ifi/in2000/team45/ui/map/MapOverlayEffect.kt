@@ -6,6 +6,7 @@ import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.style.layers.addLayer
 import com.mapbox.maps.extension.style.layers.generated.rasterLayer
 import com.mapbox.maps.extension.style.layers.getLayer
+import com.mapbox.maps.extension.style.layers.properties.generated.RasterResampling
 import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
@@ -21,34 +22,36 @@ fun MapOverlayEffect(
     overlayBBox: List<Double>?,
     useDarkMap: Boolean
 ) {
-    MapEffect(Pair(bitmap, useDarkMap)) { mapView ->
+    MapEffect(bitmap, overlayBBox, useDarkMap) { mapView ->
         val currentBitmap = bitmap ?: return@MapEffect
-        val style = mapView.mapboxMap.getStyle() ?: return@MapEffect
-
-        // changed to so that the expanded box is rendered
         val bbox = overlayBBox ?: return@MapEffect
         val corners = cornersFromBBox(bbox)
 
-        if (style.getLayer("overlaylayer") != null) {
-            style.removeStyleLayer("overlaylayer")
-        }
+        mapView.mapboxMap.getStyle { style ->
+            val sourceId = "overlaysource"
+            val layerId = "overlaylayer"
 
-        if (style.getSource("overlaysource") != null) {
-            style.removeStyleSource("overlaysource")
-        }
+            val source = style.getSourceAs<ImageSource>(sourceId)
 
-        val source = ImageSource.Builder("overlaysource")
-            .coordinates(corners)
-            .build()
+            if (source == null) {
+                val newSource = ImageSource.Builder(sourceId)
+                    .coordinates(corners)
+                    .build()
+                style.addSource(newSource)
 
-        style.addSource(source)
-        style.getSourceAs<ImageSource>("overlaysource")?.updateImage(currentBitmap)
+                style.getSourceAs<ImageSource>(sourceId)?.updateImage(currentBitmap)
 
-
-        if (style.getLayer("overlaylayer") == null) {
-            style.addLayer(rasterLayer("overlaylayer", "overlaysource") {
-                rasterOpacity(0.5)
-            })
+                if (style.getLayer(layerId) == null) {
+                    style.addLayer(rasterLayer(layerId, sourceId) {
+                        rasterOpacity(0.6)
+                        rasterFadeDuration(0.0)
+                        rasterResampling(RasterResampling.LINEAR)
+                    })
+                }
+            } else {
+                source.coordinates(corners)
+                source.updateImage(currentBitmap)
+            }
         }
     }
 }

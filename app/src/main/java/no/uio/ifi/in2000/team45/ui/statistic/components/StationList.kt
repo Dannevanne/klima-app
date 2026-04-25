@@ -101,7 +101,7 @@ fun StationList(
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
                             imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
-                            contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_favorite),
+                            contentDescription = if (isFav) stringResource(R.string.remove_saved_place) else stringResource(R.string.add_place_to_saved_places),
                             tint = if (isFav) StarGold
                             else MaterialTheme.colorScheme.onSurfaceVariant
                         )

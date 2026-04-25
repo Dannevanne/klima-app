@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ fun MapContent(
     locationGranted: Boolean,
     mapViewModel: MapViewModel,
     onMapLongClick: (Point) -> Unit,
+    context: Context,
     modifier: Modifier = Modifier
 ) {
     MapboxMap(
@@ -70,7 +72,8 @@ fun MapContent(
             mapView = mapViewRef,
             mapWidth = currentMapWidth,
             mapHeight = currentMapHeight,
-            mapViewModel = mapViewModel
+            mapViewModel = mapViewModel,
+            context = context,
         )
 
         MapOverlayEffect(

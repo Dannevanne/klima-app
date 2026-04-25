@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 // Naming dialog for saved location
 @Composable
@@ -25,7 +25,7 @@ fun MapSaveLocationDialog(
     locationName: String,
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    favoriteViewModel: FavoriteViewModel
+    savedPlacesViewModel: SavedPlacesViewModel
 ){
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -50,7 +50,7 @@ fun MapSaveLocationDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    favoriteViewModel.addLocation(
+                    savedPlacesViewModel.addLocation(
                         lat = point.latitude(),
                         lng = point.longitude(),
                         label = locationName.trim()
