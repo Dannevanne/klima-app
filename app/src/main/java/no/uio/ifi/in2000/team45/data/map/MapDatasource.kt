@@ -1,19 +1,21 @@
 package no.uio.ifi.in2000.team45.data.map
 
 import android.util.Log
+import androidx.annotation.StringRes
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
-enum class OverlayType(val label: String) {
-    FLOOD("Flom"),
-    QUICK_CLAY("Kvikkleire"),
-    RADON("Radon"),
-    WIND("Vind"),
-    LANDSLIDE("Skred")
+enum class OverlayType(@StringRes val labelRes: Int) {
+    FLOOD(R.string.flood),
+    QUICK_CLAY(R.string.quick_clay),
+    RADON(R.string.radon),
+    WIND(R.string.wind),
+    LANDSLIDE(R.string.landslide)
 }
 
 class MapDatasource {

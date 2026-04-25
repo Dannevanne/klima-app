@@ -9,6 +9,8 @@
     <string name="theme">Tema</string>
     <string name="filter_climate_hazard">Filtrer etter klimafare</string>
     <string name="flood">Flom</string>
+    <string name="quick_clay">Kvikkleire</string>
+    <string name="radon">Radon</string>
     <string name="landslide">Skred</string>
     <string name="device_settings">Bruk enhetsinnstillinger</string>
     <string name="lightmode">Lys modus</string>
