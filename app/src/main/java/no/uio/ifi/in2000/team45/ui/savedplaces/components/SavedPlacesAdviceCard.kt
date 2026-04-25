@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.favorites.components
+package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import android.content.Intent
 import android.net.Uri
@@ -158,29 +158,57 @@ fun adviceForRiskLevels(
 fun WhatCanIDoSection(
     floodLevel: String,
     landslideLevel: String,
-    windLevel: String
+    windLevel: String,
+    savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
+    var adviceExpanded by remember { mutableStateOf(false) }
     val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)
 
-    Text(
-        text = stringResource(R.string.what_can_i_do),
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        letterSpacing = 1.sp,
-        modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
-    )
-
-    categories.forEachIndexed { index, category ->
-        AdviceAccordionCard(
-            category = category,
-            isExpanded = expandedIndex == index,
-            onToggle = {
-                expandedIndex = if (expandedIndex == index) null else index
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.what_can_i_do),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            letterSpacing = 1.sp,
+            modifier = Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.height(6.dp))
+
+        if (savedPlacesCount > 2) {
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = if (adviceExpanded) {
+                    stringResource(R.string.collapse)
+                } else {
+                    stringResource(R.string.expand)
+                       },
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .rotate(if (adviceExpanded) 180f else 0f)
+                    .clickable { adviceExpanded = !adviceExpanded }
+            )
+        }
+    }
+
+    val showAdvice = savedPlacesCount <= 2 || adviceExpanded
+
+    if (showAdvice) {
+        categories.forEachIndexed { index, category ->
+            AdviceAccordionCard(
+                category = category,
+                isExpanded = expandedIndex == index,
+                onToggle = {
+                    expandedIndex = if (expandedIndex == index) null else index
+                }
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+        }
     }
 }
 

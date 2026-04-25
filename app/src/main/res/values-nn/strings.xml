@@ -9,6 +9,8 @@
     <string name="theme">Tema</string>
     <string name="filter_climate_hazard">Filtrer etter klimafare</string>
     <string name="flood">Flom</string>
+    <string name="quick_clay">Kvikkleire</string>
+    <string name="radon">Radon</string>
     <string name="landslide">Skred</string>
     <string name="device_settings">Bruk einingsinnstillingar</string>
     <string name="lightmode">Lys modus</string>
@@ -43,7 +45,7 @@
     <string name="search_for_places">Søk etter stader</string>
     <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Lim inn eit stadnamn i søkjefeltet for å navigere på kartet</string>
     <string name="save_location">Lagre stad</string>
-    <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_favorites">Trykk og hald på ein stad på kartet for å lagre det</string>
+    <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places">Trykk og hald på ein stad på kartet for å lagre det</string>
     <string name="my_location">Min lokasjon</string>
     <string name="button_to_see_location_or_give_permission">Trykk på posisjonsknappen til venstre for å sjå posisjonen din eller gi tilgang</string>
     <string name="statistics">Statistikk</string>
@@ -101,8 +103,10 @@
     <string name="station_not_found">Ingen stasjon funnen</string>
     <string name="fetch_error">Feil ved henting</string>
     <string name="nearby">I nærleiken</string>
+    <string name="remove_saved_place">Fjern lagra stad</string>
     <string name="remove_favorite">Fjern favoritt</string>
-    <string name="add_favorite">Legg til favoritt</string>
+    <string name="add_place_to_saved_places">Legg til stad i lagra stader</string>
+    <string name="add_to_favorites">Legg til i favoritter</string>
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km unna</string>
     <string name="distance_m_away">%1$d m unna</string>
@@ -123,10 +127,17 @@
     <string name="error_search_failed">Feil ved søk: %1$s</string>
     <string name="error_no_climate_data">Ingen klimadata tilgjengeleg for stasjonar nær %1$s</string>
     <string name="error_fetch_data">Feil ved henting av data: %1$s</string>
+    <string name="close">Lukk</string>
+    <string name="no_internettconnection">Ingen internettsamband</string>
     <string name="reset_app_data_title">Tilbakestill appdata</string>
     <string name="reset_app_data_description">Dette vil slette alle lagra stader, din søkjehistorikk, og all klimastatistikk.</string>
     <string name="reset_app_data_section_title">Appdata</string>
     <string name="reset_app_data_section_description">Slettar lagra stader, din søkjehistorikk, og all klimastatistikk.</string>
     <string name="reset_button">Tilbakestill</string>
     <string name="cancel_button">Avbryt</string>
+    <string name="remove_recent_search">Fjern nyleg søk</string>
+    <string name="save">Lagre</string>
+    <string name="place_name">Stadnamn</string>
+    <string name="versjon_1_0_0">Versjon 1.0.0</string>
+    <string name="search_after_place_norway">Søk etter stad i Noreg</string>
 </resources>

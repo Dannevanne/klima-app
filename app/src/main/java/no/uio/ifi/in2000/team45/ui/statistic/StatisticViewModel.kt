@@ -14,8 +14,11 @@ import no.uio.ifi.in2000.team45.R
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.common.IsoCountryCode
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import java.util.Calendar
@@ -37,6 +40,7 @@ class StatisticViewModel(
 ) : AndroidViewModel(application) {
 
     private val repository = StatisticRepository()
+    private val recentSearchRepository = RecentSearchRepository(application)
     private val clientId: String = application.getString(R.string.frost_client_id)
     private val placeAutocomplete = PlaceAutocomplete.create(locationProvider = null)
     private var searchJob: Job? = null
@@ -51,14 +55,16 @@ class StatisticViewModel(
     var selectedPeriod: Int by mutableStateOf(30)
         private set
 
-    var searchHistory: List<String> by mutableStateOf(emptyList())
-        private set
+    val searchHistory = recentSearchRepository.recentSearchesFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun resetAllStatisticData() {
         searchJob?.cancel()
         climateJob?.cancel()
         searchQuery = ""
-        searchHistory = emptyList()
         selectedPeriod = 30
         uiState = StatisticUiState.Idle
     }
@@ -110,7 +116,7 @@ class StatisticViewModel(
             try {
                 val stations = repository.searchStations(queryAtLaunch, clientId)
                 if (stations.isNotEmpty()) {
-                    addToHistory(searchQuery)
+                    recentSearchRepository.addSearch(queryAtLaunch)
                     uiState = StatisticUiState.StationResults(stations)
                     return@launch
                 }
@@ -118,7 +124,7 @@ class StatisticViewModel(
                 // No station name match -- geocode the query and find nearest
                 val nearby = geocodeAndFindNearest(queryAtLaunch)
                 uiState = if (nearby.isNotEmpty()) {
-                    addToHistory(searchQuery)
+                    recentSearchRepository.addSearch(queryAtLaunch)
                     StatisticUiState.StationResults(nearby)
                 } else {
                     StatisticUiState.Error(
@@ -196,12 +202,6 @@ class StatisticViewModel(
         super.onCleared()
     }
 
-    private fun addToHistory(query: String) {
-        val trimmed = query.trim()
-        if (trimmed.isBlank()) return
-        searchHistory = (listOf(trimmed) + searchHistory.filter { it != trimmed }).take(5)
-    }
-
     private suspend fun geocodeAndFindNearest(query: String): List<WeatherStation> {
         val options = PlaceAutocompleteOptions(
             limit = 1,
@@ -231,5 +231,11 @@ class StatisticViewModel(
                 Math.sin(dLon / 2) * Math.sin(dLon / 2)
         val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
         return (r * c).toInt()
+    }
+
+    fun removeRecentSearch(query: String) {
+        viewModelScope.launch {
+            recentSearchRepository.removeSearch(query)
+        }
     }
 }

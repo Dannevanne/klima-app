@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 
@@ -104,7 +105,7 @@ private fun OverlayPillButton(
         ) {
             Text(overlayEmoji(activeOverlay))
             Spacer(modifier = Modifier.width(8.dp))
-            Text(activeOverlay.label)
+            Text(stringResource(activeOverlay.labelRes))
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowDown
@@ -136,7 +137,7 @@ private fun OverlayOptionRow(
     ) {
         Text(overlayEmoji(type))
         Spacer(modifier = Modifier.width(12.dp))
-        Text(type.label)
+        Text(stringResource(type.labelRes))
     }
 }
 

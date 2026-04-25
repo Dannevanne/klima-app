@@ -1,7 +1,6 @@
-package no.uio.ifi.in2000.team45.ui.favorites.components
+package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,31 +39,31 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteStation
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 @Composable
-fun FavoriteContent(
+fun SavedPlacesContent(
     stations: List<FavoriteStation>,
-    locations: List<FavoriteLocation>,
-    favoriteViewModel: FavoriteViewModel,
+    locations: List<SavedPlacesLocation>,
+    savedPlacesViewModel: SavedPlacesViewModel,
     onMapClick: () -> Unit,
     topInset: Dp,
     bottomInset: Dp,
     modifier: Modifier
 ) {
     if (locations.isEmpty() && stations.isEmpty()) {
-        EmptyFavoritesContent(
+        EmptySavedPlacesContent(
             onMapClick = onMapClick,
             topInset = topInset,
             bottomInset = bottomInset,
             modifier = modifier
         )
     } else {
-        PopulatedFavoritesContent(
+        PopulatedSavedPlacesContent(
             locations = locations,
-            favoriteViewModel = favoriteViewModel,
+            savedPlacesViewModel = savedPlacesViewModel,
             topInset = topInset,
             bottomInset = bottomInset,
             modifier = modifier
@@ -73,7 +72,7 @@ fun FavoriteContent(
 }
 
 @Composable
-private fun FavoritesSearchBar(
+private fun SavedPlacesSearchBar(
     query: String,
     onQueryChange: (String) -> Unit
 ) {
@@ -101,7 +100,7 @@ private fun FavoritesSearchBar(
 }
 
 @Composable
-private fun EmptyFavoritesContent(
+private fun EmptySavedPlacesContent(
     onMapClick: () -> Unit,
     topInset: Dp,
     bottomInset: Dp,
@@ -113,7 +112,7 @@ private fun EmptyFavoritesContent(
             .padding(top = topInset, bottom = bottomInset)
             .padding(16.dp)
     ) {
-        FavoritesSearchBar(query = "", onQueryChange = {})
+        SavedPlacesSearchBar(query = "", onQueryChange = {})
         Spacer(modifier = Modifier.height(12.dp))
         Box(
             modifier = Modifier
@@ -171,9 +170,9 @@ private fun EmptyFavoritesContent(
 }
 
 @Composable
-private fun PopulatedFavoritesContent(
-    locations: List<FavoriteLocation>,
-    favoriteViewModel: FavoriteViewModel,
+private fun PopulatedSavedPlacesContent(
+    locations: List<SavedPlacesLocation>,
+    savedPlacesViewModel: SavedPlacesViewModel,
     topInset: Dp,
     bottomInset: Dp,
     modifier: Modifier
@@ -181,6 +180,8 @@ private fun PopulatedFavoritesContent(
     var searchQuery by remember { mutableStateOf("") }
     val filtered = if (searchQuery.isBlank()) locations
     else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
+
+    val savedPlacesCount = locations.size
 
     LazyColumn(
         modifier = modifier,
@@ -192,19 +193,20 @@ private fun PopulatedFavoritesContent(
         )
     ) {
         item {
-            FavoritesSearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
+            SavedPlacesSearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
             Spacer(modifier = Modifier.height(12.dp))
         }
         items(filtered) { location ->
             LaunchedEffect(location) {
-                favoriteViewModel.fetchStatusForLocation(location)
+                savedPlacesViewModel.fetchStatusForLocation(location)
             }
             val key = "${location.latitude},${location.longitude}"
-            val status = favoriteViewModel.locationStatuses[key]
-            FavoriteLocationCard(
+            val status = savedPlacesViewModel.locationStatuses[key]
+            SavedPlacesLocationCard(
                 location = location,
                 status = status,
-                onRemove = { favoriteViewModel.removeLocation(location) }
+                onRemove = { savedPlacesViewModel.removeLocation(location) },
+                savedPlacesCount = savedPlacesCount
             )
         }
     }

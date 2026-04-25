@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.favorites.components
+package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.favorites.FavoriteLocation
-import no.uio.ifi.in2000.team45.ui.favorites.LocationStatus
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.ui.savedplaces.LocationStatus
 import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val RiskHigh = Color(0xFFEF4444)
@@ -77,10 +76,11 @@ private fun overallRisk(flood: String, landslide: String, wind: String): String 
 }
 
 @Composable
-fun FavoriteLocationCard(
-    location: FavoriteLocation,
+fun SavedPlacesLocationCard(
+    location: SavedPlacesLocation,
     status: LocationStatus?,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    savedPlacesCount: Int
 ) {
     val loading = status == null
     val floodLevel = riskLevel(status?.inFloodZone == true)
@@ -160,7 +160,8 @@ fun FavoriteLocationCard(
                 WhatCanIDoSection(
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
-                    windLevel = windLevel
+                    windLevel = windLevel,
+                    savedPlacesCount = savedPlacesCount
                 )
             }
         }

@@ -1,7 +1,6 @@
-package no.uio.ifi.in2000.team45.ui.favorites
+package no.uio.ifi.in2000.team45.ui.savedplaces
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Place
@@ -18,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
@@ -26,12 +24,12 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
-import no.uio.ifi.in2000.team45.ui.favorites.components.FavoriteContent
+import no.uio.ifi.in2000.team45.ui.savedplaces.components.SavedPlacesContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteScreen(
-    favoriteViewModel: FavoriteViewModel,
+fun SavedPlacesScreen(
+    savedPlacesViewModel: SavedPlacesViewModel,
     onSettingsClick: () -> Unit,
     onInfoClick: () -> Unit,
     onHelpClick: () -> Unit,
@@ -39,8 +37,8 @@ fun FavoriteScreen(
     onStatisticClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val stations by favoriteViewModel.stations.collectAsState()
-    val locations by favoriteViewModel.locations.collectAsState()
+    val stations by savedPlacesViewModel.stations.collectAsState()
+    val locations by savedPlacesViewModel.locations.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -96,10 +94,10 @@ fun FavoriteScreen(
             )
         }
     ) { innerPadding ->
-        FavoriteContent(
+        SavedPlacesContent(
             stations = stations,
             locations = locations,
-            favoriteViewModel = favoriteViewModel,
+            savedPlacesViewModel = savedPlacesViewModel,
             onMapClick = onMapClick,
             topInset = innerPadding.calculateTopPadding(),
             bottomInset = innerPadding.calculateBottomPadding(),

@@ -11,10 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
+import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 // Naming dialog for saved location
 @Composable
@@ -23,11 +26,11 @@ fun MapSaveLocationDialog(
     locationName: String,
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    favoriteViewModel: FavoriteViewModel
+    savedPlacesViewModel: SavedPlacesViewModel
 ){
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Lagre posisjon") },
+        title = { Text(text = stringResource(R.string.save_location)) },
         text = {
             Column {
                 Text(
@@ -39,7 +42,7 @@ fun MapSaveLocationDialog(
                 OutlinedTextField(
                     value = locationName,
                     onValueChange = onLocationNameChange,
-                    label = { Text("Navn") },
+                    label = { Text(text = stringResource(R.string.place_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -48,7 +51,7 @@ fun MapSaveLocationDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    favoriteViewModel.addLocation(
+                    savedPlacesViewModel.addLocation(
                         lat = point.latitude(),
                         lng = point.longitude(),
                         label = locationName.trim()
@@ -57,12 +60,12 @@ fun MapSaveLocationDialog(
                 },
                 enabled = locationName.trim().isNotBlank()
             ) {
-                Text("Lagre")
+                Text(text = stringResource(R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Avbryt")
+                Text(text = stringResource(R.string.cancel))
             }
         }
     )

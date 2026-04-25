@@ -10,11 +10,10 @@ import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 fun zoomMap(mapView: MapView?,
                     viewPortState: MapViewportState,
                     zoomChange: Double) {
-    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 11.5
+    val currentZoom = mapView?.mapboxMap?.cameraState?.zoom ?: 3.75
 
-    val camera = CameraOptions.Builder().zoom(
-        (currentZoom + zoomChange).coerceIn(1.0, 20.0)
-    )
+    val camera = CameraOptions.Builder()
+        .zoom((currentZoom + zoomChange).coerceIn(3.25, 18.0))
         .build()
 
     viewPortState.easeTo(camera)

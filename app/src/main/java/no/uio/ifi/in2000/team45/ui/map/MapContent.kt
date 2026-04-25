@@ -45,6 +45,8 @@ fun MapContent(
             onMapViewReady(mapView)
         }
 
+        MapBoundsEffect()
+
         MapLongPressEffect(
             mapView = mapViewRef,
             onMapLongClick = onMapLongClick

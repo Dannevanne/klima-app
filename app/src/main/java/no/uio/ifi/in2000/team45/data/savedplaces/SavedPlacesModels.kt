@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.data.favorites
+package no.uio.ifi.in2000.team45.data.savedplaces
 
 data class FavoriteStation(
     val stationId: String,
@@ -7,7 +7,7 @@ data class FavoriteStation(
     val county: String = ""
 )
 
-data class FavoriteLocation(
+data class SavedPlacesLocation(
     val latitude: Double,
     val longitude: Double,
     val label: String = ""

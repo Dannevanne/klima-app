@@ -1,5 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.info
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,20 +19,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Cloud
-import androidx.compose.material.icons.outlined.DeviceThermostat
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.NoAccounts
-import androidx.compose.material.icons.outlined.TravelExplore
-import androidx.compose.material.icons.outlined.Water
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.lazy.items
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +49,7 @@ fun InfoScreen(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -67,44 +66,24 @@ fun InfoScreen(
                 AppRepresentation()
             }
             // Data and API sources
-            item { InfoSectionName(title = stringResource(R.string.datasources)) }
             item {
+                InfoSectionName(title = stringResource(R.string.datasources))
+            }
+            items(infoDatasources) { datasource ->
                 InfoDataCard(
-                    name = stringResource(R.string.nve),
-                    description = stringResource(R.string.flood_landslides_quick_clay_wind),
-                    containerColor = Color(0xFFE3F2FD),
-                    iconColor = Color(0xFF1565C0),
-                    icon = Icons.Outlined.Water,
+                    name = datasource.title,
+                    description = stringResource(datasource.descriptionId),
+                    containerColor = datasource.containerColor,
+                    iconColor = datasource.iconColor,
+                    icon = datasource.icon,
+                    onClick = {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW,
+                                Uri.parse(datasource.url))
+                        )
+                    }
                 )
             }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.frost_api_v0),
-                    description = stringResource(R.string.climate_statistics),
-                    containerColor = Color(0xFFE8F5E9),
-                    iconColor = Color(0xFF388E3C),
-                    icon = Icons.Outlined.DeviceThermostat
-                )
-            }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.mapbox),
-                    description = stringResource(R.string.map_and_search),
-                    containerColor = Color(0xFFEDE7F6),
-                    iconColor = Color(0xFF6A1B9A),
-                    icon = Icons.Outlined.TravelExplore
-                )
-            }
-            item {
-                InfoDataCard(
-                    name = stringResource(R.string.ngu_radonwms),
-                    description = stringResource(R.string.radon_gas),
-                    containerColor = Color(0xFFFFF3E0),
-                    iconColor = Color(0xFFE65100),
-                    icon = Icons.Outlined.Cloud
-                )
-            }
-
             // Privacy
             item { InfoSectionName(stringResource(R.string.privacy)) }
             item {
@@ -153,12 +132,15 @@ private fun InfoDataCard(
     description: String,
     containerColor: Color,
     iconColor: Color,
-    icon: ImageVector
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+            .clickable { onClick() }
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10.dp)
