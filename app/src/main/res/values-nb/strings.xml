@@ -40,7 +40,7 @@
     <string name="go_to_settings">Gå til innstillinger</string>
     <string name="cancel">Avbryt</string>
     <string name="my_position">Min posisjon</string>
-    <string name="select_an_overlay_by_pushing_the_bottom_left_button">Velg et lag ved å trykke på knappen nederst til venstre</string>
+    <string name="select_an_overlay_by_pushing_the_bottom_left_button">Velg et lag ved å trykke på knappen nederst til venstre. Noen lag vises bare på bestemte zoomnivåer, avhengig av hva datakilden leverer.</string>
     <string name="select_overlay">Velg lag</string>
     <string name="search_for_places">Søk etter steder</string>
     <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Lim inn et stedsnavn i søkefeltet for å navigere på kartet</string>
