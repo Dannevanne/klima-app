@@ -42,8 +42,10 @@ import kotlinx.coroutines.Job
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import com.mapbox.maps.CameraOptions
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
