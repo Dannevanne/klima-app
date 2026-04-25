@@ -114,6 +114,19 @@ class MapViewModel(
         width: Int,
         height: Int
     ) {
+        if (bbox.size != 4 || width <= 0 || height <= 0) return
+
+        // Don't update overlay if the map is too zoomed out
+        val lonSpan = kotlin.math.abs(bbox[2] - bbox[0])
+        val latSpan = kotlin.math.abs(bbox[3] - bbox[1])
+
+        if (lonSpan > 20 || latSpan > 20) {
+            mapUiState = MapUiState.Success(
+                overlayURL = "",
+                bbox
+            )
+            return
+        }
 
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
