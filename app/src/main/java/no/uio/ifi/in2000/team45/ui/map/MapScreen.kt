@@ -336,7 +336,9 @@ fun DataMap(
             bearing(0.0)
         }
     }
-    val overlayURL = (uiState as? MapUiState.Success)?.overlayURL
+    val overlayURL = (uiState as? MapUiState.Success)
+        ?.overlayURL
+        ?.takeIf { it.isNotBlank() }
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
 
     // Compose state from MapViewModel
