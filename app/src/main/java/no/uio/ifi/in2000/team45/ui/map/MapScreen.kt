@@ -235,7 +235,6 @@ fun DataMap(
         theme = mapViewModel.mapTheme,
         systemIsDark = isSystemInDarkTheme()
     )
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     // Long-press save dialog state
     var pendingPoint by remember { mutableStateOf<Point?>(null) }
     var locationName by remember { mutableStateOf("") }
@@ -254,9 +253,8 @@ fun DataMap(
             bearing(0.0)
         }
     }
-    val overlayURL = (uiState as? MapUiState.Success)
-        ?.overlayURL
-        ?.takeIf { it.isNotBlank() }
+
+    val bitmap = (uiState as? MapUiState.Success)?.bitmap
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
 
     // Compose state from MapViewModel
@@ -296,15 +294,8 @@ fun DataMap(
                 pendingPoint = point
                 locationName = ""
             },
-            modifier = Modifier.fillMaxSize()
-        )
-
-        MapOverlayBitmapEffect(
-            overlayURL = overlayURL,
             context = context,
-            imageJob = imageJob,
-            onImageJobChange = { imageJob = it },
-            onBitmapLoaded = { bitmap = it }
+            modifier = Modifier.fillMaxSize()
         )
 
         MapSearchSection(
@@ -330,10 +321,6 @@ fun DataMap(
             MapZoomControlsSection(
                 mapView = mapViewRef,
                 viewportState = viewportState,
-                overlayBBox = overlayBBox,
-                mapWidth = mapWidth,
-                mapHeight = mapHeight,
-                mapViewModel = mapViewModel,
             )
 
             MapLocationButton(
@@ -344,7 +331,7 @@ fun DataMap(
 
         MapOverlaySelector(
             activeOverlay = mapViewModel.activeOverlay,
-            onOverlaySelected = { type -> mapViewModel.setOverlay(type) },
+            onOverlaySelected = { type -> mapViewModel.setOverlay(type, context) },
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
