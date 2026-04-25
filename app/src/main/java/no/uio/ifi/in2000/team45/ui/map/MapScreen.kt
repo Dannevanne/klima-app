@@ -336,6 +336,23 @@ fun DataMap(
             bearing(0.0)
         }
     }
+
+    val activeOverlay = mapViewModel.activeOverlay
+
+    // Launch when activeOverlay changes
+    LaunchedEffect(activeOverlay) {
+
+        // Store current zoom from Mapbox-camera
+        val currentZoom = mapViewRef?.mapboxMap?.cameraState?.zoom ?: return@LaunchedEffect
+        if (currentZoom < activeOverlay.minZoom) {
+            val camera = CameraOptions.Builder()
+                .zoom(activeOverlay.minZoom)
+                .center(mapViewModel.lastCameraCenter)
+                .build()
+            viewportState.easeTo(camera)
+        }
+    }
+
     val overlayURL = (uiState as? MapUiState.Success)
         ?.overlayURL
         ?.takeIf { it.isNotBlank() }
