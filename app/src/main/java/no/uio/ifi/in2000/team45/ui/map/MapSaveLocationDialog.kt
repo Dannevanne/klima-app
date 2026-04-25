@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.favorites.FavoriteViewModel
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 // Naming dialog for saved location
