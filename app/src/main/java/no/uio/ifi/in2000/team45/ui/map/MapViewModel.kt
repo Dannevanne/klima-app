@@ -127,6 +127,12 @@ class MapViewModel(
     ) {
         val currentZoom = lastCameraZoom
 
+        // No overlay under this zoom level
+        val minimum_zoom = 5.0
+        if (currentZoom < minimum_zoom) {
+            return
+        }
+
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
         if (now - lastUpdateTime < throttleMs) {
