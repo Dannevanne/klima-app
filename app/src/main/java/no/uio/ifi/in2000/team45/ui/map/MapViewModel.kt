@@ -89,9 +89,9 @@ class MapViewModel(
         private set
 
     // Holds a map-camera-position
-    var lastCameraCenter by mutableStateOf(Point.fromLngLat(11.05, 60.5))
+    var lastCameraCenter by mutableStateOf(Point.fromLngLat(15.00, 65.0))
         private set
-    var lastCameraZoom by mutableStateOf(11.5)
+    var lastCameraZoom by mutableStateOf(3.75)
         private set
 
     // On creation, connect to the saved theme from the theme repository.
@@ -114,6 +114,19 @@ class MapViewModel(
         width: Int,
         height: Int
     ) {
+        if (bbox.size != 4 || width <= 0 || height <= 0) return
+
+        // Don't update overlay if the map is too zoomed out
+        val lonSpan = kotlin.math.abs(bbox[2] - bbox[0])
+        val latSpan = kotlin.math.abs(bbox[3] - bbox[1])
+
+        if (lonSpan > 20 || latSpan > 20) {
+            mapUiState = MapUiState.Success(
+                overlayURL = "",
+                bbox
+            )
+            return
+        }
 
         // Throttling, so it updates every X ms, not constantly
         val now = System.currentTimeMillis()
