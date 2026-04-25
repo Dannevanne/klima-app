@@ -30,6 +30,7 @@ sealed interface MapUiState {
     ): MapUiState
     object Error : MapUiState
     object Loading : MapUiState
+    object Idle : MapUiState
 }
 
 // UI model. suggestion gives access to the original object so
@@ -130,6 +131,7 @@ class MapViewModel(
         // No overlay under this zoom level
         val minimum_zoom = 5.0
         if (currentZoom < minimum_zoom) {
+            mapUiState = MapUiState.Idle
             return
         }
 
