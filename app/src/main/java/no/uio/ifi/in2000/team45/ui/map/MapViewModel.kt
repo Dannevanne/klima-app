@@ -89,9 +89,9 @@ class MapViewModel(
         private set
 
     // Holds a map-camera-position
-    var lastCameraCenter by mutableStateOf(Point.fromLngLat(11.05, 60.5))
+    var lastCameraCenter by mutableStateOf(Point.fromLngLat(15.00, 65.0))
         private set
-    var lastCameraZoom by mutableStateOf(11.5)
+    var lastCameraZoom by mutableStateOf(4.0)
         private set
 
     // On creation, connect to the saved theme from the theme repository.
