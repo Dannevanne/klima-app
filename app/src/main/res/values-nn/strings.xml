@@ -138,6 +138,15 @@
     <string name="remove_recent_search">Fjern nyleg søk</string>
     <string name="save">Lagre</string>
     <string name="place_name">Stadnamn</string>
+    <string name="the_team">Laget</string>
     <string name="versjon_1_0_0">Versjon 1.0.0</string>
     <string name="search_after_place_norway">Søk etter stad i Noreg</string>
+    <string name="app_description">App for hus- og hytteigarar som ønskjer å sjekke klimarisiko og klimastatistikk for sitt område</string>
+    <string name="datasources">Datakjelder</string>
+    <string name="flood_landslides_quick_clay_wind">Flaum, skred, kvikkleire, vind</string>
+    <string name="map_and_search">Kart og søk</string>
+    <string name="radon_gas">Radongass</string>
+    <string name="privacy">Personvern</string>
+    <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Posisjonsdata vert berre brukt lokalt og vert ikkje delt med tredjepartar</string>
+    <string name="the_app_does_not_require_a_login_or_account">Appen krev ikkje innlogging eller konto</string>
 </resources>

@@ -63,20 +63,20 @@
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
     <string name="app_description">App for house- and cabin-owners who want to check climate risk and climate statistics for their area</string>
     <string name="datasources">Datasources</string>
-    <string name="nve">NVE</string>
+    <string name="nve" translatable="false">NVE</string>
     <string name="flood_landslides_quick_clay_wind">Flood, landslides, quick clay, wind</string>
-    <string name="frost_api_v0">Frost API v0</string>
-    <string name="mapbox">Mapbox</string>
+    <string name="frost_api_v0" translatable="false">Frost API v0</string>
+    <string name="mapbox" translatable="false">Mapbox</string>
     <string name="map_and_search">Map and search</string>
-    <string name="ngu_radonwms">NGU / RadonWMS</string>
+    <string name="ngu_radonwms" translatable="false">NGU / RadonWMS</string>
     <string name="radon_gas">Radon gas</string>
     <string name="privacy">Privacy</string>
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Location data is used only locally and is not shared with third parties</string>
     <string name="the_app_does_not_require_a_login_or_account">The app does not require a login or account</string>
     <string name="the_team">The team</string>
     <string name="versjon_1_0_0">Version 1.0.0</string>
-    <string name="t45">T45</string>
-    <string name="team_45_in2000_uio_2026">Team 45 — IN2000, UiO 2026</string>
+    <string name="t45" translatable="false">T45</string>
+    <string name="team_45_in2000_uio_2026" translatable="false">Team 45 — IN2000, UiO 2026</string>
     <string name="language">Language</string>
     <string name="language_bokmal" translatable="false">Norwegian Bokmål</string>
     <string name="language_nynorsk" translatable="false">Norwegian Nynorsk</string>
