@@ -433,6 +433,7 @@ fun DataMap(
                 mapWidth = mapWidth,
                 mapHeight = mapHeight,
                 mapViewModel = mapViewModel,
+                activeOverlay = mapViewModel.activeOverlay
             )
 
             MapLocationButton(
