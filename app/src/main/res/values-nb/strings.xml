@@ -134,6 +134,7 @@
     <string name="reset_button">Tilbakestill</string>
     <string name="cancel_button">Avbryt</string>
     <string name="remove_recent_search">Fjern nylig søk</string>
+    <string name="search_after_place_norway">Søk etter sted i Norge</string>
     <string name="save">Lagre</string>
     <string name="place_name">Stedsnavn</string>
     <string name="versjon_1_0_0">Versjon 1.0.0</string>
