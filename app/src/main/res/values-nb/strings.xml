@@ -53,7 +53,7 @@
     <string name="save_area">Lagre område</string>
     <string name="press_the_star_to_save_an_area">Trykk på stjernen for å lagre et område</string>
     <string name="select_a_time_period">Velg en tidsperiode</string>
-    <string name="use_10_30_or_50_years_to_see_climate_trends">Bruk 10, 30 eller 50 år for å se klimatrender</string>
+    <string name="use_10_30_or_50_years_to_see_climate_trends">Bruk 5, 10, 30 eller 50 år for å se klimatrender</string>
     <string name="missing_data">Manglende data</string>
     <string name="warning_when_missing_data">Hvis området mangler data i valgt periode, vises en advarsel under søkefeltet</string>
     <string name="section_for_your_saved_places_for_quick_access">Seksjon for lagrede steder for rask tilgang og relevant info</string>
