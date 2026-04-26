@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mapbox.common.MapboxOptions
+import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.ui.AppNavigation
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         // Creates LanguagePreferenceRepository for the MapViewModelFactory
         val languagePreferenceRepository = LanguagePreferenceRepository(applicationContext)
 
+        val cameraRepository = MapCameraRepository(applicationContext)
+
         // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
 
@@ -46,7 +49,9 @@ class MainActivity : AppCompatActivity() {
             val mapViewModel: MapViewModel = viewModel(
                 factory = MapViewModelFactory(
                     themePreferenceRepository = themePreferenceRepository,
-                    languagePreferenceRepository = languagePreferenceRepository)
+                    languagePreferenceRepository = languagePreferenceRepository,
+                    cameraRepository = cameraRepository
+                )
             )
 
             LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
