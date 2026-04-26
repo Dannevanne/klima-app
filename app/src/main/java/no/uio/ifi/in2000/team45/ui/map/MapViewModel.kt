@@ -17,6 +17,8 @@ import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
@@ -44,7 +46,8 @@ data class SearchSuggestionUi(
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
     private val themePreferenceRepository: ThemePreferenceRepository,
-    private val languagePreferenceRepository: LanguagePreferenceRepository
+    private val languagePreferenceRepository: LanguagePreferenceRepository,
+    private val cameraRepository: MapCameraRepository
 ) : ViewModel() {
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
@@ -116,6 +119,12 @@ class MapViewModel(
             languagePreferenceRepository.languageFlow.collect { savedLanguage ->
                 selectedLanguage = savedLanguage
                 isLanguageInitialized = true
+            }
+        }
+        viewModelScope.launch {
+            cameraRepository.cameraFlow.first().let { (lat, lng, zoom) ->
+                lastCameraCenter = Point.fromLngLat(lng, lat)
+                lastCameraZoom = zoom
             }
         }
     }
@@ -355,6 +364,13 @@ class MapViewModel(
     fun saveCamera(center: Point, zoom: Double){
         lastCameraCenter = center
         lastCameraZoom = zoom
+        viewModelScope.launch {
+            cameraRepository.saveCamera(
+                lat = center.latitude(),
+                lng = center.longitude(),
+                zoom = zoom
+            )
+        }
     }
 
     // Resets SelectedLocation
