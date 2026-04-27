@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.IsOnline
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesScreen
@@ -56,6 +58,7 @@ fun AppNavigation(
 ) {
     val isOnline = IsOnline()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
 
     // Track the route locally; the NavController only seeds the initial value.
     // Bypassing NavHost lets every screen stay composed in memory after first
@@ -111,6 +114,10 @@ fun AppNavigation(
                     onHelpClick = { navigateTo(ROUTE_HELP) },
                     onMapClick = { navigateTo(ROUTE_MAP) },
                     onStatisticClick = { navigateTo(ROUTE_STATISTICS) },
+                    onShowOnMap = { lat, lon ->
+                        mapViewModel.showLocation(Point.fromLngLat(lon, lat), context)
+                        navigateTo(ROUTE_MAP)
+                    },
                     modifier = modifier
                 )
             }

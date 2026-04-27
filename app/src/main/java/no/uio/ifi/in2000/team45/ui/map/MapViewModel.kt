@@ -245,6 +245,13 @@ class MapViewModel(
         }
     }
 
+    // Used by Saved Places to jump the map to a specific point. Switches to
+    // NONE so the camera move isn't immediately fighting an overlay-zoom snap.
+    fun showLocation(point: Point, context: Context) {
+        setOverlay(OverlayType.NONE, context)
+        selectedLocation = point
+    }
+
     // Main search function. Saves query text and fetches suggestions.
     fun updateSearchQuery(query: String) {
         searchQuery = query
