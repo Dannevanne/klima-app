@@ -150,4 +150,5 @@
     <string name="privacy">Personvern</string>
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Posisjonsdata vert berre brukt lokalt og vert ikkje delt med tredjepartar</string>
     <string name="the_app_does_not_require_a_login_or_account">Appen krev ikkje innlogging eller konto</string>
+    <string name="change_layer_to_zoom_out">Byt lag for å zoome ut</string>
 </resources>
