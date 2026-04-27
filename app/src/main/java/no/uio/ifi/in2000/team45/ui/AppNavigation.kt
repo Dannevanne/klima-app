@@ -1,8 +1,7 @@
 package no.uio.ifi.in2000.team45.ui
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -77,12 +76,13 @@ fun AppNavigation(
             NavHost(
                 navController = navController,
                 startDestination = "MapScreen",
-                // Crossfade rather than the default 700ms fade-in-with-delay, so
-                // destinations dissolve cleanly over the persistent map.
-                enterTransition = { fadeIn(animationSpec = tween(250)) },
-                exitTransition = { fadeOut(animationSpec = tween(250)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(250)) },
-                popExitTransition = { fadeOut(animationSpec = tween(250)) }
+                // Instant swap. With the map always present underneath, any
+                // crossfade would briefly reveal it between two opaque screens
+                // (the "background flash" when bouncing between Saved and Stats).
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None }
             ) {
                 composable(route = "MapScreen") {
                     // Intentionally empty -- the persistent map sits underneath.
