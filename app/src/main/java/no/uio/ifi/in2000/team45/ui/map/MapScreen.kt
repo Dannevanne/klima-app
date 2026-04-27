@@ -344,6 +344,7 @@ fun DataMap(
 
     val savedPlaces by savedPlacesViewModel.locations.collectAsState()
     var selectedSavedPlace by remember { mutableStateOf<no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation?>(null) }
+    var overlayPillExpanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
 
@@ -371,6 +372,7 @@ fun DataMap(
             onMapClick = {
                 focusManager.clearFocus()
                 selectedSavedPlace = null
+                overlayPillExpanded = false
             },
             context = context,
             modifier = Modifier.fillMaxSize()
@@ -412,6 +414,8 @@ fun DataMap(
 
         MapOverlaySelector(
             activeOverlay = mapViewModel.activeOverlay,
+            expanded = overlayPillExpanded,
+            onExpandedChange = { overlayPillExpanded = it },
             onOverlaySelected = { type -> mapViewModel.setOverlay(type, context) },
             modifier = Modifier
                 .align(Alignment.BottomStart)
