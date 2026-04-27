@@ -1,5 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -26,3 +28,12 @@ val LightBox = Color(0xFFFFFFFF)
 
 // Common
 val StarGold = Color(0xFFC97B00)
+
+// Loading indicators. Blue stands out on the white-ish light background and
+// the deep-blue dark background without going to pure black/white.
+val LoadingBlue = Color(0xFF1976D2)
+val LoadingBlueLight = Color(0xFF90CAF9)
+
+@Composable
+fun loadingColor(): Color =
+    if (isSystemInDarkTheme()) LoadingBlueLight else LoadingBlue
