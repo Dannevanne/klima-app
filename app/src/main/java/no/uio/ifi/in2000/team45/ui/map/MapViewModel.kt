@@ -64,7 +64,10 @@ class MapViewModel(
     // Used to avoid applying the placeholder language on first launch.
     var isLanguageInitialized by mutableStateOf(false)
         private set
-    var activeOverlay by mutableStateOf(OverlayType.FLOOD)
+    // Defaults to NONE so the saved camera position from last session is shown
+    // as-is on launch -- no snap-to-minZoom fight, no overlay tile fetch on
+    // start, no "flood at the wrong place" if the user was zoomed wide.
+    var activeOverlay by mutableStateOf(OverlayType.NONE)
         private set
 
     // Functions to avoid unneeded new overlay requests when the camera
@@ -72,7 +75,12 @@ class MapViewModel(
     private var lastOverlayURL: String? = null
     private var lastUpdateTime = 0L
     private var throttleMs = 500L
+    // lastBBox tracks the most recent camera bounds at all times, even during
+    // NONE, so a later overlay swap fetches for the spot the user is looking
+    // at (not the spot from before they switched to NONE). lastFetchedBBox is
+    // separate, used only to skip refetching the same area twice in a row.
     private var lastBBox: List<Double>? = null
+    private var lastFetchedBBox: List<Double>? = null
     private var lastWidth = 0
     private var lastHeight = 0
 
@@ -160,6 +168,13 @@ class MapViewModel(
         height: Int,
         context: Context
     ) {
+        // Always remember the latest camera frame, even when NONE is selected.
+        // setOverlay relies on this to fetch for the current spot when the
+        // user re-enables an overlay.
+        lastBBox = bbox
+        lastWidth = width
+        lastHeight = height
+
         // No fetching when the user has chosen no overlay
         if (activeOverlay == OverlayType.NONE) return
 
@@ -178,13 +193,10 @@ class MapViewModel(
             return
         }
         lastUpdateTime = now
-        if (lastBBox == bbox) {
+        if (lastFetchedBBox == bbox) {
             return
         }
-
-        lastBBox = bbox
-        lastWidth = width
-        lastHeight = height
+        lastFetchedBBox = bbox
 
         if (bbox.size != 4 || width <= 0 || height <= 0) return
         fetchOverlayJob?.cancel()
@@ -280,6 +292,12 @@ class MapViewModel(
         activeOverlay = type
         lastOverlayURL = null
         if (type == OverlayType.NONE) {
+            // Drop the cached overlay tile so a future swap can't paint a
+            // stale FLOOD/RADON bitmap before the new fetch arrives.
+            lastFetchedBBox = null
+            lastUpdateTime = 0L
+            lastExpandedBBox = null
+            lastExpandedBitmap = null
             mapUiState = MapUiState.NoOverlay
             return
         }
@@ -288,7 +306,7 @@ class MapViewModel(
         // so the user doesn't need to move around on the map to see the new overlay
         val bbox = lastBBox
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
-            lastBBox = null
+            lastFetchedBBox = null
             lastUpdateTime = 0L
             lastExpandedBBox = null
             lastExpandedBitmap = null
