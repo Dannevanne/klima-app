@@ -42,6 +42,7 @@ import kotlinx.coroutines.Job
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
@@ -272,6 +273,14 @@ fun DataMap(
             imageJob?.cancel()
             mapViewModel.cancelMapScreenWork()
         }
+    }
+
+    LaunchedEffect(viewportState.cameraState) {
+        val camera = viewportState.cameraState ?: return@LaunchedEffect
+        mapViewModel.saveCamera(
+            center = camera.center,
+            zoom = camera.zoom
+        )
     }
 
     Box(modifier = modifier.fillMaxSize()) {

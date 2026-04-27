@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 
@@ -11,7 +12,8 @@ import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 // The regular MapViewModel doesn't need to know how the repository was made.
 class MapViewModelFactory(
     private val themePreferenceRepository: ThemePreferenceRepository,
-    private val languagePreferenceRepository: LanguagePreferenceRepository
+    private val languagePreferenceRepository: LanguagePreferenceRepository,
+    private val cameraRepository: MapCameraRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         // Checks which ViewModel was requested.
@@ -21,7 +23,8 @@ class MapViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return MapViewModel(
                 themePreferenceRepository = themePreferenceRepository,
-                languagePreferenceRepository = languagePreferenceRepository
+                languagePreferenceRepository = languagePreferenceRepository,
+                cameraRepository = cameraRepository
             ) as T
         }
         throw IllegalArgumentException("Invalid ViewModel class")
