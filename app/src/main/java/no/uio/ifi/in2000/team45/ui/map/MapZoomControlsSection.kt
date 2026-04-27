@@ -8,19 +8,22 @@ import androidx.compose.ui.unit.dp
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
 import com.mapbox.maps.MapView
+import no.uio.ifi.in2000.team45.data.map.OverlayType
 
 @Composable
 fun MapZoomControlsSection(
     mapView: MapView?,
     viewportState: MapViewportState,
+    mapViewModel: MapViewModel,
+    activeOverlay: OverlayType,
     modifier: Modifier = Modifier
 ) {
     MapZoomControls(
         onZoomIn = {
-            zoomMap(mapView, viewportState, 1.0)
+            zoomMap(mapView, viewportState, 1.0, activeOverlay)
         },
         onZoomOut = {
-            zoomMap(mapView, viewportState, -1.0)
+            zoomMap(mapView, viewportState, -1.0, activeOverlay)
         },
         modifier = modifier
     )
