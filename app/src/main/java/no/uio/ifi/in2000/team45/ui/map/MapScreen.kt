@@ -52,6 +52,7 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
+import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
@@ -262,10 +263,17 @@ fun DataMap(
 
     val activeOverlay = mapViewModel.activeOverlay
 
-    // Snap into the new overlay's allowed zoom band when the user switches overlays.
+    // Switch to a new overlay: NVE flood/quick-clay/radon are useless until you
+    // are zoomed in tight, so snap right to their minZoom. WIND, LANDSLIDE, and
+    // NONE tile at any scale, leave the camera alone (just clamp to the band).
     LaunchedEffect(activeOverlay) {
         val currentZoom = mapViewRef?.mapboxMap?.cameraState?.zoom ?: return@LaunchedEffect
-        val targetZoom = currentZoom.coerceIn(activeOverlay.minZoom, activeOverlay.maxZoom)
+        val targetZoom = when (activeOverlay) {
+            OverlayType.FLOOD, OverlayType.QUICK_CLAY, OverlayType.RADON ->
+                activeOverlay.minZoom
+            else ->
+                currentZoom.coerceIn(activeOverlay.minZoom, activeOverlay.maxZoom)
+        }
         if (targetZoom != currentZoom) {
             val camera = CameraOptions.Builder()
                 .zoom(targetZoom)
