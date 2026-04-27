@@ -410,24 +410,32 @@ fun DataMap(
 
         androidx.compose.animation.AnimatedVisibility(
             visible = zoomBlockedVisible,
-            enter = androidx.compose.animation.fadeIn(),
-            exit = androidx.compose.animation.fadeOut(),
+            enter = androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(180)
+            ),
+            exit = androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(180)
+            ),
             modifier = Modifier.align(Alignment.Center)
         ) {
-            androidx.compose.material3.Card(
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                colors = androidx.compose.material3.CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                elevation = androidx.compose.material3.CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                )
-            ) {
-                Text(
-                    text = stringResource(R.string.change_layer_to_zoom_out),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+            // Padding gives the elevation shadow room to render without
+            // getting clipped by the AnimatedVisibility's tight bounds.
+            Box(modifier = Modifier.padding(8.dp)) {
+                androidx.compose.material3.Card(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    ),
+                    elevation = androidx.compose.material3.CardDefaults.cardElevation(
+                        defaultElevation = 6.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.change_layer_to_zoom_out),
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
 
