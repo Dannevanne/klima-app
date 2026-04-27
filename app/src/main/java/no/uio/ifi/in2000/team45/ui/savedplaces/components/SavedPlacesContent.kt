@@ -52,6 +52,7 @@ fun SavedPlacesContent(
     locations: List<SavedPlacesLocation>,
     savedPlacesViewModel: SavedPlacesViewModel,
     onMapClick: () -> Unit,
+    onShowOnMap: (lat: Double, lon: Double) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
     modifier: Modifier
@@ -67,6 +68,7 @@ fun SavedPlacesContent(
         PopulatedSavedPlacesContent(
             locations = locations,
             savedPlacesViewModel = savedPlacesViewModel,
+            onShowOnMap = onShowOnMap,
             topInset = topInset,
             bottomInset = bottomInset,
             modifier = modifier
@@ -176,6 +178,7 @@ private fun EmptySavedPlacesContent(
 private fun PopulatedSavedPlacesContent(
     locations: List<SavedPlacesLocation>,
     savedPlacesViewModel: SavedPlacesViewModel,
+    onShowOnMap: (lat: Double, lon: Double) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
     modifier: Modifier
@@ -217,6 +220,7 @@ private fun PopulatedSavedPlacesContent(
                 location = location,
                 status = status,
                 onRemove = { savedPlacesViewModel.removeLocation(location) },
+                onShowOnMap = { onShowOnMap(location.latitude, location.longitude) },
                 savedPlacesCount = savedPlacesCount
             )
         }

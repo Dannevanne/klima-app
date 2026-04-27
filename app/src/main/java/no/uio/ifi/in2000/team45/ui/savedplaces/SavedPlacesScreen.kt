@@ -35,6 +35,7 @@ fun SavedPlacesScreen(
     onHelpClick: () -> Unit,
     onMapClick: () -> Unit,
     onStatisticClick: () -> Unit,
+    onShowOnMap: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val stations by savedPlacesViewModel.stations.collectAsState()
@@ -99,6 +100,7 @@ fun SavedPlacesScreen(
             locations = locations,
             savedPlacesViewModel = savedPlacesViewModel,
             onMapClick = onMapClick,
+            onShowOnMap = onShowOnMap,
             topInset = innerPadding.calculateTopPadding(),
             bottomInset = innerPadding.calculateBottomPadding(),
             modifier = modifier.fillMaxSize()

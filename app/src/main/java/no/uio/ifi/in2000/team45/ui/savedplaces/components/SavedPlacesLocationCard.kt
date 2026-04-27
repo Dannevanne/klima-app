@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -79,6 +80,7 @@ fun SavedPlacesLocationCard(
     location: SavedPlacesLocation,
     status: LocationStatus?,
     onRemove: () -> Unit,
+    onShowOnMap: () -> Unit,
     savedPlacesCount: Int
 ) {
     val loading = status == null
@@ -108,6 +110,13 @@ fun SavedPlacesLocationCard(
                     fontSize = 18.sp,
                     modifier = Modifier.weight(1f)
                 )
+                IconButton(onClick = onShowOnMap) {
+                    Icon(
+                        Icons.Outlined.Place,
+                        contentDescription = stringResource(R.string.show_on_map),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 IconButton(onClick = onRemove) {
                     Icon(
                         Icons.Filled.Delete,
