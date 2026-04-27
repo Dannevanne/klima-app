@@ -52,6 +52,7 @@ import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
+import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable
 fun MapStateScreen(
@@ -124,7 +125,7 @@ fun MapStateScreen(
                 modifier = modifier
             )
             when (uiState) {
-                is MapUiState.Loading -> CircularProgressIndicator()
+                is MapUiState.Loading -> CircularProgressIndicator(color = loadingColor())
                 is MapUiState.Error -> Text("Error", color = Color.Red)
                 is MapUiState.Idle -> {}
                 else -> {}

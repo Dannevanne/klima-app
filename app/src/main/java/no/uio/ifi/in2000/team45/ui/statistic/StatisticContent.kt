@@ -43,6 +43,7 @@ import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
+import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
@@ -213,7 +214,7 @@ fun StatisticContent(
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = loadingColor())
                 }
             }
         }

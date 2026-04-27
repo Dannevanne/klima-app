@@ -92,12 +92,13 @@ private fun OverlayPillButton(
     modifier: Modifier = Modifier
 ) {
     Card(
+        onClick = onClick,
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        modifier = modifier.clickable { onClick() }
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
