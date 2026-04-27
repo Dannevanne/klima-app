@@ -1,5 +1,8 @@
 package no.uio.ifi.in2000.team45.ui
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -57,7 +60,13 @@ fun AppNavigation(
     Surface {
         NavHost(
             navController = navController,
-            startDestination = "MapScreen"
+            startDestination = "MapScreen",
+            // Crossfade rather than the default 700ms fade-in-with-delay, so
+            // the map screen doesn't sit blank while Mapbox re-inits.
+            enterTransition = { fadeIn(animationSpec = tween(250)) },
+            exitTransition = { fadeOut(animationSpec = tween(250)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(250)) },
+            popExitTransition = { fadeOut(animationSpec = tween(250)) }
         ) {
             composable(route = "MapScreen") {
                 MapStateScreen(
