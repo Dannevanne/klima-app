@@ -24,9 +24,7 @@ import kotlinx.coroutines.flow.first
 import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
-import no.uio.ifi.in2000.team45.ui.map.util.expandBBox
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
-import kotlin.math.abs
 
 sealed interface MapUiState {
     data class Success(
@@ -116,10 +114,6 @@ class MapViewModel(
 
     private var fetchOverlayJob: Job? = null
 
-    private var lastExpandedBBox: List<Double>? = null
-    private var lastExpandedBitmap: Bitmap? = null
-    private var lastZoom: Double? = null
-
     // Each camera tick goes here; a debounced collector turns a stream of
     // camera updates into one disk write per second of idle. The map fires
     // on every frame, so writing through directly was thrashing DataStore.
@@ -202,63 +196,25 @@ class MapViewModel(
         fetchOverlayJob?.cancel()
         fetchOverlayJob = viewModelScope.launch {
             try {
-                val factor = 1.5
-
-                // No point in getting new overlay if we are in the expanded
-                if (!isBBoxContained(inner = bbox, outer = lastExpandedBBox)) {
-                    val multiplier = 1.0 + (2.0 * factor)
-
-                    val url = mapRepository.getOverlayURL(
-                        type = activeOverlay,
-                        bbox = bbox,
-                        width = (width / multiplier).toInt(),
-                        height = (height / multiplier).toInt()
-                    )
-                    val overlayBitmap = makeBitmap(context, url) ?: return@launch
-
-                    mapUiState = MapUiState.Success(overlayBitmap, bbox)
-                } else {
-                    if (mapUiState !is MapUiState.Success || (mapUiState as? MapUiState.Success)?.bitmap != lastExpandedBitmap) {
-                        mapUiState = MapUiState.Success(lastExpandedBitmap!!, lastExpandedBBox!!)
-                    }
-                }
-
-                val expandedBBox = expandBBox(bbox, factor)
-
-                val expandedUrl = mapRepository.getOverlayURL(
+                // Fetch the visible bbox at full screen resolution. The previous
+                // version downsampled by ~4x to save bandwidth, but at low zoom
+                // that pushed fine flood polygons below the pixel grid and they
+                // disappeared entirely. Single full-res fetch + raster
+                // resampling on the layer is enough to look smooth.
+                val url = mapRepository.getOverlayURL(
                     type = activeOverlay,
-                    bbox = expandedBBox,
+                    bbox = bbox,
                     width = width,
                     height = height
                 )
-                val expandedBitmap = makeBitmap(context, expandedUrl)
-                if (expandedBitmap != null) {
-                    mapUiState = MapUiState.Success(expandedBitmap, expandedBBox)
-                    lastExpandedBBox = expandedBBox
-                    lastExpandedBitmap = expandedBitmap
-                }
-
-            } catch (e: Exception) {} finally {
-                lastZoom = currentZoom
+                val overlayBitmap = makeBitmap(context, url) ?: return@launch
+                mapUiState = MapUiState.Success(overlayBitmap, bbox)
+            } catch (e: Exception) {
+                // Network/decoder failure -- leave the previous bitmap up so
+                // the user keeps seeing something rather than a sudden blank.
             }
         }
 
-    }
-
-    private fun isBBoxContained(inner: List<Double>, outer: List<Double>?): Boolean {
-        if (outer == null || lastExpandedBitmap == null) return false
-
-        val threshold = 0.05
-        lastZoom?.let {
-            if (abs(lastCameraZoom - it) > threshold) {
-                return false
-            }
-        }
-
-        return inner[0] >= outer[0] && // Southwest Lon
-                inner[1] >= outer[1] && // Southwest Lat
-                inner[2] <= outer[2] && // Northeast Lon
-                inner[3] <= outer[3]    // Northeast Lat
     }
 
     fun updateMapTheme(theme: MapTheme) {
@@ -296,8 +252,6 @@ class MapViewModel(
             // stale FLOOD/RADON bitmap before the new fetch arrives.
             lastFetchedBBox = null
             lastUpdateTime = 0L
-            lastExpandedBBox = null
-            lastExpandedBitmap = null
             mapUiState = MapUiState.NoOverlay
             return
         }
@@ -308,8 +262,6 @@ class MapViewModel(
         if (bbox != null && lastWidth > 0 && lastHeight > 0) {
             lastFetchedBBox = null
             lastUpdateTime = 0L
-            lastExpandedBBox = null
-            lastExpandedBitmap = null
             updateOverlay(bbox, lastWidth, lastHeight, context)
         } else {
             mapUiState = MapUiState.Loading
@@ -388,8 +340,6 @@ class MapViewModel(
         isSearching = false
 
         lastBBox = null
-        lastExpandedBBox = null
-        lastExpandedBitmap = null
     }
 
     // Select a suggested place and get its coordinates
