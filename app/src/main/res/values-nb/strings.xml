@@ -120,6 +120,7 @@
     <string name="precipitation_avg_year">Nedbør, snitt/år</string>
     <string name="max_wind_gust">Maks vindkast</string>
     <string name="snow_days_year">Snødager/år</string>
+    <string name="max_snow_depth">Største snødybde</string>
     <string name="extreme_precipitation">Ekstremnedbør</string>
     <string name="months_count">%1$d måneder</string>
     <string name="years_count">%1$d år</string>
@@ -129,6 +130,8 @@
     <string name="precipitation_plus_temperature">Nedbør + temperatur</string>
     <string name="annual_precipitation_trend">ÅRLIG NEDBØR - TREND (MM)</string>
     <string name="average_annual_temperature">ÅRLIG SNITTEMPERATUR (C)</string>
+    <string name="annual_max_gust_trend">STERKESTE VINDKAST PER ÅR (M/S)</string>
+    <string name="annual_max_snow_trend">STØRSTE SNØDYBDE PER ÅR (CM)</string>
     <string name="error_no_stations_found">Ingen stasjoner funnet for \"%1$s\"</string>
     <string name="error_search_failed">Feil ved søk: %1$s</string>
     <string name="error_no_climate_data">Ingen klimadata tilgjengelig for stasjoner nær %1$s</string>

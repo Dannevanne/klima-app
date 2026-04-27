@@ -44,13 +44,16 @@ fun OverviewCards(
 
     val avgPrecip = annualData.mapNotNull { it.totalPrecip }.average()
         .takeIf { annualData.any { a -> a.totalPrecip != null } }
-    val maxWindGust = stats.mapNotNull { it.windGust }.maxOrNull()
-    val avgSnowMonths = stats.count { (it.snowDepth ?: 0.0) > 0.0 }
+    // Pull peaks straight off the annual rollup; the climate-normals path
+    // (stats.windGust / stats.snowDepth) is sparse enough that almost every
+    // station shows "-" there.
+    val maxWindGust = annualData.mapNotNull { it.maxWindGust }.maxOrNull()
+    val maxSnowDepth = annualData.mapNotNull { it.maxSnowDepth }.maxOrNull()
     val extremePrecipDays = annualData.mapNotNull { it.totalPrecip }
         .count { it > (avgPrecip ?: Double.MAX_VALUE) * 1.3 }
 
     val precipTrend = computeTrend(annualData.mapNotNull { it.totalPrecip })
-    val windTrend = if (maxWindGust != null) TrendInfo(TrendDirection.STABLE, null) else TrendInfo(TrendDirection.STABLE, null)
+    val windTrend = TrendInfo(TrendDirection.STABLE, null)
     val snowTrend = TrendInfo(TrendDirection.STABLE, null)
     val extremeTrend = TrendInfo(TrendDirection.STABLE, null)
 
@@ -86,8 +89,8 @@ fun OverviewCards(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
-                label = stringResource(R.string.snow_days_year),
-                value = if (avgSnowMonths > 0) stringResource(R.string.months_count, avgSnowMonths) else "-",
+                label = stringResource(R.string.max_snow_depth),
+                value = if (maxSnowDepth != null) "${maxSnowDepth.toInt()} cm" else "-",
                 trend = snowTrend,
                 modifier = Modifier.weight(1f)
             )

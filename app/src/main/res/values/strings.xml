@@ -138,6 +138,7 @@
     <string name="precipitation_avg_year">Precipitation, avg/year</string>
     <string name="max_wind_gust">Max wind gust</string>
     <string name="snow_days_year">Snow days/year</string>
+    <string name="max_snow_depth">Max snow depth</string>
     <string name="extreme_precipitation">Extreme precipitation</string>
     <string name="months_count">%1$d months</string>
     <string name="years_count">%1$d years</string>
@@ -147,6 +148,8 @@
     <string name="precipitation_plus_temperature">Precipitation + temperature</string>
     <string name="annual_precipitation_trend">ANNUAL PRECIPITATION - TREND (MM)</string>
     <string name="average_annual_temperature">AVERAGE ANNUAL TEMPERATURE (C)</string>
+    <string name="annual_max_gust_trend">PEAK WIND GUST PER YEAR (M/S)</string>
+    <string name="annual_max_snow_trend">PEAK SNOW DEPTH PER YEAR (CM)</string>
     <string name="error_no_stations_found">No stations found for \"%1$s\"</string>
     <string name="error_search_failed">Search failed: %1$s</string>
     <string name="error_no_climate_data">No climate data available for stations near %1$s</string>

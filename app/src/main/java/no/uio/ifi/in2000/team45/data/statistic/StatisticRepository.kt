@@ -28,7 +28,53 @@ class StatisticRepository(
         yearFrom: Int,
         yearTo: Int
     ): List<AnnualObservation> {
-        return datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+        val annual = datasource.getAnnualObservations(
+            stationId, clientId, yearFrom, yearTo
+        )
+        // Frost has no P1Y aggregations for wind/snow. Pull monthly maxes
+        // and roll them up to per-year maxes here, then merge.
+        val monthly = datasource.getMonthlyWindAndSnow(
+            stationId, clientId, yearFrom, yearTo
+        )
+        if (monthly.isEmpty()) return annual
+
+        data class YearAgg(
+            var maxGust: Double? = null,
+            var maxWind: Double? = null,
+            var maxSnow: Double? = null
+        )
+        val byYear = mutableMapOf<Int, YearAgg>()
+        for (m in monthly) {
+            val year = m.month / 100
+            val agg = byYear.getOrPut(year) { YearAgg() }
+            when {
+                m.elementId.contains("wind_speed_of_gust") ->
+                    agg.maxGust = maxOfNullable(agg.maxGust, m.value)
+                m.elementId.contains("wind_speed") ->
+                    agg.maxWind = maxOfNullable(agg.maxWind, m.value)
+                m.elementId.contains("surface_snow_thickness") ->
+                    agg.maxSnow = maxOfNullable(agg.maxSnow, m.value)
+            }
+        }
+
+        val byYearAnnual = annual.associateBy { it.year }.toMutableMap()
+        for ((year, agg) in byYear) {
+            val existing = byYearAnnual[year] ?: AnnualObservation(year, null, null)
+            byYearAnnual[year] = existing.copy(
+                maxWindGust = agg.maxGust,
+                maxWindSpeed = agg.maxWind,
+                maxSnowDepth = agg.maxSnow
+            )
+        }
+        return byYearAnnual.values.sortedBy { it.year }
+    }
+
+    private fun maxOfNullable(a: Double?, b: Double?): Double? {
+        return when {
+            a == null -> b
+            b == null -> a
+            else -> maxOf(a, b)
+        }
     }
 
     suspend fun getClimateStats(
