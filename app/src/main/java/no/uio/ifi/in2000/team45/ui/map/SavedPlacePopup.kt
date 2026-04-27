@@ -6,18 +6,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.ui.theme.LoadingBlue
 
 @Composable
 fun SavedPlacePopup(
@@ -54,8 +57,15 @@ fun SavedPlacePopup(
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            // The app theme has primary == onPrimary (both black or both
+             // white), which makes default Button text invisible. Pin colours
+            // so the label is readable on both light and dark.
             Button(
                 onClick = onOpenSavedPlaces,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LoadingBlue,
+                    contentColor = Color.White
+                ),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.open_in_saved_places))
