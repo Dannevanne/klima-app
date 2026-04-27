@@ -35,11 +35,11 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 @Composable
 fun MapOverlaySelector(
     activeOverlay: OverlayType,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
     onOverlaySelected: (OverlayType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start
@@ -67,7 +67,7 @@ fun MapOverlaySelector(
                             selected = type == activeOverlay,
                             onClick = {
                                 onOverlaySelected(type)
-                                expanded = false
+                                onExpandedChange(false)
                             }
                         )
                     }
@@ -78,7 +78,7 @@ fun MapOverlaySelector(
         OverlayPillButton(
             activeOverlay = activeOverlay,
             expanded = expanded,
-            onClick = { expanded = !expanded },
+            onClick = { onExpandedChange(!expanded) },
             modifier = Modifier.padding(start = 16.dp)
         )
     }
