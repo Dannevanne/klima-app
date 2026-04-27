@@ -55,65 +55,73 @@ fun AppNavigation(
     }
 
     Surface {
-        NavHost(
-            navController = navController,
-            startDestination = "MapScreen"
-        ) {
-            composable(route = "MapScreen") {
-                MapStateScreen(
-                    modifier = modifier,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onStatisticClick = { navigateTo("StatisticScreen") },
-                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
-                    mapViewModel = mapViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
-                )
-            }
-            composable(route = "StatisticScreen") {
-                StatisticScreen(
-                    modifier = modifier,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onMapClick = { navigateTo("MapScreen") },
-                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
-                    statisticViewModel = statisticViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
-                )
-            }
-            composable(route = "SettingsScreen") {
-                SettingsScreen(
-                    mapViewModel = mapViewModel,
-                    modifier = modifier,
-                    onClick = { navController.popBackStack() },
-                    statisticViewModel = statisticViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
-                )
-            }
-            composable(route = "SavedPlacesScreen") {
-                SavedPlacesScreen(
-                    savedPlacesViewModel = savedPlacesViewModel,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onMapClick = { navigateTo("MapScreen") },
-                    onStatisticClick = { navigateTo("StatisticScreen") },
-                    modifier = modifier
-                )
-            }
-            composable(route = "InfoScreen") {
-                InfoScreen(
-                    onClick = { navController.popBackStack() },
-                    modifier = modifier
-                )
-            }
-            composable(route = "HelpScreen") {
-                HelpScreen(
-                    onClick = { navController.popBackStack()},
-                    modifier = modifier
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
+            // The map is composed once and lives for the full app session.
+            // Other destinations are rendered on top via the NavHost; navigating
+            // back to "MapScreen" just shows an empty layer so the map below
+            // becomes visible again. No MapView re-init, no tile reload.
+            MapStateScreen(
+                modifier = modifier,
+                onSettingsClick = { navigateTo("SettingsScreen") },
+                onInfoClick = { navigateTo("InfoScreen") },
+                onHelpClick = { navigateTo("HelpScreen") },
+                onStatisticClick = { navigateTo("StatisticScreen") },
+                onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
+                mapViewModel = mapViewModel,
+                savedPlacesViewModel = savedPlacesViewModel
+            )
+
+            NavHost(
+                navController = navController,
+                startDestination = "MapScreen"
+            ) {
+                composable(route = "MapScreen") {
+                    // Intentionally empty -- the persistent map sits underneath.
+                }
+                composable(route = "StatisticScreen") {
+                    StatisticScreen(
+                        modifier = modifier,
+                        onSettingsClick = { navigateTo("SettingsScreen") },
+                        onInfoClick = { navigateTo("InfoScreen") },
+                        onHelpClick = { navigateTo("HelpScreen") },
+                        onMapClick = { navigateTo("MapScreen") },
+                        onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
+                        statisticViewModel = statisticViewModel,
+                        savedPlacesViewModel = savedPlacesViewModel
+                    )
+                }
+                composable(route = "SettingsScreen") {
+                    SettingsScreen(
+                        mapViewModel = mapViewModel,
+                        modifier = modifier,
+                        onClick = { navController.popBackStack() },
+                        statisticViewModel = statisticViewModel,
+                        savedPlacesViewModel = savedPlacesViewModel
+                    )
+                }
+                composable(route = "SavedPlacesScreen") {
+                    SavedPlacesScreen(
+                        savedPlacesViewModel = savedPlacesViewModel,
+                        onSettingsClick = { navigateTo("SettingsScreen") },
+                        onInfoClick = { navigateTo("InfoScreen") },
+                        onHelpClick = { navigateTo("HelpScreen") },
+                        onMapClick = { navigateTo("MapScreen") },
+                        onStatisticClick = { navigateTo("StatisticScreen") },
+                        modifier = modifier
+                    )
+                }
+                composable(route = "InfoScreen") {
+                    InfoScreen(
+                        onClick = { navController.popBackStack() },
+                        modifier = modifier
+                    )
+                }
+                composable(route = "HelpScreen") {
+                    HelpScreen(
+                        onClick = { navController.popBackStack()},
+                        modifier = modifier
+                    )
+                }
             }
         }
 
