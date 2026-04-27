@@ -12,11 +12,14 @@ import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 import com.mapbox.search.common.IsoCountryCode
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
@@ -109,6 +112,13 @@ class MapViewModel(
     private var lastExpandedBitmap: Bitmap? = null
     private var lastZoom: Double? = null
 
+    // Each camera tick goes here; a debounced collector turns a stream of
+    // camera updates into one disk write per second of idle. The map fires
+    // on every frame, so writing through directly was thrashing DataStore.
+    private val cameraSaveRequests = MutableSharedFlow<Pair<Point, Double>>(
+        extraBufferCapacity = 1
+    )
+
     // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
@@ -126,6 +136,20 @@ class MapViewModel(
             cameraRepository.cameraFlow.first().let { (lat, lng, zoom) ->
                 lastCameraCenter = Point.fromLngLat(lng, lat)
                 lastCameraZoom = zoom
+            }
+        }
+        observeCameraSaves()
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeCameraSaves() {
+        viewModelScope.launch {
+            cameraSaveRequests.debounce(1000).collect { (center, zoom) ->
+                cameraRepository.saveCamera(
+                    lat = center.latitude(),
+                    lng = center.longitude(),
+                    zoom = zoom
+                )
             }
         }
     }
@@ -372,13 +396,7 @@ class MapViewModel(
     fun saveCamera(center: Point, zoom: Double){
         lastCameraCenter = center
         lastCameraZoom = zoom
-        viewModelScope.launch {
-            cameraRepository.saveCamera(
-                lat = center.latitude(),
-                lng = center.longitude(),
-                zoom = zoom
-            )
-        }
+        cameraSaveRequests.tryEmit(center to zoom)
     }
 
     // Resets SelectedLocation
