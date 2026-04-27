@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.StringRes
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -60,6 +61,49 @@ class MapDatasource {
         return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
     }
 
+    // Reads the actual `faregrad` attribute from the SkredKvikkleire2 layer.
+    // Returns "Lav" / "Middels" / "Hoy" (mapping from "Hoey" without the
+    // diacritic for stable comparison) or null if the point isn't in any
+    // mapped polygon. Picks the highest faregrad if a point hits multiple.
+    suspend fun getQuickClayHazard(lat: Double, lon: Double): String? {
+        val tolerance = 0.001
+        val url = buildString {
+            append("https://kart.nve.no/enterprise/rest/services/SkredKvikkleire2/MapServer/identify")
+            append("?geometry=$lon,$lat")
+            append("&geometryType=esriGeometryPoint")
+            append("&sr=4326")
+            append("&layers=visible:0,1")
+            append("&tolerance=1")
+            append("&mapExtent=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
+            append("&imageDisplay=100,100,96")
+            append("&returnGeometry=false")
+            append("&f=json")
+        }
+        return try {
+            val response = KtorClient.client.get(url)
+            if (response.status.value != 200) return null
+            val body: String = response.body()
+            val parsed = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+            val root = parsed.parseToJsonElement(body).jsonObject
+            val results = root["results"]?.jsonArray ?: return null
+            val rank = mapOf("Lav" to 1, "Middels" to 2, "Høy" to 3)
+            var best: String? = null
+            for (r in results) {
+                val attrs = r.jsonObject["attributes"]?.jsonObject ?: continue
+                val fg = attrs["faregrad"]?.jsonPrimitive?.contentOrNull
+                    ?: attrs["Faregrad"]?.jsonPrimitive?.contentOrNull
+                    ?: continue
+                if (fg in rank && (best == null || rank[fg]!! > rank[best]!!)) {
+                    best = fg
+                }
+            }
+            best
+        } catch (e: Exception) {
+            Log.e("MapDatasource", "Quick clay hazard lookup failed", e)
+            null
+        }
+    }
+
     // Generic "skred" check. Layer 1 is the vector polygon dataset (real
     // aktsomhet zones); layer 0 is a coarse raster whose pixel can be ~100m,
     // so identify against it false-positives in cities near slopes. We hit
@@ -104,6 +148,14 @@ class MapDatasource {
     }
 
     suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
+        return getRadonHazard(lat, lon) != null
+    }
+
+    // Pulls the radon "aktsomhet" class from NGU's WMS GetFeatureInfo. Returns
+    // one of: "Saerlig hoey aktsomhet", "Hoey aktsomhet",
+    // "Moderat til lav aktsomhet", "Usikker aktsomhet", or null when the
+    // point isn't in any mapped pixel.
+    suspend fun getRadonHazard(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://geo.ngu.no/mapserver/RadonWMS2")
@@ -119,10 +171,18 @@ class MapDatasource {
         return try {
             val response = KtorClient.client.get(url)
             val body: String = response.body()
-            body.contains("Feature")
+            // The text/plain response contains lines like "Aktsomhet: Hoey"
+            // or "value: <class>"; just match any of the documented classes.
+            val candidates = listOf(
+                "Særlig høy aktsomhet",
+                "Høy aktsomhet",
+                "Moderat til lav aktsomhet",
+                "Usikker aktsomhet"
+            )
+            candidates.firstOrNull { body.contains(it, ignoreCase = true) }
         } catch (e: Exception) {
             Log.e("MapDatasource", "Radon zone check failed", e)
-            false
+            null
         }
     }
 
