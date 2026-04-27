@@ -26,6 +26,7 @@ fun MapContent(
     locationGranted: Boolean,
     mapViewModel: MapViewModel,
     onMapLongClick: (Point) -> Unit,
+    onMapClick: () -> Unit,
     context: Context,
     modifier: Modifier = Modifier
 ) {
@@ -50,6 +51,11 @@ fun MapContent(
         MapLongPressEffect(
             mapView = mapViewRef,
             onMapLongClick = onMapLongClick
+        )
+
+        MapClickEffect(
+            mapView = mapViewRef,
+            onMapClick = onMapClick
         )
 
         MapUserLocationEffect(
