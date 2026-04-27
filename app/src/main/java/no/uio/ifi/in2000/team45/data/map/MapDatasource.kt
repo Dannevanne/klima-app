@@ -69,6 +69,7 @@ class MapDatasource {
     }
 
 
+
     // Returns average wind speed at 50m height (m/s), or null if no data
     suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
         val tolerance = 0.001

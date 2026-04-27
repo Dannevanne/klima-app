@@ -24,6 +24,7 @@ data class LocationStatus(
     val inFloodZone: Boolean = false,
     val inRadonZone: Boolean = false,
     val inQuickClayZone: Boolean = false,
+    val inLandslideZone: Boolean = false,
     val avgWindSpeed: Double? = null
 )
 
@@ -90,6 +91,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val floodZone = mapRepository.isInFloodZone(lat, lon)
                 val radonZone = mapRepository.isInRadonZone(lat, lon)
                 val quickClayZone = mapRepository.isInQuickClayZone(lat, lon)
+                val landslideZone = mapRepository.isInLandslideZone(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
 
                 // emit zones first so risk chips update before frost finishes
@@ -97,6 +99,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inFloodZone = floodZone,
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
+                    inLandslideZone = landslideZone,
                     avgWindSpeed = avgWind
                 )
 
@@ -150,6 +153,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inFloodZone = floodZone,
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
+                    inLandslideZone = landslideZone,
                     avgWindSpeed = avgWind
                 )
             } catch (e: Exception) {
