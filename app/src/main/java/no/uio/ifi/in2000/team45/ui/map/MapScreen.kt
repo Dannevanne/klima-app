@@ -311,16 +311,22 @@ fun DataMap(
         )
     }
 
-    // Hide the Mapbox GL surface behind a themed scrim until the view has had
-    // a moment to render. Without this, navigating back to the map flashes
-    // black while the native renderer wakes up.
+    // Hide the Mapbox GL surface behind a themed scrim until Mapbox itself
+    // says the first frame is rendered. Listening to subscribeMapLoaded means
+    // the scrim stays up through tile loading, not just the surface attach.
+    // The 5s timeout is a safety net so we never get stuck on the spinner.
     var mapSurfaceReady by remember { mutableStateOf(false) }
     LaunchedEffect(mapViewRef) {
         mapSurfaceReady = false
-        if (mapViewRef != null) {
-            kotlinx.coroutines.delay(250)
-            mapSurfaceReady = true
+        val mv = mapViewRef ?: return@LaunchedEffect
+        val ready = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val sub = mv.mapboxMap.subscribeMapLoaded { ready.complete(Unit) }
+        try {
+            kotlinx.coroutines.withTimeoutOrNull(5000) { ready.await() }
+        } finally {
+            sub.cancel()
         }
+        mapSurfaceReady = true
     }
 
     Box(modifier = modifier.fillMaxSize()) {
