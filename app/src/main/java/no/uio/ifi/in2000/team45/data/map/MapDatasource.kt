@@ -60,11 +60,12 @@ class MapDatasource {
         return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
     }
 
-    // Generic "skred" check matching the LANDSLIDE map overlay (debris/soil
-    // landslide aktsomhetsomrader). The quick-clay check above is a narrower
-    // subtype; we want both feeding into the saved-places landslide risk.
+    // Generic "skred" check. Layer 1 is the vector polygon dataset (real
+    // aktsomhet zones); layer 0 is a coarse raster whose pixel can be ~100m,
+    // so identify against it false-positives in cities near slopes. We hit
+    // only the vector layer for a cleaner in/out answer.
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("JordFlomskredAktsomhet", "0,1", lat, lon)
+        return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
     }
 
     // Returns average wind speed at 50m height (m/s), or null if no data
