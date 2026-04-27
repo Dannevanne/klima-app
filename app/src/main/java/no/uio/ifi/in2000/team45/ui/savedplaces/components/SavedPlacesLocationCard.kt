@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.savedplaces.LocationStatus
-import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 private val RiskHigh = Color(0xFFEF4444)
 private val RiskModerate = Color(0xFFF97316)
@@ -111,9 +110,9 @@ fun SavedPlacesLocationCard(
                 )
                 IconButton(onClick = onRemove) {
                     Icon(
-                        Icons.Filled.Star,
+                        Icons.Filled.Delete,
                         contentDescription = stringResource(R.string.remove),
-                        tint = StarGold
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
