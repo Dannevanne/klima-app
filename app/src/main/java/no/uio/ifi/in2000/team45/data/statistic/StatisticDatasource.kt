@@ -298,6 +298,63 @@ class StatisticDatasource {
         }
     }
 
+    // Frost has no P1Y aggregations for wind/snow, so we pull monthly maxes
+    // and the repository folds them up to per-year maximums.
+    // Returns: list of (year, elementId, monthly value) tuples.
+    suspend fun getMonthlyWindAndSnow(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): List<MonthlyObservation> {
+        val elements = listOf(
+            "max(wind_speed_of_gust P1M)",
+            "max(wind_speed P1M)",
+            "max(surface_snow_thickness P1M)"
+        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
+                "&elements=$elements" +
+                "&timeresolutions=P1M"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            if (response.status.value != 200) {
+                Log.e(TAG, "Monthly wind/snow fetch failed: ${response.status.value}")
+                return emptyList()
+            }
+            parseMonthlyObservationsWithYear(response.body())
+        } catch (e: Exception) {
+            Log.e(TAG, "Monthly wind/snow error", e)
+            emptyList()
+        }
+    }
+
+    // Like parseMonthlyObservations but uses the year-month (YYYYMM) packed
+    // into the month field so the repository can group by year.
+    private fun parseMonthlyObservationsWithYear(body: String): List<MonthlyObservation> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyList()
+        val results = mutableListOf<MonthlyObservation>()
+        for (item in data) {
+            val obj = item.jsonObject
+            val refTime = obj["referenceTime"]?.jsonPrimitive?.content ?: continue
+            val year = refTime.substring(0, 4).toIntOrNull() ?: continue
+            val month = refTime.substring(5, 7).toIntOrNull() ?: continue
+            val packed = year * 100 + month
+            val observations = obj["observations"]?.jsonArray ?: continue
+            for (obs in observations) {
+                val obsObj = obs.jsonObject
+                val elementId = obsObj["elementId"]?.jsonPrimitive?.content ?: continue
+                val value = obsObj["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                results.add(MonthlyObservation(elementId, packed, value))
+            }
+        }
+        return results
+    }
+
     private fun parseAnnualObservations(body: String): List<AnnualObservation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
