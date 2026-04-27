@@ -58,6 +58,13 @@ class MapDatasource {
         return isInNveZone("SkredKvikkleire2", lat, lon)
     }
 
+    // Generic "skred" check matching the LANDSLIDE map overlay (debris/soil
+    // landslide aktsomhetsomrader). The quick-clay check above is a narrower
+    // subtype; we want both feeding into the saved-places landslide risk.
+    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
+        return isInNveZone("JordFlomskredAktsomhet", lat, lon)
+    }
+
     // Returns average wind speed at 50m height (m/s), or null if no data
     suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
         val tolerance = 0.001

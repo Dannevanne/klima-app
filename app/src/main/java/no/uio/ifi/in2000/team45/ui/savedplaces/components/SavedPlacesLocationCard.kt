@@ -85,7 +85,11 @@ fun SavedPlacesLocationCard(
 ) {
     val loading = status == null
     val floodLevel = riskLevel(status?.inFloodZone == true)
-    val landslideLevel = riskLevel(status?.inQuickClayZone == true)
+    // Landslide risk reflects both broad debris-flow zones and the narrower
+    // quick-clay zones, since both fall under "skred" in the UI.
+    val landslideLevel = riskLevel(
+        status?.inLandslideZone == true || status?.inQuickClayZone == true
+    )
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(floodLevel, landslideLevel, windLevel)
 
