@@ -82,12 +82,10 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    val floodLevel = riskLevel(status?.inFloodZone == true)
-    // Landslide risk reflects both broad debris-flow zones and the narrower
-    // quick-clay zones, since both fall under "skred" in the UI.
-    val landslideLevel = riskLevel(
-        status?.inLandslideZone == true || status?.inQuickClayZone == true
-    )
+    // Levels are now computed in the ViewModel so we can express Moderate
+    // (within 500 m of a hazard zone) instead of just High/Low.
+    val floodLevel = status?.floodLevel ?: "Low"
+    val landslideLevel = status?.landslideLevel ?: "Low"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(floodLevel, landslideLevel, windLevel)
 
