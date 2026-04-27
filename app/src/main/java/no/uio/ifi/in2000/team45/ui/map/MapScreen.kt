@@ -422,6 +422,7 @@ fun DataMap(
             SavedPlacePopup(
                 place = place,
                 onOpenSavedPlaces = {
+                    savedPlacesViewModel.requestFocus(place)
                     selectedSavedPlace = null
                     onSavedPlacesClick()
                 },

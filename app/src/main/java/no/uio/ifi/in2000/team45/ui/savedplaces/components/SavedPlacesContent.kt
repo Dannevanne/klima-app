@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -203,8 +204,30 @@ private fun PopulatedSavedPlacesContent(
 
     val savedPlacesCount = locations.size
     val focusManager = LocalFocusManager.current
+    val listState = rememberLazyListState()
+    val pendingFocus = savedPlacesViewModel.pendingFocus
+
+    // When another screen requested a scroll-to-place, drop any active filter
+    // first so the target row can actually appear.
+    LaunchedEffect(pendingFocus) {
+        if (pendingFocus != null && searchQuery.isNotEmpty()) {
+            searchQuery = ""
+        }
+    }
+
+    // Once filtered contains the target, scroll to it. Item index 0 is the
+    // search bar, so the row index is +1 relative to the filtered list.
+    LaunchedEffect(pendingFocus, filtered) {
+        val target = pendingFocus ?: return@LaunchedEffect
+        val idx = filtered.indexOf(target)
+        if (idx >= 0) {
+            listState.animateScrollToItem(idx + 1)
+            savedPlacesViewModel.clearPendingFocus()
+        }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = modifier.pointerInput(Unit) {
             // Tap on empty space (anything not consumed by a child) drops the
             // search keyboard and resets the filter.
