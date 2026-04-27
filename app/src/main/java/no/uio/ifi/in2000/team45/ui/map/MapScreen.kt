@@ -259,14 +259,13 @@ fun DataMap(
 
     val activeOverlay = mapViewModel.activeOverlay
 
-    // Launch when activeOverlay changes
+    // Snap into the new overlay's allowed zoom band when the user switches overlays.
     LaunchedEffect(activeOverlay) {
-
-        // Store current zoom from Mapbox-camera
         val currentZoom = mapViewRef?.mapboxMap?.cameraState?.zoom ?: return@LaunchedEffect
-        if (currentZoom < activeOverlay.minZoom) {
+        val targetZoom = currentZoom.coerceIn(activeOverlay.minZoom, activeOverlay.maxZoom)
+        if (targetZoom != currentZoom) {
             val camera = CameraOptions.Builder()
-                .zoom(activeOverlay.minZoom)
+                .zoom(targetZoom)
                 .center(mapViewModel.lastCameraCenter)
                 .build()
             viewportState.easeTo(camera)
