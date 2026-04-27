@@ -25,6 +25,10 @@ data class LocationStatus(
     val inRadonZone: Boolean = false,
     val inQuickClayZone: Boolean = false,
     val inLandslideZone: Boolean = false,
+    // Gradated risk: "High" if the saved point itself is in the zone,
+    // "Moderate" if a hazard zone sits within ~500 m, "Low" otherwise.
+    val floodLevel: String = "Low",
+    val landslideLevel: String = "Low",
     val avgWindSpeed: Double? = null
 )
 
@@ -94,12 +98,24 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val landslideZone = mapRepository.isInLandslideZone(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
 
+                val floodLevel = zoneRiskLevel(lat, lon, floodZone) { la, lo ->
+                    mapRepository.isInFloodZone(la, lo)
+                }
+                val landslideLevel = zoneRiskLevel(
+                    lat, lon, landslideZone || quickClayZone
+                ) { la, lo ->
+                    mapRepository.isInLandslideZone(la, lo) ||
+                            mapRepository.isInQuickClayZone(la, lo)
+                }
+
                 // emit zones first so risk chips update before frost finishes
                 locationStatuses[key] = LocationStatus(
                     inFloodZone = floodZone,
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
                     inLandslideZone = landslideZone,
+                    floodLevel = floodLevel,
+                    landslideLevel = landslideLevel,
                     avgWindSpeed = avgWind
                 )
 
@@ -113,6 +129,9 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                         inFloodZone = floodZone,
                         inRadonZone = radonZone,
                         inQuickClayZone = quickClayZone,
+                        inLandslideZone = landslideZone,
+                        floodLevel = floodLevel,
+                        landslideLevel = landslideLevel,
                         avgWindSpeed = avgWind
                     )
                     return@launch
@@ -154,6 +173,8 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inRadonZone = radonZone,
                     inQuickClayZone = quickClayZone,
                     inLandslideZone = landslideZone,
+                    floodLevel = floodLevel,
+                    landslideLevel = landslideLevel,
                     avgWindSpeed = avgWind
                 )
             } catch (e: Exception) {
@@ -163,5 +184,25 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 )
             }
         }
+    }
+
+    // High when the saved point itself sits in the hazard zone, Moderate when
+    // any of four cardinal offsets ~500 m away does, Low otherwise. Cheap
+    // proxy for true distance-to-zone without pulling polygons.
+    private suspend fun zoneRiskLevel(
+        lat: Double,
+        lon: Double,
+        atPoint: Boolean,
+        check: suspend (Double, Double) -> Boolean
+    ): String {
+        if (atPoint) return "High"
+        val offsetMeters = 500.0
+        val offsetLat = offsetMeters / 111_000.0
+        val offsetLon = offsetLat / kotlin.math.cos(Math.toRadians(lat))
+        val nearbyHit = check(lat + offsetLat, lon) ||
+                check(lat - offsetLat, lon) ||
+                check(lat, lon + offsetLon) ||
+                check(lat, lon - offsetLon)
+        return if (nearbyHit) "Moderate" else "Low"
     }
 }
