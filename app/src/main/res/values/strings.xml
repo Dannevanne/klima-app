@@ -87,6 +87,20 @@
     <string name="open_map">Open map</string>
     <string name="show_on_map">Show on map</string>
     <string name="open_in_saved_places">Open in Saved places</string>
+    <string name="kvikkleire_info_title">Quick clay zone</string>
+    <string name="kvikkleire_faregrad_label">Hazard degree (faregrad)</string>
+    <string name="kvikkleire_lav_explanation">Lav: This zone has been mapped as a low-hazard quick clay area. Quick clay is present but the risk of a major slide is small in current conditions.</string>
+    <string name="kvikkleire_middels_explanation">Middels: This zone is classified as medium hazard. Quick clay is present and a slide could be triggered by changes in groundwater, slope cuts, or heavy loads.</string>
+    <string name="kvikkleire_hoy_explanation">Hoey: This zone is classified as high hazard for quick clay slides. Avoid grading, drainage changes, or heavy construction without a geotechnical assessment.</string>
+    <string name="kvikkleire_source">Source: NVE SkredKvikkleire2 (faregrad attribute)</string>
+    <string name="overlay_legend">Legend</string>
+    <string name="overlay_legend_title">%1$s legend</string>
+    <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
+    <string name="legend_quickclay_body">Three sub-layers are stacked. Solid color = mapped quick-clay zone with hazard degree (Lav / Middels / Hoey). Striped patterns = areas NVE has investigated; a striped polygon labelled "Omraade uten fare" was checked and found safe.</string>
+    <string name="legend_radon_body">Four classes from NGU. Purple = Saerlig hoy aktsomhet (highest concern). Red = Hoy aktsomhet (>=20%% of dwellings exceed the 200 Bq/m^3 threshold). Yellow = Moderat til lav. Grey = Usikker (insufficient data). The map cannot predict radon in a specific building — measure the building.</string>
+    <string name="legend_landslide_body">NVE jord/flomskred awareness areas. Polygons mark terrain where soil or debris flows are physically possible based on slope and soil. Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
+    <string name="legend_wind_body">NVE wind resource raster — average wind speed at 50 m above ground. Color scale increases with wind strength. Used as a long-term wind potential indicator, not a current weather snapshot.</string>
+    <string name="legend_none_body">No overlay is selected. Pick a layer from the pill to see hazard data on the map.</string>
     <string name="map_location_placeholder">Map location</string>
     <string name="remove">Remove</string>
     <string name="overall_risk">Overall risk</string>

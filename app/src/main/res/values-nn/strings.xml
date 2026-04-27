@@ -71,6 +71,20 @@
     <string name="open_map">Opne kart</string>
     <string name="show_on_map">Vis på kart</string>
     <string name="open_in_saved_places">Opne i Lagra stader</string>
+    <string name="kvikkleire_info_title">Kvikkleiresone</string>
+    <string name="kvikkleire_faregrad_label">Faregrad</string>
+    <string name="kvikkleire_lav_explanation">Lav: Sona er kartlagd som eit område med låg fare for kvikkleireskred. Kvikkleire finst, men risikoen for eit stort skred er liten under dagens tilhøve.</string>
+    <string name="kvikkleire_middels_explanation">Middels: Sona er klassifisert som middels fare. Kvikkleire finst, og eit skred kan utløysast av endringar i grunnvatn, terrenginngrep eller tunge lastar.</string>
+    <string name="kvikkleire_hoy_explanation">Høg: Sona er klassifisert som høg fare for kvikkleireskred. Unngå terrenginngrep, drensendring eller tung bygging utan geoteknisk vurdering.</string>
+    <string name="kvikkleire_source">Kjelde: NVE SkredKvikkleire2 (faregrad-attributt)</string>
+    <string name="overlay_legend">Teiknforklaring</string>
+    <string name="overlay_legend_title">Teiknforklaring for %1$s</string>
+    <string name="legend_flood_body">Heildekkjande blå polygon viser NVE sine flomaktsomheitsområde. NVE har identifisert desse som stader der flom kan oppstå. Datakjelda gjev ingen alvorsgrad — alle polygon vert vist likt.</string>
+    <string name="legend_quickclay_body">Tre lag stablast oppå kvarandre. Heildekkjande farge = kartlagd kvikkleiresone med faregrad (Lav / Middels / Høg). Skraverte mønster = område NVE har undersøkt; eit skravert polygon merkt "Område uten fare" er undersøkt og funne trygt.</string>
+    <string name="legend_radon_body">Fire klassar frå NGU. Lilla = Særleg høg aktsomheit. Raudt = Høg aktsomheit (>=20%% av bustader over grenseverdien 200 Bq/m^3). Gult = Moderat til låg. Grått = Usikker (lite data). Kartet kan ikkje forutseie radon i ein bestemt bygning — mål bygningen.</string>
+    <string name="legend_landslide_body">NVE sine aktsomheitsområde for jord- og flomskred. Polygon viser terreng der jord- eller lausmasseskred er fysisk mogleg ut frå helling og grunntilhøve. Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
+    <string name="legend_wind_body">NVE sitt vindressurskart — gjennomsnittleg vindstyrke 50 m over bakken. Fargeskalaen aukar med vindstyrke. Brukt som ein langtidsindikator for vindpotensial, ikkje som dagens vêr.</string>
+    <string name="legend_none_body">Ingen lag er valt. Vel eit lag frå pilla for å sjå faredata på kartet.</string>
     <string name="map_location_placeholder">Kartposisjon</string>
     <string name="remove">Fjern</string>
     <string name="overall_risk">Samla risiko</string>
