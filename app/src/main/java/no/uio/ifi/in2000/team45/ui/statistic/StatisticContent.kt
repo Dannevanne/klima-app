@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.statistic
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -68,7 +71,18 @@ fun StatisticContent(
         start = 16.dp,
         end = 16.dp
     )
+    val focusManager = LocalFocusManager.current
 
+    Box(
+        modifier = modifier.pointerInput(Unit) {
+            // Tap on empty space (anything not consumed by a child) drops the
+            // search keyboard and bounces back to Idle. ClimateData ignores it.
+            detectTapGestures(onTap = {
+                focusManager.clearFocus()
+                statisticViewModel.exitSearch()
+            })
+        }
+    ) {
     when (state) {
         is StatisticUiState.Idle -> {
             val history by statisticViewModel.searchHistory.collectAsState()
@@ -317,6 +331,7 @@ fun StatisticContent(
                 }
             }
         }
+    }
     }
 }
 
