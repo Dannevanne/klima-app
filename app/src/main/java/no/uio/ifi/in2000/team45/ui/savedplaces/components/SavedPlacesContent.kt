@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -182,9 +185,17 @@ private fun PopulatedSavedPlacesContent(
     else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
 
     val savedPlacesCount = locations.size
+    val focusManager = LocalFocusManager.current
 
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.pointerInput(Unit) {
+            // Tap on empty space (anything not consumed by a child) drops the
+            // search keyboard and resets the filter.
+            detectTapGestures(onTap = {
+                focusManager.clearFocus()
+                if (searchQuery.isNotEmpty()) searchQuery = ""
+            })
+        },
         contentPadding = PaddingValues(
             top = topInset + 16.dp,
             bottom = bottomInset + 10.dp,

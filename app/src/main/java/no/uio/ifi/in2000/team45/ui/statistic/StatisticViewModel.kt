@@ -224,6 +224,16 @@ class StatisticViewModel(
         uiState = StatisticUiState.Idle
     }
 
+    // Tap-outside on Stats: drop the query, cancel any in-flight search,
+    // and bounce back to Idle. Don't disturb the user when they're already
+    // looking at climate data for a specific station.
+    fun exitSearch() {
+        if (uiState is StatisticUiState.ClimateData) return
+        searchJob?.cancel()
+        searchQuery = ""
+        uiState = StatisticUiState.Idle
+    }
+
     fun cancelStatisticScreenWork() {
         searchJob?.cancel()
         climateJob?.cancel()
