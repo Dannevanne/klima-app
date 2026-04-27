@@ -12,7 +12,7 @@ import no.uio.ifi.in2000.team45.network.KtorClient
 
 // Every overlay-type with its own max- and minZoom
 enum class OverlayType(@StringRes val labelRes: Int, val minZoom: Double, val maxZoom: Double) {
-    NONE(R.string.no_overlay, 5.0, 20.0),
+    NONE(R.string.no_overlay, 3.25, 20.0),
     FLOOD(R.string.flood, 11.5, 20.0),
     QUICK_CLAY(R.string.quick_clay, 11.4, 20.0),
     RADON(R.string.radon, 10.9, 20.0),
