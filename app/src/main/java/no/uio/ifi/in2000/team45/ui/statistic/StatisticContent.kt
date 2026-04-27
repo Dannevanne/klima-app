@@ -45,6 +45,7 @@ import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
+import no.uio.ifi.in2000.team45.ui.statistic.components.FindNearbyButton
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
@@ -76,6 +77,12 @@ fun StatisticContent(
             if (hasContent) {
                 LazyColumn(modifier = modifier, contentPadding = listPadding) {
                     item { SearchBarHeader(statisticViewModel) }
+                    item {
+                        FindNearbyButton(onLocationFound = { lat, lon ->
+                            statisticViewModel.searchNearbyStations(lat, lon)
+                        })
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
 
                     if (favoriteStations.isNotEmpty()) {
                         item {
@@ -194,6 +201,10 @@ fun StatisticContent(
                         .padding(16.dp)
                 ) {
                     SearchBarHeader(statisticViewModel)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    FindNearbyButton(onLocationFound = { lat, lon ->
+                        statisticViewModel.searchNearbyStations(lat, lon)
+                    })
                     Box(modifier = Modifier.weight(1f)) {
                         IdleContent()
                     }
