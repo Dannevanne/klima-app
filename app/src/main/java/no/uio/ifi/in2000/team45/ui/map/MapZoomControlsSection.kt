@@ -16,6 +16,7 @@ fun MapZoomControlsSection(
     viewportState: MapViewportState,
     mapViewModel: MapViewModel,
     activeOverlay: OverlayType,
+    onZoomOutBlocked: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     MapZoomControls(
@@ -23,7 +24,8 @@ fun MapZoomControlsSection(
             zoomMap(mapView, viewportState, 1.0, activeOverlay)
         },
         onZoomOut = {
-            zoomMap(mapView, viewportState, -1.0, activeOverlay)
+            val blocked = zoomMap(mapView, viewportState, -1.0, activeOverlay)
+            if (blocked) onZoomOutBlocked()
         },
         modifier = modifier
     )
