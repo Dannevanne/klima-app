@@ -393,7 +393,9 @@ fun DataMap(
 
         androidx.compose.animation.AnimatedVisibility(
             visible = !mapSurfaceReady,
-            enter = androidx.compose.animation.fadeIn(),
+            // Snap in so the scrim is up on first frame, hiding Mapbox's black
+            // GL clear; only the dismissal animates as the map comes into view.
+            enter = androidx.compose.animation.EnterTransition.None,
             exit = androidx.compose.animation.fadeOut(
                 animationSpec = androidx.compose.animation.core.tween(250)
             )
