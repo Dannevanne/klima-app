@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -303,6 +304,18 @@ fun DataMap(
         )
     }
 
+    // Hide the Mapbox GL surface behind a themed scrim until the view has had
+    // a moment to render. Without this, navigating back to the map flashes
+    // black while the native renderer wakes up.
+    var mapSurfaceReady by remember { mutableStateOf(false) }
+    LaunchedEffect(mapViewRef) {
+        mapSurfaceReady = false
+        if (mapViewRef != null) {
+            kotlinx.coroutines.delay(250)
+            mapSurfaceReady = true
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
 
         MapContent(
@@ -370,6 +383,23 @@ fun DataMap(
                 .fillMaxWidth()
                 .padding(bottom = 30.dp)
         )
+
+        androidx.compose.animation.AnimatedVisibility(
+            visible = !mapSurfaceReady,
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(250)
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 
     pendingPoint?.let { point ->
