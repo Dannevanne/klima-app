@@ -309,6 +309,18 @@ fun DataMap(
         )
     }
 
+    // Bumped each time the user pinches the zoom-out button while at the
+    // overlay's minZoom; LaunchedEffect re-arms the auto-dismiss timer.
+    var zoomBlockedNonce by remember { mutableStateOf(0) }
+    var zoomBlockedVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(zoomBlockedNonce) {
+        if (zoomBlockedNonce > 0) {
+            zoomBlockedVisible = true
+            kotlinx.coroutines.delay(2000)
+            zoomBlockedVisible = false
+        }
+    }
+
     // Hide the Mapbox GL surface behind a themed scrim until Mapbox itself
     // says the first frame is rendered. Listening to subscribeMapLoaded means
     // the scrim stays up through tile loading, not just the surface attach.
@@ -377,7 +389,8 @@ fun DataMap(
                 mapView = mapViewRef,
                 viewportState = viewportState,
                 mapViewModel = mapViewModel,
-                activeOverlay = mapViewModel.activeOverlay
+                activeOverlay = mapViewModel.activeOverlay,
+                onZoomOutBlocked = { zoomBlockedNonce++ }
             )
 
             MapLocationButton(
@@ -394,6 +407,29 @@ fun DataMap(
                 .fillMaxWidth()
                 .padding(bottom = 30.dp)
         )
+
+        androidx.compose.animation.AnimatedVisibility(
+            visible = zoomBlockedVisible,
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut(),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            androidx.compose.material3.Card(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                colors = androidx.compose.material3.CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
+                elevation = androidx.compose.material3.CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.change_layer_to_zoom_out),
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
 
         androidx.compose.animation.AnimatedVisibility(
             visible = !mapSurfaceReady,
