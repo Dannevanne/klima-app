@@ -86,6 +86,7 @@
     <string name="no_saved_places_hint">Go to the map, tap an area and save it to see risk analysis and climate data here.</string>
     <string name="open_map">Open map</string>
     <string name="show_on_map">Show on map</string>
+    <string name="open_in_saved_places">Open in Saved places</string>
     <string name="map_location_placeholder">Map location</string>
     <string name="remove">Remove</string>
     <string name="overall_risk">Overall risk</string>

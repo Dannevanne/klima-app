@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -215,6 +216,7 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             locationGranted = locationGranted,
             onLocationClick = onLocationClick,
+            onSavedPlacesClick = onSavedPlacesClick,
             savedPlacesViewModel = savedPlacesViewModel,
             modifier = Modifier
                 .fillMaxSize()
@@ -228,6 +230,7 @@ fun DataMap(
     mapViewModel: MapViewModel,
     locationGranted: Boolean,
     onLocationClick: () -> Unit,
+    onSavedPlacesClick: () -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -339,6 +342,9 @@ fun DataMap(
         mapSurfaceReady = true
     }
 
+    val savedPlaces by savedPlacesViewModel.locations.collectAsState()
+    var selectedSavedPlace by remember { mutableStateOf<no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation?>(null) }
+
     Box(modifier = modifier.fillMaxSize()) {
 
         MapContent(
@@ -356,11 +362,16 @@ fun DataMap(
             currentMapHeight = currentMapHeight,
             locationGranted = locationGranted,
             mapViewModel = mapViewModel,
+            savedPlaces = savedPlaces,
+            onSavedPlaceClick = { selectedSavedPlace = it },
             onMapLongClick = { point ->
                 pendingPoint = point
                 locationName = ""
             },
-            onMapClick = { focusManager.clearFocus() },
+            onMapClick = {
+                focusManager.clearFocus()
+                selectedSavedPlace = null
+            },
             context = context,
             modifier = Modifier.fillMaxSize()
         )
@@ -407,6 +418,20 @@ fun DataMap(
                 .fillMaxWidth()
                 .padding(bottom = 30.dp)
         )
+
+        selectedSavedPlace?.let { place ->
+            SavedPlacePopup(
+                place = place,
+                onOpenSavedPlaces = {
+                    selectedSavedPlace = null
+                    onSavedPlacesClick()
+                },
+                onDismiss = { selectedSavedPlace = null },
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 96.dp, start = 16.dp, end = 16.dp)
+            )
+        }
 
         androidx.compose.animation.AnimatedVisibility(
             visible = zoomBlockedVisible,

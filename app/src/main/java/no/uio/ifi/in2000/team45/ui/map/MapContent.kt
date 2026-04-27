@@ -11,6 +11,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 
 @Composable
 fun MapContent(
@@ -25,6 +26,8 @@ fun MapContent(
     currentMapHeight: Int,
     locationGranted: Boolean,
     mapViewModel: MapViewModel,
+    savedPlaces: List<SavedPlacesLocation>,
+    onSavedPlaceClick: (SavedPlacesLocation) -> Unit,
     onMapLongClick: (Point) -> Unit,
     onMapClick: () -> Unit,
     context: Context,
@@ -86,6 +89,12 @@ fun MapContent(
             bitmap = pendingBitmap,
             overlayBBox = overlayBBox,
             useDarkMap = useDarkMap
+        )
+
+        MapSavedPlacesEffect(
+            mapView = mapViewRef,
+            savedPlaces = savedPlaces,
+            onPlaceClick = onSavedPlaceClick
         )
     }
 }
