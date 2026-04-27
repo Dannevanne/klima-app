@@ -128,9 +128,7 @@ fun MapStateScreen(
                 modifier = modifier
             )
             when (uiState) {
-                is MapUiState.Loading -> CircularProgressIndicator(color = loadingColor())
                 is MapUiState.Error -> Text("Error", color = Color.Red)
-                is MapUiState.Idle -> {}
                 else -> {}
             }
 
