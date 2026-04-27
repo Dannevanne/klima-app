@@ -24,7 +24,11 @@ fun zoomMap(
 
     viewPortState.easeTo(camera)
 
-    return zoomChange < 0 && requested < activeOverlay.minZoom
+    // NONE has no overlay to swap to, so the "change layer" hint would be
+    // misleading. Just clamp silently in that case.
+    return zoomChange < 0 &&
+            requested < activeOverlay.minZoom &&
+            activeOverlay != OverlayType.NONE
 }
 
 // Builds new camera configuration for the map
