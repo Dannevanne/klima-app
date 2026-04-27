@@ -2,6 +2,8 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,14 +28,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 import no.uio.ifi.in2000.team45.R
 
 @Composable
@@ -48,6 +52,9 @@ fun MapSearchSection(
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -56,26 +63,44 @@ fun MapSearchSection(
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { state ->
+                    if (!state.isFocused) keyboardController?.hide()
+                },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
             ),
-            label = { Text(text = stringResource(R.string.search_after_place_norway)) },
+            // Hint shown only when the field is idle and empty; once you tap it
+            // there is nothing to read, matching the statistics search bar.
+            placeholder = {
+                if (!isFocused) {
+                    Text(text = stringResource(R.string.search_after_place_norway))
+                }
+            },
             singleLine = true,
+            interactionSource = interactionSource,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }),
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
                     IconButton(onClick = onClearSearch) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = "Empty search"
+                            contentDescription = stringResource(R.string.search)
                         )
                     }
                 } else {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search"
-                    )
+                    IconButton(onClick = { focusManager.clearFocus() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(R.string.search)
+                        )
+                    }
                 }
             },
             shape = RoundedCornerShape(24.dp),
