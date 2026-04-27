@@ -11,6 +11,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
 enum class OverlayType(@StringRes val labelRes: Int) {
+    NONE(R.string.no_overlay),
     FLOOD(R.string.flood),
     QUICK_CLAY(R.string.quick_clay),
     RADON(R.string.radon),
@@ -124,6 +125,7 @@ class MapDatasource {
         val maxLat = bbox[3]
 
         return when (type) {
+            OverlayType.NONE -> error("buildOverlayURL should not be called for NONE")
             OverlayType.FLOOD -> buildNveExportURL(
                 service = "Flomaktsomhet",
                 layers = "1",

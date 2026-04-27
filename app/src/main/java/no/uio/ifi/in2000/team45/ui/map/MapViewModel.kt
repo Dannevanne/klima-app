@@ -33,6 +33,7 @@ sealed interface MapUiState {
     object Error : MapUiState
     object Loading : MapUiState
     object Idle : MapUiState
+    object NoOverlay : MapUiState
 }
 
 // UI model. suggestion gives access to the original object so
@@ -135,6 +136,9 @@ class MapViewModel(
         height: Int,
         context: Context
     ) {
+        // No fetching when the user has chosen no overlay
+        if (activeOverlay == OverlayType.NONE) return
+
         val currentZoom = lastCameraZoom
 
         // No overlay under this zoom level
@@ -251,6 +255,10 @@ class MapViewModel(
     fun setOverlay(type: OverlayType, context: Context) {
         activeOverlay = type
         lastOverlayURL = null
+        if (type == OverlayType.NONE) {
+            mapUiState = MapUiState.NoOverlay
+            return
+        }
         // When the overlay type changes, the ViewModel will try to
         // fetch a new overlay based on the previous bbox,
         // so the user doesn't need to move around on the map to see the new overlay

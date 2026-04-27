@@ -23,13 +23,25 @@ fun MapOverlayEffect(
     useDarkMap: Boolean
 ) {
     MapEffect(bitmap, overlayBBox, useDarkMap) { mapView ->
-        val currentBitmap = bitmap ?: return@MapEffect
-        val bbox = overlayBBox ?: return@MapEffect
-        val corners = cornersFromBBox(bbox)
-
         mapView.mapboxMap.getStyle { style ->
             val sourceId = "overlaysource"
             val layerId = "overlaylayer"
+
+            // No bitmap means no overlay (e.g. NONE selected). Strip the layer
+            // and source so the previous overlay is actually cleared.
+            val currentBitmap = bitmap
+            if (currentBitmap == null) {
+                if (style.getLayer(layerId) != null) {
+                    style.removeStyleLayer(layerId)
+                }
+                if (style.getSource(sourceId) != null) {
+                    style.removeStyleSource(sourceId)
+                }
+                return@getStyle
+            }
+
+            val bbox = overlayBBox ?: return@getStyle
+            val corners = cornersFromBBox(bbox)
 
             val source = style.getSourceAs<ImageSource>(sourceId)
 
