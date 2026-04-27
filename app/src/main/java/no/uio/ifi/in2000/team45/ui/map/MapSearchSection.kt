@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable
 fun MapSearchSection(
@@ -103,12 +104,7 @@ fun MapSearchSection(
                     }
                 }
             },
-            shape = RoundedCornerShape(24.dp),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-            })
+            shape = RoundedCornerShape(24.dp)
         )
         if (isSearching || searchSuggestions.isNotEmpty()) {
             Card(
