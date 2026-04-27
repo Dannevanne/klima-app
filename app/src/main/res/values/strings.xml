@@ -123,6 +123,8 @@
     <string name="fetch_error">Failed to fetch data</string>
     <string name="nearby">Nearby</string>
     <string name="favorites">Favorites</string>
+    <string name="find_nearby">Find nearby</string>
+    <string name="location_unavailable">Could not get your location</string>
     <string name="remove_saved_place">Remove saved place</string>
     <string name="remove_favorite">Remove favorite</string>
     <string name="add_to_favorites">Add to favorites</string>
