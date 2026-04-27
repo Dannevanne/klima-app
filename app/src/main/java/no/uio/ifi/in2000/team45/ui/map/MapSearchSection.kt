@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 import no.uio.ifi.in2000.team45.R
 
 @Composable
@@ -88,7 +89,7 @@ fun MapSearchSection(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = loadingColor())
                     }
                 } else {
                     LazyColumn {
