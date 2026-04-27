@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,7 @@ fun MapOverlaySelector(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     onOverlaySelected: (OverlayType) -> Unit,
+    onLegendClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -75,12 +78,33 @@ fun MapOverlaySelector(
             }
         }
 
-        OverlayPillButton(
-            activeOverlay = activeOverlay,
-            expanded = expanded,
-            onClick = { onExpandedChange(!expanded) },
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        Row(
+            modifier = Modifier.padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OverlayPillButton(
+                activeOverlay = activeOverlay,
+                expanded = expanded,
+                onClick = { onExpandedChange(!expanded) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Card(
+                shape = RoundedCornerShape(50),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                IconButton(onClick = onLegendClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                        contentDescription = stringResource(
+                            no.uio.ifi.in2000.team45.R.string.overlay_legend
+                        )
+                    )
+                }
+            }
+        }
     }
 }
 
