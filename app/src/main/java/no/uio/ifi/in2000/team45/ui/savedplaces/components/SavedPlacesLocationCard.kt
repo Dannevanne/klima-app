@@ -66,8 +66,7 @@ private fun riskLevelLabel(level: String): String {
     }
 }
 
-private fun overallRisk(flood: String, landslide: String, wind: String): String {
-    val levels = listOf(flood, landslide, wind)
+private fun overallRisk(vararg levels: String): String {
     return when {
         levels.any { it == "High" } -> "High"
         levels.any { it == "Moderate" } -> "Moderate"
@@ -84,12 +83,15 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    // Levels are now computed in the ViewModel so we can express Moderate
-    // (within 500 m of a hazard zone) instead of just High/Low.
+    // Levels come from the ViewModel. Flood/landslide use a 500 m offset
+    // proxy; kvikkleire uses NVE's faregrad attribute directly.
     val floodLevel = status?.floodLevel ?: "Low"
     val landslideLevel = status?.landslideLevel ?: "Low"
+    val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
-    val overall = overallRisk(floodLevel, landslideLevel, windLevel)
+    val overall = overallRisk(
+        floodLevel, landslideLevel, kvikkleireLevel, windLevel
+    )
 
     Card(
         modifier = Modifier
@@ -141,7 +143,7 @@ fun SavedPlacesLocationCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Risk categories row
+            // Risk categories row -- four boxes, two on each line if needed.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -155,6 +157,18 @@ fun SavedPlacesLocationCard(
                 RiskCategoryBox(
                     label = stringResource(R.string.landslide),
                     level = landslideLevel,
+                    loading = loading,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                RiskCategoryBox(
+                    label = stringResource(R.string.quick_clay),
+                    level = kvikkleireLevel,
                     loading = loading,
                     modifier = Modifier.weight(1f)
                 )
