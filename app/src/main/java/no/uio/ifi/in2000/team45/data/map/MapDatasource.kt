@@ -22,9 +22,11 @@ enum class OverlayType(@StringRes val labelRes: Int, val minZoom: Double, val ma
 
 class MapDatasource {
 
-    // NVE ArcGIS identify for a point against a given service
+    // NVE ArcGIS identify for a point against specific layers of a service.
+    // The layer IDs must match what the corresponding overlay renders, or the
+    // check returns true for background/mask layers that the user never sees.
     private suspend fun isInNveZone(
-        service: String, lat: Double, lon: Double
+        service: String, layers: String, lat: Double, lon: Double
     ): Boolean {
         val tolerance = 0.001
         val url = buildString {
@@ -32,8 +34,8 @@ class MapDatasource {
             append("?geometry=$lon,$lat")
             append("&geometryType=esriGeometryPoint")
             append("&sr=4326")
-            append("&layers=all")
-            append("&tolerance=5")
+            append("&layers=visible:$layers")
+            append("&tolerance=1")
             append("&mapExtent=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
             append("&imageDisplay=100,100,96")
             append("&returnGeometry=false")
@@ -51,18 +53,18 @@ class MapDatasource {
     }
 
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("Flomaktsomhet", lat, lon)
+        return isInNveZone("Flomaktsomhet", "1", lat, lon)
     }
 
     suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("SkredKvikkleire2", lat, lon)
+        return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
     }
 
     // Generic "skred" check matching the LANDSLIDE map overlay (debris/soil
     // landslide aktsomhetsomrader). The quick-clay check above is a narrower
     // subtype; we want both feeding into the saved-places landslide risk.
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
-        return isInNveZone("JordFlomskredAktsomhet", lat, lon)
+        return isInNveZone("JordFlomskredAktsomhet", "0,1", lat, lon)
     }
 
     // Returns average wind speed at 50m height (m/s), or null if no data
