@@ -25,6 +25,7 @@ import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import no.uio.ifi.in2000.team45.ui.theme.AppTheme
 
 sealed interface MapUiState {
     data class Success(
@@ -53,7 +54,7 @@ class MapViewModel(
     var mapUiState: MapUiState by mutableStateOf(MapUiState.Loading)
         private set
 
-    var mapTheme by mutableStateOf(MapTheme.DEVICE)
+    var appTheme by mutableStateOf(AppTheme.DEVICE)
         private set
     var selectedLanguage by mutableStateOf(LanguageOption.ENGLISH)
         private set
@@ -121,11 +122,10 @@ class MapViewModel(
     )
 
 
-    // On creation, connect to the saved theme from the theme repository.
     init {
         viewModelScope.launch {
-            themePreferenceRepository.mapThemeFlow.collect { savedTheme ->
-                mapTheme = savedTheme
+            themePreferenceRepository.appThemeFlow.collect { savedTheme ->
+                appTheme = savedTheme
             }
         }
         viewModelScope.launch {
@@ -217,12 +217,11 @@ class MapViewModel(
 
     }
 
-    fun updateMapTheme(theme: MapTheme) {
-        mapTheme = theme
+    fun updateAppTheme(theme: AppTheme) {
+        appTheme = theme
         viewModelScope.launch {
-            themePreferenceRepository.saveMapTheme(theme)
-        } // The theme gets updated instantly and also
-          // saved in the theme repository
+            themePreferenceRepository.saveAppTheme(theme)
+        }
     }
 
     fun updateLanguage(language: LanguageOption) {
@@ -387,10 +386,10 @@ class MapViewModel(
 // If the user has selected to follow device settings, the boolean
 // that gets returned from the function will be the same as the boolean
 // which says if the device is in dark theme.
-fun useDarkThemeFrom(theme: MapTheme, systemIsDark: Boolean): Boolean{
+fun useDarkThemeFrom(theme: AppTheme, systemIsDark: Boolean): Boolean{
     return when(theme) {
-        MapTheme.DEVICE -> systemIsDark
-        MapTheme.DARK -> true
-        MapTheme.LIGHT -> false
+        AppTheme.DEVICE -> systemIsDark
+        AppTheme.DARK -> true
+        AppTheme.LIGHT -> false
     }
 }
