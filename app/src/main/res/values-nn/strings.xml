@@ -106,6 +106,8 @@
     <string name="fetch_error">Feil ved henting</string>
     <string name="nearby">I nærleiken</string>
     <string name="favorites">Favorittar</string>
+    <string name="find_nearby">Søk i nærleiken</string>
+    <string name="location_unavailable">Klarte ikkje å hente posisjonen din</string>
     <string name="remove_saved_place">Fjern lagra stad</string>
     <string name="remove_favorite">Fjern favoritt</string>
     <string name="add_place_to_saved_places">Legg til stad i lagra stader</string>

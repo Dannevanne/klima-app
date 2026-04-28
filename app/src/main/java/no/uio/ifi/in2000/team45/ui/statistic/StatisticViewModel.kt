@@ -140,6 +140,40 @@ class StatisticViewModel(
         }
     }
 
+    fun searchNearbyStations(lat: Double, lon: Double) {
+        searchJob?.cancel()
+        uiState = StatisticUiState.Loading
+
+        searchJob = viewModelScope.launch {
+            try {
+                val stations = repository.findNearestStations(lat, lon, clientId, count = 5)
+                    .map { station ->
+                        station.copy(
+                            distanceMeters = distanceInMeters(
+                                lat, lon, station.latitude, station.longitude
+                            )
+                        )
+                    }
+                uiState = if (stations.isNotEmpty()) {
+                    StatisticUiState.StationResults(stations)
+                } else {
+                    StatisticUiState.Error(
+                        getApplication<Application>().getString(
+                            R.string.error_no_stations_found, ""
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("StatisticVM", "Nearby search failed", e)
+                uiState = StatisticUiState.Error(
+                    getApplication<Application>().getString(
+                        R.string.error_search_failed, e.message ?: ""
+                    )
+                )
+            }
+        }
+    }
+
     fun selectStation(station: WeatherStation) {
         // Get the full candidate list from StationResults if available
         val candidates = (uiState as? StatisticUiState.StationResults)?.stations ?: listOf(station)
