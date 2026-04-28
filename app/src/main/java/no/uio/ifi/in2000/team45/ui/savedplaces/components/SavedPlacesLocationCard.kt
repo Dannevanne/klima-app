@@ -88,17 +88,17 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    // Levels come from the ViewModel. Flood/landslide use a 500 m offset
-    // proxy; kvikkleire uses NVE's faregrad attribute directly.
     val floodLevel = status?.floodLevel ?: "Low"
     val landslideLevel = status?.landslideLevel ?: "Low"
     val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
+    val radonLevel = status?.radonLevel ?: "Low"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, kvikkleireLevel, windLevel
+        floodLevel, landslideLevel, kvikkleireLevel, radonLevel, windLevel
     )
 
     var showKvikkleireInfo by remember { mutableStateOf(false) }
+    var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -189,11 +189,39 @@ fun SavedPlacesLocationCard(
                     modifier = Modifier.weight(1f)
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                RiskCategoryBox(
+                    label = stringResource(R.string.radon),
+                    level = radonLevel,
+                    loading = loading,
+                    onInfoClick = if (status?.radonClass != null) {
+                        { showRadonInfo = true }
+                    } else null,
+                    modifier = Modifier.weight(1f)
+                )
+                ValueBox(
+                    label = stringResource(R.string.highest_recorded_temp),
+                    value = status?.recordHighTemp?.let { "%.1f °C".format(it) },
+                    loading = loading,
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
             if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
                 KvikkleireInfoDialog(
                     faregrad = status.kvikkleireFaregrad,
                     onDismiss = { showKvikkleireInfo = false }
+                )
+            }
+
+            if (showRadonInfo && status?.radonClass != null) {
+                RadonInfoDialog(
+                    radonClass = status.radonClass,
+                    onDismiss = { showRadonInfo = false }
                 )
             }
 
@@ -275,6 +303,46 @@ private fun RiskCategoryBox(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = riskColor(level)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ValueBox(
+    label: String,
+    value: String?,
+    loading: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(
+                MaterialTheme.colorScheme.background,
+                RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 10.dp)
+    ) {
+        Column {
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(14.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                Text(
+                    text = value ?: "—",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

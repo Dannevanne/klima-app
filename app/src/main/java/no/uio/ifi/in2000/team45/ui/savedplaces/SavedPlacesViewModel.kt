@@ -40,7 +40,8 @@ data class LocationStatus(
     // exact wording in an info dialog when needed.
     val kvikkleireFaregrad: String? = null,
     val radonClass: String? = null,
-    val avgWindSpeed: Double? = null
+    val avgWindSpeed: Double? = null,
+    val recordHighTemp: Double? = null
 )
 
 class SavedPlacesViewModel(application: Application) : AndroidViewModel(application) {
@@ -180,10 +181,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     return@launch
                 }
 
-                // Try stations until we have temp, wind, and precip
                 var temp: Double? = null
                 var wind: Double? = null
                 var precip: Double? = null
+                var recordHigh: Double? = null
                 var usedStation = stations.first().name
 
                 for (station in stations) {
@@ -204,7 +205,12 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                             it.key.contains("precipitation")
                         }?.value?.let { precip = it }
                     }
-                    if (temp != null && wind != null && precip != null) break
+                    if (recordHigh == null) {
+                        recordHigh = statisticRepository.getClimateStats(station.id, clientId)
+                            .mapNotNull { it.recordHigh }
+                            .maxOrNull()
+                    }
+                    if (temp != null && wind != null && precip != null && recordHigh != null) break
                 }
 
                 locationStatuses[key] = LocationStatus(
@@ -222,7 +228,8 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     radonLevel = radonLevel,
                     kvikkleireFaregrad = quickClayFaregrad,
                     radonClass = radonClass,
-                    avgWindSpeed = avgWind
+                    avgWindSpeed = avgWind,
+                    recordHighTemp = recordHigh
                 )
             } catch (e: Exception) {
                 Log.e("SavedPlacesVM", "Failed to fetch status", e)

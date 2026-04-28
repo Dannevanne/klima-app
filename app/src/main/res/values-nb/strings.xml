@@ -76,6 +76,14 @@
     <string name="kvikkleire_middels_explanation">Middels: Sonen er klassifisert som middels fare. Kvikkleire finnes, og et skred kan utløses av endringer i grunnvann, terrenginngrep eller tunge laster.</string>
     <string name="kvikkleire_hoy_explanation">Høy: Sonen er klassifisert som høy fare for kvikkleireskred. Unngå terrenginngrep, drensendring eller tung bygging uten geoteknisk vurdering.</string>
     <string name="kvikkleire_source">Kilde: NVE SkredKvikkleire2 (faregrad-attributt)</string>
+    <string name="radon_info_title">Radonsone</string>
+    <string name="radon_class_label">Aktsomhet</string>
+    <string name="radon_saerlig_hoy_explanation">Særlig høy: Området har høyeste aktsomhetsklasse for radon. Sannsynligheten for at innendørs radon overstiger tiltaksgrensen er klart høyere enn snittet. Mål radon og gjør tiltak ved forhøyede verdier.</string>
+    <string name="radon_hoy_explanation">Høy: Minst 20%% av boligene overstiger tiltaksgrensen på 200 Bq/m³. Mål radon innendørs, særlig i kjeller og soverom.</string>
+    <string name="radon_moderat_explanation">Moderat til lav: Radonnivåene ligger som regel under tiltaksgrensen. En måling er likevel eneste måte å være sikker på i din egen bolig.</string>
+    <string name="radon_usikker_explanation">Usikker: NGU har for lite data til å klassifisere området. Behandle som ukjent og vurder å måle.</string>
+    <string name="radon_source">Kilde: NGU RadonWMS2</string>
+    <string name="highest_recorded_temp">Høyeste målte temp</string>
     <string name="overlay_legend">Tegnforklaring</string>
     <string name="overlay_legend_title">Tegnforklaring for %1$s</string>
     <string name="legend_flood_body">Heldekkede blå polygoner viser NVEs flomaktsomhetsområder. NVE har identifisert disse som steder der flom kan oppstå. Datakilden gir ingen alvorlighetsgrad — alle polygoner vises likt.</string>
