@@ -29,7 +29,7 @@ class MusicManager(private val context: Context) {
 
     private fun stopMusic() {
         mediaPlayer?.pause()
-        mediaPlayer.seekTo(0)
+        mediaPlayer?.seekTo(0)
     }
 
     fun release() {
