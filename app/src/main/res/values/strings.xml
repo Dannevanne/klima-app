@@ -12,6 +12,7 @@
     <string name="quick_clay">Quick clay</string>
     <string name="radon">Radon</string>
     <string name="landslide">Landslide</string>
+    <string name="no_overlay">No overlay</string>
     <string name="device_settings">Use device settings</string>
     <string name="lightmode">Light mode</string>
     <string name="darkmode">Dark mode</string>
@@ -161,4 +162,5 @@
     <string name="save">Save</string>
     <string name="search_after_place_norway">Search after place in Norway</string>
     <string name="language_sami">Sami</string>
+    <string name="change_layer_to_zoom_out">Change layer to zoom out</string>
 </resources>

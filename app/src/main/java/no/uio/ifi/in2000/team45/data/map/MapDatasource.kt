@@ -12,8 +12,9 @@ import no.uio.ifi.in2000.team45.network.KtorClient
 
 // Every overlay-type with its own max- and minZoom
 enum class OverlayType(@StringRes val labelRes: Int, val minZoom: Double, val maxZoom: Double) {
+    NONE(R.string.no_overlay, 3.25, 20.0),
     FLOOD(R.string.flood, 11.5, 20.0),
-    QUICK_CLAY(R.string.quick_clay, 11.4, 20.0),
+    QUICK_CLAY(R.string.quick_clay, 12.5, 20.0),
     RADON(R.string.radon, 10.9, 20.0),
     WIND(R.string.wind, 5.0, 20.0),
     LANDSLIDE(R.string.landslide, 5.0, 20.0)
@@ -136,6 +137,7 @@ class MapDatasource {
         val maxLat = bbox[3]
 
         return when (type) {
+            OverlayType.NONE -> error("buildOverlayURL should not be called for NONE")
             OverlayType.FLOOD -> buildNveExportURL(
                 service = "Flomaktsomhet",
                 layers = "1",

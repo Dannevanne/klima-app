@@ -261,14 +261,16 @@ fun DataMap(
 
     val activeOverlay = mapViewModel.activeOverlay
 
-    // Launch when activeOverlay changes
+    // Switch overlay: leave the camera alone if it's already inside the
+    // overlay's allowed zoom band. Only nudge when out of range, in which
+    // case clamp to the nearest edge (zoom in if too far out, zoom out if
+    // too far in).
     LaunchedEffect(activeOverlay) {
-
-        // Store current zoom from Mapbox-camera
         val currentZoom = mapViewRef?.mapboxMap?.cameraState?.zoom ?: return@LaunchedEffect
-        if (currentZoom < activeOverlay.minZoom) {
+        val targetZoom = currentZoom.coerceIn(activeOverlay.minZoom, activeOverlay.maxZoom)
+        if (targetZoom != currentZoom) {
             val camera = CameraOptions.Builder()
-                .zoom(activeOverlay.minZoom)
+                .zoom(targetZoom)
                 .center(mapViewModel.lastCameraCenter)
                 .build()
             viewportState.easeTo(camera)
@@ -300,6 +302,18 @@ fun DataMap(
             center = camera.center,
             zoom = camera.zoom
         )
+    }
+
+    // Bumped each time the user pinches the zoom-out button while at the
+    // overlay's minZoom; LaunchedEffect re-arms the auto-dismiss timer.
+    var zoomBlockedNonce by remember { mutableStateOf(0) }
+    var zoomBlockedVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(zoomBlockedNonce) {
+        if (zoomBlockedNonce > 0) {
+            zoomBlockedVisible = true
+            kotlinx.coroutines.delay(2000)
+            zoomBlockedVisible = false
+        }
     }
 
     // Hide the Mapbox GL surface behind a themed scrim until Mapbox itself
@@ -376,7 +390,8 @@ fun DataMap(
                 mapView = mapViewRef,
                 viewportState = viewportState,
                 mapViewModel = mapViewModel,
-                activeOverlay = mapViewModel.activeOverlay
+                activeOverlay = mapViewModel.activeOverlay,
+                onZoomOutBlocked = { zoomBlockedNonce++ }
             )
 
             MapLocationButton(
@@ -395,6 +410,37 @@ fun DataMap(
                 .fillMaxWidth()
                 .padding(bottom = 30.dp)
         )
+
+        androidx.compose.animation.AnimatedVisibility(
+            visible = zoomBlockedVisible,
+            enter = androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(180)
+            ),
+            exit = androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(180)
+            ),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            // Padding gives the elevation shadow room to render without
+            // getting clipped by the AnimatedVisibility's tight bounds.
+            Box(modifier = Modifier.padding(8.dp)) {
+                androidx.compose.material3.Card(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    ),
+                    elevation = androidx.compose.material3.CardDefaults.cardElevation(
+                        defaultElevation = 6.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.change_layer_to_zoom_out),
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
 
         androidx.compose.animation.AnimatedVisibility(
             visible = !mapSurfaceReady,
