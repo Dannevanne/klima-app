@@ -1,8 +1,5 @@
 package no.uio.ifi.in2000.team45.ui
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,12 +17,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.IsOnline
@@ -39,6 +39,13 @@ import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
+private const val ROUTE_MAP = "MapScreen"
+private const val ROUTE_STATISTICS = "StatisticScreen"
+private const val ROUTE_SAVED = "SavedPlacesScreen"
+private const val ROUTE_SETTINGS = "SettingsScreen"
+private const val ROUTE_INFO = "InfoScreen"
+private const val ROUTE_HELP = "HelpScreen"
+
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
@@ -47,80 +54,84 @@ fun AppNavigation(
     statisticViewModel: StatisticViewModel = viewModel(),
     savedPlacesViewModel: SavedPlacesViewModel = viewModel()
 ) {
-
     val isOnline = IsOnline()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    fun navigateTo(route: String) {
-        navController.navigate(route) {
-            launchSingleTop = true
-            restoreState = true
-        }
+    // Track the route locally; the NavController only seeds the initial value.
+    // Bypassing NavHost lets every screen stay composed in memory after first
+    // launch, so switching tabs is instant from the very first tap.
+    var route by remember { mutableStateOf(ROUTE_MAP) }
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val backStackRoute = backStackEntry?.destination?.route
+    if (backStackRoute != null && backStackRoute != route) route = backStackRoute
+
+    fun navigateTo(target: String) {
+        if (target == route) return
+        route = target
+        keyboardController?.hide()
+    }
+
+    fun popBack() {
+        // Settings/Info/Help all return to the map for now.
+        route = ROUTE_MAP
+        keyboardController?.hide()
     }
 
     Surface {
-        NavHost(
-            navController = navController,
-            startDestination = "MapScreen",
-            // Crossfade rather than the default 700ms fade-in-with-delay, so
-            // the map screen doesn't sit blank while Mapbox re-inits.
-            enterTransition = { fadeIn(animationSpec = tween(250)) },
-            exitTransition = { fadeOut(animationSpec = tween(250)) },
-            popEnterTransition = { fadeIn(animationSpec = tween(250)) },
-            popExitTransition = { fadeOut(animationSpec = tween(250)) }
-        ) {
-            composable(route = "MapScreen") {
-                MapStateScreen(
-                    modifier = modifier,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onStatisticClick = { navigateTo("StatisticScreen") },
-                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
-                    mapViewModel = mapViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
-                )
-            }
-            composable(route = "StatisticScreen") {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // The map sits at the bottom and is always composed.
+            MapStateScreen(
+                modifier = modifier,
+                onSettingsClick = { navigateTo(ROUTE_SETTINGS) },
+                onInfoClick = { navigateTo(ROUTE_INFO) },
+                onHelpClick = { navigateTo(ROUTE_HELP) },
+                onStatisticClick = { navigateTo(ROUTE_STATISTICS) },
+                onSavedPlacesClick = { navigateTo(ROUTE_SAVED) },
+                mapViewModel = mapViewModel,
+                savedPlacesViewModel = savedPlacesViewModel
+            )
+
+            ScreenLayer(visible = route == ROUTE_STATISTICS) {
                 StatisticScreen(
                     modifier = modifier,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onMapClick = { navigateTo("MapScreen") },
-                    onSavedPlacesClick = { navigateTo("SavedPlacesScreen") },
+                    onSettingsClick = { navigateTo(ROUTE_SETTINGS) },
+                    onInfoClick = { navigateTo(ROUTE_INFO) },
+                    onHelpClick = { navigateTo(ROUTE_HELP) },
+                    onMapClick = { navigateTo(ROUTE_MAP) },
+                    onSavedPlacesClick = { navigateTo(ROUTE_SAVED) },
                     statisticViewModel = statisticViewModel,
                     savedPlacesViewModel = savedPlacesViewModel
                 )
             }
-            composable(route = "SettingsScreen") {
+            ScreenLayer(visible = route == ROUTE_SAVED) {
+                SavedPlacesScreen(
+                    savedPlacesViewModel = savedPlacesViewModel,
+                    onSettingsClick = { navigateTo(ROUTE_SETTINGS) },
+                    onInfoClick = { navigateTo(ROUTE_INFO) },
+                    onHelpClick = { navigateTo(ROUTE_HELP) },
+                    onMapClick = { navigateTo(ROUTE_MAP) },
+                    onStatisticClick = { navigateTo(ROUTE_STATISTICS) },
+                    modifier = modifier
+                )
+            }
+            ScreenLayer(visible = route == ROUTE_SETTINGS) {
                 SettingsScreen(
                     mapViewModel = mapViewModel,
                     modifier = modifier,
-                    onClick = { navController.popBackStack() },
+                    onClick = { popBack() },
                     statisticViewModel = statisticViewModel,
                     savedPlacesViewModel = savedPlacesViewModel
                 )
             }
-            composable(route = "SavedPlacesScreen") {
-                SavedPlacesScreen(
-                    savedPlacesViewModel = savedPlacesViewModel,
-                    onSettingsClick = { navigateTo("SettingsScreen") },
-                    onInfoClick = { navigateTo("InfoScreen") },
-                    onHelpClick = { navigateTo("HelpScreen") },
-                    onMapClick = { navigateTo("MapScreen") },
-                    onStatisticClick = { navigateTo("StatisticScreen") },
-                    modifier = modifier
-                )
-            }
-            composable(route = "InfoScreen") {
+            ScreenLayer(visible = route == ROUTE_INFO) {
                 InfoScreen(
-                    onClick = { navController.popBackStack() },
+                    onClick = { popBack() },
                     modifier = modifier
                 )
             }
-            composable(route = "HelpScreen") {
+            ScreenLayer(visible = route == ROUTE_HELP) {
                 HelpScreen(
-                    onClick = { navController.popBackStack()},
+                    onClick = { popBack() },
                     modifier = modifier
                 )
             }
@@ -149,5 +160,24 @@ fun AppNavigation(
                 }
             }
         }
+    }
+}
+
+// Renders the screen always (so it stays in memory) but pushes inactive
+// screens behind everything and absorbs no input. The active layer floats on
+// top with full opacity.
+@Composable
+private fun ScreenLayer(visible: Boolean, content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(if (visible) 1f else -1f)
+            .alpha(if (visible) 1f else 0f)
+            .then(
+                if (visible) Modifier
+                else Modifier.pointerInput(Unit) { /* swallow input when hidden */ }
+            )
+    ) {
+        content()
     }
 }
