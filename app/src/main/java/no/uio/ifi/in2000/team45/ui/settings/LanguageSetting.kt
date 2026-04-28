@@ -31,64 +31,32 @@ fun LanguageSetting(
             fontSize = 18.sp
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        ) {
-            RadioButton(
-                selected = selectedLanguage == LanguageOption.BOKMÅL,
-                onClick = { onLanguageSelected(LanguageOption.BOKMÅL) }
-            )
-            Text(
-                text = stringResource(R.string.language_bokmal),
-                modifier = Modifier.padding(top = 12.dp)
-            )
-        }
+        LanguageOptionRow(
+            selected = selectedLanguage == LanguageOption.BOKMÅL,
+            text = stringResource(R.string.language_bokmal),
+            flagRes = R.drawable.norway_flag,
+            onClick = { onLanguageSelected(LanguageOption.BOKMÅL) }
+        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        ) {
-            RadioButton(
-                selected = selectedLanguage == LanguageOption.NYNORSK,
-                onClick = { onLanguageSelected(LanguageOption.NYNORSK) }
-            )
-            Text(
-                text = stringResource(R.string.language_nynorsk),
-                modifier = Modifier.padding(top = 12.dp)
-            )
-        }
+        LanguageOptionRow(
+            selected = selectedLanguage == LanguageOption.NYNORSK,
+            text = stringResource(R.string.language_nynorsk),
+            flagRes = R.drawable.norway_flag,
+            onClick = { onLanguageSelected(LanguageOption.NYNORSK) }
+        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        ) {
-            RadioButton(
-                selected = selectedLanguage == LanguageOption.ENGLISH,
-                onClick = { onLanguageSelected(LanguageOption.ENGLISH) }
-            )
-            Text(
-                text = stringResource(R.string.language_english),
-                modifier = Modifier.padding(top = 12.dp)
-            )
-        }
+        LanguageOptionRow(
+            selected = selectedLanguage == LanguageOption.ENGLISH,
+            text = stringResource(R.string.language_english),
+            flagRes = R.drawable.gb_flag,
+            onClick = { onLanguageSelected(LanguageOption.ENGLISH) }
+        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        ) {
-            RadioButton(
-                selected = selectedLanguage == LanguageOption.SAMI,
-                onClick = { onLanguageSelected(LanguageOption.SAMI) }
-            )
-            Text(
-                text = stringResource(R.string.language_sami),
-                modifier = Modifier.padding(top = 12.dp)
-            )
-        }
+        LanguageOptionRow(
+            selected = selectedLanguage == LanguageOption.SAMI,
+            text = stringResource(R.string.language_sami),
+            flagRes = R.drawable.sami_flag,
+            onClick = { onLanguageSelected(LanguageOption.SAMI) }
+        )
     }
 }
