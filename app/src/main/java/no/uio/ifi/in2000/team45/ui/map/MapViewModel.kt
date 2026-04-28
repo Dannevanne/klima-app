@@ -308,8 +308,11 @@ class MapViewModel(
         selectJob?.cancel()
         searchSuggestions = emptyList()
         isSearching = false
-
+        // Reset overlay cache so map re-entry refetches (the new MapView has no layers).
         lastBBox = null
+        lastOverlayURL = null
+        lastUpdateTime = 0L
+        mapUiState = MapUiState.Loading
     }
 
     // Select a suggested place and get its coordinates
