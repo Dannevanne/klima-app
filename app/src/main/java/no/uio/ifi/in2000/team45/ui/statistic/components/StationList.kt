@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.theme.StarGold
 
 @Composable
 fun StationList(
@@ -100,10 +99,9 @@ fun StationList(
                     }
                     IconButton(onClick = { onToggleFavorite(station) }) {
                         Icon(
-                            imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                            imageVector = if (isFav) Icons.Outlined.Delete else Icons.Outlined.Star,
                             contentDescription = if (isFav) stringResource(R.string.remove_saved_place) else stringResource(R.string.add_place_to_saved_places),
-                            tint = if (isFav) StarGold
-                            else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
