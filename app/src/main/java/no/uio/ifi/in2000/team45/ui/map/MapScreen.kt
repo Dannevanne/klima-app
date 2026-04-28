@@ -45,6 +45,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import com.mapbox.maps.CameraOptions
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
@@ -256,6 +257,22 @@ fun DataMap(
         }
     }
 
+    val activeOverlay = mapViewModel.activeOverlay
+
+    // Launch when activeOverlay changes
+    LaunchedEffect(activeOverlay) {
+
+        // Store current zoom from Mapbox-camera
+        val currentZoom = mapViewRef?.mapboxMap?.cameraState?.zoom ?: return@LaunchedEffect
+        if (currentZoom < activeOverlay.minZoom) {
+            val camera = CameraOptions.Builder()
+                .zoom(activeOverlay.minZoom)
+                .center(mapViewModel.lastCameraCenter)
+                .build()
+            viewportState.easeTo(camera)
+        }
+    }
+    
     val bitmap = (uiState as? MapUiState.Success)?.bitmap
     val overlayBBox = (uiState as? MapUiState.Success)?.bbox
 
@@ -331,6 +348,8 @@ fun DataMap(
             MapZoomControlsSection(
                 mapView = mapViewRef,
                 viewportState = viewportState,
+                mapViewModel = mapViewModel,
+                activeOverlay = mapViewModel.activeOverlay
             )
 
             MapLocationButton(
