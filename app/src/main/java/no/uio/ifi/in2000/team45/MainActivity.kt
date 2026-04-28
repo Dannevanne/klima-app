@@ -25,12 +25,17 @@ import androidx.compose.runtime.collectAsState
 import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModel
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModelFactory
+import no.uio.ifi.in2000.team45.data.music.MusicManager
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var musicManager: MusicManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        musicManager = MusicManager(applicationContext)
 
         // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
@@ -61,6 +66,10 @@ class MainActivity : AppCompatActivity() {
 
             val musicEnabled by musicViewModel.musicEnabledFlow.collectAsState(initial = false)
 
+            LaunchedEffect(musicEnabled) {
+                musicManager.updateMusicState(musicEnabled)
+            }
+
             LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
                 if (mapViewModel.isLanguageInitialized) {
                     applyAppLanguage(mapViewModel.selectedLanguage)
@@ -77,11 +86,18 @@ class MainActivity : AppCompatActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppRoot(
                         mapViewModel = mapViewModel,
-                        musicEnabled = false,
-                        onMusicEnabledChanged = {}
+                        musicEnabled = musicEnabled,
+                        onMusicEnabledChanged = { enabled ->
+                            musicViewModel.updateMusicEnabled(enabled)
+                        }
                     )
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        musicManager.release()
     }
 }
