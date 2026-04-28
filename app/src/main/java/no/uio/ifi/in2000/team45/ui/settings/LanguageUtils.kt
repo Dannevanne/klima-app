@@ -9,6 +9,7 @@ fun applyAppLanguage(language: LanguageOption) {
         LanguageOption.BOKMÅL -> "nb"
         LanguageOption.NYNORSK -> "nn"
         LanguageOption.ENGLISH -> "en"
+        LanguageOption.SAMI -> "se-rNO"
     }
     val desired = LocaleListCompat.forLanguageTags(localeTag)
 
