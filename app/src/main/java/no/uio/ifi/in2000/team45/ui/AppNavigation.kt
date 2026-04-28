@@ -42,7 +42,9 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     mapViewModel: MapViewModel,
     statisticViewModel: StatisticViewModel = viewModel(),
-    savedPlacesViewModel: SavedPlacesViewModel = viewModel()
+    savedPlacesViewModel: SavedPlacesViewModel = viewModel(),
+    musicEnabled: Boolean,
+    onMusicEnabledChanged: (Boolean) -> Unit
 ) {
 
     val isOnline = IsOnline()
@@ -89,7 +91,9 @@ fun AppNavigation(
                     modifier = modifier,
                     onClick = { navController.popBackStack() },
                     statisticViewModel = statisticViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
+                    savedPlacesViewModel = savedPlacesViewModel,
+                    musicEnabled = musicEnabled,
+                    onMusicEnabledChanged = onMusicEnabledChanged
                 )
             }
             composable(route = "SavedPlacesScreen") {
