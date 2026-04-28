@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -93,14 +94,19 @@ fun MapOverlaySelector(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                modifier = Modifier.size(32.dp)
             ) {
-                IconButton(onClick = onLegendClick) {
+                IconButton(
+                    onClick = onLegendClick,
+                    modifier = Modifier.size(32.dp)
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
                         contentDescription = stringResource(
                             no.uio.ifi.in2000.team45.R.string.overlay_legend
-                        )
+                        ),
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
