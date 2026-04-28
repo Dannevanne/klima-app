@@ -2,7 +2,10 @@ package no.uio.ifi.in2000.team45.ui.savedplaces
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,6 +52,20 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
 
     // Current weather per saved location (keyed by "lat,lon")
     val locationStatuses = mutableStateMapOf<String, LocationStatus>()
+
+    // Set when another screen wants the saved-places list scrolled to a
+    // specific row (e.g. the map popup tapping "Open in Saved places").
+    // PopulatedSavedPlacesContent observes this and clears it after scrolling.
+    var pendingFocus: SavedPlacesLocation? by mutableStateOf(null)
+        private set
+
+    fun requestFocus(location: SavedPlacesLocation) {
+        pendingFocus = location
+    }
+
+    fun clearPendingFocus() {
+        pendingFocus = null
+    }
 
     fun addStation(station: WeatherStation) {
         viewModelScope.launch {

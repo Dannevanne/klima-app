@@ -69,6 +69,8 @@
     <string name="no_saved_places_yet">Ingen lagra stader enno</string>
     <string name="no_saved_places_hint">Gå til kartet, trykk på eit område og lagre det for å sjå risikoanalyse og klimadata her.</string>
     <string name="open_map">Opne kart</string>
+    <string name="show_on_map">Vis på kart</string>
+    <string name="open_in_saved_places">Opne i Lagra stader</string>
     <string name="map_location_placeholder">Kartposisjon</string>
     <string name="remove">Fjern</string>
     <string name="overall_risk">Samla risiko</string>
