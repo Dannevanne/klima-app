@@ -36,6 +36,12 @@ fun LanguageOptionRow(
             onClick = onClick
         )
 
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(text = text)
+
+        Spacer(modifier = Modifier.weight(1f))
+
         Image(
             painter = painterResource(id = flagRes),
             contentDescription = null,
@@ -43,9 +49,5 @@ fun LanguageOptionRow(
                 .size(28.dp)
                 .clip(CircleShape)
         )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Text(text = text)
     }
 }
