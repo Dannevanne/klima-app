@@ -33,7 +33,8 @@ sealed interface StatisticUiState {
         val stats: List<MonthlyClimateStats>,
         val annualData: List<AnnualObservation> = emptyList(),
         val place: Place? = null,
-        val distanceFromPlaceMeters: Int? = null
+        val distanceFromPlaceMeters: Int? = null,
+        val stationsUsed: List<WeatherStation> = emptyList()
     ) : StatisticUiState
     data class Error(val message: String) : StatisticUiState
 }
@@ -171,26 +172,24 @@ class StatisticViewModel(
     }
 
     private suspend fun geocodePlaces(query: String): List<Place> {
+        // Mapbox autocomplete is a typeahead -- it returns variants of the same
+        // query. We only want the canonical place, so cap at 1.
         val options = PlaceAutocompleteOptions(
-            limit = 5,
+            limit = 1,
             countries = listOf(IsoCountryCode.NORWAY)
         )
         val response = placeAutocomplete.suggestions(query = query, options = options)
-        val suggestions = response.value ?: return emptyList()
-        val seen = mutableSetOf<String>()
-        return suggestions.mapNotNull { suggestion ->
-            val selected = placeAutocomplete.select(suggestion).value ?: return@mapNotNull null
-            val coord = selected.coordinate ?: return@mapNotNull null
-            val name = suggestion.name
-            val key = name.lowercase()
-            if (!seen.add(key)) return@mapNotNull null
+        val suggestion = response.value?.firstOrNull() ?: return emptyList()
+        val selected = placeAutocomplete.select(suggestion).value ?: return emptyList()
+        val coord = selected.coordinate ?: return emptyList()
+        return listOf(
             Place(
-                name = name,
+                name = suggestion.name,
                 subtitle = (suggestion.formattedAddress ?: "").trim(),
                 latitude = coord.latitude(),
                 longitude = coord.longitude()
             )
-        }
+        )
     }
 
     private fun String.toTitleCase(): String {
@@ -205,9 +204,20 @@ class StatisticViewModel(
         uiState = StatisticUiState.Loading
         climateJob = viewModelScope.launch {
             try {
-                val candidates = repository.findNearestStations(
-                    place.latitude, place.longitude, clientId, count = 10
-                )
+                val maxDistanceMeters = 30_000
+                val candidates = repository
+                    .findNearestStations(place.latitude, place.longitude, clientId, count = 15)
+                    .map { c ->
+                        c.copy(
+                            distanceMeters = distanceInMeters(
+                                place.latitude, place.longitude,
+                                c.latitude, c.longitude
+                            )
+                        )
+                    }
+                    .filter { (it.distanceMeters ?: Int.MAX_VALUE) <= maxDistanceMeters }
+                    .sortedBy { it.distanceMeters ?: Int.MAX_VALUE }
+
                 if (candidates.isEmpty()) {
                     uiState = StatisticUiState.Error(
                         getApplication<Application>().getString(
@@ -221,33 +231,93 @@ class StatisticViewModel(
                 val yearTo = currentYear - 1
                 val yearFrom = yearTo - maxPeriod + 1
 
+                val annualByYear = mutableMapOf<Int, AnnualObservation>()
+                val statsByMonth = (1..12).associateWith { month ->
+                    MonthlyClimateStats(
+                        month = month,
+                        meanTemp = null,
+                        maxTemp = null,
+                        minTemp = null,
+                        precipitation = null,
+                        windSpeed = null
+                    )
+                }.toMutableMap()
+                val stationsUsed = linkedSetOf<WeatherStation>()
+
                 for (candidate in candidates) {
-                    val stats = repository.getClimateStats(candidate.id, clientId)
-                    if (stats.all { it.meanTemp == null && it.precipitation == null }) {
-                        continue
-                    }
                     val annual = repository.getAnnualObservations(
                         candidate.id, clientId, yearFrom, yearTo
                     )
-                    fullAnnualData = annual
-                    val distance = distanceInMeters(
-                        place.latitude, place.longitude,
-                        candidate.latitude, candidate.longitude
-                    )
-                    uiState = StatisticUiState.ClimateData(
-                        station = candidate,
-                        stats = stats,
-                        annualData = sliceAnnualForPeriod(selectedPeriod),
-                        place = place,
-                        distanceFromPlaceMeters = distance
+                    val stats = repository.getClimateStats(candidate.id, clientId)
+
+                    var contributed = false
+
+                    for (obs in annual) {
+                        val existing = annualByYear[obs.year]
+                            ?: AnnualObservation(obs.year, null, null)
+                        val merged = existing.copy(
+                            meanTemp = existing.meanTemp ?: obs.meanTemp,
+                            totalPrecip = existing.totalPrecip ?: obs.totalPrecip,
+                            maxWindGust = existing.maxWindGust ?: obs.maxWindGust,
+                            maxWindSpeed = existing.maxWindSpeed ?: obs.maxWindSpeed,
+                            maxSnowDepth = existing.maxSnowDepth ?: obs.maxSnowDepth
+                        )
+                        if (merged != existing) contributed = true
+                        annualByYear[obs.year] = merged
+                    }
+
+                    for (stat in stats) {
+                        val existing = statsByMonth[stat.month] ?: continue
+                        val merged = existing.copy(
+                            meanTemp = existing.meanTemp ?: stat.meanTemp,
+                            maxTemp = existing.maxTemp ?: stat.maxTemp,
+                            minTemp = existing.minTemp ?: stat.minTemp,
+                            precipitation = existing.precipitation ?: stat.precipitation,
+                            windSpeed = existing.windSpeed ?: stat.windSpeed,
+                            recordHigh = existing.recordHigh ?: stat.recordHigh,
+                            recordLow = existing.recordLow ?: stat.recordLow,
+                            snowDepth = existing.snowDepth ?: stat.snowDepth,
+                            windGust = existing.windGust ?: stat.windGust,
+                            cloudCover = existing.cloudCover ?: stat.cloudCover
+                        )
+                        if (merged != existing) contributed = true
+                        statsByMonth[stat.month] = merged
+                    }
+
+                    if (contributed) stationsUsed.add(candidate)
+
+                    val annualComplete = annualByYear.isNotEmpty() && annualByYear.values.all {
+                        it.meanTemp != null &&
+                            it.totalPrecip != null &&
+                            it.maxWindGust != null &&
+                            it.maxSnowDepth != null
+                    }
+                    val recordHighFilled = statsByMonth.values.any { it.recordHigh != null }
+                    if (annualComplete && recordHighFilled) break
+                }
+
+                if (stationsUsed.isEmpty()) {
+                    uiState = StatisticUiState.Error(
+                        getApplication<Application>().getString(
+                            R.string.error_no_climate_data, place.name
+                        )
                     )
                     return@launch
                 }
 
-                uiState = StatisticUiState.Error(
-                    getApplication<Application>().getString(
-                        R.string.error_no_climate_data, place.name
-                    )
+                val annual = annualByYear.values.sortedBy { it.year }
+                val stats = statsByMonth.values.sortedBy { it.month }
+                fullAnnualData = annual
+
+                val primary = stationsUsed.first()
+
+                uiState = StatisticUiState.ClimateData(
+                    station = primary,
+                    stats = stats,
+                    annualData = sliceAnnualForPeriod(selectedPeriod),
+                    place = place,
+                    distanceFromPlaceMeters = primary.distanceMeters,
+                    stationsUsed = stationsUsed.toList()
                 )
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Climate data failed", e)

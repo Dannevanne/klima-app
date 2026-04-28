@@ -31,6 +31,7 @@ fun ClimateDataView(
     onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     placeName: String? = null,
     distanceFromPlaceMeters: Int? = null,
+    stationsUsed: List<WeatherStation> = emptyList(),
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier
@@ -127,7 +128,8 @@ fun ClimateDataView(
                 annualData = annualData,
                 onShowOnMap = onShowOnMap,
                 placeName = placeName,
-                distanceFromPlaceMeters = distanceFromPlaceMeters
+                distanceFromPlaceMeters = distanceFromPlaceMeters,
+                stationsUsed = stationsUsed
             )
         }
     }

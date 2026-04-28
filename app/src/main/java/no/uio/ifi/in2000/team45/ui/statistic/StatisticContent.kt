@@ -286,6 +286,7 @@ fun StatisticContent(
                 onShowOnMap = onShowOnMap,
                 placeName = state.place?.name,
                 distanceFromPlaceMeters = state.distanceFromPlaceMeters,
+                stationsUsed = state.stationsUsed,
                 contentPadding = listPadding,
                 modifier = modifier,
                 header = {
