@@ -30,6 +30,7 @@ class LanguagePreferenceRepository(private val context: Context) {
             LanguageOption.BOKMÅL.name -> LanguageOption.BOKMÅL
             LanguageOption.NYNORSK.name -> LanguageOption.NYNORSK
             LanguageOption.ENGLISH.name -> LanguageOption.ENGLISH
+            LanguageOption.SAMI.name -> LanguageOption.SAMI
             else -> systemDefault()
         }
     }
