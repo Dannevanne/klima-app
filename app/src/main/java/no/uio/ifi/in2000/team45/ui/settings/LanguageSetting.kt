@@ -75,5 +75,20 @@ fun LanguageSetting(
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            RadioButton(
+                selected = selectedLanguage == LanguageOption.SAMI,
+                onClick = { onLanguageSelected(LanguageOption.SAMI) }
+            )
+            Text(
+                text = stringResource(R.string.language_sami),
+                modifier = Modifier.padding(top = 12.dp)
+            )
+        }
     }
 }
