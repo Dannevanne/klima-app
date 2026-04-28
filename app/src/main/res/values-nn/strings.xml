@@ -104,7 +104,7 @@
 
     <string name="legend_radon_what">Aktsomheitsklassar for radon innandørs i området.</string>
     <string name="legend_radon_cat_purple">Lilla — Særleg høg aktsomheit (høgaste nivå)</string>
-    <string name="legend_radon_cat_red">Raudt — Høg aktsomheit (≥20%% av bustader over 200 Bq/m³)</string>
+    <string name="legend_radon_cat_red">Raudt — Høg aktsomheit (≥20% av bustader over 200 Bq/m³)</string>
     <string name="legend_radon_cat_yellow">Gult — Moderat til låg</string>
     <string name="legend_radon_cat_grey">Grått — Usikker (lite data)</string>
     <string name="legend_radon_caveat">Kartet kan ikkje forutseie radon i ein bestemt bygning — berre ei måling kan.</string>
