@@ -78,8 +78,8 @@
     <string name="t45" translatable="false">T45</string>
     <string name="team_45_in2000_uio_2026" translatable="false">Team 45 — IN2000, UiO 2026</string>
     <string name="language">Language</string>
-    <string name="language_bokmal" translatable="false">Norwegian Bokmål</string>
-    <string name="language_nynorsk" translatable="false">Norwegian Nynorsk</string>
+    <string name="language_bokmal">Norwegian Bokmål</string>
+    <string name="language_nynorsk">Norwegian Nynorsk</string>
     <string name="language_english">English</string>
     <string name="no_saved_places_yet">No saved places yet</string>
     <string name="no_saved_places_hint">Go to the map, tap an area and save it to see risk analysis and climate data here.</string>
