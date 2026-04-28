@@ -83,6 +83,45 @@
     <string name="legend_landslide_body">NVE sine aktsomheitsområde for jord- og flomskred. Polygon viser terreng der jord- eller lausmasseskred er fysisk mogleg ut frå helling og grunntilhøve. Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
     <string name="legend_wind_body">NVE sitt vindressurskart — gjennomsnittleg vindstyrke 50 m over bakken. Fargeskalaen aukar med vindstyrke. Brukt som ein langtidsindikator for vindpotensial, ikkje som dagens vêr.</string>
     <string name="legend_none_body">Ingen lag er valt. Vel eit lag frå pilla for å sjå faredata på kartet.</string>
+
+    <string name="legend_what_shows">Kva det viser</string>
+    <string name="legend_categories">Kategoriar</string>
+    <string name="legend_caveat">Atterhald</string>
+    <string name="legend_source">Kjelde</string>
+
+    <string name="legend_flood_what">Polygon viser stader der NVE har identifisert at flom kan oppstå.</string>
+    <string name="legend_flood_cat_polygon">Heildekkjande blått polygon — kartlagt flomaktsomheitsområde</string>
+    <string name="legend_flood_caveat">Datakjelda gjev ingen alvorsgrad. Alle polygon vert vist likt.</string>
+    <string name="legend_flood_src">NVE Flomaktsomhet (lag 1)</string>
+
+    <string name="legend_quickclay_what">Tre lag stablast: faregrad, risikoklasse og kartlagt-område-status.</string>
+    <string name="legend_quickclay_cat_lav">Heildekt (Lav) — låg fare for kvikkleireskred</string>
+    <string name="legend_quickclay_cat_middels">Heildekt (Middels) — middels fare</string>
+    <string name="legend_quickclay_cat_hoy">Heildekt (Høg) — høg fare</string>
+    <string name="legend_quickclay_cat_safe">Skravert + "Område uten fare" — undersøkt og funne trygt</string>
+    <string name="legend_quickclay_cat_other">Andre skraverte mønster — under undersøking</string>
+    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad-attributt)</string>
+
+    <string name="legend_radon_what">Aktsomheitsklassar for radon innandørs i området.</string>
+    <string name="legend_radon_cat_purple">Lilla — Særleg høg aktsomheit (høgaste nivå)</string>
+    <string name="legend_radon_cat_red">Raudt — Høg aktsomheit (≥20%% av bustader over 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Gult — Moderat til låg</string>
+    <string name="legend_radon_cat_grey">Grått — Usikker (lite data)</string>
+    <string name="legend_radon_caveat">Kartet kan ikkje forutseie radon i ein bestemt bygning — berre ei måling kan.</string>
+    <string name="legend_radon_src">NGU RadonWMS2</string>
+
+    <string name="legend_landslide_what">Aktsomheitsområde for jord- og flomskred, basert på helling og grunntilhøve.</string>
+    <string name="legend_landslide_cat_polygon">Polygon — terreng der eit skred er fysisk mogleg</string>
+    <string name="legend_landslide_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
+    <string name="legend_landslide_src">NVE JordFlomskredAktsomhet (vektorlag)</string>
+
+    <string name="legend_wind_what">Langtidssnitt for vindstyrke 50 m over bakken.</string>
+    <string name="legend_wind_cat_scale">Fargeskala — aukar med vindstyrke</string>
+    <string name="legend_wind_caveat">Langtidsindikator for vindpotensial, ikkje dagens vêr.</string>
+    <string name="legend_wind_src">NVE Vindressurser (50 m høgd)</string>
+
+    <string name="legend_none_what">Ingen lag er valt.</string>
+    <string name="legend_none_cat_pick">Vel eit lag frå pilla for å sjå faredata på kartet</string>
     <string name="map_location_placeholder">Kartposisjon</string>
     <string name="remove">Fjern</string>
     <string name="overall_risk">Samla risiko</string>
