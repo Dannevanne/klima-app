@@ -100,7 +100,6 @@
     <string name="radon_moderat_explanation">Moderat til lav: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
     <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
     <string name="radon_source">Source: NGU RadonWMS2</string>
-    <string name="highest_recorded_temp">Highest recorded temp</string>
     <string name="overlay_legend">Legend</string>
     <string name="overlay_legend_title">%1$s legend</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>

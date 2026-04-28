@@ -84,7 +84,6 @@
     <string name="radon_moderat_explanation">Moderat til låg: Radonnivåa ligg som regel under tiltaksgrensa. Ei måling er likevel einaste måten å vere sikker på i di eiga bustad.</string>
     <string name="radon_usikker_explanation">Usikker: NGU har for lite data til å klassifisere området. Handsam som ukjent og vurder å måle.</string>
     <string name="radon_source">Kjelde: NGU RadonWMS2</string>
-    <string name="highest_recorded_temp">Høgaste målte temp</string>
     <string name="overlay_legend">Teiknforklaring</string>
     <string name="overlay_legend_title">Teiknforklaring for %1$s</string>
     <string name="legend_flood_body">Heildekkjande blå polygon viser NVE sine flomaktsomheitsområde. NVE har identifisert desse som stader der flom kan oppstå. Datakjelda gjev ingen alvorsgrad — alle polygon vert vist likt.</string>
