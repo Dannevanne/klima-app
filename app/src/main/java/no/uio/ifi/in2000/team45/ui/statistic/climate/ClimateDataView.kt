@@ -19,7 +19,7 @@ import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 
-private val PERIOD_OPTIONS = listOf(10, 20, 30, 50)
+private val PERIOD_OPTIONS = listOf(5, 10, 20, 30, 50)
 
 @Composable
 fun ClimateDataView(

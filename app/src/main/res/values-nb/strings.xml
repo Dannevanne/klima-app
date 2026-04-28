@@ -111,7 +111,7 @@
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km unna</string>
     <string name="distance_m_away">%1$d m unna</string>
-    <string name="overview_period">OVERSIKT %1$d-%2$d</string>
+    <string name="overview_period">Oversikt %1$d-%2$d</string>
     <string name="precipitation_avg_year">Nedbør, snitt/år</string>
     <string name="max_wind_gust">Maks vindkast</string>
     <string name="snow_days_year">Snødager/år</string>
@@ -119,11 +119,11 @@
     <string name="months_count">%1$d måneder</string>
     <string name="years_count">%1$d år</string>
     <string name="trend_vs_norm">mot norm</string>
-    <string name="weather_stations_used">BRUKTE VÆRSTASJONER</string>
+    <string name="weather_stations_used">Brukte værstasjoner</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Nedbør + temperatur</string>
-    <string name="annual_precipitation_trend">ÅRLIG NEDBØR - TREND (MM)</string>
-    <string name="average_annual_temperature">ÅRLIG SNITTEMPERATUR (C)</string>
+    <string name="annual_precipitation_trend">Årlig nedbør, trend (mm)</string>
+    <string name="average_annual_temperature">Årlig snittemperatur (C)</string>
     <string name="error_no_stations_found">Ingen stasjoner funnet for \"%1$s\"</string>
     <string name="error_search_failed">Feil ved søk: %1$s</string>
     <string name="error_no_climate_data">Ingen klimadata tilgjengelig for stasjoner nær %1$s</string>
