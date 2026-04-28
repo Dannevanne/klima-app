@@ -152,4 +152,5 @@
     <string name="the_app_does_not_require_a_login_or_account">Appa ii gáibit sisačáliheami dahje konttu</string>
     <string name="language_sami">Sámegiella</string>
     <string name="language_bokmal">Girjedárogiella</string>
+    <string name="background_music">Duogáš musihkka</string>
 </resources>

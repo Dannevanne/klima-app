@@ -152,4 +152,5 @@
     <string name="the_app_does_not_require_a_login_or_account">Appen krever ikke innlogging eller konto</string>
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk Bokmål</string>
+    <string name="background_music">Bakgrunnsmusikk</string>
 </resources>
