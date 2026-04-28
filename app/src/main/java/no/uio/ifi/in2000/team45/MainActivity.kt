@@ -29,20 +29,14 @@ import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.AppRoot
 import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
+import androidx.compose.runtime.collectAsState
+import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
 
 class MainActivity : AppCompatActivity() {
-
-    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        // Starts music
-        mediaPlayer = MediaPlayer.create(this, R.raw.glem_alt).apply {
-            isLooping = true
-            start()
-        }
 
         // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
@@ -51,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         val languagePreferenceRepository = LanguagePreferenceRepository(applicationContext)
 
         val cameraRepository = MapCameraRepository(applicationContext)
+        val musicPreferenceRepository = MusicPreferenceRepository(applicationContext)
 
         // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
@@ -63,6 +58,8 @@ class MainActivity : AppCompatActivity() {
                     cameraRepository = cameraRepository
                 )
             )
+
+
 
             LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
                 if (mapViewModel.isLanguageInitialized) {
