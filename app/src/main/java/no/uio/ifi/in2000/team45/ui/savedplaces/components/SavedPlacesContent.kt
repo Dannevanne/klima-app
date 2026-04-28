@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,33 +14,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -82,44 +67,6 @@ fun SavedPlacesContent(
 }
 
 @Composable
-private fun SavedPlacesSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        placeholder = { Text(stringResource(R.string.search_your_locations)) },
-        trailingIcon = {
-            IconButton(onClick = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-            }) {
-                Icon(
-                    Icons.Filled.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        ),
-        shape = RoundedCornerShape(24.dp),
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {
-            keyboardController?.hide()
-            focusManager.clearFocus()
-        }),
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
 private fun EmptySavedPlacesContent(
     onMapClick: () -> Unit,
     topInset: Dp,
@@ -132,59 +79,57 @@ private fun EmptySavedPlacesContent(
             .padding(top = topInset, bottom = bottomInset)
             .padding(16.dp)
     ) {
-        SavedPlacesSearchBar(query = "", onQueryChange = {})
-        Spacer(modifier = Modifier.height(12.dp))
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f),
             contentAlignment = Alignment.Center
         ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(32.dp)
-        ) {
-            Icon(
-                Icons.Outlined.Place,
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.no_saved_places_yet),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.no_saved_places_hint),
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onMapClick,
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(32.dp)
             ) {
-                Text(stringResource(R.string.open_map))
+                Icon(
+                    Icons.Outlined.Place,
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.no_saved_places_yet),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.no_saved_places_hint),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onMapClick,
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Text(stringResource(R.string.open_map))
+                }
             }
-        }
         }
     }
 }
@@ -198,44 +143,22 @@ private fun PopulatedSavedPlacesContent(
     bottomInset: Dp,
     modifier: Modifier
 ) {
-    var searchQuery by remember { mutableStateOf("") }
-    val filtered = if (searchQuery.isBlank()) locations
-    else locations.filter { it.label.contains(searchQuery, ignoreCase = true) }
-
     val savedPlacesCount = locations.size
-    val focusManager = LocalFocusManager.current
     val listState = rememberLazyListState()
     val pendingFocus = savedPlacesViewModel.pendingFocus
 
-    // When another screen requested a scroll-to-place, drop any active filter
-    // first so the target row can actually appear.
-    LaunchedEffect(pendingFocus) {
-        if (pendingFocus != null && searchQuery.isNotEmpty()) {
-            searchQuery = ""
-        }
-    }
-
-    // Once filtered contains the target, scroll to it. Item index 0 is the
-    // search bar, so the row index is +1 relative to the filtered list.
-    LaunchedEffect(pendingFocus, filtered) {
+    LaunchedEffect(pendingFocus, locations) {
         val target = pendingFocus ?: return@LaunchedEffect
-        val idx = filtered.indexOf(target)
+        val idx = locations.indexOf(target)
         if (idx >= 0) {
-            listState.animateScrollToItem(idx + 1)
+            listState.animateScrollToItem(idx)
             savedPlacesViewModel.clearPendingFocus()
         }
     }
 
     LazyColumn(
         state = listState,
-        modifier = modifier.pointerInput(Unit) {
-            // Tap on empty space (anything not consumed by a child) drops the
-            // search keyboard and resets the filter.
-            detectTapGestures(onTap = {
-                focusManager.clearFocus()
-                if (searchQuery.isNotEmpty()) searchQuery = ""
-            })
-        },
+        modifier = modifier,
         contentPadding = PaddingValues(
             top = topInset + 16.dp,
             bottom = bottomInset + 10.dp,
@@ -243,11 +166,7 @@ private fun PopulatedSavedPlacesContent(
             end = 16.dp
         )
     ) {
-        item {
-            SavedPlacesSearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        items(filtered) { location ->
+        items(locations) { location ->
             LaunchedEffect(location) {
                 savedPlacesViewModel.fetchStatusForLocation(location)
             }
