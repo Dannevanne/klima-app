@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -283,7 +285,8 @@ fun TrendChart(
 @Composable
 fun StationsUsedCard(
     station: WeatherStation,
-    annualData: List<AnnualObservation>
+    annualData: List<AnnualObservation>,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null
 ) {
     val obsCount = annualData.size
 
@@ -306,10 +309,10 @@ fun StationsUsedCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = station.name,
                     fontWeight = FontWeight.Bold,
@@ -327,18 +330,20 @@ fun StationsUsedCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = stringResource(R.string.precipitation_plus_temperature),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
                 Text(
                     text = "$obsCount obs.",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            if (onShowOnMap != null && station.latitude != 0.0 && station.longitude != 0.0) {
+                IconButton(onClick = { onShowOnMap(station.latitude, station.longitude) }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Place,
+                        contentDescription = stringResource(R.string.show_on_map),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

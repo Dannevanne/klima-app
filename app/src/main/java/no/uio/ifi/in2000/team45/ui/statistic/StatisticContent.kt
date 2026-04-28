@@ -62,6 +62,7 @@ fun StatisticContent(
     savedPlacesViewModel: SavedPlacesViewModel,
     topInset: Dp,
     bottomInset: Dp,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val listPadding = PaddingValues(
@@ -245,8 +246,8 @@ fun StatisticContent(
         }
         is StatisticUiState.StationResults -> {
             val favIds = favoriteStations.map { it.stationId }.toSet()
-            // Pinned stations first, then the rest
-            val sorted = state.stations.sortedByDescending { it.id in favIds }
+            val grouped = groupStationsByPlace(state.stations)
+            val sorted = grouped.sortedByDescending { it.id in favIds }
             StationList(
                 stations = sorted,
                 favoriteIds = favIds,
@@ -272,9 +273,13 @@ fun StatisticContent(
                 annualData = state.annualData,
                 selectedPeriod = statisticViewModel.selectedPeriod,
                 onPeriodChange = { statisticViewModel.updatePeriod(it) },
+                onShowOnMap = onShowOnMap,
                 contentPadding = listPadding,
                 modifier = modifier,
                 header = {
+                    val placeTitle = state.station.municipality.toTitleCase()
+                        .ifBlank { state.station.name }
+                    val placeSubtitle = state.station.county.toTitleCase()
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -290,13 +295,13 @@ fun StatisticContent(
                         )
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = state.station.name,
+                                text = placeTitle,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            if (state.station.municipality.isNotBlank()) {
+                            if (placeSubtitle.isNotBlank()) {
                                 Text(
-                                    text = "${state.station.municipality}, ${state.station.county}",
+                                    text = placeSubtitle,
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -343,4 +348,28 @@ private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
         onSearch = { statisticViewModel.searchStations() }
     )
     Spacer(modifier = Modifier.height(12.dp))
+}
+
+internal fun String.toTitleCase(): String {
+    if (isBlank()) return this
+    return split(" ").joinToString(" ") { word ->
+        word.lowercase().replaceFirstChar { it.uppercase() }
+    }
+}
+
+// Frost returns one entry per sensor; cities like Oslo can yield 10+ stations
+// for the same kommune/county. Collapse to one entry per (municipality, county)
+// so the search list shows places, not sensors.
+internal fun groupStationsByPlace(stations: List<WeatherStation>): List<WeatherStation> {
+    val seen = mutableSetOf<String>()
+    val out = mutableListOf<WeatherStation>()
+    for (s in stations) {
+        val key = "${s.municipality.lowercase()}|${s.county.lowercase()}"
+        if (key.isBlank() || key == "|") {
+            out.add(s)
+            continue
+        }
+        if (seen.add(key)) out.add(s)
+    }
+    return out
 }

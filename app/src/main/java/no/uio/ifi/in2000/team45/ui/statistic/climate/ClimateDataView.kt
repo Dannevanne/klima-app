@@ -28,6 +28,7 @@ fun ClimateDataView(
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
     onPeriodChange: (Int) -> Unit,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier
@@ -119,7 +120,11 @@ fun ClimateDataView(
         }
 
         item {
-            StationsUsedCard(station = station, annualData = annualData)
+            StationsUsedCard(
+                station = station,
+                annualData = annualData,
+                onShowOnMap = onShowOnMap
+            )
         }
     }
 }

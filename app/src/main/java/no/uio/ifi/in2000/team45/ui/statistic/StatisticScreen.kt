@@ -42,6 +42,7 @@ fun StatisticScreen(
     onHelpClick: () -> Unit,
     onMapClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -121,6 +122,7 @@ fun StatisticScreen(
             savedPlacesViewModel = savedPlacesViewModel,
             topInset = innerPadding.calculateTopPadding(),
             bottomInset = innerPadding.calculateBottomPadding(),
+            onShowOnMap = onShowOnMap,
             modifier = modifier.fillMaxSize()
         )
     }

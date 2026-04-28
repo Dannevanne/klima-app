@@ -102,6 +102,10 @@ fun AppNavigation(
                     onHelpClick = { navigateTo(ROUTE_HELP) },
                     onMapClick = { navigateTo(ROUTE_MAP) },
                     onSavedPlacesClick = { navigateTo(ROUTE_SAVED) },
+                    onShowOnMap = { lat, lon ->
+                        mapViewModel.showLocation(Point.fromLngLat(lon, lat), context)
+                        navigateTo(ROUTE_MAP)
+                    },
                     statisticViewModel = statisticViewModel,
                     savedPlacesViewModel = savedPlacesViewModel
                 )
