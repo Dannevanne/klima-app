@@ -7,9 +7,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by preferencesDataStore(name = "music_setting")
+private val Context.dataStore by preferencesDataStore(name = "user_settings")
 
-class MusicPreferenceRepository(private val content: Context) {
+class MusicPreferenceRepository(private val context: Context) {
     companion object {
         private val MUSIC_ENABLED_KEY = booleanPreferencesKey("music_enabled")
     }
