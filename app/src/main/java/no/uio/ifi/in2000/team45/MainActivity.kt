@@ -1,26 +1,18 @@
 package no.uio.ifi.in2000.team45
 
-import android.media.MediaPlayer
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mapbox.common.MapboxOptions
 import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
-import no.uio.ifi.in2000.team45.ui.AppNavigation
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 import no.uio.ifi.in2000.team45.ui.map.useDarkThemeFrom
 import no.uio.ifi.in2000.team45.ui.theme.Team45Theme
@@ -31,6 +23,8 @@ import no.uio.ifi.in2000.team45.ui.AppRoot
 import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
 import androidx.compose.runtime.collectAsState
 import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
+import no.uio.ifi.in2000.team45.ui.settings.MusicViewModel
+import no.uio.ifi.in2000.team45.ui.settings.MusicViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,7 +53,13 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
+            val musicViewModel: MusicViewModel = viewModel(
+                factory = MusicViewModelFactory(
+                    musicPreferenceRepository = musicPreferenceRepository
+                )
+            )
 
+            val musicEnabled by musicViewModel.musicEnabledFlow.collectAsState(initial = false)
 
             LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
                 if (mapViewModel.isLanguageInitialized) {
@@ -76,7 +76,9 @@ class MainActivity : AppCompatActivity() {
             Team45Theme(darkTheme = useDarkTheme) {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppRoot(
-                        mapViewModel = mapViewModel
+                        mapViewModel = mapViewModel,
+                        musicEnabled = false,
+                        onMusicEnabledChanged = {}
                     )
                 }
             }
