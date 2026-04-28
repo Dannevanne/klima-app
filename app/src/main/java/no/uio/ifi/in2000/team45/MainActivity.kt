@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,9 +31,18 @@ import no.uio.ifi.in2000.team45.ui.AppRoot
 import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
 
 class MainActivity : AppCompatActivity() {
+
+    private var mediaPlayer: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Starts music
+        mediaPlayer = MediaPlayer.create(this, R.raw.glem_alt).apply {
+            isLooping = true
+            start()
+        }
 
         // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
