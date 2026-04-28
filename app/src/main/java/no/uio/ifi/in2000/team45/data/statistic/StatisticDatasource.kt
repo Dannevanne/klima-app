@@ -379,8 +379,8 @@ class StatisticDatasource {
         return byYear.entries.sortedBy { it.key }.map { (year, values) ->
             AnnualObservation(
                 year = year,
-                meanTemp = values.entries.find { it.key.contains("air_temperature") }?.value,
-                totalPrecip = values.entries.find { it.key.contains("precipitation") }?.value
+                meanTemp = values["mean(air_temperature P1Y)"],
+                totalPrecip = values["sum(precipitation_amount P1Y)"]
             )
         }
     }
