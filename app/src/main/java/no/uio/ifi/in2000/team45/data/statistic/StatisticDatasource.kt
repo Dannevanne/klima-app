@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import no.uio.ifi.in2000.team45.network.KtorClient
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -80,6 +81,60 @@ class StatisticDatasource {
         }
 
         return allStations
+    }
+
+    // Single batch probe of which (station, element) combinations Frost actually
+    // serves and the time range for each. Lets us pick the canonical station
+    // for a place (Blindern for Oslo) instead of guessing by distance and then
+    // discovering after the climate fetch that the picked station has nothing.
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elementIds: List<String>,
+        clientId: String
+    ): List<TimeSeriesAvailability> {
+        if (stationIds.isEmpty() || elementIds.isEmpty()) return emptyList()
+        val sources = stationIds.joinToString(",")
+        val elements = elementIds.joinToString(",") {
+            java.net.URLEncoder.encode(it, "UTF-8")
+        }
+        val url = "$FROST_BASE/observations/availableTimeSeries/v0.jsonld" +
+            "?sources=$sources" +
+            "&elements=$elements"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            if (response.status.value != 200) {
+                Log.e(TAG, "AvailableTimeSeries failed: ${response.status.value}")
+                return emptyList()
+            }
+            val body: String = response.body()
+            parseAvailableTimeSeries(body)
+        } catch (e: Exception) {
+            Log.e(TAG, "AvailableTimeSeries error", e)
+            emptyList()
+        }
+    }
+
+    private fun parseAvailableTimeSeries(body: String): List<TimeSeriesAvailability> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyList()
+        return data.mapNotNull { item ->
+            val obj = item.jsonObject
+            val sourceId = obj["sourceId"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val elementId = obj["elementId"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val validFrom = obj["validFrom"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val validTo = obj["validTo"]?.jsonPrimitive?.contentOrNull
+            val baseStationId = sourceId.substringBefore(":")
+            val fromYear = validFrom.take(4).toIntOrNull() ?: return@mapNotNull null
+            val toYear = validTo?.take(4)?.toIntOrNull()
+            TimeSeriesAvailability(
+                stationId = baseStationId,
+                elementId = elementId,
+                validFromYear = fromYear,
+                validToYear = toYear
+            )
+        }
     }
 
     suspend fun getClimateNormals(

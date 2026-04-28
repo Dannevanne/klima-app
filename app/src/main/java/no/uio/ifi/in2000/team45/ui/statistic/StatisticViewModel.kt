@@ -22,6 +22,7 @@ import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
+import no.uio.ifi.in2000.team45.data.statistic.TimeSeriesAvailability
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import java.util.Calendar
 
@@ -214,6 +215,13 @@ class StatisticViewModel(
         }
     }
 
+    private val targetElements = listOf(
+        "mean(air_temperature P1Y)",
+        "sum(precipitation_amount P1Y)",
+        "max(wind_speed_of_gust P1M)",
+        "max(surface_snow_thickness P1M)"
+    )
+
     fun selectPlace(place: Place) {
         climateJob?.cancel()
         uiState = StatisticUiState.Loading
@@ -221,12 +229,10 @@ class StatisticViewModel(
             try {
                 val maxDistanceMeters = 30_000
                 val rawCandidates = if (place.stations.isNotEmpty()) {
-                    // Frost-name path already gave us every station in this
-                    // place. Use them as-is; don't recompute via "nearest".
                     place.stations
                 } else {
                     repository.findNearestStations(
-                        place.latitude, place.longitude, clientId, count = 15
+                        place.latitude, place.longitude, clientId, count = 20
                     )
                 }
                 val candidates = rawCandidates
@@ -250,9 +256,42 @@ class StatisticViewModel(
                     return@launch
                 }
 
+                // One batch probe: which station has which of our 4 elements
+                // and how far back. This is what lets Blindern win for Oslo
+                // -- it has all four with a 1937 start, beating sparser
+                // sensors that happen to be closer.
+                val availability = repository.getAvailableTimeSeries(
+                    candidates.map { it.id }, targetElements, clientId
+                )
+                val byStation = availability.groupBy { it.stationId }
+
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
                 val yearTo = currentYear - 1
                 val yearFrom = yearTo - maxPeriod + 1
+
+                val ranked = rankStations(candidates, byStation, currentYear)
+                val chosen = pickStationsForCoverage(ranked)
+
+                if (chosen.isEmpty()) {
+                    // Frost availability returned nothing for any candidate.
+                    // Fall back to fetching the closest station blind so we
+                    // at least show something rather than an error wall.
+                    chosen.add(candidates.first())
+                }
+
+                val fetched = coroutineScope {
+                    chosen.map { station ->
+                        async {
+                            val a = async {
+                                repository.getAnnualObservations(
+                                    station.id, clientId, yearFrom, yearTo
+                                )
+                            }
+                            val s = async { repository.getClimateStats(station.id, clientId) }
+                            Triple(station, a.await(), s.await())
+                        }
+                    }.map { it.await() }
+                }
 
                 val annualByYear = mutableMapOf<Int, AnnualObservation>()
                 val statsByMonth = (1..12).associateWith { month ->
@@ -267,28 +306,7 @@ class StatisticViewModel(
                 }.toMutableMap()
                 val stationsUsed = linkedSetOf<WeatherStation>()
 
-                // Fire all candidate fetches in parallel up to a cap. Frost
-                // tolerates ~10 concurrent requests fine and walking 20 stations
-                // sequentially turned tap-to-result into 15+ seconds.
-                val parallelCap = candidates.take(10)
-                val fetched = coroutineScope {
-                    parallelCap.map { candidate ->
-                        async {
-                            val a = async {
-                                repository.getAnnualObservations(
-                                    candidate.id, clientId, yearFrom, yearTo
-                                )
-                            }
-                            val s = async { repository.getClimateStats(candidate.id, clientId) }
-                            Triple(candidate, a.await(), s.await())
-                        }
-                    }.map { it.await() }
-                }
-
-                // Merge results in distance order so the closest station wins
-                // any given metric. Anything still null falls through to the
-                // next station out.
-                for ((candidate, annual, stats) in fetched) {
+                for ((station, annual, stats) in fetched) {
                     var contributed = false
 
                     for (obs in annual) {
@@ -323,7 +341,7 @@ class StatisticViewModel(
                         statsByMonth[stat.month] = merged
                     }
 
-                    if (contributed) stationsUsed.add(candidate)
+                    if (contributed) stationsUsed.add(station)
                 }
 
                 if (stationsUsed.isEmpty()) {
@@ -358,6 +376,52 @@ class StatisticViewModel(
                 )
             }
         }
+    }
+
+    private data class RankedStation(
+        val station: WeatherStation,
+        val score: Double,
+        val coveredElements: Set<String>,
+        val historyYears: Int
+    )
+
+    private fun rankStations(
+        candidates: List<WeatherStation>,
+        byStation: Map<String, List<TimeSeriesAvailability>>,
+        currentYear: Int
+    ): List<RankedStation> {
+        return candidates.map { station ->
+            val available = byStation[station.id].orEmpty()
+            val covered = available.map { it.elementId }.toSet()
+            // Earliest validFrom year across the elements we care about gives
+            // us a rough "history span". A station with 90 years of temp beats
+            // a station with 5.
+            val earliestFromYear = available.minOfOrNull { it.validFromYear }
+            val historyYears = earliestFromYear
+                ?.let { (currentYear - it).coerceAtLeast(0) }
+                ?: 0
+            val distanceKm = (station.distanceMeters ?: 0) / 1000.0
+            val score = covered.size * 1000.0 + historyYears.toDouble() - distanceKm
+            RankedStation(station, score, covered, historyYears)
+        }.sortedByDescending { it.score }
+    }
+
+    // Greedy set-cover: take the top-ranked station, then add stations only if
+    // they fill in metrics nobody before them had. Single-station result for
+    // canonical places (Oslo -> Blindern). Multi-station only when forced.
+    private fun pickStationsForCoverage(ranked: List<RankedStation>): MutableList<WeatherStation> {
+        val chosen = mutableListOf<WeatherStation>()
+        val coveredSoFar = mutableSetOf<String>()
+        for (entry in ranked) {
+            if (entry.coveredElements.isEmpty()) continue
+            val newCoverage = entry.coveredElements - coveredSoFar
+            val isPrimary = chosen.isEmpty()
+            if (newCoverage.isEmpty() && !isPrimary) continue
+            chosen.add(entry.station)
+            coveredSoFar.addAll(entry.coveredElements)
+            if (coveredSoFar.containsAll(targetElements)) break
+        }
+        return chosen
     }
 
     fun searchNearbyStations(lat: Double, lon: Double) {

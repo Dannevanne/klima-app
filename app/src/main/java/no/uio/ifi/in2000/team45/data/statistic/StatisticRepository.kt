@@ -22,6 +22,14 @@ class StatisticRepository(
         return datasource.getLatestObservations(stationId, clientId)
     }
 
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elementIds: List<String>,
+        clientId: String
+    ): List<TimeSeriesAvailability> {
+        return datasource.getAvailableTimeSeries(stationIds, elementIds, clientId)
+    }
+
     suspend fun getAnnualObservations(
         stationId: String,
         clientId: String,
