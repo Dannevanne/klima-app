@@ -44,18 +44,25 @@ fun OverviewCards(
 
     val avgPrecip = annualData.mapNotNull { it.totalPrecip }.average()
         .takeIf { annualData.any { a -> a.totalPrecip != null } }
-    // Pull peaks straight off the annual rollup; the climate-normals path
-    // (stats.windGust / stats.snowDepth) is sparse enough that almost every
-    // station shows "-" there.
     val maxWindGust = annualData.mapNotNull { it.maxWindGust }.maxOrNull()
     val maxSnowDepth = annualData.mapNotNull { it.maxSnowDepth }.maxOrNull()
     val extremePrecipDays = annualData.mapNotNull { it.totalPrecip }
         .count { it > (avgPrecip ?: Double.MAX_VALUE) * 1.3 }
 
-    val precipTrend = computeTrend(annualData.mapNotNull { it.totalPrecip })
-    val windTrend = TrendInfo(TrendDirection.STABLE, null)
-    val snowTrend = TrendInfo(TrendDirection.STABLE, null)
-    val extremeTrend = TrendInfo(TrendDirection.STABLE, null)
+    // Climate normals from monthly stats. Annual precip = sum of 12 monthly
+    // normals; gust/snow normals are sparse so often null.
+    val normalAnnualPrecip = stats.mapNotNull { it.precipitation }
+        .takeIf { it.size == 12 }?.sum()
+    val normalMaxGust = stats.mapNotNull { it.windGust }.maxOrNull()
+    val normalMaxSnow = stats.mapNotNull { it.snowDepth }.maxOrNull()
+    val expectedExtreme = selectedPeriod * 0.10
+
+    val precipTrend = vsNormal(avgPrecip, normalAnnualPrecip)
+    val windTrend = vsNormal(maxWindGust, normalMaxGust)
+    val snowTrend = vsNormal(maxSnowDepth, normalMaxSnow)
+    val extremeTrend = if (annualData.any { it.totalPrecip != null }) {
+        vsNormal(extremePrecipDays.toDouble(), expectedExtreme)
+    } else TrendInfo(TrendDirection.STABLE, null)
 
     Text(
         text = stringResource(R.string.overview_period, fromYear, currentYear),
@@ -138,9 +145,9 @@ fun OverviewStatCard(
                     TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
                 }
                 val arrow = when (trend.direction) {
-                    TrendDirection.UP -> "^"
-                    TrendDirection.DOWN -> "v"
-                    TrendDirection.STABLE -> "~"
+                    TrendDirection.UP -> "↑"
+                    TrendDirection.DOWN -> "↓"
+                    TrendDirection.STABLE -> "→"
                 }
                 val vsNorm = stringResource(R.string.trend_vs_norm)
                 Text(
