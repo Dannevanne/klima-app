@@ -19,6 +19,7 @@ class LanguagePreferenceRepository(private val context: Context) {
         // used on first launch before the user has chosen anything.
         fun systemDefault(): LanguageOption = when (Locale.getDefault().language) {
             "nb", "no" -> LanguageOption.BOKMÅL
+            "se-rNO" -> LanguageOption.SAMI
             "nn" -> LanguageOption.NYNORSK
             else -> LanguageOption.ENGLISH
         }
