@@ -320,6 +320,9 @@ fun DataMap(
         mapSurfaceReady = true
     }
 
+    var overlayPillExpanded by remember { mutableStateOf(false) }
+
+
     Box(modifier = modifier.fillMaxSize()) {
 
         MapContent(
@@ -341,7 +344,10 @@ fun DataMap(
                 pendingPoint = point
                 locationName = ""
             },
-            onMapClick = { focusManager.clearFocus() },
+            onMapClick = {
+                focusManager.clearFocus()
+                overlayPillExpanded = false
+            },
             context = context,
             modifier = Modifier.fillMaxSize()
         )
@@ -381,6 +387,8 @@ fun DataMap(
 
         MapOverlaySelector(
             activeOverlay = mapViewModel.activeOverlay,
+            expanded = overlayPillExpanded,
+            onExpandedChange = { overlayPillExpanded = it },
             onOverlaySelected = { type -> mapViewModel.setOverlay(type, context) },
             modifier = Modifier
                 .align(Alignment.BottomStart)
