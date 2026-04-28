@@ -172,7 +172,7 @@ private fun OverlayOptionRow(
     }
 }
 
-private fun overlayEmoji(type: OverlayType): String = when (type) {
+internal fun overlayEmoji(type: OverlayType): String = when (type) {
     OverlayType.NONE -> "\uD83D\uDEAB"
     OverlayType.FLOOD -> "\uD83C\uDF0A"
     OverlayType.QUICK_CLAY -> "\uD83E\uDEA8"
