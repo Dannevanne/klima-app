@@ -27,13 +27,23 @@ sealed interface StatisticUiState {
     object Idle : StatisticUiState
     object Loading : StatisticUiState
     data class StationResults(val stations: List<WeatherStation>) : StatisticUiState
+    data class PlaceResults(val places: List<Place>) : StatisticUiState
     data class ClimateData(
         val station: WeatherStation,
         val stats: List<MonthlyClimateStats>,
-        val annualData: List<AnnualObservation> = emptyList()
+        val annualData: List<AnnualObservation> = emptyList(),
+        val place: Place? = null,
+        val distanceFromPlaceMeters: Int? = null
     ) : StatisticUiState
     data class Error(val message: String) : StatisticUiState
 }
+
+data class Place(
+    val name: String,
+    val subtitle: String,
+    val latitude: Double,
+    val longitude: Double
+)
 
 class StatisticViewModel(
     application: Application
@@ -113,15 +123,19 @@ class StatisticViewModel(
                 val stations = repository.searchStations(queryAtLaunch, clientId)
                 if (stations.isNotEmpty()) {
                     recentSearchRepository.addSearch(queryAtLaunch)
-                    uiState = StatisticUiState.StationResults(stations)
+                    val places = groupStationsToPlaces(stations)
+                    uiState = if (places.isNotEmpty()) {
+                        StatisticUiState.PlaceResults(places)
+                    } else {
+                        StatisticUiState.StationResults(stations)
+                    }
                     return@launch
                 }
 
-                // No station name match -- geocode the query and find nearest
-                val nearby = geocodeAndFindNearest(queryAtLaunch)
-                uiState = if (nearby.isNotEmpty()) {
+                val geocoded = geocodePlaces(queryAtLaunch)
+                uiState = if (geocoded.isNotEmpty()) {
                     recentSearchRepository.addSearch(queryAtLaunch)
-                    StatisticUiState.StationResults(nearby)
+                    StatisticUiState.PlaceResults(geocoded)
                 } else {
                     StatisticUiState.Error(
                         getApplication<Application>().getString(
@@ -134,6 +148,112 @@ class StatisticViewModel(
                 uiState = StatisticUiState.Error(
                     getApplication<Application>().getString(
                         R.string.error_search_failed, e.message ?: ""
+                    )
+                )
+            }
+        }
+    }
+
+    private fun groupStationsToPlaces(stations: List<WeatherStation>): List<Place> {
+        val seen = mutableSetOf<String>()
+        return stations.mapNotNull { s ->
+            val muni = s.municipality.trim()
+            if (muni.isBlank()) return@mapNotNull null
+            val key = "${muni.lowercase()}|${s.county.lowercase()}"
+            if (!seen.add(key)) return@mapNotNull null
+            Place(
+                name = muni.toTitleCase(),
+                subtitle = s.county.trim().toTitleCase(),
+                latitude = s.latitude,
+                longitude = s.longitude
+            )
+        }
+    }
+
+    private suspend fun geocodePlaces(query: String): List<Place> {
+        val options = PlaceAutocompleteOptions(
+            limit = 5,
+            countries = listOf(IsoCountryCode.NORWAY)
+        )
+        val response = placeAutocomplete.suggestions(query = query, options = options)
+        val suggestions = response.value ?: return emptyList()
+        val seen = mutableSetOf<String>()
+        return suggestions.mapNotNull { suggestion ->
+            val selected = placeAutocomplete.select(suggestion).value ?: return@mapNotNull null
+            val coord = selected.coordinate ?: return@mapNotNull null
+            val name = suggestion.name
+            val key = name.lowercase()
+            if (!seen.add(key)) return@mapNotNull null
+            Place(
+                name = name,
+                subtitle = (suggestion.formattedAddress ?: "").trim(),
+                latitude = coord.latitude(),
+                longitude = coord.longitude()
+            )
+        }
+    }
+
+    private fun String.toTitleCase(): String {
+        if (isBlank()) return this
+        return split(" ").joinToString(" ") { word ->
+            word.lowercase().replaceFirstChar { it.uppercase() }
+        }
+    }
+
+    fun selectPlace(place: Place) {
+        climateJob?.cancel()
+        uiState = StatisticUiState.Loading
+        climateJob = viewModelScope.launch {
+            try {
+                val candidates = repository.findNearestStations(
+                    place.latitude, place.longitude, clientId, count = 10
+                )
+                if (candidates.isEmpty()) {
+                    uiState = StatisticUiState.Error(
+                        getApplication<Application>().getString(
+                            R.string.error_no_climate_data, place.name
+                        )
+                    )
+                    return@launch
+                }
+
+                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                val yearTo = currentYear - 1
+                val yearFrom = yearTo - maxPeriod + 1
+
+                for (candidate in candidates) {
+                    val stats = repository.getClimateStats(candidate.id, clientId)
+                    if (stats.all { it.meanTemp == null && it.precipitation == null }) {
+                        continue
+                    }
+                    val annual = repository.getAnnualObservations(
+                        candidate.id, clientId, yearFrom, yearTo
+                    )
+                    fullAnnualData = annual
+                    val distance = distanceInMeters(
+                        place.latitude, place.longitude,
+                        candidate.latitude, candidate.longitude
+                    )
+                    uiState = StatisticUiState.ClimateData(
+                        station = candidate,
+                        stats = stats,
+                        annualData = sliceAnnualForPeriod(selectedPeriod),
+                        place = place,
+                        distanceFromPlaceMeters = distance
+                    )
+                    return@launch
+                }
+
+                uiState = StatisticUiState.Error(
+                    getApplication<Application>().getString(
+                        R.string.error_no_climate_data, place.name
+                    )
+                )
+            } catch (e: Exception) {
+                Log.e("StatisticVM", "Climate data failed", e)
+                uiState = StatisticUiState.Error(
+                    getApplication<Application>().getString(
+                        R.string.error_fetch_data, e.message ?: ""
                     )
                 )
             }
@@ -246,24 +366,6 @@ class StatisticViewModel(
         searchJob?.cancel()
         climateJob?.cancel()
         super.onCleared()
-    }
-
-    private suspend fun geocodeAndFindNearest(query: String): List<WeatherStation> {
-        val options = PlaceAutocompleteOptions(
-            limit = 1,
-            countries = listOf(IsoCountryCode.NORWAY)
-        )
-        val response = placeAutocomplete.suggestions(query = query, options = options)
-        val suggestion = response.value?.firstOrNull() ?: return emptyList()
-
-        val selectResponse = placeAutocomplete.select(suggestion)
-        val coord = selectResponse.value?.coordinate ?: return emptyList()
-
-        val lat = coord.latitude()
-        val lon = coord.longitude()
-        return repository.findNearestStations(lat, lon, clientId, count = 5).map { station ->
-            station.copy(distanceMeters = distanceInMeters(lat, lon, station.latitude, station.longitude))
-        }
     }
 
     private fun distanceInMeters(

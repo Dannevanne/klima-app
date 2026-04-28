@@ -51,6 +51,7 @@ import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.FindNearbyButton
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
+import no.uio.ifi.in2000.team45.ui.statistic.components.PlaceList
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import androidx.compose.runtime.getValue
 
@@ -265,6 +266,15 @@ fun StatisticContent(
                 modifier = modifier
             )
         }
+        is StatisticUiState.PlaceResults -> {
+            PlaceList(
+                places = state.places,
+                onPlaceClick = { statisticViewModel.selectPlace(it) },
+                header = { SearchBarHeader(statisticViewModel) },
+                contentPadding = listPadding,
+                modifier = modifier
+            )
+        }
         is StatisticUiState.ClimateData -> {
             val isFav = favoriteStations.any { it.stationId == state.station.id }
             ClimateDataView(
@@ -274,12 +284,15 @@ fun StatisticContent(
                 selectedPeriod = statisticViewModel.selectedPeriod,
                 onPeriodChange = { statisticViewModel.updatePeriod(it) },
                 onShowOnMap = onShowOnMap,
+                placeName = state.place?.name,
+                distanceFromPlaceMeters = state.distanceFromPlaceMeters,
                 contentPadding = listPadding,
                 modifier = modifier,
                 header = {
-                    val placeTitle = state.station.municipality.toTitleCase()
-                        .ifBlank { state.station.name }
-                    val placeSubtitle = state.station.county.toTitleCase()
+                    val placeTitle = state.place?.name
+                        ?: state.station.municipality.toTitleCase().ifBlank { state.station.name }
+                    val placeSubtitle = state.place?.subtitle
+                        ?: state.station.county.toTitleCase()
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier

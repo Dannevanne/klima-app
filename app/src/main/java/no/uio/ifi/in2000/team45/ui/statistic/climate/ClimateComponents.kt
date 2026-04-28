@@ -286,9 +286,17 @@ fun TrendChart(
 fun StationsUsedCard(
     station: WeatherStation,
     annualData: List<AnnualObservation>,
-    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
+    placeName: String? = null,
+    distanceFromPlaceMeters: Int? = null
 ) {
     val obsCount = annualData.size
+    val distanceLabel = distanceFromPlaceMeters
+        ?.takeIf { placeName != null && it >= 5_000 }
+        ?.let { meters ->
+            val km = (meters / 1000.0)
+            stringResource(R.string.distance_from_place_km, "%.1f".format(km), placeName!!)
+        }
 
     Text(
         text = stringResource(R.string.weather_stations_used),
@@ -328,6 +336,13 @@ fun StationsUsedCard(
                         text = "${station.municipality}, ${station.county}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                if (distanceLabel != null) {
+                    Text(
+                        text = distanceLabel,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Text(
