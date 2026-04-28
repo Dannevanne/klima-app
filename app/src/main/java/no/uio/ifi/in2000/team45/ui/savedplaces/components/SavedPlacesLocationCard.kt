@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -22,6 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,8 +71,7 @@ private fun riskLevelLabel(level: String): String {
     }
 }
 
-private fun overallRisk(flood: String, landslide: String, wind: String): String {
-    val levels = listOf(flood, landslide, wind)
+private fun overallRisk(vararg levels: String): String {
     return when {
         levels.any { it == "High" } -> "High"
         levels.any { it == "Moderate" } -> "Moderate"
@@ -84,12 +88,17 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    // Levels are now computed in the ViewModel so we can express Moderate
-    // (within 500 m of a hazard zone) instead of just High/Low.
+    // Levels come from the ViewModel. Flood/landslide use a 500 m offset
+    // proxy; kvikkleire uses NVE's faregrad attribute directly.
     val floodLevel = status?.floodLevel ?: "Low"
     val landslideLevel = status?.landslideLevel ?: "Low"
+    val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
-    val overall = overallRisk(floodLevel, landslideLevel, windLevel)
+    val overall = overallRisk(
+        floodLevel, landslideLevel, kvikkleireLevel, windLevel
+    )
+
+    var showKvikkleireInfo by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -141,7 +150,7 @@ fun SavedPlacesLocationCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Risk categories row
+            // Risk categories row -- four boxes, two on each line if needed.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -158,11 +167,33 @@ fun SavedPlacesLocationCard(
                     loading = loading,
                     modifier = Modifier.weight(1f)
                 )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                RiskCategoryBox(
+                    label = stringResource(R.string.quick_clay),
+                    level = kvikkleireLevel,
+                    loading = loading,
+                    onInfoClick = if (status?.kvikkleireFaregrad != null) {
+                        { showKvikkleireInfo = true }
+                    } else null,
+                    modifier = Modifier.weight(1f)
+                )
                 RiskCategoryBox(
                     label = stringResource(R.string.wind),
                     level = windLevel,
                     loading = loading,
                     modifier = Modifier.weight(1f)
+                )
+            }
+
+            if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
+                KvikkleireInfoDialog(
+                    faregrad = status.kvikkleireFaregrad,
+                    onDismiss = { showKvikkleireInfo = false }
                 )
             }
 
@@ -199,6 +230,7 @@ private fun RiskCategoryBox(
     label: String,
     level: String,
     loading: Boolean,
+    onInfoClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -209,6 +241,21 @@ private fun RiskCategoryBox(
             )
             .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
+        if (onInfoClick != null) {
+            IconButton(
+                onClick = onInfoClick,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(20.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = stringResource(R.string.info),
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         Column {
             Text(
                 text = label,
