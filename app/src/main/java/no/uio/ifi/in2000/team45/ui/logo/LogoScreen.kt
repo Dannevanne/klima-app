@@ -21,6 +21,7 @@ import no.uio.ifi.in2000.team45.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.ui.map.MapStateScreen
+import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable
 fun LogoScreen(modifier: Modifier = Modifier) {
@@ -38,7 +39,7 @@ fun LogoScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.size(350.dp)
             )
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary
+                color = loadingColor()
             )
         }
     }
