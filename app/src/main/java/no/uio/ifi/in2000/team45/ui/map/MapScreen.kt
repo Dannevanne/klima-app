@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -125,9 +127,7 @@ fun MapStateScreen(
                 modifier = modifier
             )
             when (uiState) {
-                is MapUiState.Loading -> CircularProgressIndicator(color = loadingColor())
                 is MapUiState.Error -> Text("Error", color = Color.Red)
-                is MapUiState.Idle -> {}
                 else -> {}
             }
 
@@ -231,6 +231,7 @@ fun DataMap(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val uiState = mapViewModel.mapUiState
 
     // The selected theme is translated to a boolean that decides if the theme
@@ -301,6 +302,24 @@ fun DataMap(
         )
     }
 
+    // Hide the Mapbox GL surface behind a themed scrim until Mapbox itself
+    // says the first frame is rendered. Listening to subscribeMapLoaded means
+    // the scrim stays up through tile loading, not just the surface attach.
+    // The 5s timeout is a safety net so we never get stuck on the spinner.
+    var mapSurfaceReady by remember { mutableStateOf(false) }
+    LaunchedEffect(mapViewRef) {
+        mapSurfaceReady = false
+        val mv = mapViewRef ?: return@LaunchedEffect
+        val ready = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val sub = mv.mapboxMap.subscribeMapLoaded { ready.complete(Unit) }
+        try {
+            kotlinx.coroutines.withTimeoutOrNull(5000) { ready.await() }
+        } finally {
+            sub.cancel()
+        }
+        mapSurfaceReady = true
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
 
         MapContent(
@@ -322,6 +341,7 @@ fun DataMap(
                 pendingPoint = point
                 locationName = ""
             },
+            onMapClick = { focusManager.clearFocus() },
             context = context,
             modifier = Modifier.fillMaxSize()
         )
@@ -367,6 +387,25 @@ fun DataMap(
                 .fillMaxWidth()
                 .padding(bottom = 30.dp)
         )
+
+        androidx.compose.animation.AnimatedVisibility(
+            visible = !mapSurfaceReady,
+            // Snap in so the scrim is up on first frame, hiding Mapbox's black
+            // GL clear; only the dismissal animates as the map comes into view.
+            enter = androidx.compose.animation.EnterTransition.None,
+            exit = androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(250)
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 
     pendingPoint?.let { point ->
