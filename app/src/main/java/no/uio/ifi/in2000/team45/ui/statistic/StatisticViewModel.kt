@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
@@ -244,11 +246,18 @@ class StatisticViewModel(
                 }.toMutableMap()
                 val stationsUsed = linkedSetOf<WeatherStation>()
 
+                // Fetch annual + stats in parallel per station; many stations
+                // return 412/404 so the per-call latency stacks up otherwise.
                 for (candidate in candidates) {
-                    val annual = repository.getAnnualObservations(
-                        candidate.id, clientId, yearFrom, yearTo
-                    )
-                    val stats = repository.getClimateStats(candidate.id, clientId)
+                    val (annual, stats) = coroutineScope {
+                        val a = async {
+                            repository.getAnnualObservations(
+                                candidate.id, clientId, yearFrom, yearTo
+                            )
+                        }
+                        val s = async { repository.getClimateStats(candidate.id, clientId) }
+                        a.await() to s.await()
+                    }
 
                     var contributed = false
 
@@ -286,14 +295,17 @@ class StatisticViewModel(
 
                     if (contributed) stationsUsed.add(candidate)
 
+                    // Stop once every year has the four annual metrics filled.
+                    // recordHigh is nice-to-have but Frost normals 404 a lot, so
+                    // gating on it would keep iterating even when there's nothing
+                    // more to find.
                     val annualComplete = annualByYear.isNotEmpty() && annualByYear.values.all {
                         it.meanTemp != null &&
                             it.totalPrecip != null &&
                             it.maxWindGust != null &&
                             it.maxSnowDepth != null
                     }
-                    val recordHighFilled = statsByMonth.values.any { it.recordHigh != null }
-                    if (annualComplete && recordHighFilled) break
+                    if (annualComplete) break
                 }
 
                 if (stationsUsed.isEmpty()) {
