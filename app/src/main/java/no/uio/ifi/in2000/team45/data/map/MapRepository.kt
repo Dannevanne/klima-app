@@ -24,6 +24,18 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return mapDatasource.isInQuickClayZone(lat, lon)
     }
 
+    suspend fun getQuickClayHazard(lat: Double, lon: Double): String? {
+        return mapDatasource.getQuickClayHazard(lat, lon)
+    }
+
+    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
+        return mapDatasource.isInLandslideZone(lat, lon)
+    }
+
+    suspend fun getRadonHazard(lat: Double, lon: Double): String? {
+        return mapDatasource.getRadonHazard(lat, lon)
+    }
+
     suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
         return mapDatasource.getWindSpeed(lat, lon)
     }
