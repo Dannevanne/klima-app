@@ -83,7 +83,7 @@ fun StatisticContent(
                                 modifier = Modifier.padding(bottom = 4.dp)
                             ) {
                                 Icon(
-                                    Icons.Outlined.Place,
+                                    Icons.Outlined.Star,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier
@@ -91,7 +91,7 @@ fun StatisticContent(
                                         .padding(end = 4.dp)
                                 )
                                 Text(
-                                    text = stringResource(R.string.nearby),
+                                    text = stringResource(R.string.favorites),
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

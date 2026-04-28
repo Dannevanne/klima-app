@@ -104,6 +104,7 @@
     <string name="station_not_found">Ingen stasjon funnet</string>
     <string name="fetch_error">Feil ved henting</string>
     <string name="nearby">I nærheten</string>
+    <string name="favorites">Favoritter</string>
     <string name="remove_saved_place">Fjern lagret sted</string>
     <string name="remove_favorite">Fjern favoritt</string>
     <string name="add_place_to_saved_places">Legg til sted i lagrede steder</string>
