@@ -55,6 +55,12 @@ class StatisticViewModel(
     var selectedPeriod: Int by mutableStateOf(30)
         private set
 
+    // Fetched once per station for the longest selectable period; period
+    // chips slice this locally so chart switching is instant and the
+    // missing-data warning doesn't blink during a refetch.
+    private val maxPeriod = 50
+    private var fullAnnualData: List<AnnualObservation> = emptyList()
+
     val searchHistory = recentSearchRepository.recentSearchesFlow.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -73,24 +79,14 @@ class StatisticViewModel(
         selectedPeriod = years
         val current = uiState
         if (current is StatisticUiState.ClimateData) {
-            refreshAnnual(current)
+            uiState = current.copy(annualData = sliceAnnualForPeriod(years))
         }
     }
 
-    private fun refreshAnnual(current: StatisticUiState.ClimateData) {
-        climateJob?.cancel()
-        climateJob = viewModelScope.launch {
-            try {
-                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                val yearFrom = currentYear - selectedPeriod
-                val annual = repository.getAnnualObservations(
-                    current.station.id, clientId, yearFrom, currentYear
-                )
-                uiState = current.copy(annualData = annual)
-            } catch (e: Exception) {
-                Log.e("StatisticVM", "Annual refresh failed", e)
-            }
-        }
+    private fun sliceAnnualForPeriod(years: Int): List<AnnualObservation> {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val from = currentYear - years
+        return fullAnnualData.filter { it.year >= from }
     }
 
     fun updateSearchQuery(query: String) {
@@ -155,7 +151,7 @@ class StatisticViewModel(
         climateJob = viewModelScope.launch {
             try {
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                val yearFrom = currentYear - selectedPeriod
+                val yearFrom = currentYear - maxPeriod
 
                 // Try this station and fall through to next if no data
                 for (i in startIndex until candidates.size) {
@@ -167,7 +163,10 @@ class StatisticViewModel(
                     val annual = repository.getAnnualObservations(
                         candidate.id, clientId, yearFrom, currentYear
                     )
-                    uiState = StatisticUiState.ClimateData(candidate, stats, annual)
+                    fullAnnualData = annual
+                    uiState = StatisticUiState.ClimateData(
+                        candidate, stats, sliceAnnualForPeriod(selectedPeriod)
+                    )
                     return@launch
                 }
 
