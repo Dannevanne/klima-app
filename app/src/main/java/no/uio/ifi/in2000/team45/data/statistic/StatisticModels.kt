@@ -25,7 +25,13 @@ data class MonthlyObservation(
 data class AnnualObservation(
     val year: Int,
     val meanTemp: Double?,
-    val totalPrecip: Double?
+    val totalPrecip: Double?,
+    // Max single-month value within the year. Frost doesn't have P1Y
+    // aggregations for these elements, so the repository computes the yearly
+    // max from monthly data client-side.
+    val maxWindGust: Double? = null,
+    val maxWindSpeed: Double? = null,
+    val maxSnowDepth: Double? = null
 )
 
 data class MonthlyClimateStats(

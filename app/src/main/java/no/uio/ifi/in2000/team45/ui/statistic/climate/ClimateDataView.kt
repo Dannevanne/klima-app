@@ -90,6 +90,34 @@ fun ClimateDataView(
             }
         }
 
+        if (annualData.any { it.maxWindGust != null }) {
+            item {
+                TrendChart(
+                    title = stringResource(R.string.annual_max_gust_trend),
+                    data = annualData.mapNotNull { a ->
+                        a.maxWindGust?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFF7E57C2),
+                    fillColor = Color(0x307E57C2)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if (annualData.any { it.maxSnowDepth != null }) {
+            item {
+                TrendChart(
+                    title = stringResource(R.string.annual_max_snow_trend),
+                    data = annualData.mapNotNull { a ->
+                        a.maxSnowDepth?.let { a.year to it }
+                    },
+                    lineColor = Color(0xFF26C6DA),
+                    fillColor = Color(0x3026C6DA)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
         item {
             StationsUsedCard(station = station, annualData = annualData)
         }
