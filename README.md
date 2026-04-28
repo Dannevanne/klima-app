@@ -39,3 +39,12 @@ Krever:
 - **Mapbox access token** i `app/src/main/res/values/mapbox_access_token.xml`
 - **Frost client ID** i `app/src/main/res/values/frost_client_id.xml`
   - Registrer deg paa https://frost.met.no/auth/requestCredentials.html
+
+## Viktig: Emulator-oppsett for tastatur
+
+For at søkefeltet og tekstinntasting skal fungere korrekt i emulatoren,
+kan det være nødvendig å endre følgende innstillinger på emulatoren:
+- Gå til `Setting` -> `System` -> `Keyboard` -> `On-screen keyboard` -> `Gboard`   
+- Klikk på `Physical keyboard` og skru PÅ bryteren for `Show on-screen keyboard`
+- Gå ett steg tilbake (til Gboards innstillinger)
+- Klikk på `Write in text fields` og skru AV for `Use stylus to write in text fields`
