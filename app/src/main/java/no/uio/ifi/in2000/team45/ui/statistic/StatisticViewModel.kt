@@ -45,7 +45,11 @@ data class Place(
     val name: String,
     val subtitle: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    // Stations already known to belong to this place (e.g., grouped from a
+    // Frost name match like "OSLO - BLINDERN", "OSLO - VINDERN"). Empty for
+    // places that come from geocoding only.
+    val stations: List<WeatherStation> = emptyList()
 )
 
 class StatisticViewModel(
@@ -158,17 +162,26 @@ class StatisticViewModel(
     }
 
     private fun groupStationsToPlaces(stations: List<WeatherStation>): List<Place> {
-        val seen = mutableSetOf<String>()
-        return stations.mapNotNull { s ->
+        val byKey = linkedMapOf<String, MutableList<WeatherStation>>()
+        for (s in stations) {
             val muni = s.municipality.trim()
-            if (muni.isBlank()) return@mapNotNull null
+            if (muni.isBlank()) continue
             val key = "${muni.lowercase()}|${s.county.lowercase()}"
-            if (!seen.add(key)) return@mapNotNull null
+            byKey.getOrPut(key) { mutableListOf() }.add(s)
+        }
+        return byKey.values.map { group ->
+            val first = group.first()
+            // Centre = mean of station coords. Lets us compute a sensible
+            // distance from "Oslo" to each station in Oslo, instead of a
+            // distance-to-first-station that's near zero for one station.
+            val centerLat = group.map { it.latitude }.average()
+            val centerLon = group.map { it.longitude }.average()
             Place(
-                name = muni.toTitleCase(),
-                subtitle = s.county.trim().toTitleCase(),
-                latitude = s.latitude,
-                longitude = s.longitude
+                name = first.municipality.trim().toTitleCase(),
+                subtitle = first.county.trim().toTitleCase(),
+                latitude = centerLat,
+                longitude = centerLon,
+                stations = group.toList()
             )
         }
     }
@@ -207,8 +220,16 @@ class StatisticViewModel(
         climateJob = viewModelScope.launch {
             try {
                 val maxDistanceMeters = 30_000
-                val candidates = repository
-                    .findNearestStations(place.latitude, place.longitude, clientId, count = 15)
+                val rawCandidates = if (place.stations.isNotEmpty()) {
+                    // Frost-name path already gave us every station in this
+                    // place. Use them as-is; don't recompute via "nearest".
+                    place.stations
+                } else {
+                    repository.findNearestStations(
+                        place.latitude, place.longitude, clientId, count = 15
+                    )
+                }
+                val candidates = rawCandidates
                     .map { c ->
                         c.copy(
                             distanceMeters = distanceInMeters(
@@ -246,19 +267,28 @@ class StatisticViewModel(
                 }.toMutableMap()
                 val stationsUsed = linkedSetOf<WeatherStation>()
 
-                // Fetch annual + stats in parallel per station; many stations
-                // return 412/404 so the per-call latency stacks up otherwise.
-                for (candidate in candidates) {
-                    val (annual, stats) = coroutineScope {
-                        val a = async {
-                            repository.getAnnualObservations(
-                                candidate.id, clientId, yearFrom, yearTo
-                            )
+                // Fire all candidate fetches in parallel up to a cap. Frost
+                // tolerates ~10 concurrent requests fine and walking 20 stations
+                // sequentially turned tap-to-result into 15+ seconds.
+                val parallelCap = candidates.take(10)
+                val fetched = coroutineScope {
+                    parallelCap.map { candidate ->
+                        async {
+                            val a = async {
+                                repository.getAnnualObservations(
+                                    candidate.id, clientId, yearFrom, yearTo
+                                )
+                            }
+                            val s = async { repository.getClimateStats(candidate.id, clientId) }
+                            Triple(candidate, a.await(), s.await())
                         }
-                        val s = async { repository.getClimateStats(candidate.id, clientId) }
-                        a.await() to s.await()
-                    }
+                    }.map { it.await() }
+                }
 
+                // Merge results in distance order so the closest station wins
+                // any given metric. Anything still null falls through to the
+                // next station out.
+                for ((candidate, annual, stats) in fetched) {
                     var contributed = false
 
                     for (obs in annual) {
@@ -294,18 +324,6 @@ class StatisticViewModel(
                     }
 
                     if (contributed) stationsUsed.add(candidate)
-
-                    // Stop once every year has the four annual metrics filled.
-                    // recordHigh is nice-to-have but Frost normals 404 a lot, so
-                    // gating on it would keep iterating even when there's nothing
-                    // more to find.
-                    val annualComplete = annualByYear.isNotEmpty() && annualByYear.values.all {
-                        it.meanTemp != null &&
-                            it.totalPrecip != null &&
-                            it.maxWindGust != null &&
-                            it.maxSnowDepth != null
-                    }
-                    if (annualComplete) break
                 }
 
                 if (stationsUsed.isEmpty()) {
