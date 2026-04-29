@@ -159,8 +159,8 @@
     <string name="flood_measures">Flood measures</string>
     <string name="landslide_prevention">Landslide prevention</string>
     <string name="wind_protection">Wind protection</string>
-    <string name="nve_flood_link">Read more at NVE flood protection handbook</string>
-    <string name="nve_landslide_link">Read more at NVE landslide handbook</string>
+    <string name="nve_flood_link">Read more about flood protection measures at DiBK</string>
+    <string name="nve_landslide_link">Read more about landslide protection measures at DiBK</string>
     <string name="dsb_storm_link">Read more at DSB storm preparedness</string>
     <string name="flood_advice_backflow_valve">Install a backflow valve on your drainage to prevent sewage from entering the house.</string>
     <string name="flood_advice_raise_threshold">Raise the threshold to the basement and crawl space.</string>
