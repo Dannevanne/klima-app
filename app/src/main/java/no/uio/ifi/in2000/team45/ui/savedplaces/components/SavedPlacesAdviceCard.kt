@@ -279,7 +279,7 @@ private fun AdviceAccordionCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${category.linkText} ->",
+                        text = category.linkText,
                         fontSize = 13.sp,
                         color = LinkBlue,
                         modifier = Modifier.clickable {
