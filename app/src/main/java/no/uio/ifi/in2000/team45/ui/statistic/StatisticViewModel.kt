@@ -95,56 +95,59 @@ class StatisticViewModel(
         if (query.length >= 2) {
             searchJob = viewModelScope.launch {
                 delay(400)
-                searchStations()
+                performSearch(query)
             }
         }
     }
 
     fun searchStations() {
-        if (searchQuery.isBlank()) return
-
+        val query = searchQuery
+        if (query.isBlank()) return
         searchJob?.cancel()
-        uiState = StatisticUiState.Loading
-
-        val queryAtLaunch = searchQuery
-
         searchJob = viewModelScope.launch {
-            try {
-                val stations = repository.searchStations(queryAtLaunch, clientId)
-                if (stations.isNotEmpty()) {
-                    recentSearchRepository.addSearch(queryAtLaunch)
-                    uiState = StatisticUiState.StationResults(stations)
-                    return@launch
-                }
+            performSearch(query)
+        }
+    }
 
-                // No station name match -- geocode the query and find nearest
-                val nearby = geocodeAndFindNearest(queryAtLaunch)
-                uiState = if (nearby.isNotEmpty()) {
-                    recentSearchRepository.addSearch(queryAtLaunch)
-                    StatisticUiState.StationResults(nearby)
-                } else {
-                    StatisticUiState.Error(
-                        getApplication<Application>().getString(
-                            R.string.error_no_stations_found, queryAtLaunch
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e("StatisticVM", "Search failed", e)
-                uiState = StatisticUiState.Error(
+    private suspend fun performSearch(query: String) {
+        uiState = StatisticUiState.Loading
+        try {
+            val stations = repository.searchStations(query, clientId)
+            if (stations.isNotEmpty()) {
+                recentSearchRepository.addSearch(query)
+                uiState = StatisticUiState.StationResults(stations)
+                return
+            }
+
+            val nearby = geocodeAndFindNearest(query)
+            uiState = if (nearby.isNotEmpty()) {
+                recentSearchRepository.addSearch(query)
+                StatisticUiState.StationResults(nearby)
+            } else {
+                StatisticUiState.Error(
                     getApplication<Application>().getString(
-                        R.string.error_search_failed, e.message ?: ""
+                        R.string.error_no_stations_found, query
                     )
                 )
             }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            // The user typed another character or moved on. Don't paint Error
+            // for a cancelled search; just let the next coroutine take over.
+            throw e
+        } catch (e: Exception) {
+            Log.e("StatisticVM", "Search failed", e)
+            uiState = StatisticUiState.Error(
+                getApplication<Application>().getString(
+                    R.string.error_search_failed, e.message ?: ""
+                )
+            )
         }
     }
 
     fun searchNearbyStations(lat: Double, lon: Double) {
         searchJob?.cancel()
-        uiState = StatisticUiState.Loading
-
         searchJob = viewModelScope.launch {
+            uiState = StatisticUiState.Loading
             try {
                 val stations = repository.findNearestStations(lat, lon, clientId, count = 5)
                     .map { station ->
@@ -163,6 +166,8 @@ class StatisticViewModel(
                         )
                     )
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Nearby search failed", e)
                 uiState = StatisticUiState.Error(
@@ -212,6 +217,8 @@ class StatisticViewModel(
                         R.string.error_no_climate_data, station.name
                     )
                 )
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("StatisticVM", "Climate data failed", e)
                 uiState = StatisticUiState.Error(
