@@ -84,8 +84,8 @@ class StatisticViewModel(
     }
 
     private fun sliceAnnualForPeriod(years: Int): List<AnnualObservation> {
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val from = currentYear - years
+        val lastYear = Calendar.getInstance().get(Calendar.YEAR) - 1
+        val from = lastYear - years + 1
         return fullAnnualData.filter { it.year >= from }
     }
 
@@ -185,9 +185,12 @@ class StatisticViewModel(
         climateJob = viewModelScope.launch {
             try {
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                val yearFrom = currentYear - maxPeriod
+                // Skip the in-progress year for both queries. P1Y temp/precip
+                // returns nothing for it, but P1M wind/snow returns partial
+                // months, which would offset the two charts by a year.
+                val yearTo = currentYear - 1
+                val yearFrom = yearTo - maxPeriod + 1
 
-                // Try this station and fall through to next if no data
                 for (i in startIndex until candidates.size) {
                     val candidate = candidates[i]
                     val stats = repository.getClimateStats(candidate.id, clientId)
@@ -195,7 +198,7 @@ class StatisticViewModel(
                         continue
                     }
                     val annual = repository.getAnnualObservations(
-                        candidate.id, clientId, yearFrom, currentYear
+                        candidate.id, clientId, yearFrom, yearTo
                     )
                     fullAnnualData = annual
                     uiState = StatisticUiState.ClimateData(
