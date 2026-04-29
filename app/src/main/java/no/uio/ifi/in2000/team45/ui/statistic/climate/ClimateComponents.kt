@@ -32,6 +32,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.ui.statistic.util.toTitleCaseWords
 
 @Composable
 fun OverviewCards(
@@ -311,7 +312,7 @@ fun StationsUsedCard(
         ) {
             Column {
                 Text(
-                    text = station.name,
+                    text = station.name.toTitleCaseWords(),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
@@ -322,7 +323,7 @@ fun StationsUsedCard(
                 )
                 if (station.municipality.isNotBlank()) {
                     Text(
-                        text = "${station.municipality}, ${station.county}",
+                        text = "${station.municipality.toTitleCaseWords()}, ${station.county.toTitleCaseWords()}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
