@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.statistic.util.toTitleCaseWords
 
 @Composable
 fun StationList(
@@ -69,13 +68,13 @@ fun StationList(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = station.name.toTitleCaseWords(),
+                            text = station.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
                         if (station.municipality.isNotBlank()) {
                             Text(
-                                text = "${station.municipality.toTitleCaseWords()}, ${station.county.toTitleCaseWords()}",
+                                text = "${station.municipality}, ${station.county}",
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
