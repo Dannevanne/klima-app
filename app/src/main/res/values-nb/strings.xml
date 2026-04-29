@@ -142,8 +142,8 @@
     <string name="flood_measures">Tiltak mot flom</string>
     <string name="landslide_prevention">Tiltak mot skred</string>
     <string name="wind_protection">Tiltak mot vind</string>
-    <string name="nve_flood_link">Les mer i NVEs håndbok om flomsikring</string>
-    <string name="nve_landslide_link">Les mer i NVEs håndbok om skredsikring</string>
+    <string name="nve_flood_link">Les mer om sikringstiltak av flom hos DiBK</string>
+    <string name="nve_landslide_link">Les mer om sikringstiltak av skred hos DiBK</string>
     <string name="dsb_storm_link">Les mer om stormberedskap hos DSB</string>
     <string name="flood_advice_backflow_valve">Installer en tilbakeslagsventil på avløpet for å hindre at kloakk kommer inn i huset.</string>
     <string name="flood_advice_raise_threshold">Hev dørterskelen til kjeller og krypkjeller.</string>
