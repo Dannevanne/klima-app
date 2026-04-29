@@ -139,7 +139,7 @@ private fun windAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.dsb_storm_link),
-        linkUrl = "https://www.dsb.no/"
+        linkUrl = "https://www.dsb.no/sikkerhverdag/produkter-utstyr-og-fritid/slik-forbereder-du-deg-pa-storm/"
     )
 }
 
