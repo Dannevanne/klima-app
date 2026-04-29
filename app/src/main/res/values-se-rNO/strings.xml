@@ -79,8 +79,8 @@
     <string name="flood_measures">Doaibmabijut dulvvi vuostá</string>
     <string name="landslide_prevention">Doaibmabijut eanačielggadeami vuostá</string>
     <string name="wind_protection">Doaibmabijut bieggavahágiid vuostá</string>
-    <string name="nve_flood_link">Loga eanet NVE giehtagirjjis dulvesuodjaleami birra</string>
-    <string name="nve_landslide_link">Loga eanet NVE giehtagirjjis čielggadeamisuodjaleami birra</string>
+    <string name="nve_flood_link">Loga eanet dulvesihkkarastindoaibmabijuid birra DiBK:s</string>
+    <string name="nve_landslide_link">Loga eanet uđassihkkarastindoaibmabijuid birra DiBK:s</string>
     <string name="dsb_storm_link">Loga eanet stoarmmagearggusvuođa birra DSB:s</string>
     <string name="flood_advice_backflow_valve">Sajáiduhte maŋásgolganventiilla čáhcegolgii eastadan dihte ahte ruskalihtti boahtá vissui.</string>
     <string name="flood_advice_raise_threshold">Lokte kjellára ja vuolliviesu uksaráji.</string>
