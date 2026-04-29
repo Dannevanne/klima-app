@@ -83,7 +83,7 @@ private fun floodAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.nve_flood_link),
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
+        linkUrl = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/3.-flom#34-sikringstiltak"
     )
 }
 
