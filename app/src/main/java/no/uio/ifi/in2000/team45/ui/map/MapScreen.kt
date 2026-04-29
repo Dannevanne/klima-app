@@ -240,7 +240,7 @@ fun DataMap(
     // The selected theme is translated to a boolean that decides if the theme
     // should be dark or not.
     val useDarkMap = useDarkThemeFrom(
-        theme = mapViewModel.mapTheme,
+        theme = mapViewModel.appTheme,
         systemIsDark = isSystemInDarkTheme()
     )
     // Long-press save dialog state

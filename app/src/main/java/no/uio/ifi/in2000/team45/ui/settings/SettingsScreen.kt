@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import no.uio.ifi.in2000.team45.ui.map.MapTheme
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
+import no.uio.ifi.in2000.team45.ui.theme.AppTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.MaterialTheme
 import no.uio.ifi.in2000.team45.R
@@ -47,10 +47,10 @@ fun SettingsScreen(
             .padding(innerPadding)
             .padding(8.dp)) {
             item {
-                MapThemeSetting(
-                    selectedTheme = mapViewModel.mapTheme,
+                AppThemeSetting(
+                    selectedTheme = mapViewModel.appTheme,
                     onThemeSelected = { theme ->
-                        mapViewModel.updateMapTheme(theme)
+                        mapViewModel.updateAppTheme(theme)
                     }
                 )
             }
@@ -83,8 +83,8 @@ fun SettingsScreen(
 }
 
 @Composable
-fun MapThemeSetting(selectedTheme: MapTheme,
-                    onThemeSelected: (MapTheme) -> Unit,
+fun AppThemeSetting(selectedTheme: AppTheme,
+                    onThemeSelected: (AppTheme) -> Unit,
                     modifier: Modifier = Modifier){
     Column(modifier = modifier
         .fillMaxWidth()
@@ -98,8 +98,8 @@ fun MapThemeSetting(selectedTheme: MapTheme,
             .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
-            RadioButton(selected = selectedTheme == MapTheme.DEVICE,
-                onClick = { onThemeSelected(MapTheme.DEVICE)})
+            RadioButton(selected = selectedTheme == AppTheme.DEVICE,
+                onClick = { onThemeSelected(AppTheme.DEVICE)})
             Text(text = stringResource(R.string.device_settings))
         }
 
@@ -108,8 +108,8 @@ fun MapThemeSetting(selectedTheme: MapTheme,
             .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
-            RadioButton(selected = selectedTheme == MapTheme.LIGHT,
-                onClick = { onThemeSelected(MapTheme.LIGHT)})
+            RadioButton(selected = selectedTheme == AppTheme.LIGHT,
+                onClick = { onThemeSelected(AppTheme.LIGHT)})
             Text(text = stringResource(R.string.lightmode))
         }
 
@@ -118,8 +118,8 @@ fun MapThemeSetting(selectedTheme: MapTheme,
             .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically)
         {
-            RadioButton(selected = selectedTheme == MapTheme.DARK,
-                onClick = { onThemeSelected(MapTheme.DARK)})
+            RadioButton(selected = selectedTheme == AppTheme.DARK,
+                onClick = { onThemeSelected(AppTheme.DARK)})
             Text(text = stringResource(R.string.darkmode))
         }
     }

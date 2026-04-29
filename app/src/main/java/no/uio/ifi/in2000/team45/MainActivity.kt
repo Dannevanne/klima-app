@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
             // Collects the users theme preference to use for Theme45Theme
             val useDarkTheme = useDarkThemeFrom(
-                theme = mapViewModel.mapTheme,
+                theme = mapViewModel.appTheme,
                 systemIsDark = isSystemInDarkTheme()
             )
 
