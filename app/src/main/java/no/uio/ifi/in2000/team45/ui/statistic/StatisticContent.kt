@@ -183,7 +183,7 @@ fun StatisticContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        Icons.Filled.Search,
+                                        Icons.Outlined.WatchLater,
                                         contentDescription = null,
                                         modifier = Modifier.padding(end = 12.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
