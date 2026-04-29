@@ -88,17 +88,17 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    // Levels come from the ViewModel. Flood/landslide use a 500 m offset
-    // proxy; kvikkleire uses NVE's faregrad attribute directly.
     val floodLevel = status?.floodLevel ?: "Low"
     val landslideLevel = status?.landslideLevel ?: "Low"
     val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
+    val radonLevel = status?.radonLevel ?: "Low"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, kvikkleireLevel, windLevel
+        floodLevel, landslideLevel, kvikkleireLevel, radonLevel, windLevel
     )
 
     var showKvikkleireInfo by remember { mutableStateOf(false) }
+    var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -150,7 +150,7 @@ fun SavedPlacesLocationCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Risk categories row -- four boxes, two on each line if needed.
+            // Five risk categories: 3 on the top row, 2 centered below.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -167,12 +167,6 @@ fun SavedPlacesLocationCard(
                     loading = loading,
                     modifier = Modifier.weight(1f)
                 )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
                 RiskCategoryBox(
                     label = stringResource(R.string.quick_clay),
                     level = kvikkleireLevel,
@@ -182,18 +176,42 @@ fun SavedPlacesLocationCard(
                     } else null,
                     modifier = Modifier.weight(1f)
                 )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(0.5f))
                 RiskCategoryBox(
                     label = stringResource(R.string.wind),
                     level = windLevel,
                     loading = loading,
                     modifier = Modifier.weight(1f)
                 )
+                RiskCategoryBox(
+                    label = stringResource(R.string.radon),
+                    level = radonLevel,
+                    loading = loading,
+                    onInfoClick = if (status?.radonClass != null) {
+                        { showRadonInfo = true }
+                    } else null,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.weight(0.5f))
             }
 
             if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
                 KvikkleireInfoDialog(
                     faregrad = status.kvikkleireFaregrad,
                     onDismiss = { showKvikkleireInfo = false }
+                )
+            }
+
+            if (showRadonInfo && status?.radonClass != null) {
+                RadonInfoDialog(
+                    radonClass = status.radonClass,
+                    onDismiss = { showRadonInfo = false }
                 )
             }
 

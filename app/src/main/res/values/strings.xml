@@ -93,6 +93,13 @@
     <string name="kvikkleire_middels_explanation">Middels: This zone is classified as medium hazard. Quick clay is present and a slide could be triggered by changes in groundwater, slope cuts, or heavy loads.</string>
     <string name="kvikkleire_hoy_explanation">Hoey: This zone is classified as high hazard for quick clay slides. Avoid grading, drainage changes, or heavy construction without a geotechnical assessment.</string>
     <string name="kvikkleire_source">Source: NVE SkredKvikkleire2 (faregrad attribute)</string>
+    <string name="radon_info_title">Radon zone</string>
+    <string name="radon_class_label">Aktsomhet</string>
+    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon and add mitigation if elevated.</string>
+    <string name="radon_hoy_explanation">Hoy: At least 20%% of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
+    <string name="radon_moderat_explanation">Moderat til lav: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
+    <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
+    <string name="radon_source">Source: NGU RadonWMS2</string>
     <string name="overlay_legend">Legend</string>
     <string name="overlay_legend_title">%1$s legend</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>

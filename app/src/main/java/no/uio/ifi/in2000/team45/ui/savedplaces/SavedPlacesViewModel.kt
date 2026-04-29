@@ -180,7 +180,6 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     return@launch
                 }
 
-                // Try stations until we have temp, wind, and precip
                 var temp: Double? = null
                 var wind: Double? = null
                 var precip: Double? = null
