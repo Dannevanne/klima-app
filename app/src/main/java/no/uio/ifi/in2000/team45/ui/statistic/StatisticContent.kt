@@ -20,7 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
@@ -52,7 +52,6 @@ import no.uio.ifi.in2000.team45.ui.statistic.components.FindNearbyButton
 import no.uio.ifi.in2000.team45.ui.statistic.components.IdleContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.SearchBar
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
-import no.uio.ifi.in2000.team45.ui.theme.StarGold
 import androidx.compose.runtime.getValue
 
 @Composable
@@ -140,21 +139,22 @@ fun StatisticContent(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                        .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        Icons.Filled.Star,
-                                        contentDescription = null,
-                                        tint = StarGold,
-                                        modifier = Modifier.padding(end = 12.dp)
-                                    )
                                     Text(
                                         fav.name,
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 15.sp,
                                         modifier = Modifier.weight(1f)
                                     )
+                                    IconButton(onClick = { savedPlacesViewModel.removeStation(fav.stationId) }) {
+                                        Icon(
+                                            Icons.Outlined.Delete,
+                                            contentDescription = stringResource(R.string.remove_favorite),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -307,9 +307,9 @@ fun StatisticContent(
                             else savedPlacesViewModel.addStation(state.station)
                         }) {
                             Icon(
-                                imageVector = if (isFav) Icons.Filled.Star else Icons.Outlined.Star,
+                                imageVector = if (isFav) Icons.Outlined.Delete else Icons.Outlined.Star,
                                 contentDescription = if (isFav) stringResource(R.string.remove_favorite) else stringResource(R.string.add_to_favorites),
-                                tint = if (isFav) StarGold else MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
