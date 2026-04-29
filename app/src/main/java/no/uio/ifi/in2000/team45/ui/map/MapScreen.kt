@@ -391,8 +391,8 @@ fun DataMap(
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(end = 16.dp, bottom = 30.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             MapZoomControlsSection(
                 mapView = mapViewRef,

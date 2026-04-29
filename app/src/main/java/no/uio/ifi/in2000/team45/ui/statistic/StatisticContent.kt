@@ -46,7 +46,6 @@ import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.statistic.climate.ClimateDataView
-import no.uio.ifi.in2000.team45.ui.statistic.util.toTitleCaseWords
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 import no.uio.ifi.in2000.team45.ui.statistic.components.ErrorContent
 import no.uio.ifi.in2000.team45.ui.statistic.components.FindNearbyButton
@@ -144,7 +143,7 @@ fun StatisticContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        fav.name.toTitleCaseWords(),
+                                        fav.name,
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 15.sp,
                                         modifier = Modifier.weight(1f)
@@ -246,6 +245,7 @@ fun StatisticContent(
         }
         is StatisticUiState.StationResults -> {
             val favIds = favoriteStations.map { it.stationId }.toSet()
+            // Pinned stations first, then the rest
             val sorted = state.stations.sortedByDescending { it.id in favIds }
             StationList(
                 stations = sorted,
@@ -259,7 +259,7 @@ fun StatisticContent(
                         savedPlacesViewModel.addStation(station)
                     }
                 },
-                header = { ResultsHeader(statisticViewModel) },
+                header = { SearchBarHeader(statisticViewModel) },
                 contentPadding = listPadding,
                 modifier = modifier
             )
@@ -290,13 +290,13 @@ fun StatisticContent(
                         )
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = state.station.name.toTitleCaseWords(),
+                                text = state.station.name,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             if (state.station.municipality.isNotBlank()) {
                                 Text(
-                                    text = "${state.station.municipality.toTitleCaseWords()}, ${state.station.county.toTitleCaseWords()}",
+                                    text = "${state.station.municipality}, ${state.station.county}",
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -342,31 +342,5 @@ private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
         onQueryChange = { statisticViewModel.updateSearchQuery(it) },
         onSearch = { statisticViewModel.searchStations() }
     )
-    Spacer(modifier = Modifier.height(12.dp))
-}
-
-@Composable
-private fun ResultsHeader(statisticViewModel: StatisticViewModel) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
-    ) {
-        Icon(
-            Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.back_to_search),
-            modifier = Modifier
-                .clickable { statisticViewModel.exitSearch() }
-                .padding(end = 12.dp)
-        )
-        Box(modifier = Modifier.weight(1f)) {
-            SearchBar(
-                query = statisticViewModel.searchQuery,
-                onQueryChange = { statisticViewModel.updateSearchQuery(it) },
-                onSearch = { statisticViewModel.searchStations() }
-            )
-        }
-    }
     Spacer(modifier = Modifier.height(12.dp))
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,7 +32,6 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
-import no.uio.ifi.in2000.team45.ui.statistic.util.toTitleCaseWords
 
 @Composable
 fun OverviewCards(
@@ -121,7 +119,7 @@ fun OverviewStatCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.heightIn(min = 100.dp),
+        modifier = modifier.height(100.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
@@ -205,17 +203,17 @@ fun TrendChart(
                     Text(
                         text = String.format("%.0f", maxVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = Color.Gray
                     )
                     Text(
                         text = String.format("%.0f", midVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = Color.Gray
                     )
                     Text(
                         text = String.format("%.0f", minVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = Color.Gray
                     )
                 }
 
@@ -271,12 +269,12 @@ fun TrendChart(
             ) {
                 val firstYear = data.first().first
                 val lastYear = data.last().first
-                Text(firstYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(firstYear.toString(), fontSize = 10.sp, color = Color.Gray)
                 if (data.size > 2) {
                     val mid = data[data.size / 2].first
-                    Text(mid.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurface)
+                    Text(mid.toString(), fontSize = 10.sp, color = Color.Gray)
                 }
-                Text(lastYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(lastYear.toString(), fontSize = 10.sp, color = Color.Gray)
             }
         }
     }
@@ -313,7 +311,7 @@ fun StationsUsedCard(
         ) {
             Column {
                 Text(
-                    text = station.name.toTitleCaseWords(),
+                    text = station.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
@@ -324,7 +322,7 @@ fun StationsUsedCard(
                 )
                 if (station.municipality.isNotBlank()) {
                     Text(
-                        text = "${station.municipality.toTitleCaseWords()}, ${station.county.toTitleCaseWords()}",
+                        text = "${station.municipality}, ${station.county}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
