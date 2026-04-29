@@ -111,7 +111,7 @@ private fun landslideAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.nve_landslide_link),
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
+        linkUrl = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/5.-skred#54-sikringstiltak"
     )
 }
 
