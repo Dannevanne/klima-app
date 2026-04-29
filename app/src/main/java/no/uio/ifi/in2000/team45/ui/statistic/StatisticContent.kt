@@ -245,7 +245,6 @@ fun StatisticContent(
         }
         is StatisticUiState.StationResults -> {
             val favIds = favoriteStations.map { it.stationId }.toSet()
-            // Pinned stations first, then the rest
             val sorted = state.stations.sortedByDescending { it.id in favIds }
             StationList(
                 stations = sorted,
@@ -259,7 +258,7 @@ fun StatisticContent(
                         savedPlacesViewModel.addStation(station)
                     }
                 },
-                header = { SearchBarHeader(statisticViewModel) },
+                header = { ResultsHeader(statisticViewModel) },
                 contentPadding = listPadding,
                 modifier = modifier
             )
@@ -342,5 +341,31 @@ private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
         onQueryChange = { statisticViewModel.updateSearchQuery(it) },
         onSearch = { statisticViewModel.searchStations() }
     )
+    Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Composable
+private fun ResultsHeader(statisticViewModel: StatisticViewModel) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+    ) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.back_to_search),
+            modifier = Modifier
+                .clickable { statisticViewModel.exitSearch() }
+                .padding(end = 12.dp)
+        )
+        Box(modifier = Modifier.weight(1f)) {
+            SearchBar(
+                query = statisticViewModel.searchQuery,
+                onQueryChange = { statisticViewModel.updateSearchQuery(it) },
+                onSearch = { statisticViewModel.searchStations() }
+            )
+        }
+    }
     Spacer(modifier = Modifier.height(12.dp))
 }
