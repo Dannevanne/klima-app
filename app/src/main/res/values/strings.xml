@@ -101,7 +101,7 @@
     <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
     <string name="radon_source">Source: NGU RadonWMS2</string>
     <string name="overlay_legend">Legend</string>
-    <string name="overlay_legend_title">%1$s legend</string>
+    <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
     <string name="legend_quickclay_body">Three sub-layers are stacked. Solid color = mapped quick-clay zone with hazard degree (Lav / Middels / Hoey). Striped patterns = areas NVE has investigated; a striped polygon labelled "Omraade uten fare" was checked and found safe.</string>
     <string name="legend_radon_body">Four classes from NGU. Purple = Saerlig hoy aktsomhet (highest concern). Red = Hoy aktsomhet (>=20%% of dwellings exceed the 200 Bq/m^3 threshold). Yellow = Moderat til lav. Grey = Usikker (insufficient data). The map cannot predict radon in a specific building — measure the building.</string>
