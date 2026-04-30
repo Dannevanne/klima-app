@@ -83,6 +83,7 @@
     <string name="radon_usikker_explanation">Eahpesihkar: NGU:s leat menddo unnán dieđut klassifiseret dán guovllu. Gieđahallat dovdatmeahttumin ja árvvoštala mihtideami.</string>
     <string name="radon_source">Gáldu: NGU RadonWMS2</string>
     <string name="overlay_legend">Máinnas</string>
+    <string name="overlay_legend_title">%1$s</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
