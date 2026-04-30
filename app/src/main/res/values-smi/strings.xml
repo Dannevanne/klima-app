@@ -81,6 +81,7 @@
     <string name="radon_hoy_explanation">Alimus: Unnimusat 20% visttiin leat badjel 200 Bq/m3 doaibmadási. Mihtidit sisáibmorádona, erenoamážit vuolit gearddis ja idjadanlanjain.</string>
     <string name="radon_moderat_explanation">Gaskamearálaš dahje allat: Radonkonsentrašuvnnat leat dábálaččat vuollel akšuvdnadási. Mihtideapmi lea ain áidna vuohki duođaštit dásiid ruovttus.</string>
     <string name="radon_usikker_explanation">Eahpesihkar: NGU:s leat menddo unnán dieđut klassifiseret dán guovllu. Gieđahallat dovdatmeahttumin ja árvvoštala mihtideami.</string>
+    <string name="radon_source">Gáldu: NGU RadonWMS2</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
