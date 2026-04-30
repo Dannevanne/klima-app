@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.info
 
 import android.content.Intent
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -77,10 +78,15 @@ fun InfoScreen(
                     iconColor = datasource.iconColor,
                     icon = datasource.icon,
                     onClick = {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW,
-                                Uri.parse(datasource.url))
-                        )
+                        try {
+                            // prøver her å åpne med customtabsintent
+                            val customTabsIntent = CustomTabsIntent.Builder().build()
+                            customTabsIntent.launchUrl(context, Uri.parse(datasource.url))
+                        } catch (e: Exception) {
+                            // hvis det feiler så bruker vi standard approach
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(datasource.url))
+                            context.startActivity(intent)
+                        }
                     }
                 )
             }
