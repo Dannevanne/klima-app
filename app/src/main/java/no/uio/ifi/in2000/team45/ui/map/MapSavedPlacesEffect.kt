@@ -39,7 +39,7 @@ fun MapSavedPlacesEffect(
         ViewAnnotation(
             options = ViewAnnotationOptions.Builder()
                 .geometry(Point.fromLngLat(place.longitude, place.latitude))
-                .allowOverlap(true)
+                .allowOverlap(false)
                 .build()
         ) {
             Box(
