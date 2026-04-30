@@ -34,6 +34,10 @@ val StarGold = Color(0xFFC97B00)
 val LoadingBlue = Color(0xFF1976D2)
 val LoadingBlueLight = Color(0xFF90CAF9)
 
+// colors for house icon on map
+val IconWhite = Color(0xFFFFFFFF)
+val IconBlack = Color(0xFF000000)
+
 @Composable
 fun loadingColor(): Color =
     if (isSystemInDarkTheme()) LoadingBlueLight else LoadingBlue

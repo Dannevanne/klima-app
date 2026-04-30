@@ -11,6 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import no.uio.ifi.in2000.team45.ui.theme.IconWhite
 
 // primary is the brand accent (Material Blue 700/200) so default Buttons read
 // as a real button -- previously primary == onPrimary collapsed Button text
@@ -34,7 +35,10 @@ private val DarkColorScheme = darkColorScheme(
 
     onPrimary = DarkBackground,
     onSecondary = DarkOnSurface,
-    onTertiary = DarkOnSurface
+    onTertiary = DarkOnSurface,
+
+    outline = IconWhite,
+    outlineVariant = IconBlack
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -56,7 +60,10 @@ private val LightColorScheme = lightColorScheme(
 
     onPrimary = LightSurface,
     onSecondary = LightOnSurface,
-    onTertiary = LightOnSurface
+    onTertiary = LightOnSurface,
+
+    outline = IconBlack,
+    outlineVariant = IconWhite
 )
 
 @Composable
