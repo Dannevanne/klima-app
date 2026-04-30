@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Team45</string>
+    <string name="app_name">SafeProperty</string>
     <string name="map">Kart</string>
     <string name="to_settings">til innstillingar</string>
     <string name="to_statistics">til statistikk</string>
