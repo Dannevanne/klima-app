@@ -89,6 +89,7 @@
     <string name="legend_radon_body">Njeallje luohká NGU:s. Lilla = erenoamáš alla fuomášupmi (alimus fuolla). Rukses = alla diehtu (>=20%% visttiin badjel 200 Bq/m^3 ráji). Guldal = Gaskamearálaš gitta allat. Grána = Eahpesihkar (váilevaš dieđut). Kárta ii sáhte einnostit radona dihto visttis — mihtidit vistti.</string>
     <string name="legend_landslide_body">NVE jord/flomskred diđolašvuođasurggiin. Máŋggačuoggát merkejit muohttaga gos eana dahje ruskkat leat fysalaččat vejolaš vuolgit čáhce- ja eatnama vuođul. Ii mihtiduvvon einnostus — "sáhttá dáhpáhuvvat" guovlu, ii "dáhpáhuvvá".</string>
     <string name="legend_wind_body">NVE bieggafámu raster — gaskamearálaš bieggafápmu 50 m eatnama badjel. Ivdneskála lassána bieggafámu mielde. Geavahuvvo guhkesáigásaš bieggafámu indikáhtorin, ii dálá dálkkádatgovva.</string>
+    <string name="legend_none_body">Dušše kárta lea válljejuvvon. Vállje lávkki tableahtas vai oainnát váralašvuođadieđuid kárttas.</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
