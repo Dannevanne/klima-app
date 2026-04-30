@@ -499,7 +499,8 @@ fun DataMap(
             locationName = locationName,
             onLocationNameChange = { locationName = it },
             onDismiss = { pendingPoint = null },
-            savedPlacesViewModel = savedPlacesViewModel
+            savedPlacesViewModel = savedPlacesViewModel,
+            soundEnabled = mapViewModel.soundEnabled
         )
     }
 }

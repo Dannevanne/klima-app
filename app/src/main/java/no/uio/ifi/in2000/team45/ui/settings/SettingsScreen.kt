@@ -82,6 +82,15 @@ fun SettingsScreen(
                 HorizontalDivider()
             }
             item {
+                SoundSetting(
+                    soundEnabled = mapViewModel.soundEnabled,
+                    onSoundEnabledChange = { mapViewModel.updateSoundEnabled(it) }
+                )
+            }
+            item {
+                HorizontalDivider()
+            }
+            item {
                 ResetAppDataSection(
                     onResetConfirmed = {
                         savedPlacesViewModel.removeAllSavedPlaces()
