@@ -85,6 +85,7 @@
     <string name="overlay_legend">Máinnas</string>
     <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Čáhppes čáhppes polygonat merkejit NVE dulvefuomášumi guovlluid (Flom_aktsomhetsomraade). NVE lea identifiseren dáid báikkiid gos dulvi sáhttá dáhpáhuvvat. Gáldodieđuin ii leat garravuođaárvosáni — juohke polygona čájehuvvo seamma ládje.</string>
+    <string name="legend_quickclay_body">Golbma oasselávkki leat čohkkejuvvon. Čielga ivdni = kártejuvvon jođánit-muorraguovlu mas lea váralašvuođadássi (Alla / Gaskamearálaš / Alit). Rievdaduvvon ivdni = guovllut maid NVE lea guorahallan; område uten fare merkejuvvon stripe polygona dárkkistuvvui ja gávnnahuvvui dorvvolaš.</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
