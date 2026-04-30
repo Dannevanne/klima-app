@@ -67,6 +67,7 @@
     <string name="no_saved_places_yet">Eai leat vurkejuvvon báikkit vel</string>
     <string name="no_saved_places_hint">Mana kártai, deaddil guovllu ja vurke dan vai oainnát riskkaanalysa ja dálkkádatdáhtaid dáppe.</string>
     <string name="open_map">Raba kártta</string>
+    <string name="show_on_map">čájehit kárttas</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
