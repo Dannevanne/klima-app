@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import android.content.Intent
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -283,8 +284,15 @@ private fun AdviceAccordionCard(
                         fontSize = 13.sp,
                         color = LinkBlue,
                         modifier = Modifier.clickable {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(category.linkUrl))
-                            context.startActivity(intent)
+                            try {
+                                // prøver å åpne med CustomTabsIntent
+                                val customTabsIntent = CustomTabsIntent.Builder().build()
+                                customTabsIntent.launchUrl(context, Uri.parse(category.linkUrl))
+                            } catch (e: Exception) {
+                                // hvis customtabsintent ikke starter, bruker vi vanlige launchingen
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(category.linkUrl))
+                                context.startActivity(intent)
+                            }
                         }
                     )
                 }
