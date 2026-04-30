@@ -14,7 +14,9 @@ import androidx.compose.runtime.getValue
 fun AppRoot(
     mapViewModel: MapViewModel,
     musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     var showLoadingScreen by remember { mutableStateOf(true) }
 
@@ -28,6 +30,9 @@ fun AppRoot(
     } else {
         AppNavigation(mapViewModel = mapViewModel,
             musicEnabled = musicEnabled,
-            onMusicEnabledChanged = onMusicEnabledChanged)
+            onMusicEnabledChanged = onMusicEnabledChanged,
+            soundEnabled = soundEnabled,
+            onSoundEnabledChanged = onSoundEnabledChanged
+        )
     }
 }

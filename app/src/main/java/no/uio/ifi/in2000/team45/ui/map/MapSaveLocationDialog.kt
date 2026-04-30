@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import androidx.compose.foundation.layout.Column
@@ -29,9 +30,12 @@ fun MapSaveLocationDialog(
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
-    soundEnabled: Boolean
 ){
     val context = LocalContext.current
+
+    val soundEnabled = context
+        .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        .getBoolean("sound_enabled", true)
 
     AlertDialog(
         onDismissRequest = onDismiss,

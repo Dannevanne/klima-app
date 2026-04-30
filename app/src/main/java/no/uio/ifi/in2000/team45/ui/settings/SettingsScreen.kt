@@ -33,7 +33,9 @@ fun SettingsScreen(
     statisticViewModel: StatisticViewModel,
     savedPlacesViewModel: SavedPlacesViewModel,
     musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -83,8 +85,8 @@ fun SettingsScreen(
             }
             item {
                 SoundSetting(
-                    soundEnabled = mapViewModel.soundEnabled,
-                    onSoundEnabledChange = { mapViewModel.updateSoundEnabled(it) }
+                    soundEnabled = soundEnabled,
+                    onSoundEnabledChange = onSoundEnabledChanged
                 )
             }
             item {

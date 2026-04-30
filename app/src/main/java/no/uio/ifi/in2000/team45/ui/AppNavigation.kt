@@ -78,7 +78,9 @@ fun AppNavigation(
     statisticViewModel: StatisticViewModel = viewModel(),
     savedPlacesViewModel: SavedPlacesViewModel = viewModel(),
     musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     val isOnline = IsOnline()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -155,7 +157,9 @@ fun AppNavigation(
                     statisticViewModel = statisticViewModel,
                     savedPlacesViewModel = savedPlacesViewModel,
                     musicEnabled = musicEnabled,
-                    onMusicEnabledChanged = onMusicEnabledChanged
+                    onMusicEnabledChanged = onMusicEnabledChanged,
+                    soundEnabled = soundEnabled,
+                    onSoundEnabledChanged = onSoundEnabledChanged
                 )
             }
             ScreenLayer(visible = route == ROUTE_INFO) {

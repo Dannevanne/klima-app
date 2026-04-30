@@ -17,9 +17,21 @@ class MusicViewModel(
         initialValue = false
     )
 
+    val soundEnabledFlow = musicPreferenceRepository.soundEnabledFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
+
     fun updateMusicEnabled(enabled: Boolean) {
         viewModelScope.launch {
             musicPreferenceRepository.saveMusicEnabled(enabled)
+        }
+    }
+
+    fun updateSoundEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            musicPreferenceRepository.saveSoundEnabled(enabled)
         }
     }
 }
