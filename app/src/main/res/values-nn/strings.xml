@@ -223,4 +223,5 @@
     <string name="language_sami">Samisk</string>
     <string name="change_layer_to_zoom_out">Byt lag for å zoome ut</string>
     <string name="use_without_internet">Bruk likevel</string>
+    <string name="background_music">Bakgrunnsmusikk</string>
 </resources>

@@ -76,7 +76,9 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     mapViewModel: MapViewModel,
     statisticViewModel: StatisticViewModel = viewModel(),
-    savedPlacesViewModel: SavedPlacesViewModel = viewModel()
+    savedPlacesViewModel: SavedPlacesViewModel = viewModel(),
+    musicEnabled: Boolean,
+    onMusicEnabledChanged: (Boolean) -> Unit
 ) {
     val isOnline = IsOnline()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -151,7 +153,9 @@ fun AppNavigation(
                     modifier = modifier,
                     onClick = { popBack() },
                     statisticViewModel = statisticViewModel,
-                    savedPlacesViewModel = savedPlacesViewModel
+                    savedPlacesViewModel = savedPlacesViewModel,
+                    musicEnabled = musicEnabled,
+                    onMusicEnabledChanged = onMusicEnabledChanged
                 )
             }
             ScreenLayer(visible = route == ROUTE_INFO) {
