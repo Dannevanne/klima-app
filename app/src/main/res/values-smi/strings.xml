@@ -76,6 +76,7 @@
     <string name="kvikkleire_hoy_explanation">Alit: Dát guovlu lea klassifiserejuvvon alla váralažžan jođánit muohtalihkuhisvuođaide. Váldde eret árvosániid, čáhcebohcciid rievdademiid dahje garra huksemiid almmá geoteknihkalaš árvvoštallama haga.</string>
     <string name="kvikkleire_source">Gáldu: NVE SkredKvikkleire2</string>
     <string name="radon_info_title">Radonguovlu</string>
+    <string name="radon_class_label">Aktsomhet</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
