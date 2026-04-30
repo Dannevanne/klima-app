@@ -95,4 +95,7 @@ dependencies {
 
     // Appcompat
     implementation("androidx.appcompat:appcompat:1.7.1")
+
+    // Browser (url-launching)
+    implementation("androidx.browser:browser:1.10.0")
 }
