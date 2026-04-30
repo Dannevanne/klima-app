@@ -222,4 +222,5 @@
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk Bokmål</string>
     <string name="change_layer_to_zoom_out">Bytt lag for å zoome ut</string>
+    <string name="use_without_internet">Bruk likevel</string>
 </resources>
