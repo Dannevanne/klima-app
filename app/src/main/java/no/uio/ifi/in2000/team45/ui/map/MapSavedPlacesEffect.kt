@@ -55,7 +55,7 @@ fun MapSavedPlacesEffect(
                     contentDescription = stringResource(R.string.save_place),
                     tint = MaterialTheme.colorScheme.outlineVariant,
                     modifier = Modifier
-                        .size(30.dp),
+                        .size(34.dp),
 
                 )
             }
