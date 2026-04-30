@@ -70,6 +70,7 @@
     <string name="show_on_map">čájehit kárttas</string>
     <string name="open_in_saved_places">rahpat du bealde vurkejuvvon báikkiiguin</string>
     <string name="kvikkleire_info_title">guovlu mas lea jođánit muohta</string>
+    <string name="kvikkleire_faregrad_label">váralaš dássi</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
