@@ -42,6 +42,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -170,7 +172,7 @@ fun AppNavigation(
         if (!isOnline && !dismissed) {
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 60.dp, vertical = 290.dp)
+                    .padding(horizontal = 60.dp, vertical = 300.dp)
                     .background(
                         MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(24.dp)
@@ -203,17 +205,33 @@ fun AppNavigation(
                         style = MaterialTheme.typography.bodyLarge,
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(40.dp))
 
-                    Row() {
-                        OutlinedButton(onClick = {}) {
-                            Text(stringResource(R.string.try_again))
+                    Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                        OutlinedButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(
+                                stringResource(R.string.try_again),
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis)
                         }
 
                         Spacer(modifier = Modifier.padding(8.dp))
 
-                        OutlinedButton(onClick = {dismissed = true }) {
-                            Text(stringResource(R.string.use_without_internet))
+                        OutlinedButton(
+                            onClick = {dismissed = true },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                stringResource(R.string.use_without_internet),
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
                 }
