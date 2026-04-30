@@ -77,6 +77,7 @@
     <string name="kvikkleire_source">Gáldu: NVE SkredKvikkleire2</string>
     <string name="radon_info_title">Radonguovlu</string>
     <string name="radon_class_label">Aktsomhet</string>
+    <string name="radon_saerlig_hoy_explanation">Erenoamáš allat: Dán guovllus lea alimus radon-dovdamušluohkká. Sisáibmoradon badjel doaibmadási lea olu eambbo jáhkehahtti go gaskamearálaš. Mihtidit radona ja lasihit hehttehusa jus lea loktanan.</string>
     <string name="map_location_placeholder">Kártasajádat</string>
     <string name="remove">Sihko</string>
     <string name="overall_risk">Oppalaš riskka</string>
