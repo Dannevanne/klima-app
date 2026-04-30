@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Team45</string>
+    <string name="app_name">SafeProperty</string>
     <string name="map">Kart</string>
     <string name="to_settings">til innstillingar</string>
     <string name="to_statistics">til statistikk</string>
@@ -212,7 +212,7 @@
     <string name="the_team">Laget</string>
     <string name="versjon_1_0_0">Versjon 1.0.0</string>
     <string name="search_after_place_norway">Søk etter stad i Noreg</string>
-    <string name="app_description">App for hus- og hytteigarar som ønskjer å sjekke klimarisiko og klimastatistikk for sitt område</string>
+    <string name="app_description">Applikasjon for hus- og hytteigarar som ønskjer å sjekke klimarisiko og klimastatistikk for sitt område</string>
     <string name="datasources">Datakjelder</string>
     <string name="flood_landslides_quick_clay_wind">Flaum, skred, kvikkleire, vind</string>
     <string name="map_and_search">Kart og søk</string>
