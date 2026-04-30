@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -46,13 +47,13 @@ fun MapSavedPlacesEffect(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(42.dp)
-                    .background(color = Color.White, shape = CircleShape)
+                    .background(color = MaterialTheme.colorScheme.outline, shape = CircleShape)
                     .clickable { onPlaceClick(place) }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Home,
                     contentDescription = stringResource(R.string.save_place),
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.outlineVariant,
                     modifier = Modifier
                         .size(30.dp),
 
