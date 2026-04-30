@@ -83,7 +83,7 @@ private fun floodAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.nve_flood_link),
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-flom-og-erosjon/"
+        linkUrl = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/3.-flom#34-sikringstiltak"
     )
 }
 
@@ -111,7 +111,7 @@ private fun landslideAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.nve_landslide_link),
-        linkUrl = "https://www.nve.no/flom-og-skred/sikring-mot-skred/"
+        linkUrl = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/5.-skred#54-sikringstiltak"
     )
 }
 
@@ -139,7 +139,7 @@ private fun windAdvice(level: String): AdviceCategory {
         dotColor = riskColor(level),
         bullets = bullets,
         linkText = stringResource(R.string.dsb_storm_link),
-        linkUrl = "https://www.dsb.no/"
+        linkUrl = "https://www.dsb.no/sikkerhverdag/produkter-utstyr-og-fritid/slik-forbereder-du-deg-pa-storm/"
     )
 }
 
@@ -279,7 +279,7 @@ private fun AdviceAccordionCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${category.linkText} ->",
+                        text = category.linkText,
                         fontSize = 13.sp,
                         color = LinkBlue,
                         modifier = Modifier.clickable {
