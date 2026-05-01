@@ -37,10 +37,13 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.savedplaces.LocationStatus
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
-private val RiskHigh = Color(0xFFEF4444)
-private val RiskModerate = Color(0xFFF97316)
-private val RiskLow = Color(0xFF22C55E)
+private val RiskHigh = StatisticsRed
+private val RiskModerate = StatisticsOrange
+private val RiskLow = StatisticsGreen
 
 private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
     if (isWind) {

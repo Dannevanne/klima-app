@@ -40,11 +40,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.theme.LinkBlue
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
-private val RiskHigh = Color(0xFFEF4444)
-private val RiskModerate = Color(0xFFF97316)
-private val RiskLow = Color(0xFF22C55E)
-private val LinkBlue = Color(0xFF60A5FA)
+private val RiskHigh = StatisticsRed
+private val RiskModerate = StatisticsOrange
+private val RiskLow = StatisticsGreen
+private val LinkBlue = LinkBlue
 
 data class AdviceCategory(
     val title: String,
