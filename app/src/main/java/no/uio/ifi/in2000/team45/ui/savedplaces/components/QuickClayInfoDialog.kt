@@ -28,7 +28,7 @@ import no.uio.ifi.in2000.team45.R
 // faregrad value plus a short plain-language explanation.
 @Composable
 fun QuickClayInfoDialog(
-    faregrad: String,
+    hazardClass: String,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -58,13 +58,13 @@ fun QuickClayInfoDialog(
                 }
 
                 Text(
-                    text = "${stringResource(R.string.kvikkleire_faregrad_label)}: $faregrad",
+                    text = "${stringResource(R.string.kvikkleire_faregrad_label)}: $hazardClass",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
 
-                val explanation = when (faregrad) {
+                val explanation = when (hazardClass) {
                     "Lav" -> stringResource(R.string.kvikkleire_lav_explanation)
                     "Middels" -> stringResource(R.string.kvikkleire_middels_explanation)
                     "Høy" -> stringResource(R.string.kvikkleire_hoy_explanation)

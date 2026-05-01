@@ -206,7 +206,7 @@ fun SavedPlacesLocationCard(
 
             if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
                 QuickClayInfoDialog(
-                    faregrad = status.kvikkleireFaregrad,
+                    hazardClass = status.kvikkleireFaregrad,
                     onDismiss = { showKvikkleireInfo = false }
                 )
             }
