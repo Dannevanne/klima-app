@@ -9,7 +9,8 @@ class StatisticRepository(
     }
 
     suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
-        return datasource.geocodePlaces(query, mapboxToken)
+        val candidates = datasource.geocodePlaces(query, mapboxToken)
+        return PlaceSelector.pickBest(query, candidates)?.let { listOf(it) } ?: emptyList()
     }
 
     suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
