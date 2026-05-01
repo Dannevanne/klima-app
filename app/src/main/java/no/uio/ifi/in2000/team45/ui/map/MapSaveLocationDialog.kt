@@ -1,5 +1,8 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.media.RingtoneManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,8 +29,14 @@ fun MapSaveLocationDialog(
     locationName: String,
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    savedPlacesViewModel: SavedPlacesViewModel
+    savedPlacesViewModel: SavedPlacesViewModel,
 ){
+    val context = LocalContext.current
+
+    val soundEnabled = context
+        .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        .getBoolean("sound_enabled", true)
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(R.string.save_location)) },
@@ -55,6 +65,12 @@ fun MapSaveLocationDialog(
                         lng = point.longitude(),
                         label = locationName.trim()
                     )
+                    if (soundEnabled){
+                        MediaPlayer.create(context, R.raw.sound).apply {
+                            setOnCompletionListener {it.release()}
+                            start()
+                        }
+                    }
                     onDismiss()
                 },
                 enabled = locationName.trim().isNotBlank()

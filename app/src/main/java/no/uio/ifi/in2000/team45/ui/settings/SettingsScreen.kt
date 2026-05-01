@@ -33,7 +33,9 @@ fun SettingsScreen(
     statisticViewModel: StatisticViewModel,
     savedPlacesViewModel: SavedPlacesViewModel,
     musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -76,6 +78,15 @@ fun SettingsScreen(
                 MusicSetting(
                     musicEnabled = musicEnabled,
                     onMusicEnabledChanged = onMusicEnabledChanged
+                )
+            }
+            item {
+                HorizontalDivider()
+            }
+            item {
+                SoundSetting(
+                    soundEnabled = soundEnabled,
+                    onSoundEnabledChange = onSoundEnabledChanged
                 )
             }
             item {

@@ -66,6 +66,8 @@ class MainActivity : AppCompatActivity() {
 
             val musicEnabled by musicViewModel.musicEnabledFlow.collectAsState(initial = false)
 
+            val soundEnabled by musicViewModel.soundEnabledFlow.collectAsState(initial = true)
+
             LaunchedEffect(musicEnabled) {
                 musicManager.updateMusicState(musicEnabled)
             }
@@ -89,7 +91,9 @@ class MainActivity : AppCompatActivity() {
                         musicEnabled = musicEnabled,
                         onMusicEnabledChanged = { enabled ->
                             musicViewModel.updateMusicEnabled(enabled)
-                        }
+                        },
+                        soundEnabled = soundEnabled,
+                        onSoundEnabledChanged = { musicViewModel.updateSoundEnabled(it) }
                     )
                 }
             }
