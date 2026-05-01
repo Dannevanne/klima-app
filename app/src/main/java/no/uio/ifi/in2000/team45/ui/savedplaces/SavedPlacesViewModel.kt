@@ -39,7 +39,7 @@ data class LocationStatus(
     val radonLevel: String = "Low",
     // Raw classification strings from NVE/NGU, kept so the UI can show the
     // exact wording in an info dialog when needed.
-    val kvikkleireFaregrad: String? = null,
+    val quickClayHazard: String? = null,
     val radonClass: String? = null,
     val avgWindSpeed: Double? = null
 )
@@ -138,7 +138,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val lon = location.longitude
                 val floodZone = mapRepository.isInFloodZone(lat, lon)
                 val landslideZone = mapRepository.isInLandslideZone(lat, lon)
-                val quickClayFaregrad = mapRepository.getQuickClayHazard(lat, lon)
+                val quickClayHazard = mapRepository.getQuickClayHazard(lat, lon)
                 val radonClass = mapRepository.getRadonHazard(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
 
@@ -150,7 +150,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val landslideLevel = zoneRiskLevel(lat, lon, landslideZone) { la, lo ->
                     mapRepository.isInLandslideZone(la, lo)
                 }
-                val kvikkleireLevel = when (quickClayFaregrad) {
+                val kvikkleireLevel = when (quickClayHazard) {
                     "Høy" -> "High"
                     "Middels" -> "Moderate"
                     "Lav" -> "Low"
@@ -166,13 +166,13 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 locationStatuses[key] = LocationStatus(
                     inFloodZone = floodZone,
                     inRadonZone = radonClass != null,
-                    inQuickClayZone = quickClayFaregrad != null,
+                    inQuickClayZone = quickClayHazard != null,
                     inLandslideZone = landslideZone,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     kvikkleireLevel = kvikkleireLevel,
                     radonLevel = radonLevel,
-                    kvikkleireFaregrad = quickClayFaregrad,
+                    quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
                     avgWindSpeed = avgWind
                 )
@@ -186,13 +186,13 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                         stationName = getApplication<Application>().getString(R.string.station_not_found),
                         inFloodZone = floodZone,
                         inRadonZone = radonClass != null,
-                        inQuickClayZone = quickClayFaregrad != null,
+                        inQuickClayZone = quickClayHazard != null,
                         inLandslideZone = landslideZone,
                         floodLevel = floodLevel,
                         landslideLevel = landslideLevel,
                         kvikkleireLevel = kvikkleireLevel,
                         radonLevel = radonLevel,
-                        kvikkleireFaregrad = quickClayFaregrad,
+                        quickClayHazard = quickClayHazard,
                         radonClass = radonClass,
                         avgWindSpeed = avgWind
                     )
@@ -232,13 +232,13 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     precipitation = precip,
                     inFloodZone = floodZone,
                     inRadonZone = radonClass != null,
-                    inQuickClayZone = quickClayFaregrad != null,
+                    inQuickClayZone = quickClayHazard != null,
                     inLandslideZone = landslideZone,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     kvikkleireLevel = kvikkleireLevel,
                     radonLevel = radonLevel,
-                    kvikkleireFaregrad = quickClayFaregrad,
+                    quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
                     avgWindSpeed = avgWind
                 )

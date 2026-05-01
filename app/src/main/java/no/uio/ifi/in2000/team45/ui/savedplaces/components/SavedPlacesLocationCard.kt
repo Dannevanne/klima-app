@@ -174,7 +174,7 @@ fun SavedPlacesLocationCard(
                     label = stringResource(R.string.quick_clay),
                     level = kvikkleireLevel,
                     loading = loading,
-                    onInfoClick = if (status?.kvikkleireFaregrad != null) {
+                    onInfoClick = if (status?.quickClayHazard != null) {
                         { showKvikkleireInfo = true }
                     } else null,
                     modifier = Modifier.weight(1f)
@@ -204,9 +204,9 @@ fun SavedPlacesLocationCard(
                 Spacer(modifier = Modifier.weight(0.5f))
             }
 
-            if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
+            if (showKvikkleireInfo && status?.quickClayHazard != null) {
                 QuickClayInfoDialog(
-                    hazardClass = status.kvikkleireFaregrad,
+                    hazardClass = status.quickClayHazard,
                     onDismiss = { showKvikkleireInfo = false }
                 )
             }
