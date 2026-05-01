@@ -36,6 +36,10 @@ fun ClimateDataView(
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
     onPeriodChange: (Int) -> Unit,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
+    placeName: String? = null,
+    distanceFromPlaceMeters: Int? = null,
+    stationsUsed: List<WeatherStation> = emptyList(),
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier
@@ -127,7 +131,14 @@ fun ClimateDataView(
         }
 
         item {
-            StationsUsedCard(station = station, annualData = annualData)
+            StationsUsedCard(
+                station = station,
+                annualData = annualData,
+                onShowOnMap = onShowOnMap,
+                placeName = placeName,
+                distanceFromPlaceMeters = distanceFromPlaceMeters,
+                stationsUsed = stationsUsed
+            )
         }
     }
 }

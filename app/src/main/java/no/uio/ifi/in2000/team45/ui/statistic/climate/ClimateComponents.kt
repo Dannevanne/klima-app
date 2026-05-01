@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -285,9 +288,14 @@ fun TrendChart(
 @Composable
 fun StationsUsedCard(
     station: WeatherStation,
-    annualData: List<AnnualObservation>
+    annualData: List<AnnualObservation>,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
+    placeName: String? = null,
+    distanceFromPlaceMeters: Int? = null,
+    stationsUsed: List<WeatherStation> = emptyList()
 ) {
     val obsCount = annualData.size
+    val list = if (stationsUsed.isNotEmpty()) stationsUsed else listOf(station)
 
     Text(
         text = stringResource(R.string.weather_stations_used),
@@ -305,41 +313,87 @@ fun StationsUsedCard(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(
-                    text = station.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+        Column(modifier = Modifier.fillMaxWidth()) {
+            list.forEachIndexed { index, s ->
+                StationsUsedRow(
+                    station = s,
+                    placeName = placeName,
+                    onShowOnMap = onShowOnMap,
+                    obsCountSuffix = if (index == 0 && stationsUsed.size <= 1) "$obsCount obs." else null
                 )
-                Text(
-                    text = stringResource(R.string.frost_id_prefix, station.id),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (station.municipality.isNotBlank()) {
-                    Text(
-                        text = "${station.municipality}, ${station.county}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                if (index < list.size - 1) {
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.background,
+                        thickness = 1.dp
                     )
                 }
             }
-            Column(horizontalAlignment = Alignment.End) {
+        }
+    }
+}
+
+@Composable
+private fun StationsUsedRow(
+    station: WeatherStation,
+    placeName: String?,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)?,
+    obsCountSuffix: String?
+) {
+    val distanceLabel = station.distanceMeters
+        ?.takeIf { placeName != null && it >= 5_000 }
+        ?.let { meters ->
+            stringResource(
+                R.string.distance_from_place_km,
+                "%.1f".format(meters / 1000.0),
+                placeName!!
+            )
+        }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, top = 10.dp, bottom = 10.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = station.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            Text(
+                text = stringResource(R.string.frost_id_prefix, station.id),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (station.municipality.isNotBlank()) {
                 Text(
-                    text = stringResource(R.string.precipitation_plus_temperature),
+                    text = "${station.municipality}, ${station.county}",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            if (distanceLabel != null) {
                 Text(
-                    text = "$obsCount obs.",
+                    text = distanceLabel,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            if (obsCountSuffix != null) {
+                Text(
+                    text = obsCountSuffix,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+        if (onShowOnMap != null && station.latitude != 0.0 && station.longitude != 0.0) {
+            IconButton(onClick = { onShowOnMap(station.latitude, station.longitude) }) {
+                Icon(
+                    imageVector = Icons.Outlined.Place,
+                    contentDescription = stringResource(R.string.show_on_map),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

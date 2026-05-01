@@ -34,6 +34,13 @@ data class AnnualObservation(
     val maxSnowDepth: Double? = null
 )
 
+data class TimeSeriesAvailability(
+    val stationId: String,
+    val elementId: String,
+    val validFromYear: Int,
+    val validToYear: Int?
+)
+
 data class MonthlyClimateStats(
     val month: Int,
     val meanTemp: Double?,

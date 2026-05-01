@@ -194,6 +194,7 @@
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km away</string>
     <string name="distance_m_away">%1$d m away</string>
+    <string name="distance_from_place_km">%1$s km from %2$s</string>
     <string name="overview_period">Overview %1$d-%2$d</string>
     <string name="precipitation_avg_year">Precipitation, avg/year</string>
     <string name="max_wind_gust">Max wind gust</string>
