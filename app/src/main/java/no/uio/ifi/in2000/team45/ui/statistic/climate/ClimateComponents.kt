@@ -54,8 +54,23 @@ fun OverviewCards(
         .takeIf { annualData.any { a -> a.totalPrecip != null } }
     val maxWindGust = annualData.mapNotNull { it.maxWindGust }.maxOrNull()
     val maxSnowDepth = annualData.mapNotNull { it.maxSnowDepth }.maxOrNull()
-    val extremePrecipDays = annualData.mapNotNull { it.totalPrecip }
-        .count { it > (avgPrecip ?: Double.MAX_VALUE) * 1.3 }
+
+    // Heavy-rain days per year (daily precip >= 20 mm), averaged over the
+    // selected window. Baseline pulled from any 1991-2020 years we already
+    // have, falling back to the older half of the window when we don't.
+    val heavyByYear = annualData.mapNotNull { obs ->
+        obs.heavyPrecipDays?.let { obs.year to it }
+    }
+    val avgHeavyDays = heavyByYear.map { it.second }.average()
+        .takeIf { heavyByYear.isNotEmpty() }
+    val baselineHeavy = heavyByYear.filter { it.first in 1991..2020 }
+        .map { it.second }
+        .takeIf { it.isNotEmpty() }
+        ?.average()
+        ?: heavyByYear.dropLast(heavyByYear.size / 2)
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
 
     // Climate normals from monthly stats. Annual precip = sum of 12 monthly
     // normals; gust/snow normals are sparse so often null.
@@ -63,14 +78,11 @@ fun OverviewCards(
         .takeIf { it.size == 12 }?.sum()
     val normalMaxGust = stats.mapNotNull { it.windGust }.maxOrNull()
     val normalMaxSnow = stats.mapNotNull { it.snowDepth }.maxOrNull()
-    val expectedExtreme = selectedPeriod * 0.10
 
     val precipTrend = vsNormal(avgPrecip, normalAnnualPrecip)
     val windTrend = vsNormal(maxWindGust, normalMaxGust)
     val snowTrend = vsNormal(maxSnowDepth, normalMaxSnow)
-    val extremeTrend = if (annualData.any { it.totalPrecip != null }) {
-        vsNormal(extremePrecipDays.toDouble(), expectedExtreme)
-    } else TrendInfo(TrendDirection.STABLE, null)
+    val heavyTrend = vsNormal(avgHeavyDays, baselineHeavy)
 
     Text(
         text = stringResource(R.string.overview_period, fromYear, currentYear),
@@ -114,14 +126,10 @@ fun OverviewCards(
             )
             OverviewStatCard(
                 label = stringResource(R.string.extreme_precipitation),
-                // Show the count whenever we have precip data, even when it
-                // is 0. Otherwise the card paints "-" alongside a "-100% vs
-                // norm" trend because extremePrecipDays = 0 still produces
-                // a real comparison against expectedExtreme.
-                value = if (annualData.any { it.totalPrecip != null }) {
-                    stringResource(R.string.years_count, extremePrecipDays)
+                value = if (avgHeavyDays != null) {
+                    stringResource(R.string.days_per_year, avgHeavyDays.toInt())
                 } else "-",
-                trend = extremeTrend,
+                trend = heavyTrend,
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
