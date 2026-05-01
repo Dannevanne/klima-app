@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.Place
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
 import no.uio.ifi.in2000.team45.data.statistic.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
@@ -41,17 +42,6 @@ sealed interface StatisticUiState {
     ) : StatisticUiState
     data class Error(val message: String) : StatisticUiState
 }
-
-data class Place(
-    val name: String,
-    val subtitle: String,
-    val latitude: Double,
-    val longitude: Double,
-    // Stations already known to belong to this place (e.g., grouped from a
-    // Frost name match like "OSLO - BLINDERN", "OSLO - VINDERN"). Empty for
-    // places that come from geocoding only.
-    val stations: List<WeatherStation> = emptyList()
-)
 
 // @JvmOverloads is needed so AndroidViewModelFactory can find a single-arg
 // (Application) constructor at the JVM level. Without it, viewModel() in

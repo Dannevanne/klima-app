@@ -10,6 +10,17 @@ data class WeatherStation(
     val distanceMeters: Int? = null
 )
 
+data class Place(
+    val name: String,
+    val subtitle: String,
+    val latitude: Double,
+    val longitude: Double,
+    // Stations already known to belong to this place (e.g., grouped from a
+    // Frost name match like "OSLO - BLINDERN", "OSLO - VINDERN"). Empty for
+    // places that come from geocoding only.
+    val stations: List<WeatherStation> = emptyList()
+)
+
 data class ClimateNormal(
     val elementId: String,
     val month: Int,

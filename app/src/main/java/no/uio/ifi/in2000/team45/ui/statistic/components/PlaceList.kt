@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import no.uio.ifi.in2000.team45.ui.statistic.Place
+import no.uio.ifi.in2000.team45.data.statistic.Place
 
 @Composable
 fun PlaceList(
