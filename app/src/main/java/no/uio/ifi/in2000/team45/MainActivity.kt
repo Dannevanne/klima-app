@@ -26,6 +26,9 @@ import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModel
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModelFactory
 import no.uio.ifi.in2000.team45.data.music.MusicManager
+import no.uio.ifi.in2000.team45.data.settings.SoundPreferenceRepository
+import no.uio.ifi.in2000.team45.ui.settings.SoundViewModel
+import no.uio.ifi.in2000.team45.ui.settings.SoundViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         val cameraRepository = MapCameraRepository(applicationContext)
         val musicPreferenceRepository = MusicPreferenceRepository(applicationContext)
+        val soundPreferenceRepository = SoundPreferenceRepository(applicationContext)
 
         // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
@@ -64,9 +68,15 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
+            val soundViewModel: SoundViewModel = viewModel(
+                factory = SoundViewModelFactory(
+                    soundPreferenceRepository = soundPreferenceRepository
+                )
+            )
+
             val musicEnabled by musicViewModel.musicEnabledFlow.collectAsState(initial = false)
 
-            val soundEnabled by musicViewModel.soundEnabledFlow.collectAsState(initial = true)
+            val soundEnabled by soundViewModel.soundEnabledFlow.collectAsState(initial = true)
 
             LaunchedEffect(musicEnabled) {
                 musicManager.updateMusicState(musicEnabled)
@@ -93,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                             musicViewModel.updateMusicEnabled(enabled)
                         },
                         soundEnabled = soundEnabled,
-                        onSoundEnabledChanged = { musicViewModel.updateSoundEnabled(it) }
+                        onSoundEnabledChanged = { soundViewModel.updateSoundEnabled(it) }
                     )
                 }
             }
