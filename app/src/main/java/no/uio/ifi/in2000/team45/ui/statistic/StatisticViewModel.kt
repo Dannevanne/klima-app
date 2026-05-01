@@ -21,8 +21,8 @@ import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
+import no.uio.ifi.in2000.team45.data.statistic.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
-import no.uio.ifi.in2000.team45.data.statistic.TimeSeriesAvailability
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import java.util.Calendar
 
@@ -274,8 +274,9 @@ class StatisticViewModel(
                 val yearTo = currentYear - 1
                 val yearFrom = yearTo - maxPeriod + 1
 
-                val ranked = rankStations(candidates, byStation, currentYear)
-                val chosen = pickStationsForCoverage(ranked)
+                val chosen = StationPicker.pickStationsForPlace(
+                    candidates, byStation, targetElements, currentYear
+                ).toMutableList()
 
                 if (chosen.isEmpty()) {
                     // Frost availability returned nothing for any candidate.
@@ -381,52 +382,6 @@ class StatisticViewModel(
                 )
             }
         }
-    }
-
-    private data class RankedStation(
-        val station: WeatherStation,
-        val score: Double,
-        val coveredElements: Set<String>,
-        val historyYears: Int
-    )
-
-    private fun rankStations(
-        candidates: List<WeatherStation>,
-        byStation: Map<String, List<TimeSeriesAvailability>>,
-        currentYear: Int
-    ): List<RankedStation> {
-        return candidates.map { station ->
-            val available = byStation[station.id].orEmpty()
-            val covered = available.map { it.elementId }.toSet()
-            // Earliest validFrom year across the elements we care about gives
-            // us a rough "history span". A station with 90 years of temp beats
-            // a station with 5.
-            val earliestFromYear = available.minOfOrNull { it.validFromYear }
-            val historyYears = earliestFromYear
-                ?.let { (currentYear - it).coerceAtLeast(0) }
-                ?: 0
-            val distanceKm = (station.distanceMeters ?: 0) / 1000.0
-            val score = covered.size * 1000.0 + historyYears.toDouble() - distanceKm
-            RankedStation(station, score, covered, historyYears)
-        }.sortedByDescending { it.score }
-    }
-
-    // Greedy set-cover: take the top-ranked station, then add stations only if
-    // they fill in metrics nobody before them had. Single-station result for
-    // canonical places (Oslo -> Blindern). Multi-station only when forced.
-    private fun pickStationsForCoverage(ranked: List<RankedStation>): MutableList<WeatherStation> {
-        val chosen = mutableListOf<WeatherStation>()
-        val coveredSoFar = mutableSetOf<String>()
-        for (entry in ranked) {
-            if (entry.coveredElements.isEmpty()) continue
-            val newCoverage = entry.coveredElements - coveredSoFar
-            val isPrimary = chosen.isEmpty()
-            if (newCoverage.isEmpty() && !isPrimary) continue
-            chosen.add(entry.station)
-            coveredSoFar.addAll(entry.coveredElements)
-            if (coveredSoFar.containsAll(targetElements)) break
-        }
-        return chosen
     }
 
     fun searchNearbyStations(lat: Double, lon: Double) {
