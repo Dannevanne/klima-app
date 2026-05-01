@@ -33,10 +33,10 @@ data class LocationStatus(
     // "Moderate" if a hazard zone sits within ~500 m, "Low" otherwise.
     // Kvikkleire and radon read straight off the polygon attributes
     // (faregrad / aktsomhet class) so they don't need an offset hack.
-    val floodLevel: String = "Low",
-    val landslideLevel: String = "Low",
-    val kvikkleireLevel: String = "Low",
-    val radonLevel: String = "Low",
+    val floodLevel: String = "Unknown",
+    val landslideLevel: String = "Unknown",
+    val kvikkleireLevel: String = "Unknown",
+    val radonLevel: String = "Unknown",
     // Raw classification strings from NVE/NGU, kept so the UI can show the
     // exact wording in an info dialog when needed.
     val kvikkleireFaregrad: String? = null,

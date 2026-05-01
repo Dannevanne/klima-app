@@ -91,10 +91,10 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    val floodLevel = status?.floodLevel ?: "Low"
-    val landslideLevel = status?.landslideLevel ?: "Low"
-    val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
-    val radonLevel = status?.radonLevel ?: "Low"
+    val floodLevel = status?.floodLevel ?: "Unknown"
+    val landslideLevel = status?.landslideLevel ?: "Unknown"
+    val kvikkleireLevel = status?.kvikkleireLevel ?: "Unknown"
+    val radonLevel = status?.radonLevel ?: "Unknown"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
         floodLevel, landslideLevel, kvikkleireLevel, radonLevel, windLevel
