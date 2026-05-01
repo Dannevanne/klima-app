@@ -404,13 +404,15 @@ class StatisticDatasource {
         stationId: String,
         clientId: String,
         yearFrom: Int,
-        yearTo: Int
-    ): List<MonthlyObservation> {
-        val elements = listOf(
+        yearTo: Int,
+        wantedElements: Set<String> = setOf(
             "max(wind_speed_of_gust P1M)",
-            "max(wind_speed P1M)",
             "max(surface_snow_thickness P1M)"
-        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        )
+    ): List<MonthlyObservation> {
+        val toFetch = wantedElements.filter { it.contains("P1M") }
+        if (toFetch.isEmpty()) return emptyList()
+        val elements = toFetch.joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +

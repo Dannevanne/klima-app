@@ -19,6 +19,7 @@ import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.Place
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
+import no.uio.ifi.in2000.team45.data.statistic.StationAssignment
 import no.uio.ifi.in2000.team45.data.statistic.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -266,19 +267,22 @@ class StatisticViewModel @JvmOverloads constructor(
                     // Frost availability returned nothing for any candidate.
                     // Fall back to fetching the closest station blind so we
                     // at least show something rather than an error wall.
-                    chosen.add(candidates.first())
+                    chosen.add(StationAssignment(candidates.first(), targetElements.toSet()))
                 }
 
                 val fetched = coroutineScope {
-                    chosen.map { station ->
+                    chosen.map { assignment ->
                         async {
                             val a = async {
                                 repository.getAnnualObservations(
-                                    station.id, clientId, yearFrom, yearTo
+                                    assignment.station.id, clientId, yearFrom, yearTo,
+                                    assignment.elements
                                 )
                             }
-                            val s = async { repository.getClimateStats(station.id, clientId) }
-                            Triple(station, a.await(), s.await())
+                            val s = async {
+                                repository.getClimateStats(assignment.station.id, clientId)
+                            }
+                            Triple(assignment.station, a.await(), s.await())
                         }
                     }.map { it.await() }
                 }

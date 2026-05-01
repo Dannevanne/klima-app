@@ -1,5 +1,12 @@
 package no.uio.ifi.in2000.team45.data.statistic
 
+private val ALL_ANNUAL_ELEMENTS = setOf(
+    "mean(air_temperature P1Y)",
+    "sum(precipitation_amount P1Y)",
+    "max(wind_speed_of_gust P1M)",
+    "max(surface_snow_thickness P1M)"
+)
+
 class StatisticRepository(
     private val datasource: StatisticDatasource = StatisticDatasource()
 ) {
@@ -39,16 +46,23 @@ class StatisticRepository(
         stationId: String,
         clientId: String,
         yearFrom: Int,
-        yearTo: Int
+        yearTo: Int,
+        elements: Set<String> = ALL_ANNUAL_ELEMENTS
     ): List<AnnualObservation> {
-        val annual = datasource.getAnnualObservations(
-            stationId, clientId, yearFrom, yearTo
-        )
+        val needsAnnual = elements.any { it.contains("P1Y") }
+        val needsMonthly = elements.any { it.contains("P1M") }
+
+        val annual = if (needsAnnual) {
+            datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+        } else emptyList()
+
         // Frost has no P1Y aggregations for wind/snow. Pull monthly maxes
         // and roll them up to per-year maxes here, then merge.
-        val monthly = datasource.getMonthlyWindAndSnow(
-            stationId, clientId, yearFrom, yearTo
-        )
+        val monthly = if (needsMonthly) {
+            datasource.getMonthlyWindAndSnow(
+                stationId, clientId, yearFrom, yearTo, elements
+            )
+        } else emptyList()
         if (monthly.isEmpty()) return annual
 
         data class YearAgg(
