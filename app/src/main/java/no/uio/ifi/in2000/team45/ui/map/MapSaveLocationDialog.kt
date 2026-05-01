@@ -33,7 +33,14 @@ fun MapSaveLocationDialog(
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(text = stringResource(R.string.save_location))},
-            text = { Text("You can save up to ${SavedPlacesViewModel.MAX_SAVED_PLACES} places. Remove a place to add a new one")},
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.max_saved_places_message,
+                        SavedPlacesViewModel.MAX_SAVED_PLACES
+                    )
+                )
+            },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
                     Text(text = stringResource(R.string.ok))
