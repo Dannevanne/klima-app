@@ -36,13 +36,13 @@ sealed interface StatisticUiState {
 }
 
 class StatisticViewModel(
-    application: Application
+    application: Application,
+    private val repository: StatisticRepository = StatisticRepository(),
+    private val recentSearchRepository: RecentSearchRepository = RecentSearchRepository(application),
+    private val placeAutocomplete: PlaceAutocomplete = PlaceAutocomplete.create(locationProvider = null),
+    private val clientId: String = application.getString(R.string.frost_client_id)
 ) : AndroidViewModel(application) {
 
-    private val repository = StatisticRepository()
-    private val recentSearchRepository = RecentSearchRepository(application)
-    private val clientId: String = application.getString(R.string.frost_client_id)
-    private val placeAutocomplete = PlaceAutocomplete.create(locationProvider = null)
     private var searchJob: Job? = null
     private var climateJob: Job? = null
 
