@@ -207,13 +207,14 @@ class StatisticViewModel @JvmOverloads constructor(
         climateJob = viewModelScope.launch {
             try {
                 val maxDistanceMeters = 30_000
-                val rawCandidates = if (place.stations.isNotEmpty()) {
-                    place.stations
-                } else {
-                    repository.findNearestStations(
-                        place.latitude, place.longitude, clientId, count = 20
-                    )
-                }
+                // Always pull spatial neighbours, even when place.stations
+                // is non-empty. City searches group by municipality, so
+                // Stavanger's stations don't include Sola airport 9.5km away
+                // -- and Sola is the only one near Stavanger with gust data.
+                val nearby = repository.findNearestStations(
+                    place.latitude, place.longitude, clientId, count = 20
+                )
+                val rawCandidates = (place.stations + nearby).distinctBy { it.id }
                 val candidates = rawCandidates
                     .map { c ->
                         c.copy(
