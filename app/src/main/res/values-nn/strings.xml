@@ -187,6 +187,7 @@
     <string name="extreme_precipitation">Ekstremnedbør</string>
     <string name="months_count">%1$d månader</string>
     <string name="years_count">%1$d år</string>
+    <string name="days_per_year">%1$d dagar/år</string>
     <string name="trend_vs_norm">mot norm</string>
     <string name="weather_stations_used">Brukte vêrstasjonar</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>

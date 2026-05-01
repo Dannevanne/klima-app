@@ -177,6 +177,7 @@
     <string name="extreme_precipitation">Ekstrema arvi</string>
     <string name="months_count">%1$d mánu</string>
     <string name="years_count">%1$d jagi</string>
+    <string name="days_per_year">%1$d beaivvi/jagi</string>
     <string name="trend_vs_norm">norma ektui</string>
     <string name="weather_stations_used">Geavahuvvon dálkkádatstašuvnnat</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
