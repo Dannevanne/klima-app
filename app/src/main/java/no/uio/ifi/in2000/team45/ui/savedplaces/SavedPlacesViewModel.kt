@@ -67,6 +67,15 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     var pendingFocus: SavedPlacesLocation? by mutableStateOf(null)
         private set
 
+    // Decides max amount of saved places possible
+    companion object {
+        const val MAX_SAVED_PLACES = 4
+    }
+
+    fun canAddLocation(): Boolean {
+        return locations.value.size < MAX_SAVED_PLACES
+    }
+
     fun requestFocus(location: SavedPlacesLocation) {
         pendingFocus = location
     }
@@ -97,6 +106,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun addLocation(lat: Double, lng: Double, label: String) {
+        if (!canAddLocation()) return
         viewModelScope.launch {
             repository.addLocation(SavedPlacesLocation(lat, lng, label))
         }

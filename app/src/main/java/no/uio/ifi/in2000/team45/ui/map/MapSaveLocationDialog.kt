@@ -29,8 +29,71 @@ fun MapSaveLocationDialog(
     locationName: String,
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    savedPlacesViewModel: SavedPlacesViewModel,
+    savedPlacesViewModel: SavedPlacesViewModel
 ){
+    val limitReached = !savedPlacesViewModel.canAddLocation()
+
+    if (limitReached){
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.save_location))},
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.max_saved_places_message,
+                        SavedPlacesViewModel.MAX_SAVED_PLACES
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.ok))
+                }
+            }
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.save_location)) },
+            text = {
+                Column {
+                    Text(
+                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = onLocationNameChange,
+                        label = { Text(text = stringResource(R.string.place_name)) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        savedPlacesViewModel.addLocation(
+                            lat = point.latitude(),
+                            lng = point.longitude(),
+                            label = locationName.trim()
+                        )
+                        onDismiss()
+                    },
+                    enabled = locationName.trim().isNotBlank()
+                ) {
+                    Text(text = stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
     val context = LocalContext.current
 
     val soundEnabled = context
