@@ -52,6 +52,7 @@ class SavedPlacesRepository(private val context: Context) {
     }
 
     suspend fun addLocation(location: SavedPlacesLocation) {
+        if (!NorwayLocationValidator.isInsideNorway(location)) return
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
             prefs[LOCATIONS_KEY] = encodeLocations(current + location)
