@@ -42,7 +42,10 @@ data class AnnualObservation(
     // max from monthly data client-side.
     val maxWindGust: Double? = null,
     val maxWindSpeed: Double? = null,
-    val maxSnowDepth: Double? = null
+    val maxSnowDepth: Double? = null,
+    // Count of days with daily precipitation >= the heavy-rain threshold.
+    // Derived in the repository from sum(precipitation_amount P1D) data.
+    val heavyPrecipDays: Int? = null
 )
 
 data class TimeSeriesAvailability(
