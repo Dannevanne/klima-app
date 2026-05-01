@@ -35,7 +35,7 @@ data class LocationStatus(
     // (faregrad / aktsomhet class) so they don't need an offset hack.
     val floodLevel: String = "Low",
     val landslideLevel: String = "Low",
-    val kvikkleireLevel: String = "Low",
+    val quickClayLevel: String = "Low",
     val radonLevel: String = "Low",
     // Raw classification strings from NVE/NGU, kept so the UI can show the
     // exact wording in an info dialog when needed.
@@ -150,7 +150,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val landslideLevel = zoneRiskLevel(lat, lon, landslideZone) { la, lo ->
                     mapRepository.isInLandslideZone(la, lo)
                 }
-                val kvikkleireLevel = when (quickClayHazard) {
+                val quickClayLevel = when (quickClayHazard) {
                     "Høy" -> "High"
                     "Middels" -> "Moderate"
                     "Lav" -> "Low"
@@ -170,7 +170,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inLandslideZone = landslideZone,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
-                    kvikkleireLevel = kvikkleireLevel,
+                    quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
                     quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
@@ -190,7 +190,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                         inLandslideZone = landslideZone,
                         floodLevel = floodLevel,
                         landslideLevel = landslideLevel,
-                        kvikkleireLevel = kvikkleireLevel,
+                        quickClayLevel = quickClayLevel,
                         radonLevel = radonLevel,
                         quickClayHazard = quickClayHazard,
                         radonClass = radonClass,
@@ -236,7 +236,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inLandslideZone = landslideZone,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
-                    kvikkleireLevel = kvikkleireLevel,
+                    quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
                     quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
