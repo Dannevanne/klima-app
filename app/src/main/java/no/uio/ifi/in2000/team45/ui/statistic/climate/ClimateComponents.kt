@@ -3,8 +3,11 @@ package no.uio.ifi.in2000.team45.ui.statistic.climate
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -79,38 +82,41 @@ fun OverviewCards(
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // IntrinsicSize.Min on each row + fillMaxHeight on each card makes
+        // both cards in a row match the taller one's intrinsic content
+        // height. Lets cards grow when text scale is up without clipping.
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
                 label = stringResource(R.string.precipitation_avg_year),
                 value = if (avgPrecip != null) "${avgPrecip.toInt()} mm" else "-",
                 trend = precipTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
             OverviewStatCard(
                 label = stringResource(R.string.max_wind_gust),
                 value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
                 trend = windTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
                 label = stringResource(R.string.max_snow_depth),
                 value = if (maxSnowDepth != null) "${maxSnowDepth.toInt()} cm" else "-",
                 trend = snowTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
             OverviewStatCard(
                 label = stringResource(R.string.extreme_precipitation),
                 value = if (extremePrecipDays > 0) stringResource(R.string.years_count, extremePrecipDays) else "-",
                 trend = extremeTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
     }
@@ -124,7 +130,7 @@ fun OverviewStatCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(100.dp),
+        modifier = modifier.defaultMinSize(minHeight = 100.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
