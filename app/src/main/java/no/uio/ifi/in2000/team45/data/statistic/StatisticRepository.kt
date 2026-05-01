@@ -8,6 +8,10 @@ class StatisticRepository(
         return datasource.searchStations(query, clientId)
     }
 
+    suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
+        return datasource.geocodePlaces(query, mapboxToken)
+    }
+
     suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
         return datasource.findNearestStation(lat, lon, clientId)
     }

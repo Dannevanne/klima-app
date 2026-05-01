@@ -15,6 +15,8 @@ import kotlinx.serialization.json.intOrNull
 
 private const val TAG = "StatisticDatasource"
 private const val FROST_BASE = "https://frost.met.no"
+private const val MAPBOX_GEOCODE_BASE = "https://api.mapbox.com/search/geocode/v6/forward"
+
 class StatisticDatasource {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -205,6 +207,48 @@ class StatisticDatasource {
         } catch (e: Exception) {
             Log.e(TAG, "Observations error", e)
             return emptyList()
+        }
+    }
+
+    // Mapbox Geocoding v6, restricted to Norwegian admin units. The PlaceAutocomplete
+    // SDK with limit=1 ranked phonetic mismatches (Åbestad for Ibestad) above the
+    // real place; v6 with the type filter resolves Ibestad correctly.
+    suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
+        val encoded = java.net.URLEncoder.encode(query.trim(), "UTF-8")
+        val url = MAPBOX_GEOCODE_BASE +
+                "?q=$encoded" +
+                "&country=no" +
+                "&types=place,locality,region,district" +
+                "&limit=5" +
+                "&language=no" +
+                "&access_token=$mapboxToken"
+        return try {
+            val response = KtorClient.client.get(url)
+            if (response.status.value != 200) {
+                Log.e(TAG, "Geocode failed: ${response.status.value}")
+                return emptyList()
+            }
+            parseGeocodeFeatures(response.body())
+        } catch (e: Exception) {
+            Log.e(TAG, "Geocode error", e)
+            emptyList()
+        }
+    }
+
+    fun parseGeocodeFeatures(body: String): List<Place> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val features = root["features"]?.jsonArray ?: return emptyList()
+        return features.mapNotNull { feature ->
+            val obj = feature.jsonObject
+            val props = obj["properties"]?.jsonObject ?: return@mapNotNull null
+            val name = props["name"]?.jsonPrimitive?.contentOrNull ?: return@mapNotNull null
+            val placeFormatted = props["place_formatted"]?.jsonPrimitive?.contentOrNull ?: ""
+            val geom = obj["geometry"]?.jsonObject ?: return@mapNotNull null
+            val coords = geom["coordinates"]?.jsonArray ?: return@mapNotNull null
+            if (coords.size < 2) return@mapNotNull null
+            val lon = coords[0].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
+            val lat = coords[1].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
+            Place(name = name, subtitle = placeFormatted, latitude = lat, longitude = lon)
         }
     }
 
