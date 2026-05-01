@@ -18,6 +18,7 @@ import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator.isInsideNorway
 
 data class LocationStatus(
     val stationName: String = "",
@@ -97,6 +98,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun addLocation(lat: Double, lng: Double, label: String) {
+        if (!isInsideNorway(lat, lng)) return
         viewModelScope.launch {
             repository.addLocation(SavedPlacesLocation(lat, lng, label))
         }
