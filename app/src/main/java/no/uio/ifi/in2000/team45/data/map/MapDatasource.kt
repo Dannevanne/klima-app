@@ -26,9 +26,11 @@ class MapDatasource {
     // NVE ArcGIS identify for a point against specific layers of a service.
     // The layer IDs must match what the corresponding overlay renders, or the
     // check returns true for background/mask layers that the user never sees.
+    // Returns true/false when the API responded, null when the call failed.
+    // Callers use null to render "unknown" instead of misleading "Low".
     private suspend fun isInNveZone(
         service: String, layers: String, lat: Double, lon: Double
-    ): Boolean {
+    ): Boolean? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/$service/MapServer/identify")
@@ -49,15 +51,15 @@ class MapDatasource {
                     && !body.contains("\"results\": []")
         } catch (e: Exception) {
             Log.e("MapDatasource", "$service zone check failed", e)
-            false
+            null
         }
     }
 
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
         return isInNveZone("Flomaktsomhet", "1", lat, lon)
     }
 
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
         return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
     }
 
@@ -108,7 +110,7 @@ class MapDatasource {
     // aktsomhet zones); layer 0 is a coarse raster whose pixel can be ~100m,
     // so identify against it false-positives in cities near slopes. We hit
     // only the vector layer for a cleaner in/out answer.
-    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
         return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
     }
 
@@ -147,8 +149,8 @@ class MapDatasource {
         }
     }
 
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
-        return getRadonHazard(lat, lon) != null
+    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
+        return getRadonHazard(lat, lon)?.let { true }
     }
 
     // Pulls the radon "aktsomhet" class from NGU's WMS GetFeatureInfo. Returns

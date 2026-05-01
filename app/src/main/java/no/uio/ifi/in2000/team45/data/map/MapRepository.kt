@@ -12,15 +12,15 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         )
     }
 
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
         return mapDatasource.isInFloodZone(lat, lon)
     }
 
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
         return mapDatasource.isInRadonZone(lat, lon)
     }
 
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
         return mapDatasource.isInQuickClayZone(lat, lon)
     }
 
@@ -28,7 +28,7 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return mapDatasource.getQuickClayHazard(lat, lon)
     }
 
-    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean {
+    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
         return mapDatasource.isInLandslideZone(lat, lon)
     }
 
