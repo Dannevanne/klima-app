@@ -53,7 +53,11 @@ data class Place(
     val stations: List<WeatherStation> = emptyList()
 )
 
-class StatisticViewModel(
+// @JvmOverloads is needed so AndroidViewModelFactory can find a single-arg
+// (Application) constructor at the JVM level. Without it, viewModel() in
+// AppNavigation crashes at startup because Kotlin only emits the all-args
+// constructor for default-valued parameters.
+class StatisticViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: StatisticRepository = StatisticRepository(),
     private val recentSearchRepository: RecentSearchRepository = RecentSearchRepository(application),
