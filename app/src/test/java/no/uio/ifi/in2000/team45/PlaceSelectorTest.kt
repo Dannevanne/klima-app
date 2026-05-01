@@ -66,4 +66,11 @@ class PlaceSelectorTest {
         val candidates = listOf(place("Abestad"), place("Ibestad"))
         assertEquals("Ibestad", PlaceSelector.pickBest("  Ibestad  ", candidates)?.name)
     }
+
+    @Test
+    fun exactMatchBeatsPrefix() {
+        // Query "Os" matches "Oslo" by prefix and "Os" exactly. We want "Os".
+        val candidates = listOf(place("Oslo"), place("Os"))
+        assertEquals("Os", PlaceSelector.pickBest("Os", candidates)?.name)
+    }
 }
