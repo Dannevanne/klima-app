@@ -114,7 +114,13 @@ fun OverviewCards(
             )
             OverviewStatCard(
                 label = stringResource(R.string.extreme_precipitation),
-                value = if (extremePrecipDays > 0) stringResource(R.string.years_count, extremePrecipDays) else "-",
+                // Show the count whenever we have precip data, even when it
+                // is 0. Otherwise the card paints "-" alongside a "-100% vs
+                // norm" trend because extremePrecipDays = 0 still produces
+                // a real comparison against expectedExtreme.
+                value = if (annualData.any { it.totalPrecip != null }) {
+                    stringResource(R.string.years_count, extremePrecipDays)
+                } else "-",
                 trend = extremeTrend,
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
