@@ -27,45 +27,60 @@ fun MapSaveLocationDialog(
     onDismiss: () -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel
 ){
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.save_location)) },
-        text = {
-            Column {
-                Text(
-                    "%.4f, %.4f".format(point.latitude(), point.longitude()),
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = locationName,
-                    onValueChange = onLocationNameChange,
-                    label = { Text(text = stringResource(R.string.place_name)) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+    val limitReached = !savedPlacesViewModel.canAddLocation()
+
+    if (limitReached){
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.save_location))},
+            text = { Text("You can save up to ${SavedPlacesViewModel.MAX_SAVED_PLACES} places. Remove a place to add a new one")},
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.ok))
+                }
             }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    savedPlacesViewModel.addLocation(
-                        lat = point.latitude(),
-                        lng = point.longitude(),
-                        label = locationName.trim()
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.save_location)) },
+            text = {
+                Column {
+                    Text(
+                        "%.4f, %.4f".format(point.latitude(), point.longitude()),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    onDismiss()
-                },
-                enabled = locationName.trim().isNotBlank()
-            ) {
-                Text(text = stringResource(R.string.save))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = onLocationNameChange,
+                        label = { Text(text = stringResource(R.string.place_name)) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        savedPlacesViewModel.addLocation(
+                            lat = point.latitude(),
+                            lng = point.longitude(),
+                            label = locationName.trim()
+                        )
+                        onDismiss()
+                    },
+                    enabled = locationName.trim().isNotBlank()
+                ) {
+                    Text(text = stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.cancel))
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        }
-    )
+        )
+    }
 }
