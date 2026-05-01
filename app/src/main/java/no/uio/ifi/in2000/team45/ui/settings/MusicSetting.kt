@@ -15,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.graphics.Color
+import no.uio.ifi.in2000.team45.ui.theme.SwitchButtonGray
+import no.uio.ifi.in2000.team45.ui.theme.SwitchButtonGreen
 
 @Composable
 fun MusicSetting(
@@ -39,9 +41,9 @@ fun MusicSetting(
             onCheckedChange = onMusicEnabledChanged,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
-                checkedTrackColor = Color(0xFF2E7D32),
+                checkedTrackColor = SwitchButtonGreen,
                 uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFF5F6368),
+                uncheckedTrackColor = SwitchButtonGray,
                 checkedBorderColor = Color.White,
                 uncheckedBorderColor = Color.White
             )

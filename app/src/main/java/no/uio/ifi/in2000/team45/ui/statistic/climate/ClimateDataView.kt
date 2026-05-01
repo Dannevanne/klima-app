@@ -18,6 +18,14 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.ui.theme.FillColorBlue
+import no.uio.ifi.in2000.team45.ui.theme.FillColorOrange
+import no.uio.ifi.in2000.team45.ui.theme.FillColorPurple
+import no.uio.ifi.in2000.team45.ui.theme.FillColorTurquoise
+import no.uio.ifi.in2000.team45.ui.theme.LineColorBlue
+import no.uio.ifi.in2000.team45.ui.theme.LineColorOrange
+import no.uio.ifi.in2000.team45.ui.theme.LineColorPurple
+import no.uio.ifi.in2000.team45.ui.theme.LineColorTurquoise
 
 private val PERIOD_OPTIONS = listOf(5, 10, 20, 30, 50)
 
@@ -69,8 +77,8 @@ fun ClimateDataView(
                     data = annualData.mapNotNull { a ->
                         a.totalPrecip?.let { a.year to it }
                     },
-                    lineColor = Color(0xFF42A5F5),
-                    fillColor = Color(0x3042A5F5)
+                    lineColor = LineColorBlue,
+                    fillColor = FillColorBlue
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -83,8 +91,8 @@ fun ClimateDataView(
                     data = annualData.mapNotNull { a ->
                         a.meanTemp?.let { a.year to it }
                     },
-                    lineColor = Color(0xFFFF9800),
-                    fillColor = Color(0x30FF9800)
+                    lineColor = LineColorOrange,
+                    fillColor = FillColorOrange
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -97,8 +105,8 @@ fun ClimateDataView(
                     data = annualData.mapNotNull { a ->
                         a.maxWindGust?.let { a.year to it }
                     },
-                    lineColor = Color(0xFF7E57C2),
-                    fillColor = Color(0x307E57C2)
+                    lineColor = LineColorPurple,
+                    fillColor = FillColorPurple
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -111,8 +119,8 @@ fun ClimateDataView(
                     data = annualData.mapNotNull { a ->
                         a.maxSnowDepth?.let { a.year to it }
                     },
-                    lineColor = Color(0xFF26C6DA),
-                    fillColor = Color(0x3026C6DA)
+                    lineColor = LineColorTurquoise,
+                    fillColor = FillColorTurquoise
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

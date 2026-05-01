@@ -8,6 +8,14 @@ import androidx.compose.material.icons.outlined.Water
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.theme.IconBlue
+import no.uio.ifi.in2000.team45.ui.theme.IconGreen
+import no.uio.ifi.in2000.team45.ui.theme.IconLightBlue
+import no.uio.ifi.in2000.team45.ui.theme.IconLightGreen
+import no.uio.ifi.in2000.team45.ui.theme.IconLightOrange
+import no.uio.ifi.in2000.team45.ui.theme.IconLightPurple
+import no.uio.ifi.in2000.team45.ui.theme.IconOrange
+import no.uio.ifi.in2000.team45.ui.theme.IconPurple
 
 data class InfoDatasource(
     val title: String,
@@ -23,32 +31,32 @@ val infoDatasources = listOf(
         title = "NVE",
         url = "https://www.nve.no/",
         descriptionId = R.string.flood_landslides_quick_clay_wind,
-        containerColor = Color(0xFFE3F2FD),
-        iconColor = Color(0xFF1565C0),
+        containerColor = IconLightBlue,
+        iconColor = IconBlue,
         icon = Icons.Outlined.Water
     ),
     InfoDatasource(
         title = "Frost API v0",
         url = "https://frost.met.no/index.html",
         descriptionId = R.string.climate_statistics,
-        containerColor = Color(0xFFE8F5E9),
-        iconColor = Color(0xFF388E3C),
+        containerColor = IconLightGreen,
+        iconColor = IconGreen,
         icon = Icons.Outlined.DeviceThermostat
     ),
     InfoDatasource(
         title = "Mapbox",
         url = "https://www.mapbox.com/",
         descriptionId = R.string.map_and_search,
-        containerColor = Color(0xFFEDE7F6),
-        iconColor = Color(0xFF6A1B9A),
+        containerColor = IconLightPurple,
+        iconColor = IconPurple,
         icon = Icons.Outlined.TravelExplore
     ),
     InfoDatasource(
         title = "NGU / RadonWMS",
         url = "https://www.ngu.no/",
         descriptionId = R.string.radon_gas,
-        containerColor = Color(0xFFFFF3E0),
-        iconColor = Color(0xFFE65100),
+        containerColor = IconLightOrange,
+        iconColor = IconOrange,
         icon = Icons.Outlined.Cloud
     )
 )

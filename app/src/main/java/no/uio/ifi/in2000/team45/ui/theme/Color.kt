@@ -38,6 +38,37 @@ val LoadingBlueLight = Color(0xFF90CAF9)
 val IconWhite = Color(0xFFFFFFFF)
 val IconBlack = Color(0xFF000000)
 
+// Colors for switch buttons
+val SwitchButtonGreen = Color(0xFF2E7D32)
+val SwitchButtonGray = Color(0xFF5F6368)
+
+// Colors for infoDatasourceIcons
+val IconLightBlue = Color(0xFFE3F2FD)
+val IconBlue = Color(0xFF1565C0)
+val IconLightGreen = Color(0xFFE8F5E9)
+val IconGreen = Color(0xFF388E3C)
+val IconLightPurple = Color(0xFFEDE7F6)
+val IconPurple = Color(0xFF6A1B9A)
+val IconLightOrange = Color(0xFFFFF3E0)
+val IconOrange = Color(0xFFE65100)
+
+//Colors for ClimateDataView
+val LineColorBlue = Color(0xFF42A5F5)
+val FillColorBlue = Color(0x3042A5F5)
+val LineColorOrange = Color(0xFFFF9800)
+val FillColorOrange = Color(0x30FF9800)
+val LineColorPurple = Color(0xFF7E57C2)
+val FillColorPurple = Color(0x307E57C2)
+val LineColorTurquoise = Color(0xFF26C6DA)
+val FillColorTurquoise = Color(0x3026C6DA)
+
+// Colors for ClimateComponents and savedPlaces statistics
+val StatisticsRed = Color(0xFFEF4444)
+val StatisticsGreen = Color(0xFF22C55E)
+
+val StatisticsOrange = Color(0xFFF97316)
+
+val LinkBlue = Color(0xFF60A5FA)
 @Composable
 fun loadingColor(): Color =
     if (isSystemInDarkTheme()) LoadingBlueLight else LoadingBlue
