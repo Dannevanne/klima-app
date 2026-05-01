@@ -233,4 +233,5 @@
     <string name="sound_effect">Sound Effect</string>
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
+    <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
 </resources>

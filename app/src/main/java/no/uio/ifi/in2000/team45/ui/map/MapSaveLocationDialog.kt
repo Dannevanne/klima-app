@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 // Naming dialog for saved location
@@ -33,13 +34,25 @@ fun MapSaveLocationDialog(
 ) {
     val limitReached = !savedPlacesViewModel.canAddLocation()
     val context = LocalContext.current
+    val outsideNorway = !NorwayLocationValidator.isInsideNorway(point.latitude(),point.longitude())
 
     val soundEnabled = context
         .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         .getBoolean("sound_enabled", true)
 
-    if (limitReached) {
-        AlertDialog(
+    when {
+        outsideNorway -> AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = stringResource(R.string.save_location)) },
+            text = { Text(text = stringResource(R.string.you_can_not_save_a_place_outside_of_norway)) },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.ok))
+                }
+            }
+        )
+
+        limitReached -> AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(text = stringResource(R.string.save_location)) },
             text = {
@@ -56,8 +69,7 @@ fun MapSaveLocationDialog(
                 }
             }
         )
-    } else {
-        AlertDialog(
+    else -> AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(text = stringResource(R.string.save_location)) },
             text = {
