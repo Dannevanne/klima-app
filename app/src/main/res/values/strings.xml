@@ -153,6 +153,7 @@
     <string name="risk_high">High</string>
     <string name="risk_moderate">Moderate</string>
     <string name="risk_low">Low</string>
+    <string name="risk_unknown">Unknown</string>
     <string name="what_can_i_do">WHAT CAN I DO?</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>

@@ -128,6 +128,7 @@
     <string name="risk_high">Alla</string>
     <string name="risk_moderate">Gaskamearálaš</string>
     <string name="risk_low">Vuollegis</string>
+    <string name="risk_unknown">Eahpesihkar</string>
     <string name="what_can_i_do">MAID MUN SÁHTÁN DAHKAT?</string>
     <string name="collapse">Čiega</string>
     <string name="expand">Viiddid</string>
