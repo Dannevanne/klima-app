@@ -8,6 +8,11 @@ class StatisticRepository(
         return datasource.searchStations(query, clientId)
     }
 
+    suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
+        val candidates = datasource.geocodePlaces(query, mapboxToken)
+        return PlaceSelector.pickBest(query, candidates)?.let { listOf(it) } ?: emptyList()
+    }
+
     suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
         return datasource.findNearestStation(lat, lon, clientId)
     }

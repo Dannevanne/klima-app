@@ -13,13 +13,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
-import com.mapbox.search.autocomplete.PlaceAutocomplete
-import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
-import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.Place
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
 import no.uio.ifi.in2000.team45.data.statistic.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
@@ -42,17 +40,6 @@ sealed interface StatisticUiState {
     data class Error(val message: String) : StatisticUiState
 }
 
-data class Place(
-    val name: String,
-    val subtitle: String,
-    val latitude: Double,
-    val longitude: Double,
-    // Stations already known to belong to this place (e.g., grouped from a
-    // Frost name match like "OSLO - BLINDERN", "OSLO - VINDERN"). Empty for
-    // places that come from geocoding only.
-    val stations: List<WeatherStation> = emptyList()
-)
-
 // @JvmOverloads is needed so AndroidViewModelFactory can find a single-arg
 // (Application) constructor at the JVM level. Without it, viewModel() in
 // AppNavigation crashes at startup because Kotlin only emits the all-args
@@ -61,8 +48,8 @@ class StatisticViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: StatisticRepository = StatisticRepository(),
     private val recentSearchRepository: RecentSearchRepository = RecentSearchRepository(application),
-    private val placeAutocomplete: PlaceAutocomplete = PlaceAutocomplete.create(locationProvider = null),
-    private val clientId: String = application.getString(R.string.frost_client_id)
+    private val clientId: String = application.getString(R.string.frost_client_id),
+    private val mapboxAccessToken: String = application.getString(R.string.mapbox_access_token)
 ) : AndroidViewModel(application) {
 
     private var searchJob: Job? = null
@@ -197,24 +184,7 @@ class StatisticViewModel @JvmOverloads constructor(
     }
 
     private suspend fun geocodePlaces(query: String): List<Place> {
-        // Mapbox autocomplete is a typeahead -- it returns variants of the same
-        // query. We only want the canonical place, so cap at 1.
-        val options = PlaceAutocompleteOptions(
-            limit = 1,
-            countries = listOf(IsoCountryCode.NORWAY)
-        )
-        val response = placeAutocomplete.suggestions(query = query, options = options)
-        val suggestion = response.value?.firstOrNull() ?: return emptyList()
-        val selected = placeAutocomplete.select(suggestion).value ?: return emptyList()
-        val coord = selected.coordinate ?: return emptyList()
-        return listOf(
-            Place(
-                name = suggestion.name,
-                subtitle = (suggestion.formattedAddress ?: "").trim(),
-                latitude = coord.latitude(),
-                longitude = coord.longitude()
-            )
-        )
+        return repository.geocodePlaces(query, mapboxAccessToken)
     }
 
     private fun String.toTitleCase(): String {
