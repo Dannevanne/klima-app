@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45
 
 import android.app.Application
-import com.mapbox.search.autocomplete.PlaceAutocomplete
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -42,7 +41,6 @@ class StatisticViewModelTest {
         val mockApp = mockk<Application>(relaxed = true)
         val mockRepo = mockk<StatisticRepository>()
         val mockRecent = mockk<RecentSearchRepository>()
-        val mockPlace = mockk<PlaceAutocomplete>(relaxed = true)
 
         every { mockRecent.recentSearchesFlow } returns flowOf(emptyList())
         // Hang on the network call so the launched coroutine stays at
@@ -51,7 +49,7 @@ class StatisticViewModelTest {
             CompletableDeferred<List<WeatherStation>>().await()
         }
 
-        val vm = StatisticViewModel(mockApp, mockRepo, mockRecent, mockPlace, "id")
+        val vm = StatisticViewModel(mockApp, mockRepo, mockRecent, "id", "token")
         vm.updateSearchQuery("Oslo")
         vm.searchStations()
 
