@@ -1,3 +1,5 @@
+import com.android.tools.r8.internal.im
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -73,6 +75,7 @@ dependencies {
     //mapbox
     implementation("com.mapbox.maps:android-ndk27:11.20.1")
     implementation("com.mapbox.extension:maps-compose-ndk27:11.20.1")
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-turf:7.10.0")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
