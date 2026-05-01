@@ -97,11 +97,14 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch { repository.removeLocation(location) }
     }
 
-    fun addLocation(lat: Double, lng: Double, label: String) {
-        if (!isInsideNorway(lat, lng)) return
+    fun addLocation(lat: Double, lng: Double, label: String): Boolean {
+        if (!isInsideNorway(lat, lng)) return false
+
         viewModelScope.launch {
             repository.addLocation(SavedPlacesLocation(lat, lng, label))
         }
+
+        return true
     }
 
     fun removeAllSavedPlaces() {
