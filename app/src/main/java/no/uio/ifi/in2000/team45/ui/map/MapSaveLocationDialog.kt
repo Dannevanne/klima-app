@@ -30,13 +30,18 @@ fun MapSaveLocationDialog(
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel
-){
+) {
     val limitReached = !savedPlacesViewModel.canAddLocation()
+    val context = LocalContext.current
 
-    if (limitReached){
+    val soundEnabled = context
+        .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        .getBoolean("sound_enabled", true)
+
+    if (limitReached) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(text = stringResource(R.string.save_location))},
+            title = { Text(text = stringResource(R.string.save_location)) },
             text = {
                 Text(
                     text = stringResource(
@@ -80,6 +85,12 @@ fun MapSaveLocationDialog(
                             lng = point.longitude(),
                             label = locationName.trim()
                         )
+                        if (soundEnabled) {
+                            MediaPlayer.create(context, R.raw.sound).apply {
+                                setOnCompletionListener { it.release() }
+                                start()
+                            }
+                        }
                         onDismiss()
                     },
                     enabled = locationName.trim().isNotBlank()
@@ -94,57 +105,4 @@ fun MapSaveLocationDialog(
             }
         )
     }
-    val context = LocalContext.current
-
-    val soundEnabled = context
-        .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        .getBoolean("sound_enabled", true)
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.save_location)) },
-        text = {
-            Column {
-                Text(
-                    "%.4f, %.4f".format(point.latitude(), point.longitude()),
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = locationName,
-                    onValueChange = onLocationNameChange,
-                    label = { Text(text = stringResource(R.string.place_name)) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    savedPlacesViewModel.addLocation(
-                        lat = point.latitude(),
-                        lng = point.longitude(),
-                        label = locationName.trim()
-                    )
-                    if (soundEnabled){
-                        MediaPlayer.create(context, R.raw.sound).apply {
-                            setOnCompletionListener {it.release()}
-                            start()
-                        }
-                    }
-                    onDismiss()
-                },
-                enabled = locationName.trim().isNotBlank()
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        }
-    )
 }
