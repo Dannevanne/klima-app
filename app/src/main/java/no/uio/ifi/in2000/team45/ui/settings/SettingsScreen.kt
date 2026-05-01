@@ -31,7 +31,11 @@ fun SettingsScreen(
     mapViewModel: MapViewModel,
     onClick: () -> Unit,
     statisticViewModel: StatisticViewModel,
-    savedPlacesViewModel: SavedPlacesViewModel
+    savedPlacesViewModel: SavedPlacesViewModel,
+    musicEnabled: Boolean,
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -65,6 +69,24 @@ fun SettingsScreen(
                     onLanguageSelected = { language ->
                         mapViewModel.updateLanguage(language)
                     }
+                )
+            }
+            item {
+                HorizontalDivider()
+            }
+            item {
+                MusicSetting(
+                    musicEnabled = musicEnabled,
+                    onMusicEnabledChanged = onMusicEnabledChanged
+                )
+            }
+            item {
+                HorizontalDivider()
+            }
+            item {
+                SoundSetting(
+                    soundEnabled = soundEnabled,
+                    onSoundEnabledChange = onSoundEnabledChanged
                 )
             }
             item {

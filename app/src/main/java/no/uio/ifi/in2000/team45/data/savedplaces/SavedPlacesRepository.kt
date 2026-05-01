@@ -14,6 +14,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
 
 private val Context.favoritesDataStore by preferencesDataStore(name = "savedplaces")
 class SavedPlacesRepository(private val context: Context) {
@@ -24,6 +25,10 @@ class SavedPlacesRepository(private val context: Context) {
     }
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    init {
+        NorwayLocationValidator.loadBoundary(context)
+    }
 
     val favoriteStationsFlow: Flow<List<FavoriteStation>> =
         context.favoritesDataStore.data.map { prefs ->
@@ -52,6 +57,7 @@ class SavedPlacesRepository(private val context: Context) {
     }
 
     suspend fun addLocation(location: SavedPlacesLocation) {
+        if (!NorwayLocationValidator.isInsideNorway(location)) return
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
             prefs[LOCATIONS_KEY] = encodeLocations(current + location)
@@ -106,13 +112,15 @@ class SavedPlacesRepository(private val context: Context) {
 
     private fun parseLocations(raw: String): List<SavedPlacesLocation> {
         return try {
-            json.parseToJsonElement(raw).jsonArray.map { el ->
+            json.parseToJsonElement(raw).jsonArray.mapNotNull { el ->
                 val obj = el.jsonObject
-                SavedPlacesLocation(
+                val location = SavedPlacesLocation(
                     latitude = obj["latitude"]!!.jsonPrimitive.double,
                     longitude = obj["longitude"]!!.jsonPrimitive.double,
                     label = obj["label"]?.jsonPrimitive?.content ?: ""
                 )
+
+                if (NorwayLocationValidator.isInsideNorway(location)) location else null
             }
         } catch (_: Exception) { emptyList() }
     }

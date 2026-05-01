@@ -1,3 +1,5 @@
+import com.android.tools.r8.internal.im
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -60,6 +62,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.material3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -72,6 +75,7 @@ dependencies {
     //mapbox
     implementation("com.mapbox.maps:android-ndk27:11.20.1")
     implementation("com.mapbox.extension:maps-compose-ndk27:11.20.1")
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-turf:7.10.0")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
@@ -94,4 +98,7 @@ dependencies {
 
     // Appcompat
     implementation("androidx.appcompat:appcompat:1.7.1")
+
+    // Browser (url-launching)
+    implementation("androidx.browser:browser:1.10.0")
 }

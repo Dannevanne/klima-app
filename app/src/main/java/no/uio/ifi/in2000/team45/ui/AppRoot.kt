@@ -12,7 +12,11 @@ import androidx.compose.runtime.getValue
 
 @Composable
 fun AppRoot(
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    musicEnabled: Boolean,
+    onMusicEnabledChanged: (Boolean) -> Unit,
+    soundEnabled: Boolean,
+    onSoundEnabledChanged: (Boolean) -> Unit
 ) {
     var showLoadingScreen by remember { mutableStateOf(true) }
 
@@ -24,6 +28,11 @@ fun AppRoot(
     if (showLoadingScreen) {
         LogoScreen()
     } else {
-        AppNavigation(mapViewModel = mapViewModel)
+        AppNavigation(mapViewModel = mapViewModel,
+            musicEnabled = musicEnabled,
+            onMusicEnabledChanged = onMusicEnabledChanged,
+            soundEnabled = soundEnabled,
+            onSoundEnabledChanged = onSoundEnabledChanged
+        )
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Team45</string>
+    <string name="app_name">SafeProperty</string>
     <string name="map">Map</string>
     <string name="to_settings">to settings</string>
     <string name="to_statistics">to statistics</string>
@@ -101,7 +101,7 @@
     <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
     <string name="radon_source">Source: NGU RadonWMS2</string>
     <string name="overlay_legend">Legend</string>
-    <string name="overlay_legend_title">%1$s legend</string>
+    <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
     <string name="legend_quickclay_body">Three sub-layers are stacked. Solid color = mapped quick-clay zone with hazard degree (Lav / Middels / Hoey). Striped patterns = areas NVE has investigated; a striped polygon labelled "Omraade uten fare" was checked and found safe.</string>
     <string name="legend_radon_body">Four classes from NGU. Purple = Saerlig hoy aktsomhet (highest concern). Red = Hoy aktsomhet (>=20%% of dwellings exceed the 200 Bq/m^3 threshold). Yellow = Moderat til lav. Grey = Usikker (insufficient data). The map cannot predict radon in a specific building — measure the building.</string>
@@ -159,8 +159,8 @@
     <string name="flood_measures">Flood measures</string>
     <string name="landslide_prevention">Landslide prevention</string>
     <string name="wind_protection">Wind protection</string>
-    <string name="nve_flood_link">Read more at NVE flood protection handbook</string>
-    <string name="nve_landslide_link">Read more at NVE landslide handbook</string>
+    <string name="nve_flood_link">Read more about flood protection at DiBK</string>
+    <string name="nve_landslide_link">Read more about landslide protection at DiBK</string>
     <string name="dsb_storm_link">Read more at DSB storm preparedness</string>
     <string name="flood_advice_backflow_valve">Install a backflow valve on your drainage to prevent sewage from entering the house.</string>
     <string name="flood_advice_raise_threshold">Raise the threshold to the basement and crawl space.</string>
@@ -229,4 +229,10 @@
     <string name="search_after_place_norway">Search after place in Norway</string>
     <string name="language_sami">Sami</string>
     <string name="change_layer_to_zoom_out">Change layer to zoom out</string>
+    <string name="use_without_internet">Use anyway</string>
+    <string name="background_music">Background music</string>
+    <string name="sound_effect">Sound Effect</string>
+    <string name="ok">Ok</string>
+    <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
+    <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
 </resources>

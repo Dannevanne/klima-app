@@ -121,6 +121,9 @@ class MapViewModel(
         extraBufferCapacity = 1
     )
 
+    var soundEnabled by mutableStateOf(false)
+        private set
+
 
     init {
         viewModelScope.launch {
@@ -154,6 +157,10 @@ class MapViewModel(
                 )
             }
         }
+    }
+
+    fun updateSoundEnabled(enabled: Boolean) {
+        soundEnabled = enabled
     }
 
     fun updateOverlay(

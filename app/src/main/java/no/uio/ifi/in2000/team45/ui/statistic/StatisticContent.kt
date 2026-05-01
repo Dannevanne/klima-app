@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.WatchLater
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -185,7 +186,7 @@ fun StatisticContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        Icons.Filled.Search,
+                                        Icons.Outlined.WatchLater,
                                         contentDescription = null,
                                         modifier = Modifier.padding(end = 12.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant

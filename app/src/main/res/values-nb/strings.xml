@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Team45</string>
+    <string name="app_name">SafeProperty</string>
     <string name="map">Kart</string>
     <string name="to_settings">til innstillinger</string>
     <string name="to_statistics">til statistikk</string>
@@ -142,8 +142,8 @@
     <string name="flood_measures">Tiltak mot flom</string>
     <string name="landslide_prevention">Tiltak mot skred</string>
     <string name="wind_protection">Tiltak mot vind</string>
-    <string name="nve_flood_link">Les mer i NVEs håndbok om flomsikring</string>
-    <string name="nve_landslide_link">Les mer i NVEs håndbok om skredsikring</string>
+    <string name="nve_flood_link">Les mer om sikringstiltak mot flom hos DiBK</string>
+    <string name="nve_landslide_link">Les mer om sikringstiltak mot skred hos DiBK</string>
     <string name="dsb_storm_link">Les mer om stormberedskap hos DSB</string>
     <string name="flood_advice_backflow_valve">Installer en tilbakeslagsventil på avløpet for å hindre at kloakk kommer inn i huset.</string>
     <string name="flood_advice_raise_threshold">Hev dørterskelen til kjeller og krypkjeller.</string>
@@ -212,7 +212,7 @@
     <string name="place_name">Stedsnavn</string>
     <string name="the_team">Teamet</string>
     <string name="versjon_1_0_0">Versjon 1.0.0</string>
-    <string name="app_description">App for hus- og hytteeiere som ønsker å sjekke klimarisiko og klimastatistikk for sitt område</string>
+    <string name="app_description">Applikasjon for hus- og hytteeiere som ønsker å sjekke klimarisiko og klimastatistikk for sitt område</string>
     <string name="datasources">Datakilder</string>
     <string name="flood_landslides_quick_clay_wind">Flom, skred, kvikkleire, vind</string>
     <string name="map_and_search">Kart og søk</string>
@@ -222,5 +222,11 @@
     <string name="the_app_does_not_require_a_login_or_account">Appen krever ikke innlogging eller konto</string>
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk Bokmål</string>
+    <string name="background_music">Bakgrunnsmusikk</string>
     <string name="change_layer_to_zoom_out">Bytt lag for å zoome ut</string>
+    <string name="use_without_internet">Bruk likevel</string>
+    <string name="sound_effect">Lydeffekt</string>
+    <string name="ok">Greit</string>
+    <string name="max_saved_places_message">Du kan bare lagre opptil %1$d steder. Fjern et sted for å legge til et nytt.</string>
+    <string name="you_can_not_save_a_place_outside_of_norway">Du kan ikke lagre et sted utenfor Norge</string>
 </resources>

@@ -18,6 +18,7 @@ import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
 
 data class LocationStatus(
     val stationName: String = "",
@@ -50,6 +51,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     private val mapRepository = MapRepository()
     private val clientId: String = application.getString(R.string.frost_client_id)
 
+    init {
+        NorwayLocationValidator.loadBoundary(application)
+    }
+
     val stations = repository.favoriteStationsFlow.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
@@ -66,6 +71,15 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     // PopulatedSavedPlacesContent observes this and clears it after scrolling.
     var pendingFocus: SavedPlacesLocation? by mutableStateOf(null)
         private set
+
+    // Decides max amount of saved places possible
+    companion object {
+        const val MAX_SAVED_PLACES = 4
+    }
+
+    fun canAddLocation(): Boolean {
+        return locations.value.size < MAX_SAVED_PLACES
+    }
 
     fun requestFocus(location: SavedPlacesLocation) {
         pendingFocus = location
@@ -96,10 +110,15 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch { repository.removeLocation(location) }
     }
 
-    fun addLocation(lat: Double, lng: Double, label: String) {
+    fun addLocation(lat: Double, lng: Double, label: String): Boolean {
+        if (!canAddLocation()) return false
+        if (!NorwayLocationValidator.isInsideNorway(lat, lng)) return false
+
         viewModelScope.launch {
             repository.addLocation(SavedPlacesLocation(lat, lng, label))
         }
+
+        return true
     }
 
     fun removeAllSavedPlaces() {

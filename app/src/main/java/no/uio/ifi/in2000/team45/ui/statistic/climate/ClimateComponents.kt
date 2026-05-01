@@ -35,6 +35,8 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
 @Composable
 fun OverviewCards(
@@ -143,8 +145,8 @@ fun OverviewStatCard(
             if (trend.percentChange != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 val trendColor = when (trend.direction) {
-                    TrendDirection.UP -> Color(0xFFEF4444)
-                    TrendDirection.DOWN -> Color(0xFF22C55E)
+                    TrendDirection.UP -> StatisticsRed
+                    TrendDirection.DOWN -> StatisticsGreen
                     TrendDirection.STABLE -> MaterialTheme.colorScheme.onSurfaceVariant
                 }
                 val arrow = when (trend.direction) {

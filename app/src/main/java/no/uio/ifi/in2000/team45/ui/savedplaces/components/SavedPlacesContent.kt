@@ -90,12 +90,6 @@ private fun EmptySavedPlacesContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(32.dp)
             ) {
                 Icon(
                     Icons.Outlined.Place,
