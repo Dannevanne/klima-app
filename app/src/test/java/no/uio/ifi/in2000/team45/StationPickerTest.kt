@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45
 
+import no.uio.ifi.in2000.team45.data.statistic.StationAssignment
 import no.uio.ifi.in2000.team45.data.statistic.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.TimeSeriesAvailability
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -35,6 +36,8 @@ class StationPickerTest {
                 validToYear = null
             )
         }
+
+    private fun stationsOf(result: List<StationAssignment>) = result.map { it.station }
 
     @Test
     fun emptyCandidatesReturnsEmpty() {
@@ -82,7 +85,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(blindern), result)
+        assertEquals(listOf(blindern), stationsOf(result))
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // The user said: if the nearest already covers everything with 50 yr, end
@@ -108,7 +112,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(nearby), result)
+        assertEquals(listOf(nearby), stationsOf(result))
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // Bergen-like: a station 4 km away has all four with a long history. The
@@ -130,12 +135,13 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(florida), result)
+        assertEquals(listOf(florida), stationsOf(result))
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // No single station covers all four with 50 yr, so we drop to phase 2:
-    // pick per element the station with the longest history. Two stations
-    // contribute, in distance order.
+    // pick per element the station with the longest history. Three stations
+    // contribute, in distance order, each tagged with just its own elements.
     @Test
     fun noPerfectStationFallsToPerElementCoverage() {
         val near = station("SN-NEAR", 1_000)    // temp + precip, 30 yr
@@ -152,7 +158,10 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(near, mid, far), result)
+        assertEquals(listOf(near, mid, far), stationsOf(result))
+        assertEquals(setOf(temp, precip), result[0].elements)
+        assertEquals(setOf(gust), result[1].elements)
+        assertEquals(setOf(snow), result[2].elements)
     }
 
     // A station has full coverage but only 40 yr of history -- below the
@@ -172,7 +181,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(onlyOne), result)
+        assertEquals(listOf(onlyOne), stationsOf(result))
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // Tiny village with a single short-history station. Algorithm covers
@@ -189,7 +199,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(onlyOne), result)
+        assertEquals(listOf(onlyOne), stationsOf(result))
+        assertEquals(setOf(temp), result.first().elements)
     }
 
     // A reasonably sized town: closer station has temp 30 yr; a farther one
@@ -209,7 +220,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, listOf(temp), currentYear
         )
-        assertEquals(listOf(historic), result)
+        assertEquals(listOf(historic), stationsOf(result))
+        assertEquals(setOf(temp), result.first().elements)
     }
 
     // Two stations have the exact same history for the only target element.
@@ -228,7 +240,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, listOf(temp), currentYear
         )
-        assertEquals(listOf(close), result)
+        assertEquals(listOf(close), stationsOf(result))
+        assertEquals(setOf(temp), result.first().elements)
     }
 
     // Candidates without availability entries are skipped silently. Models
@@ -250,7 +263,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(real), result)
+        assertEquals(listOf(real), stationsOf(result))
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // When availability is empty for everyone, we get nothing back. The VM
@@ -290,7 +304,8 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(candidates[4]), result)  // Blindern
+        assertEquals(listOf(candidates[4]), stationsOf(result))  // Blindern
+        assertEquals(all.toSet(), result.first().elements)
     }
 
     // Result preserves distance order when phase 2 picks multiple stations.
@@ -311,7 +326,10 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, all, currentYear
         )
-        assertEquals(listOf(nearTemp, midGust, farPrecip), result)
+        assertEquals(listOf(nearTemp, midGust, farPrecip), stationsOf(result))
+        assertEquals(setOf(temp), result[0].elements)
+        assertEquals(setOf(gust), result[1].elements)
+        assertEquals(setOf(precip, snow), result[2].elements)
     }
 
     // Only a subset of elements is requested. Phase 1 succeeds as soon as a
@@ -327,6 +345,35 @@ class StationPickerTest {
         val result = StationPicker.pickStationsForPlace(
             candidates, availability, listOf(temp, precip), currentYear
         )
-        assertEquals(listOf(nearby), result)
+        assertEquals(listOf(nearby), stationsOf(result))
+        assertEquals(setOf(temp, precip), result.first().elements)
+    }
+
+    // Stavanger-like: Vaaland has 3 of 4 metrics with deep history; gust
+    // lives only at Sola airport. Vaaland gets temp+precip+snow, Sola gets
+    // gust alone.
+    @Test
+    fun stavangerSplitsVaalandAndSolaByElement() {
+        val vaaland = station("SN44640", 0)
+        val sola = station("SN44560", 9_500)
+
+        val candidates = listOf(vaaland, sola)
+        val availability = mapOf(
+            "SN44640" to avail(
+                "SN44640",
+                temp to 1927, precip to 1895, snow to 1902
+            ),
+            "SN44560" to avail(
+                "SN44560",
+                temp to 1935, precip to 1935, gust to 1982, snow to 1935
+            )
+        )
+
+        val result = StationPicker.pickStationsForPlace(
+            candidates, availability, all, currentYear
+        )
+        assertEquals(listOf(vaaland, sola), stationsOf(result))
+        assertEquals(setOf(temp, precip, snow), result[0].elements)
+        assertEquals(setOf(gust), result[1].elements)
     }
 }
