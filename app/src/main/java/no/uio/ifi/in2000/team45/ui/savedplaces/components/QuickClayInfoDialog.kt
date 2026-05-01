@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import no.uio.ifi.in2000.team45.R
 
-// Dialog for the (i) icon on the kvikkleire risk box. Shows the actual NVE
+// Dialog for the (i) icon on the quick clay risk box. Shows the actual NVE
 // faregrad value plus a short plain-language explanation.
 @Composable
-fun KvikkleireInfoDialog(
+fun QuickClayInfoDialog(
     faregrad: String,
     onDismiss: () -> Unit
 ) {
