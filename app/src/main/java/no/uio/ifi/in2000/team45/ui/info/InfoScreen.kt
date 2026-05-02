@@ -42,13 +42,15 @@ import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.outlined.Wifi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoScreen(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onHelpClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -90,16 +92,30 @@ fun InfoScreen(
                     }
                 )
             }
+            // Availability
+            item { InfoSectionName(stringResource(R.string.availability)) }
+            item {
+                InfoTextRow(
+                    icon = Icons.Outlined.Wifi,
+                    text = stringResource(R.string.internet_connection_needed_for_full_functionality)
+                )
+            }
+            item {
+                InfoAvailabilityHelpText(
+                    text = stringResource(R.string.check_help_screen),
+                    onClick = onHelpClick
+                )
+            }
             // Privacy
             item { InfoSectionName(stringResource(R.string.privacy)) }
             item {
-                InfoPrivacySection(
+                InfoTextRow(
                     icon = Icons.Outlined.Lock,
                     text = stringResource(R.string.location_data_is_used_only_locally_and_is_not_shared_with_third_parties)
                 )
             }
             item {
-                InfoPrivacySection(
+                InfoTextRow(
                     icon = Icons.Outlined.NoAccounts,
                     text = stringResource(R.string.the_app_does_not_require_a_login_or_account)
                 )
@@ -180,9 +196,9 @@ private fun InfoDataCard(
     }
 }
 
-// Structure for privacy section
+// Structure for text rows
 @Composable
-private fun InfoPrivacySection(
+private fun InfoTextRow(
     icon: ImageVector,
     text: String
 ) {
@@ -207,6 +223,25 @@ private fun InfoPrivacySection(
             lineHeight = 18.sp
         )
     }
+}
+
+@Composable
+private fun InfoAvailabilityHelpText(
+    text: String,
+    onClick: (() -> Unit)?
+) {
+    Text(
+        text = text,
+        fontSize = 13.sp,
+        color = MaterialTheme.colorScheme.primary,
+        lineHeight = 18.sp,
+        modifier = Modifier
+            .padding(start = 46.dp, end = 16.dp, top = 2.dp, bottom = 6.dp)
+            .then(
+                if (onClick != null) Modifier.clickable { onClick() }
+                else Modifier
+            )
+    )
 }
 
 @Composable

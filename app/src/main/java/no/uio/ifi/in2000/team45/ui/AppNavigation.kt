@@ -178,7 +178,8 @@ fun AppNavigation(
             ScreenLayer(visible = route == ROUTE_INFO) {
                 InfoScreen(
                     onClick = { popBack() },
-                    modifier = modifier
+                    modifier = modifier,
+                    onHelpClick = { navigateTo(ROUTE_HELP) }
                 )
             }
             ScreenLayer(visible = route == ROUTE_HELP) {

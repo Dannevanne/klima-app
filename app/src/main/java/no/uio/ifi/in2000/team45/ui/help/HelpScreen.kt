@@ -48,6 +48,7 @@ import com.mapbox.maps.extension.compose.annotation.IconImage
 import com.mapbox.maps.extension.style.expressions.dsl.generated.mod
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
+import androidx.compose.material.icons.outlined.WifiOff
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +73,19 @@ fun HelpScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
+
+            // Availability-section
+            item {
+                HelpSectionTitle(stringResource(R.string.availability))
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Outlined.WifiOff,
+                    title = stringResource(R.string.without_internet_connection),
+                    description = stringResource(R.string.offline_limitations_description)
+                )
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
 
             // Map-section
             item {
