@@ -64,7 +64,7 @@
     <string name="this_place_is_missing_some_data">Denne staden manglar noko data for vald periode</string>
     <string name="language">Språk</string>
     <string name="language_bokmal">Norsk Bokmål</string>
-    <string name="language_nynorsk">Norsk Nynorsk</string>
+    <string name="language_nynorsk">Norsk nynorsk</string>
     <string name="language_english">Engelsk</string>
     <string name="no_saved_places_yet">Ingen lagra stader enno</string>
     <string name="no_saved_places_hint">Gå til kartet, trykk på eit område og lagre det for å sjå risikoanalyse og klimadata her.</string>
