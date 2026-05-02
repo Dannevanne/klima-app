@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
@@ -60,13 +63,16 @@ fun ClimateDataView(
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             ) {
                 PERIOD_OPTIONS.forEach { years ->
                     PeriodChip(
                         years = years,
                         selected = selectedPeriod == years,
-                        onClick = { onPeriodChange(years) }
+                        onClick = { onPeriodChange(years) },
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -153,7 +159,8 @@ fun ClimateDataView(
 private fun PeriodChip(
     years: Int,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val bg = if (selected) MaterialTheme.colorScheme.primary
     else MaterialTheme.colorScheme.surfaceContainer
@@ -162,15 +169,17 @@ private fun PeriodChip(
     Surface(
         color = bg,
         shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = modifier.clickable(onClick = onClick)
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
         ) {
             Text(
                 text = stringResource(R.string.years_count, years),
                 color = fg,
+                fontSize = 13.sp,
+                maxLines = 1,
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
             )
         }
