@@ -216,7 +216,7 @@ fun TrendChart(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = chartAxisColor(),
                 letterSpacing = 1.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
