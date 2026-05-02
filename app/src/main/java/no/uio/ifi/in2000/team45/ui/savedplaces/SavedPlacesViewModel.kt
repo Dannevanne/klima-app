@@ -33,10 +33,10 @@ data class LocationStatus(
     // "Moderate" if a hazard zone sits within ~500 m, "Low" otherwise.
     // Kvikkleire and radon read straight off the polygon attributes
     // (faregrad / aktsomhet class) so they don't need an offset hack.
-    val floodLevel: String = "Low",
-    val landslideLevel: String = "Low",
-    val quickClayLevel: String = "Low",
-    val radonLevel: String = "Low",
+    val floodLevel: String = "Unknown",
+    val landslideLevel: String = "Unknown",
+    val quickClayLevel: String = "Unknown",
+    val radonLevel: String = "Unknown",
     // Raw classification strings from NVE/NGU, kept so the UI can show the
     // exact wording in an info dialog when needed.
     val quickClayHazard: String? = null,
@@ -154,20 +154,22 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     "Høy" -> "High"
                     "Middels" -> "Moderate"
                     "Lav" -> "Low"
+                    null -> "Unknown"
                     else -> "Low"
                 }
                 val radonLevel = when (radonClass) {
                     "Særlig høy aktsomhet", "Høy aktsomhet" -> "High"
                     "Moderat til lav aktsomhet" -> "Moderate"
+                    null -> "Unknown"
                     else -> "Low"
                 }
 
                 // emit zones first so risk chips update before frost finishes
                 locationStatuses[key] = LocationStatus(
-                    inFloodZone = floodZone,
+                    inFloodZone = floodZone == true,
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
-                    inLandslideZone = landslideZone,
+                    inLandslideZone = landslideZone == true,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     quickClayLevel = quickClayLevel,
@@ -184,10 +186,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 if (stations.isEmpty()) {
                     locationStatuses[key] = LocationStatus(
                         stationName = getApplication<Application>().getString(R.string.station_not_found),
-                        inFloodZone = floodZone,
+                        inFloodZone = floodZone == true,
                         inRadonZone = radonClass != null,
                         inQuickClayZone = quickClayHazard != null,
-                        inLandslideZone = landslideZone,
+                        inLandslideZone = landslideZone == true,
                         floodLevel = floodLevel,
                         landslideLevel = landslideLevel,
                         quickClayLevel = quickClayLevel,
@@ -230,10 +232,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     temperature = temp,
                     windSpeed = wind,
                     precipitation = precip,
-                    inFloodZone = floodZone,
+                    inFloodZone = floodZone == true,
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
-                    inLandslideZone = landslideZone,
+                    inLandslideZone = landslideZone == true,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     quickClayLevel = quickClayLevel,
@@ -252,22 +254,24 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     // High when the saved point itself sits in the hazard zone, Moderate when
-    // any of four cardinal offsets ~500 m away does, Low otherwise. Cheap
-    // proxy for true distance-to-zone without pulling polygons.
+    // any of four cardinal offsets ~500 m away does, Low otherwise. Returns
+    // Unknown when the source API didn't respond at the saved point so we
+    // don't show a misleading "Low".
     private suspend fun zoneRiskLevel(
         lat: Double,
         lon: Double,
-        atPoint: Boolean,
-        check: suspend (Double, Double) -> Boolean
+        atPoint: Boolean?,
+        check: suspend (Double, Double) -> Boolean?
     ): String {
+        if (atPoint == null) return "Unknown"
         if (atPoint) return "High"
         val offsetMeters = 500.0
         val offsetLat = offsetMeters / 111_000.0
         val offsetLon = offsetLat / kotlin.math.cos(Math.toRadians(lat))
-        val nearbyHit = check(lat + offsetLat, lon) ||
-                check(lat - offsetLat, lon) ||
-                check(lat, lon + offsetLon) ||
-                check(lat, lon - offsetLon)
+        val nearbyHit = check(lat + offsetLat, lon) == true ||
+                check(lat - offsetLat, lon) == true ||
+                check(lat, lon + offsetLon) == true ||
+                check(lat, lon - offsetLon) == true
         return if (nearbyHit) "Moderate" else "Low"
     }
 }

@@ -68,6 +68,8 @@ val StatisticsGreen = Color(0xFF22C55E)
 
 val StatisticsOrange = Color(0xFFF97316)
 
+val StatisticsGray = Color(0xFF9CA3AF)
+
 val LinkBlue = Color(0xFF60A5FA)
 @Composable
 fun loadingColor(): Color =
