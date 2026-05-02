@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
 
@@ -34,7 +35,13 @@ fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text(stringResource(R.string.place_or_station)) },
+        placeholder = {
+            Text(
+                stringResource(R.string.place_or_station),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
         trailingIcon = {
             IconButton(onClick = {
                 onSearch()
