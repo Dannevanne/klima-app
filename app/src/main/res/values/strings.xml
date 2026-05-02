@@ -236,4 +236,6 @@
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Use the + and - buttons on the right side to zoom. Please note that some overlays have limited expansion. Select \"No overlay\" to zoom freely</string>
 </resources>

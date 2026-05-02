@@ -230,4 +230,6 @@
     <string name="ok">Greit</string>
     <string name="max_saved_places_message">Du kan bare lagre opptil %1$d steder. Fjern et sted for å legge til et nytt.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Du kan ikke lagre et sted utenfor Norge</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Bruk + og - knappene på høyre side for å zoome. Vær oppmerksom på at enkelte overlegg har begrenset utvidelse. Velg «Ingen lag» for å zoome fritt</string>
 </resources>

@@ -222,4 +222,6 @@
     <string name="ok">Justa</string>
     <string name="max_saved_places_message">Don sáhtát vurket eanemusat %1$d báikki. Váldde eret ovtta báikki vai sáhtát lasihit ođđa.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Ii sáhte vurket báikki olggobealde Norgga</string>
+    <string name="zoom">Stuoridit</string>
+    <string name="zoom_explanation">Geavahit + ja - boaluide gurut bealde go galggat stuoridit dahje unnidit gova. Fuomáš ahte muhtun govvaearuin lea rájálaš viidodat. Vállje \"Dušše kartet\" jus háliidat friddja stuoridit</string>
 </resources>
