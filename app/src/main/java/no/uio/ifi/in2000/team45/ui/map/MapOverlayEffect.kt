@@ -23,14 +23,20 @@ fun MapOverlayEffect(
     useDarkMap: Boolean
 ) {
     MapEffect(bitmap, overlayBBox, useDarkMap) { mapView ->
-        val currentBitmap = bitmap ?: return@MapEffect
-        val bbox = overlayBBox ?: return@MapEffect
-        val corners = cornersFromBBox(bbox)
-
         mapView.mapboxMap.getStyle { style ->
             val sourceId = "overlaysource"
             val layerId = "overlaylayer"
 
+            // Switching to "no overlay" leaves bitmap/bbox null. Tear the
+            // previous layer down instead of returning early, otherwise the
+            // old raster keeps painting over the map.
+            if (bitmap == null || overlayBBox == null) {
+                if (style.getLayer(layerId) != null) style.removeStyleLayer(layerId)
+                if (style.getSource(sourceId) != null) style.removeStyleSource(sourceId)
+                return@getStyle
+            }
+
+            val corners = cornersFromBBox(overlayBBox)
             val source = style.getSourceAs<ImageSource>(sourceId)
 
             if (source == null) {
@@ -39,7 +45,7 @@ fun MapOverlayEffect(
                     .build()
                 style.addSource(newSource)
 
-                style.getSourceAs<ImageSource>(sourceId)?.updateImage(currentBitmap)
+                style.getSourceAs<ImageSource>(sourceId)?.updateImage(bitmap)
 
                 if (style.getLayer(layerId) == null) {
                     style.addLayer(rasterLayer(layerId, sourceId) {
@@ -50,7 +56,7 @@ fun MapOverlayEffect(
                 }
             } else {
                 source.coordinates(corners)
-                source.updateImage(currentBitmap)
+                source.updateImage(bitmap)
             }
         }
     }
