@@ -203,6 +203,7 @@
     <string name="extreme_precipitation">Extreme precipitation</string>
     <string name="months_count">%1$d months</string>
     <string name="years_count">%1$d years</string>
+    <string name="days_per_year">%1$d days/year</string>
     <string name="trend_vs_norm">vs norm</string>
     <string name="weather_stations_used">Weather stations used</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>

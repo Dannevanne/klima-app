@@ -376,4 +376,85 @@ class StationPickerTest {
         assertEquals(setOf(temp, precip, snow), result[0].elements)
         assertEquals(setOf(gust), result[1].elements)
     }
+
+    // Real Frost availability has multiple time-series entries per element
+    // when sensors get reconfigured (Vaaland has 5 temp entries from 1927,
+    // 1937, 1953, 2008, 2019). Phase 1 must use the oldest start per element,
+    // not the latest, otherwise it sees Vaaland as a 7-yr station.
+    @Test
+    fun phase1HandlesMultipleTimeSeriesPerElement() {
+        val vaaland = station("SN44640", 0)
+        val candidates = listOf(vaaland)
+        // Sensor reconfigurations give Vaaland 5 separate temp entries
+        val availability = mapOf(
+            "SN44640" to listOf(
+                TimeSeriesAvailability("SN44640", temp, 1927, null),
+                TimeSeriesAvailability("SN44640", temp, 1937, null),
+                TimeSeriesAvailability("SN44640", temp, 1953, null),
+                TimeSeriesAvailability("SN44640", temp, 2008, null),
+                TimeSeriesAvailability("SN44640", temp, 2019, null),
+                TimeSeriesAvailability("SN44640", precip, 1895, null),
+                TimeSeriesAvailability("SN44640", gust, 1960, null),
+                TimeSeriesAvailability("SN44640", snow, 1902, null)
+            )
+        )
+
+        val result = StationPicker.pickStationsForPlace(
+            candidates, availability, all, currentYear
+        )
+        assertEquals(listOf(vaaland), stationsOf(result))
+    }
+
+    // Real-world Stavanger probe: 20 candidates, multi-series per element on
+    // Vaaland and Sola. Only Sola covers all 4; gust there starts in 1982
+    // (44 yr) so Phase 1 fails, Phase 2 should split Vaaland (temp/precip/
+    // snow) and Sola (gust).
+    @Test
+    fun stavangerRealAvailabilityAssignsSolaToGustAlone() {
+        val vaaland = station("SN44640", 5_100)
+        val sola = station("SN44560", 12_677)
+        val tasta = station("SN44620", 935)       // closest, precip-only
+        val hundvag = station("SN44660", 2_120)   // precip-only
+        val madla = station("SN44580", 5_349)     // precip-only
+        val kvitsoy = station("SN44610", 17_561)  // all 4 but very young
+
+        val candidates = listOf(tasta, hundvag, vaaland, madla, sola, kvitsoy)
+        val availability = mapOf(
+            "SN44640" to listOf(
+                TimeSeriesAvailability("SN44640", temp, 1927, null),
+                TimeSeriesAvailability("SN44640", temp, 1937, null),
+                TimeSeriesAvailability("SN44640", temp, 1953, null),
+                TimeSeriesAvailability("SN44640", temp, 2008, null),
+                TimeSeriesAvailability("SN44640", temp, 2019, null),
+                TimeSeriesAvailability("SN44640", precip, 1895, null),
+                TimeSeriesAvailability("SN44640", snow, 1902, null)
+            ),
+            "SN44560" to listOf(
+                TimeSeriesAvailability("SN44560", temp, 1935, null),
+                TimeSeriesAvailability("SN44560", temp, 1952, null),
+                TimeSeriesAvailability("SN44560", precip, 1935, null),
+                TimeSeriesAvailability("SN44560", gust, 1982, null),
+                TimeSeriesAvailability("SN44560", snow, 1935, null)
+            ),
+            "SN44620" to listOf(TimeSeriesAvailability("SN44620", precip, 1999, null)),
+            "SN44660" to listOf(TimeSeriesAvailability("SN44660", precip, 1999, null)),
+            "SN44580" to listOf(TimeSeriesAvailability("SN44580", precip, 1999, null)),
+            "SN44610" to listOf(
+                TimeSeriesAvailability("SN44610", temp, 2005, null),
+                TimeSeriesAvailability("SN44610", precip, 2006, null),
+                TimeSeriesAvailability("SN44610", gust, 2005, null),
+                TimeSeriesAvailability("SN44610", snow, 2008, null)
+            )
+        )
+
+        val result = StationPicker.pickStationsForPlace(
+            candidates, availability, all, currentYear
+        )
+        // Vaaland gets temp/precip/snow, Sola gets gust. Order by distance
+        // among picked: Vaaland (5.1km) before Sola (12.7km).
+        val vaalandAssignment = result.firstOrNull { it.station == vaaland }
+        val solaAssignment = result.firstOrNull { it.station == sola }
+        assertEquals(setOf(temp, precip, snow), vaalandAssignment?.elements)
+        assertEquals(setOf(gust), solaAssignment?.elements)
+    }
 }

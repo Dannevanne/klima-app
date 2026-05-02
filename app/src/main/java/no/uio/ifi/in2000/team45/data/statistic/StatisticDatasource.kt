@@ -433,6 +433,54 @@ class StatisticDatasource {
         }
     }
 
+    // Returns daily precipitation values keyed by year, so callers can count
+    // heavy-rain days. We pull only the value, not the full observation,
+    // because the daily endpoint can return tens of thousands of points over
+    // a 50-year window and we don't need any per-day metadata.
+    suspend fun getDailyPrecipitation(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): Map<Int, List<Double>> {
+        val element = java.net.URLEncoder.encode("sum(precipitation_amount P1D)", "UTF-8")
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
+                "&elements=$element" +
+                "&timeresolutions=P1D"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            if (response.status.value != 200) {
+                Log.e(TAG, "Daily precip fetch failed: ${response.status.value}")
+                return emptyMap()
+            }
+            parseDailyPrecipitation(response.body())
+        } catch (e: Exception) {
+            Log.e(TAG, "Daily precip error", e)
+            emptyMap()
+        }
+    }
+
+    private fun parseDailyPrecipitation(body: String): Map<Int, List<Double>> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyMap()
+        val byYear = mutableMapOf<Int, MutableList<Double>>()
+        for (item in data) {
+            val obj = item.jsonObject
+            val refTime = obj["referenceTime"]?.jsonPrimitive?.contentOrNull ?: continue
+            val year = refTime.substring(0, 4).toIntOrNull() ?: continue
+            val observations = obj["observations"]?.jsonArray ?: continue
+            for (obs in observations) {
+                val value = obs.jsonObject["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                byYear.getOrPut(year) { mutableListOf() }.add(value)
+            }
+        }
+        return byYear
+    }
+
     // Like parseMonthlyObservations but uses the year-month (YYYYMM) packed
     // into the month field so the repository can group by year.
     private fun parseMonthlyObservationsWithYear(body: String): List<MonthlyObservation> {
