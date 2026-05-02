@@ -234,5 +234,5 @@
     <string name="internet_connection_needed_for_full_functionality">Appen trenger internettforbindelse for full funksjonalitet</string>
     <string name="check_help_screen">Se hjelpeskjermen for å finne ut hvilke begrensninger du vil oppleve uten internettforbindelse</string>
     <string name="without_internet_connection">Uten internettforbindelse</string>
-    <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder kan hende ikke lastes uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider.</string>
+    <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder kan hende ikke lastes uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider</string>
 </resources>

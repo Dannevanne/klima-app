@@ -226,5 +226,5 @@
     <string name="internet_connection_needed_for_full_functionality">Appa dárbbaša interneahttaoktavuođa vai buot doaibmavuođat leat olámuttus</string>
     <string name="check_help_screen">Geahča veahkkesihkkaršlája oaidnit makkár ráddjehusaid vásihat go ii leat interneahttaoktavuohta</string>
     <string name="without_internet_connection">Ilman interneahttaoktavuođa</string>
-    <string name="offline_limitations_description">Kárttadat, ohcan, dálkkádatstatistihkka ja olgguldas diehtoláhkáid eai dárbbašlaččat loada go ii leat interneahttaoktavuohta. Don sáhtát ain rahpat appa, oaidnit vurkejuvvon báikkiid ja lohkat veahki- ja diehtosisdoalu.</string>
+    <string name="offline_limitations_description">Kárttadat, ohcan, dálkkádatstatistihkka ja olgguldas diehtoláhkáid eai dárbbašlaččat loada go ii leat interneahttaoktavuohta. Don sáhtát ain rahpat appa, oaidnit vurkejuvvon báikkiid ja lohkat veahki- ja diehtosisdoalu</string>
 </resources>
