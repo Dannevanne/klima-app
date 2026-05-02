@@ -224,7 +224,7 @@
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk bokmål</string>
     <string name="background_music">Bakgrunnsmusikk</string>
-    <string name="change_layer_to_zoom_out">Bytt kartlag for å zoome lenger ut</string>
+    <string name="change_layer_to_zoom_out">Kartlaget har begrenset rekkevidde – bytt for å zoome ut mer</string>
     <string name="use_without_internet">Bruk likevel</string>
     <string name="sound_effect">Lydeffekt</string>
     <string name="ok">Greit</string>
