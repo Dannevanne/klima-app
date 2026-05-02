@@ -111,10 +111,10 @@
     <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad-attributt)</string>
 
     <string name="legend_radon_what">Aktsomhetsklasser for radon innendørs i området.</string>
-    <string name="legend_radon_cat_purple">Lilla — Særlig høy aktsomhet (høyeste nivå)</string>
-    <string name="legend_radon_cat_red">Rødt — Høy aktsomhet (≥20% av boliger over 200 Bq/m³)</string>
-    <string name="legend_radon_cat_yellow">Gult — Moderat til lav</string>
-    <string name="legend_radon_cat_grey">Grått — Usikker (lite data)</string>
+    <string name="legend_radon_cat_purple">Lilla — særlig høy aktsomhet (høyeste nivå)</string>
+    <string name="legend_radon_cat_red">Rødt — høy aktsomhet (≥20% av boliger over 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Gult — moderat til lav</string>
+    <string name="legend_radon_cat_grey">Grått — usikker (lite data)</string>
     <string name="legend_radon_caveat">Kartet kan ikke forutsi radon i en bestemt bygning — kun en måling kan.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
 

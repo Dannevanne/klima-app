@@ -120,18 +120,18 @@
     <string name="legend_flood_src">NVE Flomaktsomhet (layer 1)</string>
 
     <string name="legend_quickclay_what">Three sub-layers stacked: hazard degree, risk class, and mapped-area status.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Lav) — low quick-clay hazard</string>
-    <string name="legend_quickclay_cat_middels">Solid (Middels) — medium hazard</string>
-    <string name="legend_quickclay_cat_hoy">Solid (Hoey) — high hazard</string>
-    <string name="legend_quickclay_cat_safe">Striped + "Omraade uten fare" — investigated and found safe</string>
+    <string name="legend_quickclay_cat_lav">Solid (Low) — low quick-clay hazard</string>
+    <string name="legend_quickclay_cat_middels">Solid (Medium) — medium hazard</string>
+    <string name="legend_quickclay_cat_hoy">Solid (High) — high hazard</string>
+    <string name="legend_quickclay_cat_safe">Striped + Area without danger — investigated and found safe</string>
     <string name="legend_quickclay_cat_other">Other striped patterns — under investigation</string>
-    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad attribute)</string>
+    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (danger level attribute)</string>
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
-    <string name="legend_radon_cat_purple">Purple — Saerlig hoy aktsomhet (highest concern)</string>
-    <string name="legend_radon_cat_red">Red — Hoy aktsomhet (≥20% of dwellings exceed 200 Bq/m³)</string>
-    <string name="legend_radon_cat_yellow">Yellow — Moderat til lav</string>
-    <string name="legend_radon_cat_grey">Grey — Usikker (insufficient data)</string>
+    <string name="legend_radon_cat_purple">Purple — particuary high caution (highest concern)</string>
+    <string name="legend_radon_cat_red">Red — high caution (≥20% of dwellings exceed 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Yellow — moderate to low</string>
+    <string name="legend_radon_cat_grey">Grey — unsure (insufficient data)</string>
     <string name="legend_radon_caveat">The map cannot predict radon in a specific building — only a measurement can.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
