@@ -42,6 +42,7 @@ import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.outlined.Wifi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,6 +89,13 @@ fun InfoScreen(
                             context.startActivity(intent)
                         }
                     }
+                )
+            }
+            item { InfoSectionName(stringResource(R.string.availability)) }
+            item {
+                InfoPrivacySection(
+                    icon = Icons.Outlined.Wifi,
+                    text = stringResource(R.string.internet_connection_needed_for_full_functionality)
                 )
             }
             // Privacy
