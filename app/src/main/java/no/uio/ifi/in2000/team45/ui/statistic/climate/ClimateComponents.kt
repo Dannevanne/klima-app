@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.statistic.climate
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -40,6 +41,14 @@ import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
+
+// Chart tick labels need higher contrast than M3's onSurfaceVariant gives in
+// dark mode (purple-grey on a dark blue card reads dim). Light mode keeps the
+// secondary onSurfaceVariant tone so labels don't fight the chart line.
+@Composable
+private fun chartAxisColor(): Color =
+    if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface
+    else MaterialTheme.colorScheme.onSurfaceVariant
 
 @Composable
 fun OverviewCards(
@@ -228,17 +237,17 @@ fun TrendChart(
                     Text(
                         text = String.format("%.0f", maxVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = chartAxisColor()
                     )
                     Text(
                         text = String.format("%.0f", midVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = chartAxisColor()
                     )
                     Text(
                         text = String.format("%.0f", minVal),
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = chartAxisColor()
                     )
                 }
 
@@ -294,12 +303,12 @@ fun TrendChart(
             ) {
                 val firstYear = data.first().first
                 val lastYear = data.last().first
-                Text(firstYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(firstYear.toString(), fontSize = 10.sp, color = chartAxisColor())
                 if (data.size > 2) {
                     val mid = data[data.size / 2].first
-                    Text(mid.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(mid.toString(), fontSize = 10.sp, color = chartAxisColor())
                 }
-                Text(lastYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(lastYear.toString(), fontSize = 10.sp, color = chartAxisColor())
             }
         }
     }
