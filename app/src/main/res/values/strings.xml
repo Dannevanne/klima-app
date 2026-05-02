@@ -17,7 +17,7 @@
     <string name="lightmode">Light mode</string>
     <string name="darkmode">Dark mode</string>
     <string name="climate_statistics">Climate statistics</string>
-    <string name="place_or_station">Search by location or weather station</string>
+    <string name="place_or_station">Place or station</string>
     <string name="search_your_locations">Search your saved locations</string>
     <string name="search">Search</string>
     <string name="search_to_see_stats">Start by searching for a location</string>
