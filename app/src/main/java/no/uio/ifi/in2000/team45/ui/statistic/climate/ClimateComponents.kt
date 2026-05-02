@@ -47,7 +47,7 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 // secondary onSurfaceVariant tone so labels don't fight the chart line.
 @Composable
 private fun chartAxisColor(): Color =
-    if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface
+    if (isSystemInDarkTheme()) Color.White
     else MaterialTheme.colorScheme.onSurfaceVariant
 
 @Composable
