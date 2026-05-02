@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -96,17 +98,24 @@ fun AppNavigation(
 
     var dismissed by remember { mutableStateOf(false) }
 
+    // Aux screens (settings/info/help) need to return to whichever tab the
+    // user came from. Stack so navigating aux -> aux still unwinds correctly.
+    val auxRoutes = setOf(ROUTE_SETTINGS, ROUTE_INFO, ROUTE_HELP)
+    val auxBackStack = remember { mutableStateListOf<String>() }
+
     fun navigateTo(target: String) {
         if (target == route) return
+        if (target in auxRoutes) auxBackStack.add(route)
         route = target
         keyboardController?.hide()
     }
 
     fun popBack() {
-        // Settings/Info/Help all return to the map for now.
-        route = ROUTE_MAP
+        route = auxBackStack.removeLastOrNull() ?: ROUTE_MAP
         keyboardController?.hide()
     }
+
+    BackHandler(enabled = route in auxRoutes) { popBack() }
 
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
