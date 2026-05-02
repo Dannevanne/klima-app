@@ -99,17 +99,17 @@
     <string name="legend_flood_caveat">Ii leat garravuođaárvvoštallan gálduin. Juohke polygona čájehuvvo seamma ládje.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet</string>
     <string name="legend_quickclay_what">Golbma oasselávkki leat čohkkejuvvon: váralašvuođadássi, riskaluohkká ja kártejuvvon guovllu stáhtus.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Low) — alla jođánit šaddan muohtavárra</string>
-    <string name="legend_quickclay_cat_middels">Solid (gaskamearálaš) — gaskamearálaš váralašvuohta</string>
-    <string name="legend_quickclay_cat_hoy">Solid (High) — alla váralašvuohta</string>
+    <string name="legend_quickclay_cat_lav">Oalát gokčá (Vuollegis) — alla jođánit šaddan muohtavárra</string>
+    <string name="legend_quickclay_cat_middels">Oalát gokčá (Gaska) — gaskamearálaš váralašvuohta</string>
+    <string name="legend_quickclay_cat_hoy">Oalát gokčá (Allat) — alla váralašvuohta</string>
     <string name="legend_quickclay_cat_safe">Rievdaduvvon ja merkejuvvon "guovlu vára haga" dutkojuvvon ja gávdnon dorvvolaš</string>
     <string name="legend_quickclay_cat_other">Eará mállet main leat rievssat leat dutkamuša vuolde</string>
     <string name="legend_quickclay_src">NVE SkredKvikkleire2</string>
     <string name="legend_radon_what">Sisáibmoradonfuomášuhttinluohkát guovllu várás.</string>
     <string name="legend_radon_cat_purple">Lilla — erenoamáš alla fuomášupmi (eanemus fuolastuhtti)</string>
-    <string name="legend_radon_cat_red">Rukses — Stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m3)</string>
-    <string name="legend_radon_cat_yellow">Galbma ivdni lea gaskamearálaččat gitta allat</string>
-    <string name="legend_radon_cat_grey">Grána — Eahpesihkar (váilevaš dieđut)</string>
+    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m3)</string>
+    <string name="legend_radon_cat_yellow">Galbma — ivdni lea gaskamearálaččat gitta allat</string>
+    <string name="legend_radon_cat_grey">Grána — eahpesihkar (váilevaš dieđut)</string>
     <string name="legend_radon_caveat">Kárta ii sáhte einnostit radona dihto visttis — dušše mihtideapmi sáhttá.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
     <string name="legend_landslide_what">Fuomášuhttinguovllut eatnama ja ruskkaid vuovdima ektui, mat vuođđuduvvet eatnamiidda ja eatnama šlájaide.</string>
@@ -128,6 +128,7 @@
     <string name="risk_high">Alla</string>
     <string name="risk_moderate">Gaskamearálaš</string>
     <string name="risk_low">Vuollegis</string>
+    <string name="risk_unknown">Eahpesihkar</string>
     <string name="what_can_i_do">MAID MUN SÁHTÁN DAHKAT?</string>
     <string name="collapse">Čiega</string>
     <string name="expand">Viiddid</string>
@@ -169,6 +170,7 @@
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km eret</string>
     <string name="distance_m_away">%1$d m eret</string>
+    <string name="distance_from_place_km">%1$s km eret %2$s</string>
     <string name="overview_period">Geahčastat %1$d-%2$d</string>
     <string name="precipitation_avg_year">Arvi, gaskamearálaš/jahki</string>
     <string name="max_wind_gust">Stuorámus bieggaskuolla</string>
@@ -213,7 +215,7 @@
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Sajádatdáhtat geavahuvvojit dušše báikkálaččat ja eai juogaduvvo goalmmát bealuiguin</string>
     <string name="the_app_does_not_require_a_login_or_account">Appa ii gáibit sisačáliheami dahje konttu</string>
     <string name="language_sami">Sámegiella</string>
-    <string name="change_layer_to_zoom_out">Sirdde dušše kártii go galggat guhkidit</string>
+    <string name="change_layer_to_zoom_out">Dán gokčasa stuorámus juvven lea olahuvvon. Vállje «Dušše kartet» vai oainnat olles kártta</string>
     <string name="language_bokmal">Girjedárogiella</string>
     <string name="language_nynorsk">Oirjedárogiella</string>
     <string name="use_without_internet">Geavat dattetge</string>
@@ -227,4 +229,6 @@
     <string name="check_help_screen">Geahča veahkkesihkkaršlája oaidnit makkár ráddjehusaid vásihat go ii leat interneahttaoktavuohta</string>
     <string name="without_internet_connection">Ilman interneahttaoktavuođa</string>
     <string name="offline_limitations_description">Kárttadat, ohcan, dálkkádatstatistihkka ja olgguldas diehtoláhkáid eai dárbbašlaččat loada go ii leat interneahttaoktavuohta. Don sáhtát ain rahpat appa, oaidnit vurkejuvvon báikkiid ja lohkat veahki- ja diehtosisdoalu</string>
+    <string name="zoom">Stuoridit</string>
+    <string name="zoom_explanation">Geavahit + ja - boaluide gurut bealde go galggat stuoridit dahje unnidit gova. Fuomáš ahte muhtun govvaearuin lea rájálaš viidodat. Vállje \"Dušše kartet\" jus háliidat friddja stuoridit</string>
 </resources>

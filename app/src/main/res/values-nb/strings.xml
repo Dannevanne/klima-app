@@ -111,10 +111,10 @@
     <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad-attributt)</string>
 
     <string name="legend_radon_what">Aktsomhetsklasser for radon innendørs i området.</string>
-    <string name="legend_radon_cat_purple">Lilla — Særlig høy aktsomhet (høyeste nivå)</string>
-    <string name="legend_radon_cat_red">Rødt — Høy aktsomhet (≥20% av boliger over 200 Bq/m³)</string>
-    <string name="legend_radon_cat_yellow">Gult — Moderat til lav</string>
-    <string name="legend_radon_cat_grey">Grått — Usikker (lite data)</string>
+    <string name="legend_radon_cat_purple">Lilla — særlig høy aktsomhet (høyeste nivå)</string>
+    <string name="legend_radon_cat_red">Rødt — høy aktsomhet (≥20% av boliger over 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Gult — moderat til lav</string>
+    <string name="legend_radon_cat_grey">Grått — usikker (lite data)</string>
     <string name="legend_radon_caveat">Kartet kan ikke forutsi radon i en bestemt bygning — kun en måling kan.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
@@ -136,6 +136,7 @@
     <string name="risk_high">Høy</string>
     <string name="risk_moderate">Moderat</string>
     <string name="risk_low">Lav</string>
+    <string name="risk_unknown">Ukjent</string>
     <string name="what_can_i_do">HVA KAN JEG GJØRE?</string>
     <string name="collapse">Lukk</string>
     <string name="expand">Utvid</string>
@@ -224,7 +225,7 @@
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk bokmål</string>
     <string name="background_music">Bakgrunnsmusikk</string>
-    <string name="change_layer_to_zoom_out">Bytt kartlag for å zoome lenger ut</string>
+    <string name="change_layer_to_zoom_out">Maksimalt utzoomingsnivå for dette laget er nådd. Velg «Ingen lag» for å se hele kartet</string>
     <string name="use_without_internet">Bruk likevel</string>
     <string name="sound_effect">Lydeffekt</string>
     <string name="ok">Greit</string>
@@ -235,4 +236,6 @@
     <string name="check_help_screen">Se hjelpeskjermen for å finne ut hvilke begrensninger du vil oppleve uten internettforbindelse</string>
     <string name="without_internet_connection">Uten internettforbindelse</string>
     <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder kan hende ikke lastes uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Bruk + og - knappene på høyre side for å zoome. Vær oppmerksom på at enkelte overlegg har begrenset utvidelse. Velg «Ingen lag» for å zoome fritt</string>
 </resources>

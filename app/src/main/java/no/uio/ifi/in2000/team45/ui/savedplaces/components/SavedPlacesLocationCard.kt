@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.savedplaces.LocationStatus
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
@@ -44,11 +45,12 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 private val RiskHigh = StatisticsRed
 private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
+private val RiskUnknown = StatisticsGray
 
 private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
     if (isWind) {
         return when {
-            windSpeed == null -> "Low"
+            windSpeed == null -> "Unknown"
             windSpeed >= 8.0 -> "High"
             windSpeed >= 5.0 -> "Moderate"
             else -> "Low"
@@ -61,7 +63,8 @@ private fun riskColor(level: String): Color {
     return when (level) {
         "High" -> RiskHigh
         "Moderate" -> RiskModerate
-        else -> RiskLow
+        "Low" -> RiskLow
+        else -> RiskUnknown
     }
 }
 
@@ -70,7 +73,8 @@ private fun riskLevelLabel(level: String): String {
     return when (level) {
         "High" -> stringResource(R.string.risk_high)
         "Moderate" -> stringResource(R.string.risk_moderate)
-        else -> stringResource(R.string.risk_low)
+        "Low" -> stringResource(R.string.risk_low)
+        else -> stringResource(R.string.risk_unknown)
     }
 }
 
@@ -78,7 +82,8 @@ private fun overallRisk(vararg levels: String): String {
     return when {
         levels.any { it == "High" } -> "High"
         levels.any { it == "Moderate" } -> "Moderate"
-        else -> "Low"
+        levels.any { it == "Low" } -> "Low"
+        else -> "Unknown"
     }
 }
 
@@ -91,16 +96,16 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    val floodLevel = status?.floodLevel ?: "Low"
-    val landslideLevel = status?.landslideLevel ?: "Low"
-    val kvikkleireLevel = status?.kvikkleireLevel ?: "Low"
-    val radonLevel = status?.radonLevel ?: "Low"
+    val floodLevel = status?.floodLevel ?: "Unknown"
+    val landslideLevel = status?.landslideLevel ?: "Unknown"
+    val quickClayLevel = status?.quickClayLevel ?: "Unknown"
+    val radonLevel = status?.radonLevel ?: "Unknown"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, kvikkleireLevel, radonLevel, windLevel
+        floodLevel, landslideLevel, quickClayLevel, radonLevel, windLevel
     )
 
-    var showKvikkleireInfo by remember { mutableStateOf(false) }
+    var showQuickClayInfo by remember { mutableStateOf(false) }
     var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
@@ -172,10 +177,10 @@ fun SavedPlacesLocationCard(
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.quick_clay),
-                    level = kvikkleireLevel,
+                    level = quickClayLevel,
                     loading = loading,
-                    onInfoClick = if (status?.kvikkleireFaregrad != null) {
-                        { showKvikkleireInfo = true }
+                    onInfoClick = if (status?.quickClayHazard != null) {
+                        { showQuickClayInfo = true }
                     } else null,
                     modifier = Modifier.weight(1f)
                 )
@@ -204,10 +209,10 @@ fun SavedPlacesLocationCard(
                 Spacer(modifier = Modifier.weight(0.5f))
             }
 
-            if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
-                KvikkleireInfoDialog(
-                    faregrad = status.kvikkleireFaregrad,
-                    onDismiss = { showKvikkleireInfo = false }
+            if (showQuickClayInfo && status?.quickClayHazard != null) {
+                QuickClayInfoDialog(
+                    hazardClass = status.quickClayHazard,
+                    onDismiss = { showQuickClayInfo = false }
                 )
             }
 

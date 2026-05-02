@@ -120,18 +120,18 @@
     <string name="legend_flood_src">NVE Flomaktsomhet (layer 1)</string>
 
     <string name="legend_quickclay_what">Three sub-layers stacked: hazard degree, risk class, and mapped-area status.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Lav) — low quick-clay hazard</string>
-    <string name="legend_quickclay_cat_middels">Solid (Middels) — medium hazard</string>
-    <string name="legend_quickclay_cat_hoy">Solid (Hoey) — high hazard</string>
-    <string name="legend_quickclay_cat_safe">Striped + "Omraade uten fare" — investigated and found safe</string>
+    <string name="legend_quickclay_cat_lav">Solid (Low) — low quick-clay hazard</string>
+    <string name="legend_quickclay_cat_middels">Solid (Medium) — medium hazard</string>
+    <string name="legend_quickclay_cat_hoy">Solid (High) — high hazard</string>
+    <string name="legend_quickclay_cat_safe">Striped + Area without danger — investigated and found safe</string>
     <string name="legend_quickclay_cat_other">Other striped patterns — under investigation</string>
-    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad attribute)</string>
+    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (danger level attribute)</string>
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
-    <string name="legend_radon_cat_purple">Purple — Saerlig hoy aktsomhet (highest concern)</string>
-    <string name="legend_radon_cat_red">Red — Hoy aktsomhet (≥20% of dwellings exceed 200 Bq/m³)</string>
-    <string name="legend_radon_cat_yellow">Yellow — Moderat til lav</string>
-    <string name="legend_radon_cat_grey">Grey — Usikker (insufficient data)</string>
+    <string name="legend_radon_cat_purple">Purple — particuary high caution (highest concern)</string>
+    <string name="legend_radon_cat_red">Red — high caution (≥20% of dwellings exceed 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Yellow — moderate to low</string>
+    <string name="legend_radon_cat_grey">Grey — unsure (insufficient data)</string>
     <string name="legend_radon_caveat">The map cannot predict radon in a specific building — only a measurement can.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
@@ -153,6 +153,7 @@
     <string name="risk_high">High</string>
     <string name="risk_moderate">Moderate</string>
     <string name="risk_low">Low</string>
+    <string name="risk_unknown">Unknown</string>
     <string name="what_can_i_do">WHAT CAN I DO?</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
@@ -229,7 +230,7 @@
     <string name="save">Save</string>
     <string name="search_after_place_norway">Search after place in Norway</string>
     <string name="language_sami">Sami</string>
-    <string name="change_layer_to_zoom_out">Switch overlay to zoom out further</string>
+    <string name="change_layer_to_zoom_out">Max zoom out level for this overlay reached. To see the full map, please select "No overlay"</string>
     <string name="use_without_internet">Use anyway</string>
     <string name="background_music">Background music</string>
     <string name="sound_effect">Sound effect</string>
@@ -241,4 +242,6 @@
     <string name="check_help_screen">Check out the help screen to see what limitations you will experience when disconnected</string>
     <string name="without_internet_connection">Without internet connection</string>
     <string name="offline_limitations_description">Map data, search, climate statistics and external data sources may not load while disconnected. You can still open the app, view already saved places and read help and info content</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Use the + and - buttons on the right side to zoom. Please note that some overlays have limited expansion. Select \"No overlay\" to zoom freely</string>
 </resources>

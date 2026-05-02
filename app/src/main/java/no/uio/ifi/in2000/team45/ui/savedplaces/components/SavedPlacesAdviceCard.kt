@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.theme.LinkBlue
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
@@ -48,6 +49,7 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 private val RiskHigh = StatisticsRed
 private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
+private val RiskUnknown = StatisticsGray
 private val LinkBlue = LinkBlue
 
 data class AdviceCategory(
@@ -61,7 +63,8 @@ data class AdviceCategory(
 private fun riskColor(level: String): Color = when (level) {
     "High" -> RiskHigh
     "Moderate" -> RiskModerate
-    else -> RiskLow
+    "Low" -> RiskLow
+    else -> RiskUnknown
 }
 
 @Composable
