@@ -230,4 +230,7 @@
     <string name="max_saved_places_message">Du kan berre lagre opptil %1$d stader. Fjern ein stad for å leggje til ein ny.</string>
     <string name="sound_effect">Lydeffekt</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Du kan ikkje lagra ein stad utanfor Noreg</string>
+    <string name="availability">Tilgjengelegheit</string>
+    <string name="internet_connection_needed_for_full_functionality">
+    Appen treng internettforbinding for full funksjonalitet</string>
 </resources>
