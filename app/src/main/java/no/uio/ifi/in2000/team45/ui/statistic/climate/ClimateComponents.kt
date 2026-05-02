@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team45.ui.statistic.climate
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -40,6 +41,14 @@ import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
+
+// Chart tick labels need higher contrast than M3's onSurfaceVariant gives in
+// dark mode (purple-grey on a dark blue card reads dim). Light mode keeps the
+// secondary onSurfaceVariant tone so labels don't fight the chart line.
+@Composable
+private fun chartAxisColor(): Color =
+    if (isSystemInDarkTheme()) Color.White
+    else MaterialTheme.colorScheme.onSurfaceVariant
 
 @Composable
 fun OverviewCards(
@@ -207,7 +216,7 @@ fun TrendChart(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = chartAxisColor(),
                 letterSpacing = 1.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -228,17 +237,17 @@ fun TrendChart(
                     Text(
                         text = String.format("%.0f", maxVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = chartAxisColor()
                     )
                     Text(
                         text = String.format("%.0f", midVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = chartAxisColor()
                     )
                     Text(
                         text = String.format("%.0f", minVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = chartAxisColor()
                     )
                 }
 
@@ -287,19 +296,23 @@ fun TrendChart(
                 }
             }
 
-            // Year labels
+            // Year labels, padded to start where the chart canvas does (after
+            // the 40 dp Y-axis label column) so the first year sits under the
+            // first data point instead of at the row's left edge.
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val firstYear = data.first().first
                 val lastYear = data.last().first
-                Text(firstYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                Text(firstYear.toString(), fontSize = 10.sp, color = chartAxisColor())
                 if (data.size > 2) {
                     val mid = data[data.size / 2].first
-                    Text(mid.toString(), fontSize = 10.sp, color = Color.Gray)
+                    Text(mid.toString(), fontSize = 10.sp, color = chartAxisColor())
                 }
-                Text(lastYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                Text(lastYear.toString(), fontSize = 10.sp, color = chartAxisColor())
             }
         }
     }
