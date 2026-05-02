@@ -228,17 +228,17 @@ fun TrendChart(
                     Text(
                         text = String.format("%.0f", maxVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = String.format("%.0f", midVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = String.format("%.0f", minVal),
                         fontSize = 10.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -294,12 +294,12 @@ fun TrendChart(
             ) {
                 val firstYear = data.first().first
                 val lastYear = data.last().first
-                Text(firstYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                Text(firstYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (data.size > 2) {
                     val mid = data[data.size / 2].first
-                    Text(mid.toString(), fontSize = 10.sp, color = Color.Gray)
+                    Text(mid.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Text(lastYear.toString(), fontSize = 10.sp, color = Color.Gray)
+                Text(lastYear.toString(), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
