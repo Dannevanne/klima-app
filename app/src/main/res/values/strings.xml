@@ -239,4 +239,6 @@
     <string name="availability">Availability</string>
     <string name="internet_connection_needed_for_full_functionality">App needs internet connection for full functionality</string>
     <string name="check_help_screen">Check out the help screen to see what limitations you will experience when disconnected</string>
+    <string name="without_internet_connection">Without internet connection</string>
+    <string name="offline_limitations_description">Map data, search, climate statistics and external data sources may not load while disconnected. You can still open the app, view already saved places and read help and info content.</string>
 </resources>
