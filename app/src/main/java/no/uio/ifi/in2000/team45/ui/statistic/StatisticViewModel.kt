@@ -311,7 +311,8 @@ class StatisticViewModel @JvmOverloads constructor(
                             totalPrecip = existing.totalPrecip ?: obs.totalPrecip,
                             maxWindGust = existing.maxWindGust ?: obs.maxWindGust,
                             maxWindSpeed = existing.maxWindSpeed ?: obs.maxWindSpeed,
-                            maxSnowDepth = existing.maxSnowDepth ?: obs.maxSnowDepth
+                            maxSnowDepth = existing.maxSnowDepth ?: obs.maxSnowDepth,
+                            heavyPrecipDays = existing.heavyPrecipDays ?: obs.heavyPrecipDays
                         )
                         if (merged != existing) contributed = true
                         annualByYear[obs.year] = merged
