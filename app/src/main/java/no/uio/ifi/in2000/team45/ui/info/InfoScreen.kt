@@ -49,7 +49,8 @@ import androidx.compose.material.icons.outlined.Wifi
 @Composable
 fun InfoScreen(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onHelpClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -91,11 +92,18 @@ fun InfoScreen(
                     }
                 )
             }
+            // Availability
             item { InfoSectionName(stringResource(R.string.availability)) }
             item {
                 InfoPrivacySection(
                     icon = Icons.Outlined.Wifi,
                     text = stringResource(R.string.internet_connection_needed_for_full_functionality)
+                )
+            }
+            item {
+                InfoAvailabilityHelpText(
+                    text = stringResource(R.string.check_help_screen),
+                    onClick = onHelpClick
                 )
             }
             // Privacy
@@ -215,6 +223,25 @@ private fun InfoPrivacySection(
             lineHeight = 18.sp
         )
     }
+}
+
+@Composable
+private fun InfoAvailabilityHelpText(
+    text: String,
+    onClick: (() -> Unit)?
+) {
+    Text(
+        text = text,
+        fontSize = 13.sp,
+        color = MaterialTheme.colorScheme.primary,
+        lineHeight = 18.sp,
+        modifier = Modifier
+            .padding(start = 46.dp, end = 16.dp, top = 2.dp, bottom = 6.dp)
+            .then(
+                if (onClick != null) Modifier.clickable { onClick() }
+                else Modifier
+            )
+    )
 }
 
 @Composable
