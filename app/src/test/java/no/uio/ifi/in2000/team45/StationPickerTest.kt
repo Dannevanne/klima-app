@@ -376,4 +376,32 @@ class StationPickerTest {
         assertEquals(setOf(temp, precip, snow), result[0].elements)
         assertEquals(setOf(gust), result[1].elements)
     }
+
+    // Real Frost availability has multiple time-series entries per element
+    // when sensors get reconfigured (Vaaland has 5 temp entries from 1927,
+    // 1937, 1953, 2008, 2019). Phase 1 must use the oldest start per element,
+    // not the latest, otherwise it sees Vaaland as a 7-yr station.
+    @Test
+    fun phase1HandlesMultipleTimeSeriesPerElement() {
+        val vaaland = station("SN44640", 0)
+        val candidates = listOf(vaaland)
+        // Sensor reconfigurations give Vaaland 5 separate temp entries
+        val availability = mapOf(
+            "SN44640" to listOf(
+                TimeSeriesAvailability("SN44640", temp, 1927, null),
+                TimeSeriesAvailability("SN44640", temp, 1937, null),
+                TimeSeriesAvailability("SN44640", temp, 1953, null),
+                TimeSeriesAvailability("SN44640", temp, 2008, null),
+                TimeSeriesAvailability("SN44640", temp, 2019, null),
+                TimeSeriesAvailability("SN44640", precip, 1895, null),
+                TimeSeriesAvailability("SN44640", gust, 1960, null),
+                TimeSeriesAvailability("SN44640", snow, 1902, null)
+            )
+        )
+
+        val result = StationPicker.pickStationsForPlace(
+            candidates, availability, all, currentYear
+        )
+        assertEquals(listOf(vaaland), stationsOf(result))
+    }
 }
