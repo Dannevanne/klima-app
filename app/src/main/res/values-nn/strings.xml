@@ -232,4 +232,5 @@
     <string name="you_can_not_save_a_place_outside_of_norway">Du kan ikkje lagra ein stad utanfor Noreg</string>
     <string name="availability">Tilgjengelegheit</string>
     <string name="internet_connection_needed_for_full_functionality">Appen treng internettforbinding for full funksjonalitet</string>
+    <string name="check_help_screen">Sjå hjelpeskjermen for å finne ut kva avgrensingar du vil oppleve utan internettforbinding</string>
 </resources>
