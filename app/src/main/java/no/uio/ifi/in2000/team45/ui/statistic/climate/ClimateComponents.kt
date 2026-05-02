@@ -296,9 +296,13 @@ fun TrendChart(
                 }
             }
 
-            // Year labels
+            // Year labels, padded to start where the chart canvas does (after
+            // the 40 dp Y-axis label column) so the first year sits under the
+            // first data point instead of at the row's left edge.
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val firstYear = data.first().first
