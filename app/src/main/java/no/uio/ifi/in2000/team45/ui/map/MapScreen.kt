@@ -314,7 +314,7 @@ fun DataMap(
     LaunchedEffect(zoomBlockedNonce) {
         if (zoomBlockedNonce > 0) {
             zoomBlockedVisible = true
-            kotlinx.coroutines.delay(2000)
+            kotlinx.coroutines.delay(4000)
             zoomBlockedVisible = false
         }
     }
