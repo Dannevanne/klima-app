@@ -229,11 +229,13 @@
     <string name="save">Save</string>
     <string name="search_after_place_norway">Search after place in Norway</string>
     <string name="language_sami">Sami</string>
-    <string name="change_layer_to_zoom_out">Switch overlay to zoom out further</string>
+    <string name="change_layer_to_zoom_out">Max zoom out level for this overlay reached. To see the full map, please select "No overlay"</string>
     <string name="use_without_internet">Use anyway</string>
     <string name="background_music">Background music</string>
     <string name="sound_effect">Sound effect</string>
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Use the + and - buttons on the right side to zoom. Please note that some overlays have limited expansion. Select \"No overlay\" to zoom freely</string>
 </resources>
