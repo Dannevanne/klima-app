@@ -95,7 +95,7 @@ fun InfoScreen(
             // Availability
             item { InfoSectionName(stringResource(R.string.availability)) }
             item {
-                InfoPrivacySection(
+                InfoTextRow(
                     icon = Icons.Outlined.Wifi,
                     text = stringResource(R.string.internet_connection_needed_for_full_functionality)
                 )
@@ -109,13 +109,13 @@ fun InfoScreen(
             // Privacy
             item { InfoSectionName(stringResource(R.string.privacy)) }
             item {
-                InfoPrivacySection(
+                InfoTextRow(
                     icon = Icons.Outlined.Lock,
                     text = stringResource(R.string.location_data_is_used_only_locally_and_is_not_shared_with_third_parties)
                 )
             }
             item {
-                InfoPrivacySection(
+                InfoTextRow(
                     icon = Icons.Outlined.NoAccounts,
                     text = stringResource(R.string.the_app_does_not_require_a_login_or_account)
                 )
@@ -196,9 +196,9 @@ private fun InfoDataCard(
     }
 }
 
-// Structure for privacy section
+// Structure for text rows
 @Composable
-private fun InfoPrivacySection(
+private fun InfoTextRow(
     icon: ImageVector,
     text: String
 ) {
