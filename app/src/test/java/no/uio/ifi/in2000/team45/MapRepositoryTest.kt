@@ -25,7 +25,9 @@ class MapRepositoryTest {
     fun testGetOverlayUrlAllTypesReturnNonEmpty() {
         val repository = MapRepository()
         val bbox = listOf(10.0, 59.0, 11.0, 60.0)
-        for (type in OverlayType.entries) {
+        // NONE is excluded -- buildOverlayURL throws for it on purpose since
+        // the map skips overlay rendering when no overlay is selected.
+        for (type in OverlayType.entries.filter { it != OverlayType.NONE }) {
             val url = repository.getOverlayURL(type, bbox, 500, 400)
             assertTrue("URL for $type should not be empty", url.isNotEmpty())
         }

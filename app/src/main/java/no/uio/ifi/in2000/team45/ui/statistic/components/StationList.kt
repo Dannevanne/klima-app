@@ -28,6 +28,13 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
 
+private fun String.toDisplayCase(): String {
+    if (isBlank()) return this
+    return split(" ").joinToString(" ") { word ->
+        word.lowercase().replaceFirstChar { it.uppercase() }
+    }
+}
+
 @Composable
 fun StationList(
     stations: List<WeatherStation>,
@@ -67,23 +74,21 @@ fun StationList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+                        val title = station.municipality.toDisplayCase()
+                            .ifBlank { station.name }
+                        val subtitle = station.county.toDisplayCase()
                         Text(
-                            text = station.name,
+                            text = title,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
-                        if (station.municipality.isNotBlank()) {
+                        if (subtitle.isNotBlank()) {
                             Text(
-                                text = "${station.municipality}, ${station.county}",
+                                text = subtitle,
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Text(
-                            text = stringResource(R.string.station_id_prefix, station.id),
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                         station.distanceMeters?.let { dist ->
                             val distText = if (dist >= 1000) {
                                 stringResource(R.string.distance_km_away, "%.1f".format(dist / 1000.0))

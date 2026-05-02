@@ -16,7 +16,7 @@
     <string name="device_settings">Use device settings</string>
     <string name="lightmode">Light mode</string>
     <string name="darkmode">Dark mode</string>
-    <string name="climate_statistics">Climate Statistics</string>
+    <string name="climate_statistics">Climate statistics</string>
     <string name="place_or_station">Search by location or weather station</string>
     <string name="search_your_locations">Search your saved locations</string>
     <string name="search">Search</string>
@@ -79,8 +79,8 @@
     <string name="t45" translatable="false">T45</string>
     <string name="team_45_in2000_uio_2026" translatable="false">Team 45 — IN2000, UiO 2026</string>
     <string name="language">Language</string>
-    <string name="language_bokmal" translatable="false">Norsk bokmål</string>
-    <string name="language_nynorsk" translatable="false">Nynorsk</string>
+    <string name="language_bokmal" translatable="false">Norwegian bokmål</string>
+    <string name="language_nynorsk" translatable="false">Norwegian nynorsk</string>
     <string name="language_english">English</string>
     <string name="no_saved_places_yet">No saved places yet</string>
     <string name="no_saved_places_hint">Go to the map, tap an area and save it to see risk analysis and climate data here.</string>
@@ -120,18 +120,18 @@
     <string name="legend_flood_src">NVE Flomaktsomhet (layer 1)</string>
 
     <string name="legend_quickclay_what">Three sub-layers stacked: hazard degree, risk class, and mapped-area status.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Lav) — low quick-clay hazard</string>
-    <string name="legend_quickclay_cat_middels">Solid (Middels) — medium hazard</string>
-    <string name="legend_quickclay_cat_hoy">Solid (Hoey) — high hazard</string>
-    <string name="legend_quickclay_cat_safe">Striped + "Omraade uten fare" — investigated and found safe</string>
+    <string name="legend_quickclay_cat_lav">Solid (Low) — low quick-clay hazard</string>
+    <string name="legend_quickclay_cat_middels">Solid (Medium) — medium hazard</string>
+    <string name="legend_quickclay_cat_hoy">Solid (High) — high hazard</string>
+    <string name="legend_quickclay_cat_safe">Striped + Area without danger — investigated and found safe</string>
     <string name="legend_quickclay_cat_other">Other striped patterns — under investigation</string>
-    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad attribute)</string>
+    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (danger level attribute)</string>
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
-    <string name="legend_radon_cat_purple">Purple — Saerlig hoy aktsomhet (highest concern)</string>
-    <string name="legend_radon_cat_red">Red — Hoy aktsomhet (≥20% of dwellings exceed 200 Bq/m³)</string>
-    <string name="legend_radon_cat_yellow">Yellow — Moderat til lav</string>
-    <string name="legend_radon_cat_grey">Grey — Usikker (insufficient data)</string>
+    <string name="legend_radon_cat_purple">Purple — particuary high caution (highest concern)</string>
+    <string name="legend_radon_cat_red">Red — high caution (≥20% of dwellings exceed 200 Bq/m³)</string>
+    <string name="legend_radon_cat_yellow">Yellow — moderate to low</string>
+    <string name="legend_radon_cat_grey">Grey — unsure (insufficient data)</string>
     <string name="legend_radon_caveat">The map cannot predict radon in a specific building — only a measurement can.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
@@ -195,6 +195,7 @@
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km away</string>
     <string name="distance_m_away">%1$d m away</string>
+    <string name="distance_from_place_km">%1$s km from %2$s</string>
     <string name="overview_period">Overview %1$d-%2$d</string>
     <string name="precipitation_avg_year">Precipitation, avg/year</string>
     <string name="max_wind_gust">Max wind gust</string>
@@ -203,6 +204,7 @@
     <string name="extreme_precipitation">Extreme precipitation</string>
     <string name="months_count">%1$d months</string>
     <string name="years_count">%1$d years</string>
+    <string name="days_per_year">%1$d days/year</string>
     <string name="trend_vs_norm">vs norm</string>
     <string name="weather_stations_used">Weather stations used</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
@@ -228,11 +230,13 @@
     <string name="save">Save</string>
     <string name="search_after_place_norway">Search after place in Norway</string>
     <string name="language_sami">Sami</string>
-    <string name="change_layer_to_zoom_out">Change layer to zoom out</string>
+    <string name="change_layer_to_zoom_out">Max zoom out level for this overlay reached. To see the full map, please select "No overlay"</string>
     <string name="use_without_internet">Use anyway</string>
     <string name="background_music">Background music</string>
-    <string name="sound_effect">Sound Effect</string>
+    <string name="sound_effect">Sound effect</string>
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_explanation">Use the + and - buttons on the right side to zoom. Please note that some overlays have limited expansion. Select \"No overlay\" to zoom freely</string>
 </resources>

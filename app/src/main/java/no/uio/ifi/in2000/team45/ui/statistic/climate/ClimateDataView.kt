@@ -1,19 +1,28 @@
 package no.uio.ifi.in2000.team45.ui.statistic.climate
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.FilterChip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
 import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
@@ -36,6 +45,10 @@ fun ClimateDataView(
     annualData: List<AnnualObservation>,
     selectedPeriod: Int,
     onPeriodChange: (Int) -> Unit,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
+    placeName: String? = null,
+    distanceFromPlaceMeters: Int? = null,
+    stationsUsed: List<WeatherStation> = emptyList(),
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier
@@ -50,13 +63,16 @@ fun ClimateDataView(
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             ) {
                 PERIOD_OPTIONS.forEach { years ->
-                    FilterChip(
+                    PeriodChip(
+                        years = years,
                         selected = selectedPeriod == years,
                         onClick = { onPeriodChange(years) },
-                        label = { Text(stringResource(R.string.years_count, years)) }
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -127,7 +143,45 @@ fun ClimateDataView(
         }
 
         item {
-            StationsUsedCard(station = station, annualData = annualData)
+            StationsUsedCard(
+                station = station,
+                annualData = annualData,
+                onShowOnMap = onShowOnMap,
+                placeName = placeName,
+                distanceFromPlaceMeters = distanceFromPlaceMeters,
+                stationsUsed = stationsUsed
+            )
+        }
+    }
+}
+
+@Composable
+private fun PeriodChip(
+    years: Int,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val bg = if (selected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.surfaceContainer
+    val fg = if (selected) MaterialTheme.colorScheme.onPrimary
+    else MaterialTheme.colorScheme.onSurface
+    Surface(
+        color = bg,
+        shape = RoundedCornerShape(12.dp),
+        modifier = modifier.clickable(onClick = onClick)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.years_count, years),
+                color = fg,
+                fontSize = 13.sp,
+                maxLines = 1,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+            )
         }
     }
 }

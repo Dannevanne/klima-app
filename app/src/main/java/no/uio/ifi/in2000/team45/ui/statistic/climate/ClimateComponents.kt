@@ -3,8 +3,11 @@ package no.uio.ifi.in2000.team45.ui.statistic.climate
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,9 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,8 +54,23 @@ fun OverviewCards(
         .takeIf { annualData.any { a -> a.totalPrecip != null } }
     val maxWindGust = annualData.mapNotNull { it.maxWindGust }.maxOrNull()
     val maxSnowDepth = annualData.mapNotNull { it.maxSnowDepth }.maxOrNull()
-    val extremePrecipDays = annualData.mapNotNull { it.totalPrecip }
-        .count { it > (avgPrecip ?: Double.MAX_VALUE) * 1.3 }
+
+    // Heavy-rain days per year (daily precip >= 20 mm), averaged over the
+    // selected window. Baseline pulled from any 1991-2020 years we already
+    // have, falling back to the older half of the window when we don't.
+    val heavyByYear = annualData.mapNotNull { obs ->
+        obs.heavyPrecipDays?.let { obs.year to it }
+    }
+    val avgHeavyDays = heavyByYear.map { it.second }.average()
+        .takeIf { heavyByYear.isNotEmpty() }
+    val baselineHeavy = heavyByYear.filter { it.first in 1991..2020 }
+        .map { it.second }
+        .takeIf { it.isNotEmpty() }
+        ?.average()
+        ?: heavyByYear.dropLast(heavyByYear.size / 2)
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
 
     // Climate normals from monthly stats. Annual precip = sum of 12 monthly
     // normals; gust/snow normals are sparse so often null.
@@ -57,14 +78,11 @@ fun OverviewCards(
         .takeIf { it.size == 12 }?.sum()
     val normalMaxGust = stats.mapNotNull { it.windGust }.maxOrNull()
     val normalMaxSnow = stats.mapNotNull { it.snowDepth }.maxOrNull()
-    val expectedExtreme = selectedPeriod * 0.10
 
     val precipTrend = vsNormal(avgPrecip, normalAnnualPrecip)
     val windTrend = vsNormal(maxWindGust, normalMaxGust)
     val snowTrend = vsNormal(maxSnowDepth, normalMaxSnow)
-    val extremeTrend = if (annualData.any { it.totalPrecip != null }) {
-        vsNormal(extremePrecipDays.toDouble(), expectedExtreme)
-    } else TrendInfo(TrendDirection.STABLE, null)
+    val heavyTrend = vsNormal(avgHeavyDays, baselineHeavy)
 
     Text(
         text = stringResource(R.string.overview_period, fromYear, currentYear),
@@ -76,38 +94,43 @@ fun OverviewCards(
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // IntrinsicSize.Min on each row + fillMaxHeight on each card makes
+        // both cards in a row match the taller one's intrinsic content
+        // height. Lets cards grow when text scale is up without clipping.
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
                 label = stringResource(R.string.precipitation_avg_year),
                 value = if (avgPrecip != null) "${avgPrecip.toInt()} mm" else "-",
                 trend = precipTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
             OverviewStatCard(
                 label = stringResource(R.string.max_wind_gust),
                 value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
                 trend = windTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewStatCard(
                 label = stringResource(R.string.max_snow_depth),
                 value = if (maxSnowDepth != null) "${maxSnowDepth.toInt()} cm" else "-",
                 trend = snowTrend,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
             OverviewStatCard(
                 label = stringResource(R.string.extreme_precipitation),
-                value = if (extremePrecipDays > 0) stringResource(R.string.years_count, extremePrecipDays) else "-",
-                trend = extremeTrend,
-                modifier = Modifier.weight(1f)
+                value = if (avgHeavyDays != null) {
+                    stringResource(R.string.days_per_year, avgHeavyDays.toInt())
+                } else "-",
+                trend = heavyTrend,
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
     }
@@ -121,7 +144,7 @@ fun OverviewStatCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(100.dp),
+        modifier = modifier.defaultMinSize(minHeight = 100.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
@@ -285,9 +308,14 @@ fun TrendChart(
 @Composable
 fun StationsUsedCard(
     station: WeatherStation,
-    annualData: List<AnnualObservation>
+    annualData: List<AnnualObservation>,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
+    placeName: String? = null,
+    distanceFromPlaceMeters: Int? = null,
+    stationsUsed: List<WeatherStation> = emptyList()
 ) {
     val obsCount = annualData.size
+    val list = if (stationsUsed.isNotEmpty()) stationsUsed else listOf(station)
 
     Text(
         text = stringResource(R.string.weather_stations_used),
@@ -305,41 +333,87 @@ fun StationsUsedCard(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(
-                    text = station.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+        Column(modifier = Modifier.fillMaxWidth()) {
+            list.forEachIndexed { index, s ->
+                StationsUsedRow(
+                    station = s,
+                    placeName = placeName,
+                    onShowOnMap = onShowOnMap,
+                    obsCountSuffix = if (index == 0 && stationsUsed.size <= 1) "$obsCount obs." else null
                 )
-                Text(
-                    text = stringResource(R.string.frost_id_prefix, station.id),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (station.municipality.isNotBlank()) {
-                    Text(
-                        text = "${station.municipality}, ${station.county}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                if (index < list.size - 1) {
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.background,
+                        thickness = 1.dp
                     )
                 }
             }
-            Column(horizontalAlignment = Alignment.End) {
+        }
+    }
+}
+
+@Composable
+private fun StationsUsedRow(
+    station: WeatherStation,
+    placeName: String?,
+    onShowOnMap: ((lat: Double, lon: Double) -> Unit)?,
+    obsCountSuffix: String?
+) {
+    val distanceLabel = station.distanceMeters
+        ?.takeIf { placeName != null && it >= 5_000 }
+        ?.let { meters ->
+            stringResource(
+                R.string.distance_from_place_km,
+                "%.1f".format(meters / 1000.0),
+                placeName!!
+            )
+        }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, top = 10.dp, bottom = 10.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = station.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            Text(
+                text = stringResource(R.string.frost_id_prefix, station.id),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (station.municipality.isNotBlank()) {
                 Text(
-                    text = stringResource(R.string.precipitation_plus_temperature),
+                    text = "${station.municipality}, ${station.county}",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            if (distanceLabel != null) {
                 Text(
-                    text = "$obsCount obs.",
+                    text = distanceLabel,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            if (obsCountSuffix != null) {
+                Text(
+                    text = obsCountSuffix,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+        if (onShowOnMap != null && station.latitude != 0.0 && station.longitude != 0.0) {
+            IconButton(onClick = { onShowOnMap(station.latitude, station.longitude) }) {
+                Icon(
+                    imageVector = Icons.Outlined.Place,
+                    contentDescription = stringResource(R.string.show_on_map),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

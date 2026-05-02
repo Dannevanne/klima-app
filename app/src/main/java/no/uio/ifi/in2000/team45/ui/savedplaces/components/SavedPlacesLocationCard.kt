@@ -98,14 +98,14 @@ fun SavedPlacesLocationCard(
     val loading = status == null
     val floodLevel = status?.floodLevel ?: "Unknown"
     val landslideLevel = status?.landslideLevel ?: "Unknown"
-    val kvikkleireLevel = status?.kvikkleireLevel ?: "Unknown"
+    val quickClayLevel = status?.quickClayLevel ?: "Unknown"
     val radonLevel = status?.radonLevel ?: "Unknown"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, kvikkleireLevel, radonLevel, windLevel
+        floodLevel, landslideLevel, quickClayLevel, radonLevel, windLevel
     )
 
-    var showKvikkleireInfo by remember { mutableStateOf(false) }
+    var showQuickClayInfo by remember { mutableStateOf(false) }
     var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
@@ -177,10 +177,10 @@ fun SavedPlacesLocationCard(
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.quick_clay),
-                    level = kvikkleireLevel,
+                    level = quickClayLevel,
                     loading = loading,
-                    onInfoClick = if (status?.kvikkleireFaregrad != null) {
-                        { showKvikkleireInfo = true }
+                    onInfoClick = if (status?.quickClayHazard != null) {
+                        { showQuickClayInfo = true }
                     } else null,
                     modifier = Modifier.weight(1f)
                 )
@@ -209,10 +209,10 @@ fun SavedPlacesLocationCard(
                 Spacer(modifier = Modifier.weight(0.5f))
             }
 
-            if (showKvikkleireInfo && status?.kvikkleireFaregrad != null) {
-                KvikkleireInfoDialog(
-                    faregrad = status.kvikkleireFaregrad,
-                    onDismiss = { showKvikkleireInfo = false }
+            if (showQuickClayInfo && status?.quickClayHazard != null) {
+                QuickClayInfoDialog(
+                    hazardClass = status.quickClayHazard,
+                    onDismiss = { showQuickClayInfo = false }
                 )
             }
 

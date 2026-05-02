@@ -29,6 +29,35 @@ Appen har to hovedskjermer tilgjengelig via en bunnnavigasjonsbar:
 - **MET Frost API v0** - Klimadata (stasjoner, normaler, observasjoner)
 - **NVE flomsone-tjeneste** - Flomsonekart som overlay
 
+## Algoritmer
+
+### Stasjonsvalg for et stedssoek
+
+Naar brukeren soeker paa et sted (f.eks. "Stavanger") henter vi en liste
+med naerliggende vaerstasjoner sortert paa avstand. `StationPicker`
+velger sa hvilke stasjoner som faktisk skal brukes:
+
+1. Foerst leter vi etter en enkelt stasjon som dekker alle maalinger
+   (temperatur, nedboer, vind, snoedybde) og har minst 50 aars historikk.
+   For Oslo treffer Blindern her, og vi slipper aa blande data.
+2. Hvis ingen enkelt stasjon er god nok, splitter vi per element og
+   plukker stasjonen med lengst historikk for hvert maaleelement. Sola
+   havner f.eks. paa temperatur (1935-) mens vinden hentes fra en annen
+   stasjon for Stavanger.
+
+Resultatet er en liten liste med `StationAssignment`, der hver stasjon
+er tagget med akkurat de elementene den skal levere. Det holder
+nettverkstrafikken nede.
+
+### Dager med kraftig nedboer
+
+Aarsstatistikken inkluderer "dager med >= 20 mm nedboer", omtrent
+det nivaaet som overbelaster urban drenering. Vi henter daglige
+sumverdier fra Frost for nedboerstasjonen og teller dagene per aar.
+Tallene varierer kraftig mellom regioner (Bergen ~40 dager/aar,
+Karasjok ~1), saa det fungerer som en konkret risikoindikator for
+huseiere.
+
 ## Bygg og kjor
 
 ```bash

@@ -12,7 +12,7 @@
     <string name="quick_clay">Jorggi savki</string>
     <string name="radon">Radon</string>
     <string name="landslide">Eanačielggadeapmi</string>
-    <string name="no_overlay">dušše kartet</string>
+    <string name="no_overlay">Dušše kartet</string>
     <string name="device_settings">Geavat ovttadaga heivehemiid</string>
     <string name="lightmode">Čuovga modus</string>
     <string name="darkmode">Sevdnjes modus</string>
@@ -99,17 +99,17 @@
     <string name="legend_flood_caveat">Ii leat garravuođaárvvoštallan gálduin. Juohke polygona čájehuvvo seamma ládje.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet</string>
     <string name="legend_quickclay_what">Golbma oasselávkki leat čohkkejuvvon: váralašvuođadássi, riskaluohkká ja kártejuvvon guovllu stáhtus.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Low) — alla jođánit šaddan muohtavárra</string>
-    <string name="legend_quickclay_cat_middels">Solid (gaskamearálaš) — gaskamearálaš váralašvuohta</string>
-    <string name="legend_quickclay_cat_hoy">Solid (High) — alla váralašvuohta</string>
+    <string name="legend_quickclay_cat_lav">Oalát gokčá (Vuollegis) — alla jođánit šaddan muohtavárra</string>
+    <string name="legend_quickclay_cat_middels">Oalát gokčá (Gaska) — gaskamearálaš váralašvuohta</string>
+    <string name="legend_quickclay_cat_hoy">Oalát gokčá (Allat) — alla váralašvuohta</string>
     <string name="legend_quickclay_cat_safe">Rievdaduvvon ja merkejuvvon "guovlu vára haga" dutkojuvvon ja gávdnon dorvvolaš</string>
     <string name="legend_quickclay_cat_other">Eará mállet main leat rievssat leat dutkamuša vuolde</string>
     <string name="legend_quickclay_src">NVE SkredKvikkleire2</string>
     <string name="legend_radon_what">Sisáibmoradonfuomášuhttinluohkát guovllu várás.</string>
     <string name="legend_radon_cat_purple">Lilla — erenoamáš alla fuomášupmi (eanemus fuolastuhtti)</string>
-    <string name="legend_radon_cat_red">Rukses — Stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m3)</string>
-    <string name="legend_radon_cat_yellow">Galbma ivdni lea gaskamearálaččat gitta allat</string>
-    <string name="legend_radon_cat_grey">Grána — Eahpesihkar (váilevaš dieđut)</string>
+    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m3)</string>
+    <string name="legend_radon_cat_yellow">Galbma — ivdni lea gaskamearálaččat gitta allat</string>
+    <string name="legend_radon_cat_grey">Grána — eahpesihkar (váilevaš dieđut)</string>
     <string name="legend_radon_caveat">Kárta ii sáhte einnostit radona dihto visttis — dušše mihtideapmi sáhttá.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
     <string name="legend_landslide_what">Fuomášuhttinguovllut eatnama ja ruskkaid vuovdima ektui, mat vuođđuduvvet eatnamiidda ja eatnama šlájaide.</string>
@@ -170,7 +170,8 @@
     <string name="station_id_prefix">ID: %1$s</string>
     <string name="distance_km_away">%1$s km eret</string>
     <string name="distance_m_away">%1$d m eret</string>
-    <string name="overview_period">GEAHČASTAT %1$d-%2$d</string>
+    <string name="distance_from_place_km">%1$s km eret %2$s</string>
+    <string name="overview_period">Geahčastat %1$d-%2$d</string>
     <string name="precipitation_avg_year">Arvi, gaskamearálaš/jahki</string>
     <string name="max_wind_gust">Stuorámus bieggaskuolla</string>
     <string name="snow_days_year">Muohtabeaivvit/jahki</string>
@@ -178,12 +179,13 @@
     <string name="extreme_precipitation">Ekstrema arvi</string>
     <string name="months_count">%1$d mánu</string>
     <string name="years_count">%1$d jagi</string>
+    <string name="days_per_year">%1$d beaivvi/jagi</string>
     <string name="trend_vs_norm">norma ektui</string>
-    <string name="weather_stations_used">GEAVAHUVVON DÁLKKÁDATSTAŠUVNNAT</string>
+    <string name="weather_stations_used">Geavahuvvon dálkkádatstašuvnnat</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Arvi + temperatuvra</string>
-    <string name="annual_precipitation_trend">JAHKÁSAŠ ARVI - TRENDDA (MM)</string>
-    <string name="average_annual_temperature">JAHKÁSAŠ GASKATEMPERATUVRA (C)</string>
+    <string name="annual_precipitation_trend">Jahkásaš arvi - trendda (mm)</string>
+    <string name="average_annual_temperature">Jahkásaš gaskatemperatuvra (C)</string>
     <string name="annual_max_gust_trend">Alimus bieggafápmu jagis (m/s)</string>
     <string name="annual_max_snow_trend">Alimus muohttaga govdodat jahkái (cm)</string>
     <string name="error_no_stations_found">Ii gávdnon stašuvnnaid \"%1$s\" várás</string>
@@ -213,7 +215,7 @@
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Sajádatdáhtat geavahuvvojit dušše báikkálaččat ja eai juogaduvvo goalmmát bealuiguin</string>
     <string name="the_app_does_not_require_a_login_or_account">Appa ii gáibit sisačáliheami dahje konttu</string>
     <string name="language_sami">Sámegiella</string>
-    <string name="change_layer_to_zoom_out">Sirdde dušše kártii go galggat guhkidit</string>
+    <string name="change_layer_to_zoom_out">Dán gokčasa stuorámus juvven lea olahuvvon. Vállje «Dušše kartet» vai oainnat olles kártta</string>
     <string name="language_bokmal">Girjedárogiella</string>
     <string name="language_nynorsk">Oirjedárogiella</string>
     <string name="use_without_internet">Geavat dattetge</string>
@@ -222,4 +224,6 @@
     <string name="ok">Justa</string>
     <string name="max_saved_places_message">Don sáhtát vurket eanemusat %1$d báikki. Váldde eret ovtta báikki vai sáhtát lasihit ođđa.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Ii sáhte vurket báikki olggobealde Norgga</string>
+    <string name="zoom">Stuoridit</string>
+    <string name="zoom_explanation">Geavahit + ja - boaluide gurut bealde go galggat stuoridit dahje unnidit gova. Fuomáš ahte muhtun govvaearuin lea rájálaš viidodat. Vállje \"Dušše kartet\" jus háliidat friddja stuoridit</string>
 </resources>

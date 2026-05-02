@@ -25,6 +25,8 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material.icons.outlined.ZoomIn
+import androidx.compose.material.icons.outlined.ZoomOutMap
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -94,6 +96,13 @@ fun HelpScreen(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.overlay_explanation),
                     description = stringResource(R.string.press_to_see_explanation_for_selected_overlay)
+                )
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Outlined.ZoomOutMap,
+                    title = stringResource(R.string.zoom),
+                    description = stringResource(R.string.zoom_explanation)
                 )
             }
             item {

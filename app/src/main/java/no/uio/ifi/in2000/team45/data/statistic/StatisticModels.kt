@@ -10,6 +10,17 @@ data class WeatherStation(
     val distanceMeters: Int? = null
 )
 
+data class Place(
+    val name: String,
+    val subtitle: String,
+    val latitude: Double,
+    val longitude: Double,
+    // Stations already known to belong to this place (e.g., grouped from a
+    // Frost name match like "OSLO - BLINDERN", "OSLO - VINDERN"). Empty for
+    // places that come from geocoding only.
+    val stations: List<WeatherStation> = emptyList()
+)
+
 data class ClimateNormal(
     val elementId: String,
     val month: Int,
@@ -31,7 +42,17 @@ data class AnnualObservation(
     // max from monthly data client-side.
     val maxWindGust: Double? = null,
     val maxWindSpeed: Double? = null,
-    val maxSnowDepth: Double? = null
+    val maxSnowDepth: Double? = null,
+    // Count of days with daily precipitation >= the heavy-rain threshold.
+    // Derived in the repository from sum(precipitation_amount P1D) data.
+    val heavyPrecipDays: Int? = null
+)
+
+data class TimeSeriesAvailability(
+    val stationId: String,
+    val elementId: String,
+    val validFromYear: Int,
+    val validToYear: Int?
 )
 
 data class MonthlyClimateStats(

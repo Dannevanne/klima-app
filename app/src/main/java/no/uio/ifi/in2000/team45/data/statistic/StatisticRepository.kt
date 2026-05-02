@@ -1,11 +1,29 @@
 package no.uio.ifi.in2000.team45.data.statistic
 
+private val ALL_ANNUAL_ELEMENTS = setOf(
+    "mean(air_temperature P1Y)",
+    "sum(precipitation_amount P1Y)",
+    "max(wind_speed_of_gust P1M)",
+    "max(surface_snow_thickness P1M)"
+)
+
+// Heavy-rain threshold (mm/day). 20 mm/24h is the Norwegian standard for
+// "kraftig nedbor" -- enough to overload urban drainage. We count days at
+// or above this to give homeowners a meaningful annual measure that
+// discriminates between climates (Bergen ~40 days/yr, Karasjok ~1).
+private const val HEAVY_PRECIP_THRESHOLD_MM = 20.0
+
 class StatisticRepository(
     private val datasource: StatisticDatasource = StatisticDatasource()
 ) {
 
     suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
         return datasource.searchStations(query, clientId)
+    }
+
+    suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
+        val candidates = datasource.geocodePlaces(query, mapboxToken)
+        return PlaceSelector.pickBest(query, candidates)?.let { listOf(it) } ?: emptyList()
     }
 
     suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
@@ -22,21 +40,48 @@ class StatisticRepository(
         return datasource.getLatestObservations(stationId, clientId)
     }
 
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elementIds: List<String>,
+        clientId: String
+    ): List<TimeSeriesAvailability> {
+        return datasource.getAvailableTimeSeries(stationIds, elementIds, clientId)
+    }
+
     suspend fun getAnnualObservations(
         stationId: String,
         clientId: String,
         yearFrom: Int,
-        yearTo: Int
+        yearTo: Int,
+        elements: Set<String> = ALL_ANNUAL_ELEMENTS
     ): List<AnnualObservation> {
-        val annual = datasource.getAnnualObservations(
-            stationId, clientId, yearFrom, yearTo
-        )
+        val needsAnnual = elements.any { it.contains("P1Y") }
+        val needsMonthly = elements.any { it.contains("P1M") }
+        // Daily fetch piggybacks on the precipitation station so we can count
+        // heavy-rain days (>= 20 mm) per year. Only do it when this station
+        // is the one assigned to precipitation.
+        val needsDaily = elements.contains("sum(precipitation_amount P1Y)")
+
+        val annual = if (needsAnnual) {
+            datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+        } else emptyList()
+
         // Frost has no P1Y aggregations for wind/snow. Pull monthly maxes
         // and roll them up to per-year maxes here, then merge.
-        val monthly = datasource.getMonthlyWindAndSnow(
-            stationId, clientId, yearFrom, yearTo
-        )
-        if (monthly.isEmpty()) return annual
+        val monthly = if (needsMonthly) {
+            datasource.getMonthlyWindAndSnow(
+                stationId, clientId, yearFrom, yearTo, elements
+            )
+        } else emptyList()
+
+        val heavyByYear: Map<Int, Int> = if (needsDaily) {
+            datasource.getDailyPrecipitation(stationId, clientId, yearFrom, yearTo)
+                .mapValues { (_, daily) ->
+                    daily.count { it >= HEAVY_PRECIP_THRESHOLD_MM }
+                }
+        } else emptyMap()
+
+        if (monthly.isEmpty() && heavyByYear.isEmpty()) return annual
 
         data class YearAgg(
             var maxGust: Double? = null,
@@ -58,12 +103,15 @@ class StatisticRepository(
         }
 
         val byYearAnnual = annual.associateBy { it.year }.toMutableMap()
-        for ((year, agg) in byYear) {
+        val years = (byYearAnnual.keys + byYear.keys + heavyByYear.keys).toSortedSet()
+        for (year in years) {
             val existing = byYearAnnual[year] ?: AnnualObservation(year, null, null)
+            val agg = byYear[year]
             byYearAnnual[year] = existing.copy(
-                maxWindGust = agg.maxGust,
-                maxWindSpeed = agg.maxWind,
-                maxSnowDepth = agg.maxSnow
+                maxWindGust = agg?.maxGust ?: existing.maxWindGust,
+                maxWindSpeed = agg?.maxWind ?: existing.maxWindSpeed,
+                maxSnowDepth = agg?.maxSnow ?: existing.maxSnowDepth,
+                heavyPrecipDays = heavyByYear[year] ?: existing.heavyPrecipDays
             )
         }
         return byYearAnnual.values.sortedBy { it.year }

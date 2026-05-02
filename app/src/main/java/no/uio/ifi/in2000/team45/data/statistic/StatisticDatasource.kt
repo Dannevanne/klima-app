@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import no.uio.ifi.in2000.team45.network.KtorClient
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -14,6 +15,8 @@ import kotlinx.serialization.json.intOrNull
 
 private const val TAG = "StatisticDatasource"
 private const val FROST_BASE = "https://frost.met.no"
+private const val MAPBOX_GEOCODE_BASE = "https://api.mapbox.com/search/geocode/v6/forward"
+
 class StatisticDatasource {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -80,6 +83,60 @@ class StatisticDatasource {
         }
 
         return allStations
+    }
+
+    // Single batch probe of which (station, element) combinations Frost actually
+    // serves and the time range for each. Lets us pick the canonical station
+    // for a place (Blindern for Oslo) instead of guessing by distance and then
+    // discovering after the climate fetch that the picked station has nothing.
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elementIds: List<String>,
+        clientId: String
+    ): List<TimeSeriesAvailability> {
+        if (stationIds.isEmpty() || elementIds.isEmpty()) return emptyList()
+        val sources = stationIds.joinToString(",")
+        val elements = elementIds.joinToString(",") {
+            java.net.URLEncoder.encode(it, "UTF-8")
+        }
+        val url = "$FROST_BASE/observations/availableTimeSeries/v0.jsonld" +
+            "?sources=$sources" +
+            "&elements=$elements"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            if (response.status.value != 200) {
+                Log.e(TAG, "AvailableTimeSeries failed: ${response.status.value}")
+                return emptyList()
+            }
+            val body: String = response.body()
+            parseAvailableTimeSeries(body)
+        } catch (e: Exception) {
+            Log.e(TAG, "AvailableTimeSeries error", e)
+            emptyList()
+        }
+    }
+
+    private fun parseAvailableTimeSeries(body: String): List<TimeSeriesAvailability> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyList()
+        return data.mapNotNull { item ->
+            val obj = item.jsonObject
+            val sourceId = obj["sourceId"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val elementId = obj["elementId"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val validFrom = obj["validFrom"]?.jsonPrimitive?.content ?: return@mapNotNull null
+            val validTo = obj["validTo"]?.jsonPrimitive?.contentOrNull
+            val baseStationId = sourceId.substringBefore(":")
+            val fromYear = validFrom.take(4).toIntOrNull() ?: return@mapNotNull null
+            val toYear = validTo?.take(4)?.toIntOrNull()
+            TimeSeriesAvailability(
+                stationId = baseStationId,
+                elementId = elementId,
+                validFromYear = fromYear,
+                validToYear = toYear
+            )
+        }
     }
 
     suspend fun getClimateNormals(
@@ -150,6 +207,48 @@ class StatisticDatasource {
         } catch (e: Exception) {
             Log.e(TAG, "Observations error", e)
             return emptyList()
+        }
+    }
+
+    // Mapbox Geocoding v6, restricted to Norwegian admin units. The PlaceAutocomplete
+    // SDK with limit=1 ranked phonetic mismatches (Åbestad for Ibestad) above the
+    // real place; v6 with the type filter resolves Ibestad correctly.
+    suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
+        val encoded = java.net.URLEncoder.encode(query.trim(), "UTF-8")
+        val url = MAPBOX_GEOCODE_BASE +
+                "?q=$encoded" +
+                "&country=no" +
+                "&types=place,locality,region,district" +
+                "&limit=5" +
+                "&language=no" +
+                "&access_token=$mapboxToken"
+        return try {
+            val response = KtorClient.client.get(url)
+            if (response.status.value != 200) {
+                Log.e(TAG, "Geocode failed: ${response.status.value}")
+                return emptyList()
+            }
+            parseGeocodeFeatures(response.body())
+        } catch (e: Exception) {
+            Log.e(TAG, "Geocode error", e)
+            emptyList()
+        }
+    }
+
+    fun parseGeocodeFeatures(body: String): List<Place> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val features = root["features"]?.jsonArray ?: return emptyList()
+        return features.mapNotNull { feature ->
+            val obj = feature.jsonObject
+            val props = obj["properties"]?.jsonObject ?: return@mapNotNull null
+            val name = props["name"]?.jsonPrimitive?.contentOrNull ?: return@mapNotNull null
+            val placeFormatted = props["place_formatted"]?.jsonPrimitive?.contentOrNull ?: ""
+            val geom = obj["geometry"]?.jsonObject ?: return@mapNotNull null
+            val coords = geom["coordinates"]?.jsonArray ?: return@mapNotNull null
+            if (coords.size < 2) return@mapNotNull null
+            val lon = coords[0].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
+            val lat = coords[1].jsonPrimitive.doubleOrNull ?: return@mapNotNull null
+            Place(name = name, subtitle = placeFormatted, latitude = lat, longitude = lon)
         }
     }
 
@@ -305,13 +404,15 @@ class StatisticDatasource {
         stationId: String,
         clientId: String,
         yearFrom: Int,
-        yearTo: Int
-    ): List<MonthlyObservation> {
-        val elements = listOf(
+        yearTo: Int,
+        wantedElements: Set<String> = setOf(
             "max(wind_speed_of_gust P1M)",
-            "max(wind_speed P1M)",
             "max(surface_snow_thickness P1M)"
-        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        )
+    ): List<MonthlyObservation> {
+        val toFetch = wantedElements.filter { it.contains("P1M") }
+        if (toFetch.isEmpty()) return emptyList()
+        val elements = toFetch.joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
@@ -330,6 +431,54 @@ class StatisticDatasource {
             Log.e(TAG, "Monthly wind/snow error", e)
             emptyList()
         }
+    }
+
+    // Returns daily precipitation values keyed by year, so callers can count
+    // heavy-rain days. We pull only the value, not the full observation,
+    // because the daily endpoint can return tens of thousands of points over
+    // a 50-year window and we don't need any per-day metadata.
+    suspend fun getDailyPrecipitation(
+        stationId: String,
+        clientId: String,
+        yearFrom: Int,
+        yearTo: Int
+    ): Map<Int, List<Double>> {
+        val element = java.net.URLEncoder.encode("sum(precipitation_amount P1D)", "UTF-8")
+        val url = "$FROST_BASE/observations/v0.jsonld" +
+                "?sources=$stationId" +
+                "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
+                "&elements=$element" +
+                "&timeresolutions=P1D"
+        return try {
+            val response = KtorClient.client.get(url) {
+                header("Authorization", authHeader(clientId))
+            }
+            if (response.status.value != 200) {
+                Log.e(TAG, "Daily precip fetch failed: ${response.status.value}")
+                return emptyMap()
+            }
+            parseDailyPrecipitation(response.body())
+        } catch (e: Exception) {
+            Log.e(TAG, "Daily precip error", e)
+            emptyMap()
+        }
+    }
+
+    private fun parseDailyPrecipitation(body: String): Map<Int, List<Double>> {
+        val root = json.parseToJsonElement(body).jsonObject
+        val data = root["data"]?.jsonArray ?: return emptyMap()
+        val byYear = mutableMapOf<Int, MutableList<Double>>()
+        for (item in data) {
+            val obj = item.jsonObject
+            val refTime = obj["referenceTime"]?.jsonPrimitive?.contentOrNull ?: continue
+            val year = refTime.substring(0, 4).toIntOrNull() ?: continue
+            val observations = obj["observations"]?.jsonArray ?: continue
+            for (obs in observations) {
+                val value = obs.jsonObject["value"]?.jsonPrimitive?.doubleOrNull ?: continue
+                byYear.getOrPut(year) { mutableListOf() }.add(value)
+            }
+        }
+        return byYear
     }
 
     // Like parseMonthlyObservations but uses the year-month (YYYYMM) packed
