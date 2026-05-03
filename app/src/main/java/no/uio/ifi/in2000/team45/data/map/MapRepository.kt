@@ -33,7 +33,7 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
     }
 
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
-        return mapDatasource.isInFloodZone(lat, lon)
+        return identifyHasResults("Flomaktsomhet", "1", lat, lon)
     }
 
     suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
@@ -41,7 +41,7 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
     }
 
     suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
-        return mapDatasource.isInQuickClayZone(lat, lon)
+        return identifyHasResults("SkredKvikkleire2", "0,1", lat, lon)
     }
 
     // Highest `faregrad` ("Lav" / "Middels" / "Hoy") at the point, or null
@@ -71,8 +71,24 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         }
     }
 
+    // Layer 1 is the vector polygon dataset (real aktsomhet zones); layer 0
+    // is a coarse raster whose pixel can be ~100m, so identifying against it
+    // false-positives in cities near slopes. We hit only the vector layer for
+    // a cleaner in/out answer.
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
-        return mapDatasource.isInLandslideZone(lat, lon)
+        return identifyHasResults("JordFlomskredAktsomhet", "1", lat, lon)
+    }
+
+    // True/false if the NVE identify response had any features at the point,
+    // null when the call itself failed so callers can render "unknown" instead
+    // of a misleading "Low".
+    private suspend fun identifyHasResults(
+        service: String, layers: String, lat: Double, lon: Double
+    ): Boolean? {
+        val body = mapDatasource.fetchNveIdentifyBody(service, layers, lat, lon) ?: return null
+        return body.contains("\"results\"") &&
+                !body.contains("\"results\":[]") &&
+                !body.contains("\"results\": []")
     }
 
     // Pulls the radon "aktsomhet" class out of NGU's WMS GetFeatureInfo body.

@@ -4,10 +4,6 @@ import android.util.Log
 import androidx.annotation.StringRes
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
@@ -26,11 +22,11 @@ class MapDatasource {
     // NVE ArcGIS identify for a point against specific layers of a service.
     // The layer IDs must match what the corresponding overlay renders, or the
     // check returns true for background/mask layers that the user never sees.
-    // Returns true/false when the API responded, null when the call failed.
-    // Callers use null to render "unknown" instead of misleading "Low".
-    private suspend fun isInNveZone(
+    // Returns the raw JSON body, or null when the call failed; the repository
+    // turns that into the in/out Boolean.
+    suspend fun fetchNveIdentifyBody(
         service: String, layers: String, lat: Double, lon: Double
-    ): Boolean? {
+    ): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/$service/MapServer/identify")
@@ -46,21 +42,11 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            body.contains("\"results\"") && !body.contains("\"results\":[]")
-                    && !body.contains("\"results\": []")
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "$service zone check failed", e)
+            Log.e("MapDatasource", "$service identify failed", e)
             null
         }
-    }
-
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("Flomaktsomhet", "1", lat, lon)
-    }
-
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
     }
 
     // Raw identify JSON for the SkredKvikkleire2 layers at the given point.
@@ -88,16 +74,6 @@ class MapDatasource {
             null
         }
     }
-
-    // Generic "skred" check. Layer 1 is the vector polygon dataset (real
-    // aktsomhet zones); layer 0 is a coarse raster whose pixel can be ~100m,
-    // so identify against it false-positives in cities near slopes. We hit
-    // only the vector layer for a cleaner in/out answer.
-    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
-    }
-
-
 
     // Raw identify JSON for the NVE wind resource raster at the given point.
     // The repository pulls the pixel value (m/s at 50 m height) out of it.
