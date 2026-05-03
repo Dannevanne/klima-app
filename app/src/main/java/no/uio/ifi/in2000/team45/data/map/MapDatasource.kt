@@ -149,15 +149,11 @@ class MapDatasource {
         }
     }
 
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
-        return getRadonHazard(lat, lon)?.let { true }
-    }
-
-    // Pulls the radon "aktsomhet" class from NGU's WMS GetFeatureInfo. Returns
-    // one of: "Saerlig hoey aktsomhet", "Hoey aktsomhet",
-    // "Moderat til lav aktsomhet", "Usikker aktsomhet", or null when the
-    // point isn't in any mapped pixel.
-    suspend fun getRadonHazard(lat: Double, lon: Double): String? {
+    // Raw GML body from NGU's WMS GetFeatureInfo at the given point. The
+    // repository turns the body into an aktsomhet class string. text/plain
+    // only returns a feature id with no attributes, which silently mapped
+    // every in-zone point to Unknown.
+    suspend fun fetchRadonHazardBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://geo.ngu.no/mapserver/RadonWMS2")
@@ -172,20 +168,9 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            // GML response includes the class as
-            // <aktsomhetgrad_besk>...</aktsomhetgrad_besk>. text/plain only
-            // returns a feature id with no attributes, which silently mapped
-            // every in-zone point to Unknown.
-            val candidates = listOf(
-                "Særlig høy aktsomhet",
-                "Høy aktsomhet",
-                "Moderat til lav aktsomhet",
-                "Usikker aktsomhet"
-            )
-            candidates.firstOrNull { body.contains(it, ignoreCase = true) }
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Radon zone check failed", e)
+            Log.e("MapDatasource", "Radon hazard fetch failed", e)
             null
         }
     }
