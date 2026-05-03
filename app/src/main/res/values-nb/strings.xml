@@ -239,4 +239,7 @@
     <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder lastes kanskje ikke uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider</string>
     <string name="zoom">Zoom</string>
     <string name="zoom_explanation">Bruk + og - knappene på høyre side for å zoome. Vær oppmerksom på at enkelte overlegg har begrenset utvidelse. Velg «Ingen lag» for å zoome fritt</string>
+    <string name="show_on_map_help">Trykk på posisjonsnålen i et lagret sted for å se det på kartet</string>
+    <string name="remove_saved_place_help">Trykk på søppelbøtte-ikonet for å slette et lagret sted</string>
+    <string name="expand_advice_help">Trykk på pilen ned for å vise eller skjule råd for det lagrede stedet</string>
 </resources>
