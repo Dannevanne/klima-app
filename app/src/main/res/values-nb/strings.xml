@@ -36,7 +36,7 @@
     <string name="saved_places">Lagrede steder</string>
     <string name="nav_map">Kart</string>
     <string name="nav_statistics">Statistikk</string>
-    <string name="need_location_permission">Trenger tilgang til posisjon</string>
+    <string name="need_location_permission">Posisjonstillatelse krevers</string>
     <string name="permission_settings">Vi trenger din tillatelse for å bruke posisjonen din. Gå til innstillinger for å endre tillatelser</string>
     <string name="go_to_settings">Gå til innstillinger</string>
     <string name="cancel">Avbryt</string>
