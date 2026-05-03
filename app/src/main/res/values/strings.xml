@@ -56,7 +56,7 @@
     <string name="select_a_time_period">Select a time period</string>
     <string name="use_10_30_or_50_years_to_see_climate_trends">Use 5, 10, 30 or 50 years to see climate trends</string>
     <string name="missing_data">Missing data</string>
-    <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning is appearing under the searchbar</string>
+    <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning will appear under the search bar</string>
     <string name="section_for_your_saved_places_for_quick_access">Section for your saved places for quick access and relevant info</string>
     <string name="save_place">Save place</string>
     <string name="overlay_explanation">Overlay explanation</string>
