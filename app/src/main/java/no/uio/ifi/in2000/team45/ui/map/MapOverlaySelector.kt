@@ -179,4 +179,5 @@ internal fun overlayEmoji(type: OverlayType): String = when (type) {
     OverlayType.RADON -> "\u2622\uFE0F"
     OverlayType.WIND -> "\uD83D\uDCA8"
     OverlayType.LANDSLIDE -> "\u26F0\uFE0F"
+    OverlayType.AVALANCHE -> "\u2744\uFE0F"
 }

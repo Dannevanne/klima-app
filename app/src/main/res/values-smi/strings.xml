@@ -12,6 +12,7 @@
     <string name="quick_clay">Jorggi savki</string>
     <string name="radon">Radon</string>
     <string name="landslide">Eanačielggadeapmi</string>
+    <string name="avalanche">Muohtačielggadeapmi</string>
     <string name="no_overlay">Dušše kartet</string>
     <string name="device_settings">Geavat ovttadaga heivehemiid</string>
     <string name="lightmode">Čuovga modus</string>
@@ -114,6 +115,11 @@
     <string name="legend_wind_cat_scale">Ivdneskála — lassána bieggafámuin</string>
     <string name="legend_wind_caveat">Guhkesáigásaš bieggafápmu, ii dálá dálkkádatgovva.</string>
     <string name="legend_wind_src">NVE Vindressurser-50 m</string>
+
+    <string name="legend_avalanche_what">Fuomášuhttinguovllut muohtačielggademiide, terrengmodelleremii vuođul.</string>
+    <string name="legend_avalanche_cat_polygon">Polygon — muohta gos muohtačielggadeapmi lea vejolaš</string>
+    <string name="legend_avalanche_caveat">Ii mihtiduvvon einnostus — "sáhttá dáhpáhuvvat" guovlu, ii "dáhpáhuvvá" guovlu.</string>
+    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
     <string name="legend_none_what">Dušše kárta lea válljejuvvon.</string>
     <string name="legend_none_cat_pick">Vállje lávkki tableahtas vai oainnát váralašvuođadieđuid kárttas</string>
     <string name="map_location_placeholder">Kártasajádat</string>

@@ -12,6 +12,7 @@
     <string name="quick_clay">Kvikkleire</string>
     <string name="radon">Radon</string>
     <string name="landslide">Skred</string>
+    <string name="avalanche">Snøskred</string>
     <string name="no_overlay">Ingen lag</string>
     <string name="device_settings">Bruk einingsinnstillingar</string>
     <string name="lightmode">Lys modus</string>
@@ -122,6 +123,11 @@
     <string name="legend_wind_cat_scale">Fargeskala — aukar med vindstyrke</string>
     <string name="legend_wind_caveat">Langtidsindikator for vindpotensial, ikkje dagens vêr.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m høgd)</string>
+
+    <string name="legend_avalanche_what">Aktsomheitsområde for snøskred, basert på terrengmodellering.</string>
+    <string name="legend_avalanche_cat_polygon">Polygon — terreng der eit snøskred er mogleg</string>
+    <string name="legend_avalanche_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
+    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
 
     <string name="legend_none_what">Ingen lag er valt.</string>
     <string name="legend_none_cat_pick">Vel eit lag frå pilla for å sjå faredata på kartet</string>
