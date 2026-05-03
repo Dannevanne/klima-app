@@ -106,7 +106,7 @@ fun StatisticScreen(
                         modifier = Modifier.weight(1f)
                     )
                     NavBarItem(
-                        onClick = {},
+                        onClick = { statisticViewModel.resetAllStatisticData() },
                         icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) },
                         label = stringResource(R.string.nav_statistics),
                         modifier = Modifier.weight(1f)
