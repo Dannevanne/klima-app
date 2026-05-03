@@ -1,12 +1,16 @@
 package no.uio.ifi.in2000.team45.ui.map
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -15,6 +19,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -25,6 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
+import no.uio.ifi.in2000.team45.ui.theme.IconBlue
+import no.uio.ifi.in2000.team45.ui.theme.IconPurple
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
+import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +85,8 @@ fun OverlayLegendSheet(
                     icon = "🎨",
                     heading = stringResource(R.string.legend_categories),
                     items = categories,
-                    boldPrefix = true
+                    boldPrefix = true,
+                    bulletColors = legendCategoryColors(overlay)
                 )
             }
 
@@ -104,7 +116,8 @@ private fun LegendSection(
     icon: String,
     heading: String,
     items: List<String>,
-    boldPrefix: Boolean
+    boldPrefix: Boolean,
+    bulletColors: List<Color?>? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -118,13 +131,23 @@ private fun LegendSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             Row(verticalAlignment = Alignment.Top) {
-                Text(
-                    text = "•  ",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                val swatch = bulletColors?.getOrNull(index)
+                if (swatch != null) {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 5.dp, end = 8.dp)
+                            .size(12.dp)
+                            .background(swatch, CircleShape)
+                    )
+                } else {
+                    Text(
+                        text = "•  ",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
                 Text(
                     text = if (boldPrefix) bulletAnnotated(item) else AnnotatedString(item),
                     fontSize = 14.sp,
@@ -158,6 +181,37 @@ private fun legendWhatShows(overlay: OverlayType): String? = when (overlay) {
     OverlayType.LANDSLIDE -> stringResource(R.string.legend_landslide_what)
     OverlayType.WIND -> stringResource(R.string.legend_wind_what)
     OverlayType.AVALANCHE -> stringResource(R.string.legend_avalanche_what)
+}
+
+// Swatch colors for the categories list, lined up by index with the strings
+// returned from `legendCategories`. Null means "no swatch, fall back to a
+// plain bullet" (used for instructional items and the wind gradient).
+private val LegendYellow = Color(0xFFFCD34D)
+// Match the dominant raster color the user actually sees on each NVE layer.
+// SnoskredAktsomhet layer 0 -> salmon pink. JordFlomskredAktsomhet layer 0
+// -> dark brick brown.
+private val LegendAvalanchePink = Color(0xFFFF7F7F)
+private val LegendLandslideBrick = Color(0xFF732600)
+
+private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (overlay) {
+    OverlayType.NONE -> listOf(null)
+    OverlayType.FLOOD -> listOf(IconBlue)
+    OverlayType.QUICK_CLAY -> listOf(
+        LegendYellow,
+        StatisticsOrange,
+        StatisticsRed,
+        StatisticsGreen,
+        StatisticsGray
+    )
+    OverlayType.RADON -> listOf(
+        IconPurple,
+        StatisticsRed,
+        LegendYellow,
+        StatisticsGray
+    )
+    OverlayType.LANDSLIDE -> listOf(LegendLandslideBrick)
+    OverlayType.WIND -> listOf(null)
+    OverlayType.AVALANCHE -> listOf(LegendAvalanchePink)
 }
 
 @Composable

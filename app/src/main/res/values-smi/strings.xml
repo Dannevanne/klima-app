@@ -90,7 +90,7 @@
     <string name="legend_caveat">Váruhus</string>
     <string name="legend_source">Gáldu</string>
     <string name="legend_flood_what">Máŋggačuoggát merkejit báikkiid gos NVE lea identifiseren ahte dulvi sáhttá dáhpáhuvvat.</string>
-    <string name="legend_flood_cat_polygon">Čielga čáhppes polygona — kártejuvvon dulvedieđihanguovlu</string>
+    <string name="legend_flood_cat_polygon">Merkejuvvon guovlu — kártejuvvon dulveguovlu</string>
     <string name="legend_flood_caveat">Ii leat garravuođaárvvoštallan gálduin. Juohke polygona čájehuvvo seamma ládje.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet</string>
     <string name="legend_quickclay_what">Golbma oasselávkki leat čohkkejuvvon: váralašvuođadássi, riskaluohkká ja kártejuvvon guovllu stáhtus.</string>
@@ -108,16 +108,16 @@
     <string name="legend_radon_caveat">Kárta ii sáhte einnostit radona dihto visttis — dušše mihtideapmi sáhttá.</string>
     <string name="legend_radon_src">NGU RadonWMS2</string>
     <string name="legend_landslide_what">Fuomášuhttinguovllut eatnama ja ruskkaid vuovdima ektui, mat vuođđuduvvet eatnamiidda ja eatnama šlájaide.</string>
-    <string name="legend_landslide_cat_polygon">Polygon — muohta gos čuoigan lea fysalaččat vejolaš</string>
+    <string name="legend_landslide_cat_polygon">Merkejuvvon guovlu — eatnan gos čielggadeapmi lea fysalaččat vejolaš</string>
     <string name="legend_landslide_caveat">Ii mihtiduvvon einnostus — "sáhttá dáhpáhuvvat" guovlu, ii "dáhpáhuvvá" guovlu.</string>
     <string name="legend_landslide_src">NVE JordFlomskredAktsomhet</string>
     <string name="legend_wind_what">Guhkesáiggi gaskamearálaš bieggafápmu 50 m eatnama bajábealde.</string>
-    <string name="legend_wind_cat_scale">Ivdneskála — lassána bieggafámuin</string>
+    <string name="legend_wind_cat_scale">Ivdneskála — alit lea unnán biegga, rukses lea garra biegga</string>
     <string name="legend_wind_caveat">Guhkesáigásaš bieggafápmu, ii dálá dálkkádatgovva.</string>
     <string name="legend_wind_src">NVE Vindressurser-50 m</string>
 
     <string name="legend_avalanche_what">Fuomášuhttinguovllut muohtačielggademiide, terrengmodelleremii vuođul.</string>
-    <string name="legend_avalanche_cat_polygon">Polygon — muohta gos muohtačielggadeapmi lea vejolaš</string>
+    <string name="legend_avalanche_cat_polygon">Merkejuvvon guovlu — muohta gos muohtačielggadeapmi lea vejolaš</string>
     <string name="legend_avalanche_caveat">Ii mihtiduvvon einnostus — "sáhttá dáhpáhuvvat" guovlu, ii "dáhpáhuvvá" guovlu.</string>
     <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
     <string name="legend_none_what">Dušše kárta lea válljejuvvon.</string>

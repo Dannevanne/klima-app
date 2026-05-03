@@ -94,7 +94,7 @@
     <string name="legend_source">Kjelde</string>
 
     <string name="legend_flood_what">Polygon viser stader der NVE har identifisert at flom kan oppstå.</string>
-    <string name="legend_flood_cat_polygon">Heildekkjande blått polygon — kartlagt flomaktsomheitsområde</string>
+    <string name="legend_flood_cat_polygon">Markert område — kartlagt flomsone</string>
     <string name="legend_flood_caveat">Datakjelda gjev ingen alvorsgrad. Alle polygon vert vist likt.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet (lag 1)</string>
 
@@ -115,17 +115,17 @@
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
     <string name="legend_landslide_what">Aktsomheitsområde for jord- og flomskred, basert på helling og grunntilhøve.</string>
-    <string name="legend_landslide_cat_polygon">Polygon — terreng der eit skred er fysisk mogleg</string>
+    <string name="legend_landslide_cat_polygon">Markert område — terreng der eit skred er fysisk mogleg</string>
     <string name="legend_landslide_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
     <string name="legend_landslide_src">NVE JordFlomskredAktsomhet (vektorlag)</string>
 
     <string name="legend_wind_what">Langtidssnitt for vindstyrke 50 m over bakken.</string>
-    <string name="legend_wind_cat_scale">Fargeskala — aukar med vindstyrke</string>
+    <string name="legend_wind_cat_scale">Fargeskala — blått er veik vind, raudt er sterk vind</string>
     <string name="legend_wind_caveat">Langtidsindikator for vindpotensial, ikkje dagens vêr.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m høgd)</string>
 
     <string name="legend_avalanche_what">Aktsomheitsområde for snøskred, basert på terrengmodellering.</string>
-    <string name="legend_avalanche_cat_polygon">Polygon — terreng der eit snøskred er mogleg</string>
+    <string name="legend_avalanche_cat_polygon">Markert område — terreng der eit snøskred er mogleg</string>
     <string name="legend_avalanche_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
     <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
 
