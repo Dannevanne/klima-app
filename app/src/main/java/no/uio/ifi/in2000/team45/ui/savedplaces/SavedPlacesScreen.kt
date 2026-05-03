@@ -40,9 +40,9 @@ fun SavedPlacesScreen(
 ) {
     val stations by savedPlacesViewModel.stations.collectAsState()
     val locations by savedPlacesViewModel.locations.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
     var scrollToTopTick by remember { mutableStateOf(0) }
 
+    var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -57,14 +57,23 @@ fun SavedPlacesScreen(
                     )
                 },
                 actions = {
-                    OverflowMenuButton(onClick = { expanded = true })
+                    OverflowMenuButton(onClick = { menuExpanded = true })
 
                     OverflowMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        onSettingsClick = onSettingsClick,
-                        onInfoClick = onInfoClick,
-                        onHelpClick = onHelpClick
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        onSettingsClick = {
+                            menuExpanded = false
+                            onSettingsClick()
+                        },
+                        onInfoClick = {
+                            menuExpanded = false
+                            onInfoClick()
+                        },
+                        onHelpClick = {
+                            menuExpanded = false
+                            onHelpClick()
+                        }
                     )
                 }
             )

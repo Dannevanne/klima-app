@@ -54,7 +54,7 @@ fun StatisticScreen(
         }
     }
 
-    var expanded by remember { mutableStateOf(false)}
+    var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -69,14 +69,23 @@ fun StatisticScreen(
                     )
                 },
                 actions = {
-                    OverflowMenuButton(onClick = { expanded = true } )
+                    OverflowMenuButton(onClick = { menuExpanded = true } )
 
                     OverflowMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        onSettingsClick = onSettingsClick,
-                        onInfoClick = onInfoClick,
-                        onHelpClick = onHelpClick
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        onSettingsClick = {
+                            menuExpanded = false
+                            onSettingsClick()
+                        },
+                        onInfoClick = {
+                            menuExpanded = false
+                            onInfoClick()
+                        },
+                        onHelpClick = {
+                            menuExpanded = false
+                            onHelpClick()
+                        }
                     )
                 }
             )
