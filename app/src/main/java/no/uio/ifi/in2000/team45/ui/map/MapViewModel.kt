@@ -215,6 +215,9 @@ class MapViewModel(
                     height = height
                 )
                 val overlayBitmap = makeBitmap(context, url) ?: return@launch
+                // The user may have switched to NONE while the bitmap was in
+                // flight. Don't paint anything in that case.
+                if (activeOverlay == OverlayType.NONE) return@launch
                 mapUiState = MapUiState.Success(overlayBitmap, bbox)
             } catch (e: Exception) {
                 // Network/decoder failure -- leave the previous bitmap up so
@@ -258,6 +261,9 @@ class MapViewModel(
             // stale FLOOD/RADON bitmap before the new fetch arrives.
             lastFetchedBBox = null
             lastUpdateTime = 0L
+            // Cancel any in-flight fetch from before the switch so it can't
+            // land afterwards and re-paint the layer we just cleared.
+            fetchOverlayJob?.cancel()
             mapUiState = MapUiState.Idle
             return
         }
