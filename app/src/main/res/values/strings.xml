@@ -48,7 +48,7 @@
     <string name="save_location">Save location</string>
     <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places">Tap and hold on a location on the map to save it to your saved places</string>
     <string name="my_location">My location</string>
-    <string name="button_to_see_location_or_give_permission">Press the locationbutton in the left button to see your location or to accept sharing location</string>
+    <string name="button_to_see_location_or_give_permission">Press the location button on the bottom right to view your location or to enable location sharing</string>
     <string name="statistics">Statistics</string>
     <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate-statistics</string>
     <string name="save_area">Save area</string>
