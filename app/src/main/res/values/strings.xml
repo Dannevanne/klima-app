@@ -159,6 +159,7 @@
     <string name="expand">Expand</string>
     <string name="flood_measures">Flood measures</string>
     <string name="landslide_prevention">Landslide prevention</string>
+    <string name="quick_clay_precautions">Quick clay precautions</string>
     <string name="wind_protection">Wind protection</string>
     <string name="nve_flood_link">Read more about flood protection at DiBK</string>
     <string name="nve_landslide_link">Read more about landslide protection at DiBK</string>

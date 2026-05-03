@@ -123,6 +123,38 @@ private fun landslideAdvice(level: String): AdviceCategory {
     )
 }
 
+// Quick clay is a type of landslide, so its advice reuses the landslide
+// bullets. The DiBK skred page covers both. Kept as its own category so the
+// user sees a dot matching their quick clay risk level alongside the other
+// hazard rows.
+@Composable
+private fun quickClayAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            stringResource(R.string.landslide_advice_hazard_maps_high),
+            stringResource(R.string.landslide_advice_geotechnical),
+            stringResource(R.string.landslide_advice_slopes_vegetation),
+            stringResource(R.string.landslide_advice_evacuation_plan)
+        )
+        "Moderate" -> listOf(
+            stringResource(R.string.landslide_advice_hazard_maps_moderate),
+            stringResource(R.string.landslide_advice_slopes_vegetation),
+            stringResource(R.string.landslide_advice_monitor_cracks)
+        )
+        else -> listOf(
+            stringResource(R.string.landslide_advice_remove_vegetation),
+            stringResource(R.string.landslide_advice_nve_warnings)
+        )
+    }
+    return AdviceCategory(
+        title = stringResource(R.string.quick_clay_precautions),
+        dotColor = riskColor(level),
+        bullets = bullets,
+        linkText = stringResource(R.string.nve_landslide_link),
+        linkUrl = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/5.-skred#54-sikringstiltak"
+    )
+}
+
 @Composable
 private fun windAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -155,10 +187,12 @@ private fun windAdvice(level: String): AdviceCategory {
 fun adviceForRiskLevels(
     floodLevel: String,
     landslideLevel: String,
+    quickClayLevel: String,
     windLevel: String
 ): List<AdviceCategory> = listOf(
     floodAdvice(floodLevel),
     landslideAdvice(landslideLevel),
+    quickClayAdvice(quickClayLevel),
     windAdvice(windLevel)
 )
 
@@ -166,12 +200,13 @@ fun adviceForRiskLevels(
 fun WhatCanIDoSection(
     floodLevel: String,
     landslideLevel: String,
+    quickClayLevel: String,
     windLevel: String,
     savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     var adviceExpanded by remember { mutableStateOf(false) }
-    val categories = adviceForRiskLevels(floodLevel, landslideLevel, windLevel)
+    val categories = adviceForRiskLevels(floodLevel, landslideLevel, quickClayLevel, windLevel)
 
     Row(
         modifier = Modifier

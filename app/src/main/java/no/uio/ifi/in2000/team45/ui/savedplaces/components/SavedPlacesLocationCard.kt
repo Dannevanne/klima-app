@@ -105,7 +105,6 @@ fun SavedPlacesLocationCard(
         floodLevel, landslideLevel, quickClayLevel, radonLevel, windLevel
     )
 
-    var showQuickClayInfo by remember { mutableStateOf(false) }
     var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
@@ -179,9 +178,6 @@ fun SavedPlacesLocationCard(
                     label = stringResource(R.string.quick_clay),
                     level = quickClayLevel,
                     loading = loading,
-                    onInfoClick = if (status?.quickClayHazard != null) {
-                        { showQuickClayInfo = true }
-                    } else null,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -209,13 +205,6 @@ fun SavedPlacesLocationCard(
                 Spacer(modifier = Modifier.weight(0.5f))
             }
 
-            if (showQuickClayInfo && status?.quickClayHazard != null) {
-                QuickClayInfoDialog(
-                    hazardClass = status.quickClayHazard,
-                    onDismiss = { showQuickClayInfo = false }
-                )
-            }
-
             if (showRadonInfo && status?.radonClass != null) {
                 RadonInfoDialog(
                     radonClass = status.radonClass,
@@ -227,6 +216,7 @@ fun SavedPlacesLocationCard(
                 WhatCanIDoSection(
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
+                    quickClayLevel = quickClayLevel,
                     windLevel = windLevel,
                     savedPlacesCount = savedPlacesCount
                 )
