@@ -135,6 +135,20 @@ fun HelpScreen(
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
 
+            // Saved places - section
+            item {
+                HelpSectionTitle(stringResource(R.string.saved_places))
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Filled.FavoriteBorder,
+                    title = stringResource(R.string.saved_places),
+                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access)
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+
             // Statistics-section
             item {
                 HelpSectionTitle(stringResource(R.string.statistics))
@@ -167,21 +181,6 @@ fun HelpScreen(
                     description = stringResource(R.string.warning_when_missing_data)
                 )
             }
-
-            item { Spacer(modifier = Modifier.height(8.dp))}
-
-            // Saved places - section
-            item {
-                HelpSectionTitle(stringResource(R.string.saved_places))
-            }
-            item {
-                HelpItem(
-                    iconImage = Icons.Filled.FavoriteBorder,
-                    title = stringResource(R.string.saved_places),
-                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access)
-                )
-            }
-
             item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
