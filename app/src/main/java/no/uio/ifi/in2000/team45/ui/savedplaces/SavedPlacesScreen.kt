@@ -43,6 +43,7 @@ fun SavedPlacesScreen(
     var expanded by remember { mutableStateOf(false) }
     var scrollToTopTick by remember { mutableStateOf(0) }
 
+    var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
