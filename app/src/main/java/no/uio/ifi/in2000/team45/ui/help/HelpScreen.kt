@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.WifiOff
@@ -133,6 +136,27 @@ fun HelpScreen(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.saved_places),
                     description = stringResource(R.string.section_for_your_saved_places_for_quick_access)
+                )
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Outlined.Place,
+                    title = stringResource(R.string.show_on_map),
+                    description = stringResource(R.string.show_on_map_help)
+                )
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Filled.Delete,
+                    title = stringResource(R.string.remove_saved_place),
+                    description = stringResource(R.string.remove_saved_place_help)
+                )
+            }
+            item {
+                HelpItem(
+                    iconImage = Icons.Filled.KeyboardArrowDown,
+                    title = stringResource(R.string.expand),
+                    description = stringResource(R.string.expand_advice_help)
                 )
             }
 

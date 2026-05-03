@@ -232,4 +232,7 @@
     <string name="offline_limitations_description">Kárttadat, ohcan, dálkkádatstatistihkka ja olgguldas diehtoláhkáid eai dárbbašlaččat loada go ii leat interneahttaoktavuohta. Don sáhtát ain rahpat appa, oaidnit vurkejuvvon báikkiid ja lohkat veahki- ja diehtosisdoalu</string>
     <string name="zoom">Stuoridit</string>
     <string name="zoom_explanation">Geavahit + ja - boaluide gurut bealde go galggat stuoridit dahje unnidit gova. Fuomáš ahte muhtun govvaearuin lea rájálaš viidodat. Vállje \"Dušše kartet\" jus háliidat friddja stuoridit</string>
+    <string name="show_on_map_help">Deaddil sajádatnállu vurkejuvvon báikkis vai oainnát dan kárttás</string>
+    <string name="remove_saved_place_help">Deaddil ruskalihti-ikona vurkejuvvon báikki sihkkun várás</string>
+    <string name="expand_advice_help">Deaddil njuolggu vuolasguvlui čájehit dahje čiehkat rávvagiid vurkejuvvon báikki várás</string>
 </resources>

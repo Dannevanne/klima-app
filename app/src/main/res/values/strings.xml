@@ -245,4 +245,7 @@
     <string name="offline_limitations_description">Map data, search, climate statistics and external data sources may not load while disconnected. You can still open the app, view already saved places and read help and info content</string>
     <string name="zoom">Zoom</string>
     <string name="zoom_explanation">Use the + and - buttons on the right side to zoom. Please note that some overlays have limited expansion. Select \"No overlay\" to zoom freely</string>
+    <string name="show_on_map_help">Tap the location pin on a saved place to view it on the map</string>
+    <string name="remove_saved_place_help">Tap the trash icon to delete a saved place</string>
+    <string name="expand_advice_help">Tap the down arrow to show or hide safety advice for the saved place</string>
 </resources>
