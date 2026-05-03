@@ -219,7 +219,7 @@
     <string name="ok">Justa</string>
     <string name="max_saved_places_message">Don sáhtát vurket eanemusat %1$d báikki. Váldde eret ovtta báikki vai sáhtát lasihit ođđa.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Ii sáhte vurket báikki olggobealde Norgga</string>
-    <string name="availability">Offline-doarjja</string>
+    <string name="offline_support">Offline-doarjja</string>
     <string name="internet_connection_needed_for_full_functionality">Appa dárbbaša interneahttaoktavuođa vai buot doaibmavuođat leat olámuttus</string>
     <string name="check_help_screen">Geahča veahkkesihkkaršlája oaidnit makkár ráddjehusaid vásihat go ii leat interneahttaoktavuohta</string>
     <string name="without_internet_connection">Ilman interneahttaoktavuođa</string>

@@ -226,7 +226,7 @@
     <string name="ok">Greit</string>
     <string name="max_saved_places_message">Du kan bare lagre opptil %1$d steder. Fjern et sted for å legge til et nytt.</string>
     <string name="you_can_not_save_a_place_outside_of_norway">Du kan ikke lagre et sted utenfor Norge</string>
-    <string name="availability">Offline-støtte</string>
+    <string name="offline_support">Offline-støtte</string>
     <string name="internet_connection_needed_for_full_functionality">Appen trenger internettforbindelse for full funksjonalitet</string>
     <string name="check_help_screen">Se hjelpeskjermen for å finne ut hvilke begrensninger du vil oppleve uten internettforbindelse</string>
     <string name="without_internet_connection">Uten internettforbindelse</string>
