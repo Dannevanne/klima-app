@@ -44,7 +44,7 @@
     <string name="select_an_overlay_by_pushing_the_bottom_left_button">Select an overlay by pushing the bottom-left button. Some overlays only appear at certain zoom levels, depending on what the data source provides.</string>
     <string name="select_overlay">Select overlay</string>
     <string name="search_for_places">Search for places</string>
-    <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Paste a placename in the searchbar to navigate on the map</string>
+    <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Paste a place name in the searchbar to navigate on the map</string>
     <string name="save_location">Save location</string>
     <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places">Tap and hold on a location on the map to save it to your saved places</string>
     <string name="my_location">My location</string>
