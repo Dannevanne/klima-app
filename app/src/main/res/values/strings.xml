@@ -36,7 +36,7 @@
     <string name="saved_places">Saved places</string>
     <string name="nav_map">Map</string>
     <string name="nav_statistics">Statistics</string>
-    <string name="need_location_permission">Needs location permission</string>
+    <string name="location_permission_required">Location permission required</string>
     <string name="permission_settings">"We need your permission to use your location. Go to settings to change permissions "</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
@@ -44,25 +44,25 @@
     <string name="select_an_overlay_by_pushing_the_bottom_left_button">Select an overlay by pushing the bottom-left button. Some overlays only appear at certain zoom levels, depending on what the data source provides.</string>
     <string name="select_overlay">Select overlay</string>
     <string name="search_for_places">Search for places</string>
-    <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Paste a placename in the searchbar to navigate on the map</string>
+    <string name="paste_a_place_name_in_the_search_bar_to_navigate_on_the_map">Paste a place name in the search bar to navigate on the map</string>
     <string name="save_location">Save location</string>
     <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places">Tap and hold on a location on the map to save it to your saved places</string>
     <string name="my_location">My location</string>
-    <string name="button_to_see_location_or_give_permission">Press the locationbutton in the left button to see your location or to accept sharing location</string>
+    <string name="button_to_see_location_or_give_permission">Press the location button on the bottom right to view your location or to enable location sharing</string>
     <string name="statistics">Statistics</string>
-    <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate-statistics</string>
+    <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate statistics</string>
     <string name="save_area">Save area</string>
     <string name="press_the_star_to_save_an_area">Press the star to save an area</string>
     <string name="select_a_time_period">Select a time period</string>
-    <string name="use_10_30_or_50_years_to_see_climate_trends">Use 5, 10, 30 or 50 years to see climate-trends</string>
+    <string name="use_10_30_or_50_years_to_see_climate_trends">Use 5, 10, 30 or 50 years to see climate trends</string>
     <string name="missing_data">Missing data</string>
-    <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning is appearing under the searchbar</string>
+    <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning will appear under the search bar</string>
     <string name="section_for_your_saved_places_for_quick_access">Section for your saved places for quick access and relevant info</string>
     <string name="save_place">Save place</string>
     <string name="overlay_explanation">Overlay explanation</string>
     <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
-    <string name="app_description">App for house- and cabin-owners who want to check climate risk and climate statistics for their area</string>
+    <string name="app_description">App for house- and cabin owners who want to check climate risk and climate statistics for their area</string>
     <string name="datasources">Datasources</string>
     <string name="nve" translatable="false">NVE</string>
     <string name="flood_landslides_quick_clay_wind">Flood, landslides, quick clay, wind</string>
@@ -89,7 +89,7 @@
     <string name="open_in_saved_places">Open in Saved places</string>
     <string name="radon_info_title">Radon zone</string>
     <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon and add mitigation if elevated.</string>
+    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon level and add mitigation if elevated.</string>
     <string name="radon_hoy_explanation">Hoy: At least 20%% of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
     <string name="radon_moderat_explanation">Moderat til lav: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
     <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
@@ -122,7 +122,7 @@
     <string name="legend_quickclay_src">NVE SkredKvikkleire2 (danger level attribute)</string>
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
-    <string name="legend_radon_cat_purple">Purple — particuary high caution (highest concern)</string>
+    <string name="legend_radon_cat_purple">Purple — particularly high caution (highest concern)</string>
     <string name="legend_radon_cat_red">Red — high caution (≥20% of dwellings exceed 200 Bq/m³)</string>
     <string name="legend_radon_cat_yellow">Yellow — moderate to low</string>
     <string name="legend_radon_cat_grey">Grey — unsure (insufficient data)</string>
@@ -213,7 +213,7 @@
     <string name="error_no_climate_data">No climate data available for stations near %1$s</string>
     <string name="error_fetch_data">Error fetching data: %1$s</string>
     <string name="close">Close</string>
-    <string name="no_internettconnection">No internet connection</string>
+    <string name="no_internet_connection">No internet connection</string>
     <string name="reset_app_data_title">Reset app data</string>
     <string name="reset_app_data_description">This will delete all saved places, your search history and all climate statistics.</string>
     <string name="reset_app_data_section_title">App data</string>
@@ -228,10 +228,10 @@
     <string name="change_layer_to_zoom_out">Max zoom out level for this overlay reached. To see the full map, please select "No overlay"</string>
     <string name="use_without_internet">Use anyway</string>
     <string name="background_music">Background music</string>
-    <string name="sound_effect">Sound effect</string>
+    <string name="sound_effect">Sound effects</string>
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>
-    <string name="you_can_not_save_a_place_outside_of_norway">You can not save a place outside of Norway</string>
+    <string name="you_can_not_save_a_place_outside_of_norway">You cannot save a place outside of Norway</string>
     <string name="offline_support">Offline support</string>
     <string name="internet_connection_needed_for_full_functionality">App needs internet connection for full functionality</string>
     <string name="check_help_screen">Check out the help screen to see what limitations you will experience when disconnected</string>

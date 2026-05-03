@@ -36,8 +36,8 @@
     <string name="saved_places">Lagrede steder</string>
     <string name="nav_map">Kart</string>
     <string name="nav_statistics">Statistikk</string>
-    <string name="need_location_permission">Trenger tilgang til posisjon</string>
-    <string name="permission_settings">Vi trenger din tillatelse for å bruke posisjonen din. Gå til innstillinger for å endre tillatelser</string>
+    <string name="need_location_permission">Posisjonstillatelse krevers</string>
+    <string name="permission_settings">Vi trenger tillatelse til å bruke posisjonen din. Gå til innstillinger for å endre tillatelser.</string>
     <string name="go_to_settings">Gå til innstillinger</string>
     <string name="cancel">Avbryt</string>
     <string name="my_position">Min posisjon</string>
@@ -57,7 +57,7 @@
     <string name="use_10_30_or_50_years_to_see_climate_trends">Bruk 5, 10, 30 eller 50 år for å se klimatrender</string>
     <string name="missing_data">Manglende data</string>
     <string name="warning_when_missing_data">Hvis området mangler data i valgt periode, vises en advarsel under søkefeltet</string>
-    <string name="section_for_your_saved_places_for_quick_access">Seksjon for lagrede steder for rask tilgang og relevant info</string>
+    <string name="section_for_your_saved_places_for_quick_access">Seksjon for lagrede steder for rask tilgang og relevant informasjon</string>
     <string name="save_place">Lagre sted</string>
     <string name="overlay_explanation">Forklaring av lag</string>
     <string name="press_to_see_explanation_for_selected_overlay">Trykk for å se forklaring for valgt lag</string>
@@ -183,12 +183,12 @@
     <string name="months_count">%1$d måneder</string>
     <string name="years_count">%1$d år</string>
     <string name="days_per_year">%1$d dager/år</string>
-    <string name="trend_vs_norm">mot norm</string>
+    <string name="trend_vs_norm">mot normalen</string>
     <string name="weather_stations_used">Brukte værstasjoner</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Nedbør + temperatur</string>
     <string name="annual_precipitation_trend">Årlig nedbør, trend (mm)</string>
-    <string name="average_annual_temperature">Årlig snittemperatur (C)</string>
+    <string name="average_annual_temperature">Årlig gjennomsnittemperatur (°C)</string>
     <string name="annual_max_gust_trend">Sterkeste vindkast per år (m/s)</string>
     <string name="annual_max_snow_trend">Største snødybde per år (cm)</string>
     <string name="error_no_stations_found">Ingen stasjoner funnet for \"%1$s\"</string>
@@ -230,7 +230,7 @@
     <string name="internet_connection_needed_for_full_functionality">Appen trenger internettforbindelse for full funksjonalitet</string>
     <string name="check_help_screen">Se hjelpeskjermen for å finne ut hvilke begrensninger du vil oppleve uten internettforbindelse</string>
     <string name="without_internet_connection">Uten internettforbindelse</string>
-    <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder kan hende ikke lastes uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider</string>
+    <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakilder lastes kanskje ikke uten internettforbindelse. Du kan fortsatt åpne appen, se lagrede steder og lese hjelp- og infosider</string>
     <string name="zoom">Zoom</string>
     <string name="zoom_explanation">Bruk + og - knappene på høyre side for å zoome. Vær oppmerksom på at enkelte overlegg har begrenset utvidelse. Velg «Ingen lag» for å zoome fritt</string>
 </resources>
