@@ -213,7 +213,7 @@ fun AppNavigation(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.WifiOff,
-                            contentDescription = stringResource(R.string.no_internettconnection),
+                            contentDescription = stringResource(R.string.no_internet_connection),
                             tint = Color.White,
                             modifier = Modifier.size(48.dp)
                         )
@@ -222,7 +222,7 @@ fun AppNavigation(
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Text(
-                        text = stringResource(R.string.no_internettconnection),
+                        text = stringResource(R.string.no_internet_connection),
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyLarge,
                     )
