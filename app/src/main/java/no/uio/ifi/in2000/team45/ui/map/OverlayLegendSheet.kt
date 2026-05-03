@@ -206,6 +206,7 @@ private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (ove
     )
     OverlayType.LANDSLIDE -> listOf(StatisticsOrange)
     OverlayType.WIND -> listOf(null)
+    OverlayType.AVALANCHE -> listOf(IconBlue)
 }
 
 @Composable
