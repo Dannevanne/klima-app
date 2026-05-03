@@ -69,12 +69,6 @@
     <string name="open_map">Raba kártta</string>
     <string name="show_on_map">čájehit kárttas</string>
     <string name="open_in_saved_places">rahpat du bealde vurkejuvvon báikkiiguin</string>
-    <string name="kvikkleire_info_title">guovlu mas lea jođánit muohta</string>
-    <string name="kvikkleire_faregrad_label">váralaš dássi</string>
-    <string name="kvikkleire_lav_explanation">Lav: Dát guovlu lea kártejuvvon allaváralaš jođánit muohtaguovlun. Jođánit muohta lea doppe muhto várra ahte jođánit muohta gahččá lea unni dálá dilis.</string>
-    <string name="kvikkleire_middels_explanation">Gaskamearálaš: Dát guovlu lea klassifiserejuvvon gaskamearálaš váralažžan. Lea jođánit muohta ja lihkadeapmi sáhttá čuožžilit go eatnama čáhci rievdá, čáhcečuohpadeapmi dahje garra lasta.</string>
-    <string name="kvikkleire_hoy_explanation">Alit: Dát guovlu lea klassifiserejuvvon alla váralažžan jođánit muohtalihkuhisvuođaide. Váldde eret árvosániid, čáhcebohcciid rievdademiid dahje garra huksemiid almmá geoteknihkalaš árvvoštallama haga.</string>
-    <string name="kvikkleire_source">Gáldu: NVE SkredKvikkleire2</string>
     <string name="radon_info_title">Radonguovlu</string>
     <string name="radon_class_label">Aktsomhet</string>
     <string name="radon_saerlig_hoy_explanation">Erenoamáš allat: Dán guovllus lea alimus radon-dovdamušluohkká. Sisáibmoradon badjel doaibmadási lea olu eambbo jáhkehahtti go gaskamearálaš. Mihtidit radona ja lasihit hehttehusa jus lea loktanan.</string>

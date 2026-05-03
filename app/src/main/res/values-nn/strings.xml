@@ -71,12 +71,6 @@
     <string name="open_map">Opne kart</string>
     <string name="show_on_map">Vis på kart</string>
     <string name="open_in_saved_places">Opne i Lagra stader</string>
-    <string name="kvikkleire_info_title">Kvikkleiresone</string>
-    <string name="kvikkleire_faregrad_label">Faregrad</string>
-    <string name="kvikkleire_lav_explanation">Lav: Sona er kartlagd som eit område med låg fare for kvikkleireskred. Kvikkleire finst, men risikoen for eit stort skred er liten under dagens tilhøve.</string>
-    <string name="kvikkleire_middels_explanation">Middels: Sona er klassifisert som middels fare. Kvikkleire finst, og eit skred kan utløysast av endringar i grunnvatn, terrenginngrep eller tunge lastar.</string>
-    <string name="kvikkleire_hoy_explanation">Høg: Sona er klassifisert som høg fare for kvikkleireskred. Unngå terrenginngrep, drensendring eller tung bygging utan geoteknisk vurdering.</string>
-    <string name="kvikkleire_source">Kjelde: NVE SkredKvikkleire2 (faregrad-attributt)</string>
     <string name="radon_info_title">Radonsone</string>
     <string name="radon_class_label">Aktsomheit</string>
     <string name="radon_saerlig_hoy_explanation">Særleg høg: Området har høgaste aktsomheitsklasse for radon. Sannsynet for at innandørs radon overstig tiltaksgrensa er klart høgare enn snittet. Mål radon og gjer tiltak ved forhøga verdiar.</string>
