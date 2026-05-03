@@ -74,9 +74,18 @@ fun StatisticScreen(
                     OverflowMenu(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false },
-                        onSettingsClick = onSettingsClick,
-                        onInfoClick = onInfoClick,
-                        onHelpClick = onHelpClick
+                        onSettingsClick = {
+                            menuExpanded = false
+                            onSettingsClick()
+                        },
+                        onInfoClick = {
+                            menuExpanded = false
+                            onInfoClick()
+                        },
+                        onHelpClick = {
+                            menuExpanded = false
+                            onHelpClick()
+                        }
                     )
                 }
             )
