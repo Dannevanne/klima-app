@@ -45,6 +45,7 @@ fun SavedPlacesContent(
     onShowOnMap: (lat: Double, lon: Double) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
+    scrollToTopTick: Int,
     modifier: Modifier
 ) {
     if (locations.isEmpty() && stations.isEmpty()) {
@@ -61,6 +62,7 @@ fun SavedPlacesContent(
             onShowOnMap = onShowOnMap,
             topInset = topInset,
             bottomInset = bottomInset,
+            scrollToTopTick = scrollToTopTick,
             modifier = modifier
         )
     }
@@ -135,6 +137,7 @@ private fun PopulatedSavedPlacesContent(
     onShowOnMap: (lat: Double, lon: Double) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
+    scrollToTopTick: Int,
     modifier: Modifier
 ) {
     val savedPlacesCount = locations.size
@@ -148,6 +151,11 @@ private fun PopulatedSavedPlacesContent(
             listState.animateScrollToItem(idx)
             savedPlacesViewModel.clearPendingFocus()
         }
+    }
+
+    // Skip the first emission so we don't animate a no-op on first composition.
+    LaunchedEffect(scrollToTopTick) {
+        if (scrollToTopTick > 0) listState.animateScrollToItem(0)
     }
 
     LazyColumn(

@@ -41,6 +41,7 @@ fun SavedPlacesScreen(
     val stations by savedPlacesViewModel.stations.collectAsState()
     val locations by savedPlacesViewModel.locations.collectAsState()
     var expanded by remember { mutableStateOf(false) }
+    var scrollToTopTick by remember { mutableStateOf(0) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -78,7 +79,7 @@ fun SavedPlacesScreen(
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.saved_places),
-                        onClick = {},
+                        onClick = { scrollToTopTick++ },
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = null) }
                     ),
                     BottomBarItemData(
@@ -103,6 +104,7 @@ fun SavedPlacesScreen(
             onShowOnMap = onShowOnMap,
             topInset = innerPadding.calculateTopPadding(),
             bottomInset = innerPadding.calculateBottomPadding(),
+            scrollToTopTick = scrollToTopTick,
             modifier = modifier.fillMaxSize()
         )
     }
