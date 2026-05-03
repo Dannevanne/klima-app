@@ -89,7 +89,7 @@
     <string name="open_in_saved_places">Open in Saved places</string>
     <string name="radon_info_title">Radon zone</string>
     <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon and add mitigation if elevated.</string>
+    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon level and add mitigation if elevated.</string>
     <string name="radon_hoy_explanation">Hoy: At least 20%% of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
     <string name="radon_moderat_explanation">Moderat til lav: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
     <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
