@@ -81,16 +81,49 @@ fun OverviewCards(
             .takeIf { it.isNotEmpty() }
             ?.average()
 
+    // Average yearly peak gust and snow depth, used for trend math against the
+    // baseline. Display still shows the all-time max from the window. Compared
+    // as averages-of-yearly-max so the trend isn't always UP (a max-over-window
+    // is by construction >= max over any subset of it).
+    val windByYear = annualData.mapNotNull { obs ->
+        obs.maxWindGust?.let { obs.year to it }
+    }
+    val avgYearlyMaxGust = windByYear.map { it.second }.average()
+        .takeIf { windByYear.isNotEmpty() }
+    val snowByYear = annualData.mapNotNull { obs ->
+        obs.maxSnowDepth?.let { obs.year to it }
+    }
+    val avgYearlyMaxSnow = snowByYear.map { it.second }.average()
+        .takeIf { snowByYear.isNotEmpty() }
+
     // Climate normals from monthly stats. Annual precip = sum of 12 monthly
-    // normals; gust/snow normals are sparse so often null.
+    // normals; gust/snow normals are sparse and often null, so we fall back to
+    // the heavy-precip baseline pattern: 1991-2020 from annual data, then the
+    // older half of the window.
     val normalAnnualPrecip = stats.mapNotNull { it.precipitation }
         .takeIf { it.size == 12 }?.sum()
-    val normalMaxGust = stats.mapNotNull { it.windGust }.maxOrNull()
-    val normalMaxSnow = stats.mapNotNull { it.snowDepth }.maxOrNull()
+    val baselineWind = stats.mapNotNull { it.windGust }.maxOrNull()
+        ?: windByYear.filter { it.first in 1991..2020 }
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
+        ?: windByYear.dropLast(windByYear.size / 2)
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
+    val baselineSnow = stats.mapNotNull { it.snowDepth }.maxOrNull()
+        ?: snowByYear.filter { it.first in 1991..2020 }
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
+        ?: snowByYear.dropLast(snowByYear.size / 2)
+            .map { it.second }
+            .takeIf { it.isNotEmpty() }
+            ?.average()
 
     val precipTrend = vsNormal(avgPrecip, normalAnnualPrecip)
-    val windTrend = vsNormal(maxWindGust, normalMaxGust)
-    val snowTrend = vsNormal(maxSnowDepth, normalMaxSnow)
+    val windTrend = vsNormal(avgYearlyMaxGust, baselineWind)
+    val snowTrend = vsNormal(avgYearlyMaxSnow, baselineSnow)
     val heavyTrend = vsNormal(avgHeavyDays, baselineHeavy)
 
     Text(
