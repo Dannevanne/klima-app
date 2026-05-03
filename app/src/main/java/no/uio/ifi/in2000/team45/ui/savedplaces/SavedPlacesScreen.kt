@@ -40,7 +40,6 @@ fun SavedPlacesScreen(
 ) {
     val stations by savedPlacesViewModel.stations.collectAsState()
     val locations by savedPlacesViewModel.locations.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
     var scrollToTopTick by remember { mutableStateOf(0) }
 
     var menuExpanded by remember { mutableStateOf(false) }
@@ -58,11 +57,11 @@ fun SavedPlacesScreen(
                     )
                 },
                 actions = {
-                    OverflowMenuButton(onClick = { expanded = true })
+                    OverflowMenuButton(onClick = { menuExpanded = true })
 
                     OverflowMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
                         onSettingsClick = onSettingsClick,
                         onInfoClick = onInfoClick,
                         onHelpClick = onHelpClick
