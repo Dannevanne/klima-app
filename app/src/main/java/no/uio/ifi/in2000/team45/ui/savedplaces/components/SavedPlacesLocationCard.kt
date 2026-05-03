@@ -285,13 +285,15 @@ private fun RiskCategoryBox(
                 )
             }
         }
-        Column {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = label,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.height(2.dp))
             if (loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(14.dp),
