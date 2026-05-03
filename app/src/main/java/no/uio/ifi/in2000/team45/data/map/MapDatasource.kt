@@ -168,13 +168,15 @@ class MapDatasource {
             append("&BBOX=${lon - tolerance},${lat - tolerance},${lon + tolerance},${lat + tolerance}")
             append("&WIDTH=101&HEIGHT=101")
             append("&X=50&Y=50")
-            append("&INFO_FORMAT=text/plain")
+            append("&INFO_FORMAT=application/vnd.ogc.gml")
         }
         return try {
             val response = KtorClient.client.get(url)
             val body: String = response.body()
-            // The text/plain response contains lines like "Aktsomhet: Hoey"
-            // or "value: <class>"; just match any of the documented classes.
+            // GML response includes the class as
+            // <aktsomhetgrad_besk>...</aktsomhetgrad_besk>. text/plain only
+            // returns a feature id with no attributes, which silently mapped
+            // every in-zone point to Unknown.
             val candidates = listOf(
                 "Særlig høy aktsomhet",
                 "Høy aktsomhet",
