@@ -460,6 +460,7 @@ class StatisticViewModel @JvmOverloads constructor(
     }
 
     fun goBack() {
+        searchQuery = ""
         uiState = StatisticUiState.Idle
     }
 
