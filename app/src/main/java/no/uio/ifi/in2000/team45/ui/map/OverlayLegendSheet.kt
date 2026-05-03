@@ -187,6 +187,11 @@ private fun legendWhatShows(overlay: OverlayType): String? = when (overlay) {
 // returned from `legendCategories`. Null means "no swatch, fall back to a
 // plain bullet" (used for instructional items and the wind gradient).
 private val LegendYellow = Color(0xFFFCD34D)
+// Match the dominant raster color the user actually sees on each NVE layer.
+// SnoskredAktsomhet layer 0 -> salmon pink. JordFlomskredAktsomhet layer 0
+// -> dark brick brown.
+private val LegendAvalanchePink = Color(0xFFFF7F7F)
+private val LegendLandslideBrick = Color(0xFF732600)
 
 private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (overlay) {
     OverlayType.NONE -> listOf(null)
@@ -204,9 +209,9 @@ private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (ove
         LegendYellow,
         StatisticsGray
     )
-    OverlayType.LANDSLIDE -> listOf(StatisticsOrange)
+    OverlayType.LANDSLIDE -> listOf(LegendLandslideBrick)
     OverlayType.WIND -> listOf(null)
-    OverlayType.AVALANCHE -> listOf(IconBlue)
+    OverlayType.AVALANCHE -> listOf(LegendAvalanchePink)
 }
 
 @Composable
