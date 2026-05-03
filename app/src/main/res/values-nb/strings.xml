@@ -183,7 +183,7 @@
     <string name="months_count">%1$d måneder</string>
     <string name="years_count">%1$d år</string>
     <string name="days_per_year">%1$d dager/år</string>
-    <string name="trend_vs_norm">mot norm</string>
+    <string name="trend_vs_norm">mot normalen</string>
     <string name="weather_stations_used">Brukte værstasjoner</string>
     <string name="frost_id_prefix">Frost ID: %1$s</string>
     <string name="precipitation_plus_temperature">Nedbør + temperatur</string>
