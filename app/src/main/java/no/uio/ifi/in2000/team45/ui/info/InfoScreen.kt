@@ -93,7 +93,7 @@ fun InfoScreen(
                 )
             }
             // Availability
-            item { InfoSectionName(stringResource(R.string.availability)) }
+            item { InfoSectionName(stringResource(R.string.offline_support)) }
             item {
                 InfoTextRow(
                     icon = Icons.Outlined.Wifi,
