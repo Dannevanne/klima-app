@@ -76,7 +76,7 @@ fun HelpScreen(
 
             // Availability-section
             item {
-                HelpSectionTitle(stringResource(R.string.availability))
+                HelpSectionTitle(stringResource(R.string.offline_support))
             }
             item {
                 HelpItem(
