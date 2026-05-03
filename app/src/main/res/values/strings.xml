@@ -110,7 +110,7 @@
     <string name="legend_source">Source</string>
 
     <string name="legend_flood_what">Polygons mark places where NVE has identified that flooding could occur.</string>
-    <string name="legend_flood_cat_polygon">Solid blue polygon — mapped flood awareness area</string>
+    <string name="legend_flood_cat_polygon">Marked area — mapped flood zone</string>
     <string name="legend_flood_caveat">No severity grading from the source. Every polygon is shown the same.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet (layer 1)</string>
 
@@ -131,17 +131,17 @@
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
     <string name="legend_landslide_what">Awareness areas for soil and debris flows, based on slope and soil type.</string>
-    <string name="legend_landslide_cat_polygon">Polygon — terrain where a slide is physically possible</string>
+    <string name="legend_landslide_cat_polygon">Marked area — terrain where a slide is physically possible</string>
     <string name="legend_landslide_caveat">Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
     <string name="legend_landslide_src">NVE JordFlomskredAktsomhet (vector layer)</string>
 
     <string name="legend_wind_what">Long-term average wind speed at 50 m above ground.</string>
-    <string name="legend_wind_cat_scale">Color scale — increases with wind strength</string>
+    <string name="legend_wind_cat_scale">Color scale — blue is calm wind, red is strong wind</string>
     <string name="legend_wind_caveat">Long-term wind potential, not a current weather snapshot.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m height)</string>
 
     <string name="legend_avalanche_what">Awareness areas for snow avalanches, based on terrain modelling.</string>
-    <string name="legend_avalanche_cat_polygon">Polygon — terrain where a snow avalanche is possible</string>
+    <string name="legend_avalanche_cat_polygon">Marked area — terrain where a snow avalanche is possible</string>
     <string name="legend_avalanche_caveat">Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
     <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
 

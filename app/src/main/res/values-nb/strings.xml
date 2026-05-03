@@ -93,7 +93,7 @@
     <string name="legend_source">Kilde</string>
 
     <string name="legend_flood_what">Polygoner viser steder der NVE har identifisert at flom kan oppstå.</string>
-    <string name="legend_flood_cat_polygon">Heldekkende blått polygon — kartlagt flomaktsomhetsområde</string>
+    <string name="legend_flood_cat_polygon">Markert område — kartlagt flomsone</string>
     <string name="legend_flood_caveat">Datakilden gir ingen alvorlighetsgrad. Alle polygoner vises likt.</string>
     <string name="legend_flood_src">NVE Flomaktsomhet (lag 1)</string>
 
@@ -114,17 +114,17 @@
     <string name="legend_radon_src">NGU RadonWMS2</string>
 
     <string name="legend_landslide_what">Aktsomhetsområder for jord- og flomskred, basert på helning og grunnforhold.</string>
-    <string name="legend_landslide_cat_polygon">Polygon — terreng der et skred er fysisk mulig</string>
+    <string name="legend_landslide_cat_polygon">Markert område — terreng der et skred er fysisk mulig</string>
     <string name="legend_landslide_caveat">Ikke en målt prognose — et "kan skje"-område, ikke et "vil skje"-område.</string>
     <string name="legend_landslide_src">NVE JordFlomskredAktsomhet (vektorlag)</string>
 
     <string name="legend_wind_what">Langtidssnitt for vindstyrke 50 m over bakken.</string>
-    <string name="legend_wind_cat_scale">Fargeskala — øker med vindstyrke</string>
+    <string name="legend_wind_cat_scale">Fargeskala — blått er svak vind, rødt er sterk vind</string>
     <string name="legend_wind_caveat">Langtidsindikator for vindpotensial, ikke dagens vær.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m høyde)</string>
 
     <string name="legend_avalanche_what">Aktsomhetsområder for snøskred, basert på terrengmodellering.</string>
-    <string name="legend_avalanche_cat_polygon">Polygon — terreng der et snøskred er mulig</string>
+    <string name="legend_avalanche_cat_polygon">Markert område — terreng der et snøskred er mulig</string>
     <string name="legend_avalanche_caveat">Ikke en målt prognose — et "kan skje"-område, ikke et "vil skje"-område.</string>
     <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
 
