@@ -95,7 +95,7 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Search,
                     title = stringResource(R.string.search_for_places),
-                    description = stringResource(R.string.paste_a_place_name_in_the_searchbar_to_navigate_on_the_map)
+                    description = stringResource(R.string.paste_a_place_name_in_the_search_bar_to_navigate_on_the_map)
                 )
             }
             item {
