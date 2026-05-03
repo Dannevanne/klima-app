@@ -4,10 +4,6 @@ import android.util.Log
 import androidx.annotation.StringRes
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
@@ -27,11 +23,11 @@ class MapDatasource {
     // NVE ArcGIS identify for a point against specific layers of a service.
     // The layer IDs must match what the corresponding overlay renders, or the
     // check returns true for background/mask layers that the user never sees.
-    // Returns true/false when the API responded, null when the call failed.
-    // Callers use null to render "unknown" instead of misleading "Low".
-    private suspend fun isInNveZone(
+    // Returns the raw JSON body, or null when the call failed; the repository
+    // turns that into the in/out Boolean.
+    suspend fun fetchNveIdentifyBody(
         service: String, layers: String, lat: Double, lon: Double
-    ): Boolean? {
+    ): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/$service/MapServer/identify")
@@ -47,28 +43,16 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            body.contains("\"results\"") && !body.contains("\"results\":[]")
-                    && !body.contains("\"results\": []")
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "$service zone check failed", e)
+            Log.e("MapDatasource", "$service identify failed", e)
             null
         }
     }
 
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("Flomaktsomhet", "1", lat, lon)
-    }
-
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("SkredKvikkleire2", "0,1", lat, lon)
-    }
-
-    // Reads the actual `faregrad` attribute from the SkredKvikkleire2 layer.
-    // Returns "Lav" / "Middels" / "Hoy" (mapping from "Hoey" without the
-    // diacritic for stable comparison) or null if the point isn't in any
-    // mapped polygon. Picks the highest faregrad if a point hits multiple.
-    suspend fun getQuickClayHazard(lat: Double, lon: Double): String? {
+    // Raw identify JSON for the SkredKvikkleire2 layers at the given point.
+    // The repository pulls the highest `faregrad` attribute out of it.
+    suspend fun fetchQuickClayHazardBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/SkredKvikkleire2/MapServer/identify")
@@ -85,47 +69,16 @@ class MapDatasource {
         return try {
             val response = KtorClient.client.get(url)
             if (response.status.value != 200) return null
-            val body: String = response.body()
-            val parsed = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
-            val root = parsed.parseToJsonElement(body).jsonObject
-            val results = root["results"]?.jsonArray ?: return null
-            val rank = mapOf("Lav" to 1, "Middels" to 2, "Høy" to 3)
-            var best: String? = null
-            for (r in results) {
-                val attrs = r.jsonObject["attributes"]?.jsonObject ?: continue
-                val fg = attrs["faregrad"]?.jsonPrimitive?.contentOrNull
-                    ?: attrs["Faregrad"]?.jsonPrimitive?.contentOrNull
-                    ?: continue
-                if (fg in rank && (best == null || rank[fg]!! > rank[best]!!)) {
-                    best = fg
-                }
-            }
-            best
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Quick clay hazard lookup failed", e)
+            Log.e("MapDatasource", "Quick clay hazard fetch failed", e)
             null
         }
     }
 
-    // Generic "skred" check. Layer 1 is the vector polygon dataset (real
-    // aktsomhet zones); layer 0 is a coarse raster whose pixel can be ~100m,
-    // so identify against it false-positives in cities near slopes. We hit
-    // only the vector layer for a cleaner in/out answer.
-    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
-    }
-
-    // Layer 1 is the S3 snowslide aktsomhet polygons (the main vector layer
-    // visible at usable zoom levels). Layer 0 is a coarse raster meant for
-    // overviews; we skip it for identify to avoid false positives.
-    suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
-        return isInNveZone("SnoskredAktsomhet", "1", lat, lon)
-    }
-
-
-
-    // Returns average wind speed at 50m height (m/s), or null if no data
-    suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
+    // Raw identify JSON for the NVE wind resource raster at the given point.
+    // The repository pulls the pixel value (m/s at 50 m height) out of it.
+    suspend fun fetchWindSpeedBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/Vindressurser/MapServer/identify")
@@ -141,31 +94,18 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
-            val root = json.parseToJsonElement(body).jsonObject
-            val results = root["results"]?.jsonArray ?: return null
-            for (result in results) {
-                val attrs = result.jsonObject["attributes"]?.jsonObject ?: continue
-                val pixelVal = attrs["Classify.Pixel Value"]?.jsonPrimitive?.content
-                pixelVal?.toDoubleOrNull()?.let { return it }
-            }
-            null
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Wind speed check failed", e)
+            Log.e("MapDatasource", "Wind speed fetch failed", e)
             null
         }
     }
 
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
-        return getRadonHazard(lat, lon)?.let { true }
-    }
-
-    // Pulls the radon "aktsomhet" class from NGU's WMS GetFeatureInfo. Returns
-    // one of: "Saerlig hoey aktsomhet", "Hoey aktsomhet",
-    // "Moderat til lav aktsomhet", "Usikker aktsomhet", or null when the
-    // point isn't in any mapped pixel.
-    suspend fun getRadonHazard(lat: Double, lon: Double): String? {
+    // Raw GML body from NGU's WMS GetFeatureInfo at the given point. The
+    // repository turns the body into an aktsomhet class string. text/plain
+    // only returns a feature id with no attributes, which silently mapped
+    // every in-zone point to Unknown.
+    suspend fun fetchRadonHazardBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://geo.ngu.no/mapserver/RadonWMS2")
@@ -180,20 +120,9 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            // GML response includes the class as
-            // <aktsomhetgrad_besk>...</aktsomhetgrad_besk>. text/plain only
-            // returns a feature id with no attributes, which silently mapped
-            // every in-zone point to Unknown.
-            val candidates = listOf(
-                "Særlig høy aktsomhet",
-                "Høy aktsomhet",
-                "Moderat til lav aktsomhet",
-                "Usikker aktsomhet"
-            )
-            candidates.firstOrNull { body.contains(it, ignoreCase = true) }
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Radon zone check failed", e)
+            Log.e("MapDatasource", "Radon hazard fetch failed", e)
             null
         }
     }
