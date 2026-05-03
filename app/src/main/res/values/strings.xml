@@ -50,11 +50,11 @@
     <string name="my_location">My location</string>
     <string name="button_to_see_location_or_give_permission">Press the location button on the bottom right to view your location or to enable location sharing</string>
     <string name="statistics">Statistics</string>
-    <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate-statistics</string>
+    <string name="search_for_a_place_to_see_climate_statistics">Search for a place to see climate statistics</string>
     <string name="save_area">Save area</string>
     <string name="press_the_star_to_save_an_area">Press the star to save an area</string>
     <string name="select_a_time_period">Select a time period</string>
-    <string name="use_10_30_or_50_years_to_see_climate_trends">Use 5, 10, 30 or 50 years to see climate-trends</string>
+    <string name="use_10_30_or_50_years_to_see_climate_trends">Use 5, 10, 30 or 50 years to see climate trends</string>
     <string name="missing_data">Missing data</string>
     <string name="warning_when_missing_data">If your area is missing some data in selected period, a warning is appearing under the searchbar</string>
     <string name="section_for_your_saved_places_for_quick_access">Section for your saved places for quick access and relevant info</string>
@@ -62,7 +62,7 @@
     <string name="overlay_explanation">Overlay explanation</string>
     <string name="press_to_see_explanation_for_selected_overlay">Press to see explanation for selected overlay</string>
     <string name="this_place_is_missing_some_data">This place is missing some data for the chosen period</string>
-    <string name="app_description">App for house- and cabin-owners who want to check climate risk and climate statistics for their area</string>
+    <string name="app_description">App for house- and cabin owners who want to check climate risk and climate statistics for their area</string>
     <string name="datasources">Datasources</string>
     <string name="nve" translatable="false">NVE</string>
     <string name="flood_landslides_quick_clay_wind">Flood, landslides, quick clay, wind</string>
