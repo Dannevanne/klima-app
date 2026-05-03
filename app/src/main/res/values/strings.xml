@@ -36,7 +36,7 @@
     <string name="saved_places">Saved places</string>
     <string name="nav_map">Map</string>
     <string name="nav_statistics">Statistics</string>
-    <string name="need_location_permission">Needs location permission</string>
+    <string name="need_location_permission">Location permission required</string>
     <string name="permission_settings">"We need your permission to use your location. Go to settings to change permissions "</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
