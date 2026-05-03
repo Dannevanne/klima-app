@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.team45.data.map
 
 import android.util.Log
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -11,6 +12,10 @@ private val RADON_HAZARD_CLASSES = listOf(
     "Høy aktsomhet",
     "Moderat til lav aktsomhet",
     "Usikker aktsomhet"
+)
+
+private val QUICK_CLAY_FAREGRAD_RANK = mapOf(
+    "Lav" to 1, "Middels" to 2, "Høy" to 3
 )
 
 private val lenientJson = Json { ignoreUnknownKeys = true }
@@ -39,8 +44,31 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return mapDatasource.isInQuickClayZone(lat, lon)
     }
 
+    // Highest `faregrad` ("Lav" / "Middels" / "Hoy") at the point, or null
+    // if it isn't in any mapped polygon. Picks the highest if a point hits
+    // multiple polygons.
     suspend fun getQuickClayHazard(lat: Double, lon: Double): String? {
-        return mapDatasource.getQuickClayHazard(lat, lon)
+        val body = mapDatasource.fetchQuickClayHazardBody(lat, lon) ?: return null
+        return try {
+            val root = lenientJson.parseToJsonElement(body).jsonObject
+            val results = root["results"]?.jsonArray ?: return null
+            var best: String? = null
+            for (r in results) {
+                val attrs = r.jsonObject["attributes"]?.jsonObject ?: continue
+                val fg = attrs["faregrad"]?.jsonPrimitive?.contentOrNull
+                    ?: attrs["Faregrad"]?.jsonPrimitive?.contentOrNull
+                    ?: continue
+                if (fg in QUICK_CLAY_FAREGRAD_RANK
+                    && (best == null || QUICK_CLAY_FAREGRAD_RANK[fg]!! > QUICK_CLAY_FAREGRAD_RANK[best]!!)
+                ) {
+                    best = fg
+                }
+            }
+            best
+        } catch (e: Exception) {
+            Log.e("MapRepository", "Quick clay hazard parse failed", e)
+            null
+        }
     }
 
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
