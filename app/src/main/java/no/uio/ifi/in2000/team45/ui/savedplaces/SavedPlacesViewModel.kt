@@ -37,9 +37,8 @@ data class LocationStatus(
     val landslideLevel: String = "Unknown",
     val quickClayLevel: String = "Unknown",
     val radonLevel: String = "Unknown",
-    // Raw classification strings from NVE/NGU, kept so the UI can show the
-    // exact wording in an info dialog when needed.
-    val quickClayHazard: String? = null,
+    // Raw radon class string from NGU, kept so the radon info dialog can show
+    // the exact wording.
     val radonClass: String? = null,
     val avgWindSpeed: Double? = null
 )
@@ -174,7 +173,6 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     landslideLevel = landslideLevel,
                     quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
-                    quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
                     avgWindSpeed = avgWind
                 )
@@ -194,7 +192,6 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                         landslideLevel = landslideLevel,
                         quickClayLevel = quickClayLevel,
                         radonLevel = radonLevel,
-                        quickClayHazard = quickClayHazard,
                         radonClass = radonClass,
                         avgWindSpeed = avgWind
                     )
@@ -240,7 +237,6 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     landslideLevel = landslideLevel,
                     quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
-                    quickClayHazard = quickClayHazard,
                     radonClass = radonClass,
                     avgWindSpeed = avgWind
                 )
