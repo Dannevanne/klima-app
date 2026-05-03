@@ -54,7 +54,7 @@ fun StatisticScreen(
         }
     }
 
-    var expanded by remember { mutableStateOf(false)}
+    var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
