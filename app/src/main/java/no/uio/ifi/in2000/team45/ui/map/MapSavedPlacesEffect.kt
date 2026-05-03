@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
@@ -46,17 +45,15 @@ fun MapSavedPlacesEffect(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(42.dp)
-                    .background(color = MaterialTheme.colorScheme.outline, shape = CircleShape)
+                    .size(28.dp)
+                    .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
                     .clickable { onPlaceClick(place) }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Home,
                     contentDescription = stringResource(R.string.save_place),
-                    tint = MaterialTheme.colorScheme.outlineVariant,
-                    modifier = Modifier
-                        .size(34.dp),
-
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(16.dp)
                 )
             }
 
