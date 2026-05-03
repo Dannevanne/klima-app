@@ -115,6 +115,13 @@ class MapDatasource {
         return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
     }
 
+    // Layer 1 is the S3 snowslide aktsomhet polygons (the main vector layer
+    // visible at usable zoom levels). Layer 0 is a coarse raster meant for
+    // overviews; we skip it for identify to avoid false positives.
+    suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
+        return isInNveZone("SnoskredAktsomhet", "1", lat, lon)
+    }
+
 
 
     // Returns average wind speed at 50m height (m/s), or null if no data

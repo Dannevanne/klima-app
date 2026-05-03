@@ -32,6 +32,10 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return mapDatasource.isInLandslideZone(lat, lon)
     }
 
+    suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
+        return mapDatasource.isInAvalancheZone(lat, lon)
+    }
+
     suspend fun getRadonHazard(lat: Double, lon: Double): String? {
         return mapDatasource.getRadonHazard(lat, lon)
     }

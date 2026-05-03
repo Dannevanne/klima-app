@@ -218,7 +218,7 @@
     <string name="search_after_place_norway">Søk etter stad i Noreg</string>
     <string name="app_description">Applikasjon for hus- og hytteigarar som ønskjer å sjekke klimarisiko og klimastatistikk for sitt område</string>
     <string name="datasources">Datakjelder</string>
-    <string name="flood_landslides_quick_clay_wind">Flaum, skred, kvikkleire, vind</string>
+    <string name="flood_landslides_quick_clay_wind">Flaum, jord- og flomskred, snøskred, kvikkleire, vind</string>
     <string name="map_and_search">Kart og søk</string>
     <string name="radon_gas">Radongass</string>
     <string name="privacy">Personvern</string>

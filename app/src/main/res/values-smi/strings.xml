@@ -209,7 +209,7 @@
     <string name="search_after_place_norway">Oza báikki Norggas</string>
     <string name="app_description">Appa dáluid ja hytteeaiggádiidda geat háliidit dárkkistit dálkkádatriskka ja dálkkádatstatistihka iežaset guovllus</string>
     <string name="datasources">Dáhtagáldut</string>
-    <string name="flood_landslides_quick_clay_wind">Dulvi, eanačielggadeamit, jorggi savki, biegga</string>
+    <string name="flood_landslides_quick_clay_wind">Dulvi, eanačielggadeamit, muohtačielggadeamit, jorggi savki, biegga</string>
     <string name="map_and_search">Kárta ja ohcan</string>
     <string name="radon_gas">Radongássa</string>
     <string name="privacy">Persovdnasuodjalus</string>

@@ -98,11 +98,12 @@ fun SavedPlacesLocationCard(
     val loading = status == null
     val floodLevel = status?.floodLevel ?: "Unknown"
     val landslideLevel = status?.landslideLevel ?: "Unknown"
+    val avalancheLevel = status?.avalancheLevel ?: "Unknown"
     val quickClayLevel = status?.quickClayLevel ?: "Unknown"
     val radonLevel = status?.radonLevel ?: "Unknown"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, quickClayLevel, radonLevel, windLevel
+        floodLevel, landslideLevel, avalancheLevel, quickClayLevel, radonLevel, windLevel
     )
 
     var showRadonInfo by remember { mutableStateOf(false) }
@@ -157,7 +158,7 @@ fun SavedPlacesLocationCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Five risk categories: 3 on the top row, 2 centered below.
+            // 3x2 grid of risk categories.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -175,8 +176,8 @@ fun SavedPlacesLocationCard(
                     modifier = Modifier.weight(1f)
                 )
                 RiskCategoryBox(
-                    label = stringResource(R.string.quick_clay),
-                    level = quickClayLevel,
+                    label = stringResource(R.string.avalanche),
+                    level = avalancheLevel,
                     loading = loading,
                     modifier = Modifier.weight(1f)
                 )
@@ -186,7 +187,12 @@ fun SavedPlacesLocationCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Spacer(modifier = Modifier.weight(0.5f))
+                RiskCategoryBox(
+                    label = stringResource(R.string.quick_clay),
+                    level = quickClayLevel,
+                    loading = loading,
+                    modifier = Modifier.weight(1f)
+                )
                 RiskCategoryBox(
                     label = stringResource(R.string.wind),
                     level = windLevel,
@@ -202,7 +208,6 @@ fun SavedPlacesLocationCard(
                     } else null,
                     modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.weight(0.5f))
             }
 
             if (showRadonInfo && status?.radonClass != null) {
