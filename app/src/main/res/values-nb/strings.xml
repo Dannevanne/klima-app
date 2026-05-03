@@ -57,7 +57,7 @@
     <string name="use_10_30_or_50_years_to_see_climate_trends">Bruk 5, 10, 30 eller 50 år for å se klimatrender</string>
     <string name="missing_data">Manglende data</string>
     <string name="warning_when_missing_data">Hvis området mangler data i valgt periode, vises en advarsel under søkefeltet</string>
-    <string name="section_for_your_saved_places_for_quick_access">Seksjon for lagrede steder for rask tilgang og relevant info</string>
+    <string name="section_for_your_saved_places_for_quick_access">Seksjon for lagrede steder for rask tilgang og relevant informasjon</string>
     <string name="save_place">Lagre sted</string>
     <string name="overlay_explanation">Forklaring av lag</string>
     <string name="press_to_see_explanation_for_selected_overlay">Trykk for å se forklaring for valgt lag</string>
