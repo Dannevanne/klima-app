@@ -18,7 +18,8 @@ enum class OverlayType(@StringRes val labelRes: Int, val minZoom: Double, val ma
     QUICK_CLAY(R.string.quick_clay, 12.5, 20.0),
     RADON(R.string.radon, 10.9, 20.0),
     WIND(R.string.wind, 5.0, 20.0),
-    LANDSLIDE(R.string.landslide, 5.0, 20.0)
+    LANDSLIDE(R.string.landslide, 5.0, 20.0),
+    AVALANCHE(R.string.avalanche, 5.0, 20.0)
 }
 
 class MapDatasource {
@@ -112,6 +113,13 @@ class MapDatasource {
     // only the vector layer for a cleaner in/out answer.
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
         return isInNveZone("JordFlomskredAktsomhet", "1", lat, lon)
+    }
+
+    // Layer 1 is the S3 snowslide aktsomhet polygons (the main vector layer
+    // visible at usable zoom levels). Layer 0 is a coarse raster meant for
+    // overviews; we skip it for identify to avoid false positives.
+    suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
+        return isInNveZone("SnoskredAktsomhet", "1", lat, lon)
     }
 
 
@@ -224,6 +232,13 @@ class MapDatasource {
             OverlayType.LANDSLIDE -> buildNveExportURL(
                 service = "JordFlomskredAktsomhet",
                 layers = "0,1", // getting both layers
+                bbox = bbox, width = width, height = height
+            )
+            OverlayType.AVALANCHE -> buildNveExportURL(
+                service = "SnoskredAktsomhet",
+                // 0 is the raster shown at low zoom; 1,2,3 are the vector
+                // polygon variants (S3, S2 without/with forest effect).
+                layers = "0,1,2,3",
                 bbox = bbox, width = width, height = height
             )
         }

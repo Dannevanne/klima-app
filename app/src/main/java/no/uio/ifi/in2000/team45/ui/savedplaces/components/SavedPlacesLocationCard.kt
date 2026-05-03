@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -98,11 +100,12 @@ fun SavedPlacesLocationCard(
     val loading = status == null
     val floodLevel = status?.floodLevel ?: "Unknown"
     val landslideLevel = status?.landslideLevel ?: "Unknown"
+    val avalancheLevel = status?.avalancheLevel ?: "Unknown"
     val quickClayLevel = status?.quickClayLevel ?: "Unknown"
     val radonLevel = status?.radonLevel ?: "Unknown"
     val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
     val overall = overallRisk(
-        floodLevel, landslideLevel, quickClayLevel, radonLevel, windLevel
+        floodLevel, landslideLevel, avalancheLevel, quickClayLevel, radonLevel, windLevel
     )
 
     var showRadonInfo by remember { mutableStateOf(false) }
@@ -157,41 +160,52 @@ fun SavedPlacesLocationCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Five risk categories: 3 on the top row, 2 centered below.
+            // 3x2 grid of risk categories. IntrinsicSize.Max + fillMaxHeight
+            // keeps each row's boxes the same height when one label wraps to
+            // two lines (e.g. "Jord- og flomskred" or longer Sami labels).
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 RiskCategoryBox(
                     label = stringResource(R.string.flood),
                     level = floodLevel,
                     loading = loading,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxHeight()
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.landslide),
                     level = landslideLevel,
                     loading = loading,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxHeight()
                 )
                 RiskCategoryBox(
-                    label = stringResource(R.string.quick_clay),
-                    level = quickClayLevel,
+                    label = stringResource(R.string.avalanche),
+                    level = avalancheLevel,
                     loading = loading,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxHeight()
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Spacer(modifier = Modifier.weight(0.5f))
+                RiskCategoryBox(
+                    label = stringResource(R.string.quick_clay),
+                    level = quickClayLevel,
+                    loading = loading,
+                    modifier = Modifier.weight(1f).fillMaxHeight()
+                )
                 RiskCategoryBox(
                     label = stringResource(R.string.wind),
                     level = windLevel,
                     loading = loading,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxHeight()
                 )
                 RiskCategoryBox(
                     label = stringResource(R.string.radon),
@@ -200,9 +214,8 @@ fun SavedPlacesLocationCard(
                     onInfoClick = if (status?.radonClass != null) {
                         { showRadonInfo = true }
                     } else null,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxHeight()
                 )
-                Spacer(modifier = Modifier.weight(0.5f))
             }
 
             if (showRadonInfo && status?.radonClass != null) {
@@ -272,13 +285,15 @@ private fun RiskCategoryBox(
                 )
             }
         }
-        Column {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = label,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.height(2.dp))
             if (loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(14.dp),

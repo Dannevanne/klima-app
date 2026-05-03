@@ -157,6 +157,7 @@ private fun legendWhatShows(overlay: OverlayType): String? = when (overlay) {
     OverlayType.RADON -> stringResource(R.string.legend_radon_what)
     OverlayType.LANDSLIDE -> stringResource(R.string.legend_landslide_what)
     OverlayType.WIND -> stringResource(R.string.legend_wind_what)
+    OverlayType.AVALANCHE -> stringResource(R.string.legend_avalanche_what)
 }
 
 @Composable
@@ -178,6 +179,7 @@ private fun legendCategories(overlay: OverlayType): List<String> = when (overlay
     )
     OverlayType.LANDSLIDE -> listOf(stringResource(R.string.legend_landslide_cat_polygon))
     OverlayType.WIND -> listOf(stringResource(R.string.legend_wind_cat_scale))
+    OverlayType.AVALANCHE -> listOf(stringResource(R.string.legend_avalanche_cat_polygon))
 }
 
 @Composable
@@ -186,6 +188,7 @@ private fun legendCaveat(overlay: OverlayType): String? = when (overlay) {
     OverlayType.RADON -> stringResource(R.string.legend_radon_caveat)
     OverlayType.LANDSLIDE -> stringResource(R.string.legend_landslide_caveat)
     OverlayType.WIND -> stringResource(R.string.legend_wind_caveat)
+    OverlayType.AVALANCHE -> stringResource(R.string.legend_avalanche_caveat)
     else -> null
 }
 
@@ -196,5 +199,6 @@ private fun legendSource(overlay: OverlayType): String? = when (overlay) {
     OverlayType.RADON -> stringResource(R.string.legend_radon_src)
     OverlayType.LANDSLIDE -> stringResource(R.string.legend_landslide_src)
     OverlayType.WIND -> stringResource(R.string.legend_wind_src)
+    OverlayType.AVALANCHE -> stringResource(R.string.legend_avalanche_src)
     OverlayType.NONE -> null
 }

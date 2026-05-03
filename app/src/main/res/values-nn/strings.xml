@@ -11,7 +11,8 @@
     <string name="flood">Flom</string>
     <string name="quick_clay">Kvikkleire</string>
     <string name="radon">Radon</string>
-    <string name="landslide">Skred</string>
+    <string name="landslide">Jord- og flomskred</string>
+    <string name="avalanche">Snøskred</string>
     <string name="no_overlay">Ingen lag</string>
     <string name="device_settings">Bruk einingsinnstillingar</string>
     <string name="lightmode">Lys modus</string>
@@ -123,6 +124,11 @@
     <string name="legend_wind_caveat">Langtidsindikator for vindpotensial, ikkje dagens vêr.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m høgd)</string>
 
+    <string name="legend_avalanche_what">Aktsomheitsområde for snøskred, basert på terrengmodellering.</string>
+    <string name="legend_avalanche_cat_polygon">Polygon — terreng der eit snøskred er mogleg</string>
+    <string name="legend_avalanche_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
+    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
+
     <string name="legend_none_what">Ingen lag er valt.</string>
     <string name="legend_none_cat_pick">Vel eit lag frå pilla for å sjå faredata på kartet</string>
     <string name="map_location_placeholder">Kartposisjon</string>
@@ -212,7 +218,7 @@
     <string name="search_after_place_norway">Søk etter stad i Noreg</string>
     <string name="app_description">Applikasjon for hus- og hytteigarar som ønskjer å sjekke klimarisiko og klimastatistikk for sitt område</string>
     <string name="datasources">Datakjelder</string>
-    <string name="flood_landslides_quick_clay_wind">Flaum, skred, kvikkleire, vind</string>
+    <string name="flood_landslides_quick_clay_wind">Flaum, jord- og flomskred, snøskred, kvikkleire, vind</string>
     <string name="map_and_search">Kart og søk</string>
     <string name="radon_gas">Radongass</string>
     <string name="privacy">Personvern</string>

@@ -12,6 +12,7 @@
     <string name="quick_clay">Quick clay</string>
     <string name="radon">Radon</string>
     <string name="landslide">Landslide</string>
+    <string name="avalanche">Avalanche</string>
     <string name="no_overlay">No overlay</string>
     <string name="device_settings">Use device settings</string>
     <string name="lightmode">Light mode</string>
@@ -65,7 +66,7 @@
     <string name="app_description">App for house- and cabin owners who want to check climate risk and climate statistics for their area</string>
     <string name="datasources">Datasources</string>
     <string name="nve" translatable="false">NVE</string>
-    <string name="flood_landslides_quick_clay_wind">Flood, landslides, quick clay, wind</string>
+    <string name="flood_landslides_quick_clay_wind">Flood, landslides, snow avalanches, quick clay, wind</string>
     <string name="frost_api_v0" translatable="false">Frost API v0</string>
     <string name="mapbox" translatable="false">Mapbox</string>
     <string name="map_and_search">Map and search</string>
@@ -138,6 +139,11 @@
     <string name="legend_wind_cat_scale">Color scale — increases with wind strength</string>
     <string name="legend_wind_caveat">Long-term wind potential, not a current weather snapshot.</string>
     <string name="legend_wind_src">NVE Vindressurser (50 m height)</string>
+
+    <string name="legend_avalanche_what">Awareness areas for snow avalanches, based on terrain modelling.</string>
+    <string name="legend_avalanche_cat_polygon">Polygon — terrain where a snow avalanche is possible</string>
+    <string name="legend_avalanche_caveat">Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
+    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
 
     <string name="legend_none_what">No overlay is selected.</string>
     <string name="legend_none_cat_pick">Pick a layer from the pill to see hazard data on the map</string>

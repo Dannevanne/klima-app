@@ -68,4 +68,15 @@ class MapDatasourceTest {
         )
         assertTrue(url.contains("Vindressurser"))
     }
+
+    @Test
+    fun testBuildOverlayUrlAvalancheUsesSnoskredAktsomhet() {
+        val url = datasource.buildOverlayURL(
+            type = OverlayType.AVALANCHE,
+            bbox = listOf(10.0, 59.0, 11.0, 60.0),
+            width = 800,
+            height = 600
+        )
+        assertTrue(url.contains("SnoskredAktsomhet"))
+    }
 }

@@ -29,12 +29,14 @@ data class LocationStatus(
     val inRadonZone: Boolean = false,
     val inQuickClayZone: Boolean = false,
     val inLandslideZone: Boolean = false,
+    val inAvalancheZone: Boolean = false,
     // Gradated risk: "High" if the saved point itself is in the zone,
     // "Moderate" if a hazard zone sits within ~500 m, "Low" otherwise.
     // Kvikkleire and radon read straight off the polygon attributes
     // (faregrad / aktsomhet class) so they don't need an offset hack.
     val floodLevel: String = "Unknown",
     val landslideLevel: String = "Unknown",
+    val avalancheLevel: String = "Unknown",
     val quickClayLevel: String = "Unknown",
     val radonLevel: String = "Unknown",
     // Raw radon class string from NGU, kept so the radon info dialog can show
@@ -137,6 +139,7 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val lon = location.longitude
                 val floodZone = mapRepository.isInFloodZone(lat, lon)
                 val landslideZone = mapRepository.isInLandslideZone(lat, lon)
+                val avalancheZone = mapRepository.isInAvalancheZone(lat, lon)
                 val quickClayHazard = mapRepository.getQuickClayHazard(lat, lon)
                 val radonClass = mapRepository.getRadonHazard(lat, lon)
                 val avgWind = mapRepository.getWindSpeed(lat, lon)
@@ -148,6 +151,9 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 // clay has its own row that uses the actual NVE faregrad class.
                 val landslideLevel = zoneRiskLevel(lat, lon, landslideZone) { la, lo ->
                     mapRepository.isInLandslideZone(la, lo)
+                }
+                val avalancheLevel = zoneRiskLevel(lat, lon, avalancheZone) { la, lo ->
+                    mapRepository.isInAvalancheZone(la, lo)
                 }
                 val quickClayLevel = when (quickClayHazard) {
                     "Høy" -> "High"
@@ -169,8 +175,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
                     inLandslideZone = landslideZone == true,
+                    inAvalancheZone = avalancheZone == true,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
+                    avalancheLevel = avalancheLevel,
                     quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
                     radonClass = radonClass,
@@ -233,8 +241,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
                     inLandslideZone = landslideZone == true,
+                    inAvalancheZone = avalancheZone == true,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
+                    avalancheLevel = avalancheLevel,
                     quickClayLevel = quickClayLevel,
                     radonLevel = radonLevel,
                     radonClass = radonClass,
