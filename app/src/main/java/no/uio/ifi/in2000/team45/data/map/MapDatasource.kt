@@ -116,8 +116,9 @@ class MapDatasource {
 
 
 
-    // Returns average wind speed at 50m height (m/s), or null if no data
-    suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
+    // Raw identify JSON for the NVE wind resource raster at the given point.
+    // The repository pulls the pixel value (m/s at 50 m height) out of it.
+    suspend fun fetchWindSpeedBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
             append("https://kart.nve.no/enterprise/rest/services/Vindressurser/MapServer/identify")
@@ -133,18 +134,9 @@ class MapDatasource {
         }
         return try {
             val response = KtorClient.client.get(url)
-            val body: String = response.body()
-            val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
-            val root = json.parseToJsonElement(body).jsonObject
-            val results = root["results"]?.jsonArray ?: return null
-            for (result in results) {
-                val attrs = result.jsonObject["attributes"]?.jsonObject ?: continue
-                val pixelVal = attrs["Classify.Pixel Value"]?.jsonPrimitive?.content
-                pixelVal?.toDoubleOrNull()?.let { return it }
-            }
-            null
+            response.body<String>()
         } catch (e: Exception) {
-            Log.e("MapDatasource", "Wind speed check failed", e)
+            Log.e("MapDatasource", "Wind speed fetch failed", e)
             null
         }
     }
