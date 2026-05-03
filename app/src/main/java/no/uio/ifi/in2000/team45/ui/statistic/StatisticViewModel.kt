@@ -102,6 +102,10 @@ class StatisticViewModel @JvmOverloads constructor(
     fun updateSearchQuery(query: String) {
         searchQuery = query
         searchJob?.cancel()
+        if (query.isEmpty()) {
+            uiState = StatisticUiState.Idle
+            return
+        }
         if (query.length >= 2) {
             searchJob = viewModelScope.launch {
                 delay(400)
@@ -120,7 +124,14 @@ class StatisticViewModel @JvmOverloads constructor(
     }
 
     private suspend fun performSearch(query: String) {
-        uiState = StatisticUiState.Loading
+        // Only show the loading spinner when there's nothing useful on screen.
+        // While refining a query (results already visible) keep the previous
+        // list around so the screen doesn't blink between every keystroke.
+        if (uiState !is StatisticUiState.StationResults &&
+            uiState !is StatisticUiState.PlaceResults
+        ) {
+            uiState = StatisticUiState.Loading
+        }
         try {
             val stations = repository.searchStations(query, clientId)
             if (stations.isNotEmpty()) {
