@@ -412,7 +412,6 @@ fun DataMap(
                     selectedSavedPlace = null
                     onSavedPlacesClick()
                 },
-                onDismiss = { selectedSavedPlace = null },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 96.dp, start = 16.dp, end = 16.dp)
