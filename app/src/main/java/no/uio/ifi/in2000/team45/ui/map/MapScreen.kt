@@ -464,11 +464,21 @@ fun DataMap(
                         defaultElevation = 6.dp
                     )
                 ) {
-                    Text(
-                        text = stringResource(R.string.change_layer_to_zoom_out),
+                    Column(
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.change_layer_to_zoom_out),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        androidx.compose.material3.TextButton(
+                            onClick = { zoomBlockedVisible = false }
+                        ) {
+                            Text(text = stringResource(R.string.ok))
+                        }
+                    }
                 }
             }
         }
