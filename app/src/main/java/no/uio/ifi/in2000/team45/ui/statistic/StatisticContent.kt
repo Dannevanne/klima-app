@@ -56,6 +56,7 @@ import androidx.compose.runtime.getValue
 
 @Composable
 fun StatisticContent(
+    modifier: Modifier = Modifier,
     state: StatisticUiState,
     favoriteStations: List<FavoriteStation>,
     statisticViewModel: StatisticViewModel,
@@ -63,7 +64,6 @@ fun StatisticContent(
     topInset: Dp,
     bottomInset: Dp,
     onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     val listPadding = PaddingValues(
         top = topInset + 16.dp,
