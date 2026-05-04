@@ -129,10 +129,6 @@ class StatisticViewModel @JvmOverloads constructor(
             if (stations.isNotEmpty()) {
                 recentSearchRepository.addSearch(query)
                 val places = groupStationsToPlaces(stations)
-                if (places.size == 1) {
-                    selectPlace(places.first())
-                    return
-                }
                 uiState = if (places.isNotEmpty()) {
                     StatisticUiState.PlaceResults(places)
                 } else {
@@ -142,11 +138,6 @@ class StatisticViewModel @JvmOverloads constructor(
             }
 
             val geocoded = geocodePlaces(query)
-            if (geocoded.size == 1) {
-                recentSearchRepository.addSearch(query)
-                selectPlace(geocoded.first())
-                return
-            }
             uiState = if (geocoded.isNotEmpty()) {
                 recentSearchRepository.addSearch(query)
                 StatisticUiState.PlaceResults(geocoded)
