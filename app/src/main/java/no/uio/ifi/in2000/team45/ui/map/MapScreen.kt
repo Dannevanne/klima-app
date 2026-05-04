@@ -49,6 +49,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.mapbox.maps.CameraOptions
+import no.uio.ifi.in2000.team45.ui.common.AnimatedConfirmDialog
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
@@ -307,17 +308,9 @@ fun DataMap(
         )
     }
 
-    // Bumped each time the user pinches the zoom-out button while at the
-    // overlay's minZoom; LaunchedEffect re-arms the auto-dismiss timer.
-    var zoomBlockedNonce by remember { mutableStateOf(0) }
+    // Set when the user tries to zoom out past the overlay's minZoom; the
+    // modal AlertDialog below stays up until the user taps OK.
     var zoomBlockedVisible by remember { mutableStateOf(false) }
-    LaunchedEffect(zoomBlockedNonce) {
-        if (zoomBlockedNonce > 0) {
-            zoomBlockedVisible = true
-            kotlinx.coroutines.delay(4000)
-            zoomBlockedVisible = false
-        }
-    }
 
     // Hide the Mapbox GL surface behind a themed scrim until Mapbox itself
     // says the first frame is rendered. Listening to subscribeMapLoaded means
@@ -399,7 +392,7 @@ fun DataMap(
                 viewportState = viewportState,
                 mapViewModel = mapViewModel,
                 activeOverlay = mapViewModel.activeOverlay,
-                onZoomOutBlocked = { zoomBlockedNonce++ }
+                onZoomOutBlocked = { zoomBlockedVisible = true }
             )
 
             MapLocationButton(
@@ -442,46 +435,13 @@ fun DataMap(
             )
         }
 
-        androidx.compose.animation.AnimatedVisibility(
+        AnimatedConfirmDialog(
             visible = zoomBlockedVisible,
-            enter = androidx.compose.animation.fadeIn(
-                animationSpec = androidx.compose.animation.core.tween(180)
-            ),
-            exit = androidx.compose.animation.fadeOut(
-                animationSpec = androidx.compose.animation.core.tween(180)
-            ),
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            // Padding gives the elevation shadow room to render without
-            // getting clipped by the AnimatedVisibility's tight bounds.
-            Box(modifier = Modifier.padding(8.dp)) {
-                androidx.compose.material3.Card(
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                    colors = androidx.compose.material3.CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
-                    ),
-                    elevation = androidx.compose.material3.CardDefaults.cardElevation(
-                        defaultElevation = 6.dp
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.change_layer_to_zoom_out),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                        androidx.compose.material3.TextButton(
-                            onClick = { zoomBlockedVisible = false }
-                        ) {
-                            Text(text = stringResource(R.string.ok))
-                        }
-                    }
-                }
-            }
-        }
+            onDismissed = { zoomBlockedVisible = false },
+            title = stringResource(R.string.zoom),
+            text = stringResource(R.string.change_layer_to_zoom_out),
+            confirmText = stringResource(R.string.ok)
+        )
 
         androidx.compose.animation.AnimatedVisibility(
             visible = !mapSurfaceReady,
@@ -503,15 +463,13 @@ fun DataMap(
         }
     }
 
-    pendingPoint?.let { point ->
-        MapSaveLocationDialog(
-            point = point,
-            locationName = locationName,
-            onLocationNameChange = { locationName = it },
-            onDismiss = { pendingPoint = null },
-            savedPlacesViewModel = savedPlacesViewModel,
-        )
-    }
+    MapSaveLocationDialog(
+        point = pendingPoint,
+        locationName = locationName,
+        onLocationNameChange = { locationName = it },
+        onDismiss = { pendingPoint = null },
+        savedPlacesViewModel = savedPlacesViewModel,
+    )
 }
 
 // Composable to change map look when the selected theme changes
