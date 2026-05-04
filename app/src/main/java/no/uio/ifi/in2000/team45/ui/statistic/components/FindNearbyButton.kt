@@ -56,7 +56,7 @@ fun FindNearbyButton(
             } else {
                 Toast.makeText(context, noLocMsg, Toast.LENGTH_SHORT).show()
             }
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             Toast.makeText(context, noLocMsg, Toast.LENGTH_SHORT).show()
         }
     }
