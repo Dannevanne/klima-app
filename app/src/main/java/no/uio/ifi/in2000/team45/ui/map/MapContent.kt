@@ -37,7 +37,7 @@ fun MapContent(
             .onSizeChanged {
                 onMapSizeChanged(it.width, it.height)
                            // The maps size is needed when the
-                           // when the overlayURL is being built
+                           // overlayURL is being built
                            // because the backend service returns
                            // a photo depending on the shown map window
             },
