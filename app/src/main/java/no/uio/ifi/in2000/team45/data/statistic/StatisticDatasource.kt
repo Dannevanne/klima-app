@@ -436,7 +436,7 @@ class StatisticDatasource {
     // Returns daily precipitation values keyed by year, so callers can count
     // heavy-rain days. We pull only the value, not the full observation,
     // because the daily endpoint can return tens of thousands of points over
-    // a 50-year window and we don't need any per-day metadata.
+    // a 50-year window, and we don't need any per-day metadata.
     suspend fun getDailyPrecipitation(
         stationId: String,
         clientId: String,
