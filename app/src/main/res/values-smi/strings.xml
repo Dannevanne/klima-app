@@ -37,7 +37,7 @@
     <string name="saved_places">Vurkejuvvon báikkit</string>
     <string name="nav_map">Kárta</string>
     <string name="nav_statistics">Statistihkka</string>
-    <string name="need_location_permission">Dárbbaša sajádatlobi</string>
+    <string name="location_permission_required">Dárbbaša sajádatlobi</string>
     <string name="permission_settings">Mii dárbbašit du lobi geavahit du sajádaga. Mana heivehemiide rievdadit lobi</string>
     <string name="go_to_settings">Mana heivehemiide</string>
     <string name="cancel">Gaskkalduhte</string>

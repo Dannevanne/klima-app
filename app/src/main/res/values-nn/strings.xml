@@ -37,7 +37,7 @@
     <string name="saved_places">Lagra stader</string>
     <string name="nav_map">Kart</string>
     <string name="nav_statistics">Statistikk</string>
-    <string name="need_location_permission">Treng tilgang til posisjon</string>
+    <string name="location_permission_required">Treng tilgang til posisjon</string>
     <string name="permission_settings">Vi treng di løyve for å bruke posisjonen din. Gå til innstillingar for å endre løyve</string>
     <string name="go_to_settings">Gå til innstillingar</string>
     <string name="cancel">Avbryt</string>
