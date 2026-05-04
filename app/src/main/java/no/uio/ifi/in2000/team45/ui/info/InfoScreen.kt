@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.info
 
 import android.content.Intent
-import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,6 +42,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Wifi
+import androidx.core.net.toUri
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,10 +83,10 @@ fun InfoScreen(
                         try {
                             // prøver her å åpne med customtabsintent
                             val customTabsIntent = CustomTabsIntent.Builder().build()
-                            customTabsIntent.launchUrl(context, Uri.parse(datasource.url))
-                        } catch (e: Exception) {
+                            customTabsIntent.launchUrl(context, datasource.url.toUri())
+                        } catch (_: Exception) {
                             // hvis det feiler så bruker vi standard approach
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(datasource.url))
+                            val intent = Intent(Intent.ACTION_VIEW, datasource.url.toUri())
                             context.startActivity(intent)
                         }
                     }
