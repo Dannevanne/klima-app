@@ -36,14 +36,6 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         return identifyHasResults("Flomaktsomhet", "1", lat, lon)
     }
 
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
-        return getRadonHazard(lat, lon)?.let { true }
-    }
-
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
-        return identifyHasResults("SkredKvikkleire2", "0,1", lat, lon)
-    }
-
     // Highest `faregrad` ("Lav" / "Middels" / "Hoy") at the point, or null
     // if it isn't in any mapped polygon. Picks the highest if a point hits
     // multiple polygons.
