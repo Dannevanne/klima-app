@@ -12,18 +12,15 @@ fun MapClickEffect(
     mapView: MapView?,
     onMapClick: () -> Unit
 ) {
+    if (mapView == null) return
     DisposableEffect(mapView) {
-        if (mapView == null) {
-            onDispose { }
-        } else {
-            val listener = OnMapClickListener {
-                onMapClick()
-                false
-            }
-            mapView.mapboxMap.addOnMapClickListener(listener)
-            onDispose {
-                mapView.mapboxMap.removeOnMapClickListener(listener)
-            }
+        val listener = OnMapClickListener {
+            onMapClick()
+            false
+        }
+        mapView.mapboxMap.addOnMapClickListener(listener)
+        onDispose {
+            mapView.mapboxMap.removeOnMapClickListener(listener)
         }
     }
 }
