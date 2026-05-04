@@ -46,7 +46,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.common.IsOnline
+import no.uio.ifi.in2000.team45.ui.common.isOnline
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesScreen
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import no.uio.ifi.in2000.team45.ui.help.HelpScreen
@@ -76,7 +76,7 @@ fun AppNavigation(
     soundEnabled: Boolean,
     onSoundEnabledChanged: (Boolean) -> Unit
 ) {
-    val isOnline = IsOnline()
+    val isOnline = isOnline()
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
 
