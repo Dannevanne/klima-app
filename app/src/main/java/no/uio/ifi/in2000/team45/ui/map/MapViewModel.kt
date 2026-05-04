@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.team45.ui.map
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -107,9 +108,9 @@ class MapViewModel(
         private set
 
     // Holds a map-camera-position
-    var lastCameraCenter by mutableStateOf(Point.fromLngLat(15.00, 65.0))
+    var lastCameraCenter: Point? by mutableStateOf(Point.fromLngLat(15.00, 65.0))
         private set
-    var lastCameraZoom by mutableStateOf(3.75)
+    var lastCameraZoom by mutableDoubleStateOf(3.75)
         private set
 
     private var fetchOverlayJob: Job? = null
@@ -120,10 +121,6 @@ class MapViewModel(
     private val cameraSaveRequests = MutableSharedFlow<Pair<Point, Double>>(
         extraBufferCapacity = 1
     )
-
-    var soundEnabled by mutableStateOf(false)
-        private set
-
 
     init {
         viewModelScope.launch {
@@ -159,10 +156,6 @@ class MapViewModel(
         }
     }
 
-    fun updateSoundEnabled(enabled: Boolean) {
-        soundEnabled = enabled
-    }
-
     fun updateOverlay(
         bbox: List<Double>,
         width: Int,
@@ -182,8 +175,8 @@ class MapViewModel(
         val currentZoom = lastCameraZoom
 
         // No overlay under this zoom level
-        val minimum_zoom = 5.0
-        if (currentZoom < minimum_zoom) {
+        val minimumZoom = 5.0
+        if (currentZoom < minimumZoom) {
             mapUiState = MapUiState.Idle
             return
         }
@@ -219,7 +212,7 @@ class MapViewModel(
                 // flight. Don't paint anything in that case.
                 if (activeOverlay == OverlayType.NONE) return@launch
                 mapUiState = MapUiState.Success(overlayBitmap, bbox)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Network/decoder failure -- leave the previous bitmap up so
                 // the user keeps seeing something rather than a sudden blank.
             }
@@ -262,7 +255,7 @@ class MapViewModel(
             lastFetchedBBox = null
             lastUpdateTime = 0L
             // Cancel any in-flight fetch from before the switch so it can't
-            // land afterwards and re-paint the layer we just cleared.
+            // land afterward and re-paint the layer we just cleared.
             fetchOverlayJob?.cancel()
             mapUiState = MapUiState.Idle
             return
