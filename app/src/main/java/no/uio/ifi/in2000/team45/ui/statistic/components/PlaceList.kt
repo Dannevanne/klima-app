@@ -21,11 +21,11 @@ import no.uio.ifi.in2000.team45.data.statistic.Place
 
 @Composable
 fun PlaceList(
+    modifier: Modifier = Modifier,
     places: List<Place>,
     onPlaceClick: (Place) -> Unit,
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
-    modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         item { header() }
