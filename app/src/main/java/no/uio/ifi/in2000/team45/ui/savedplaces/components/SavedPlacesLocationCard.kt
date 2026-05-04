@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.savedplaces.LocationStatus
+import no.uio.ifi.in2000.team45.ui.savedplaces.RiskLevel
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
@@ -49,44 +50,33 @@ private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
 private val RiskUnknown = StatisticsGray
 
-private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
-    if (isWind) {
-        return when {
-            windSpeed == null -> "Unknown"
-            windSpeed >= 8.0 -> "High"
-            windSpeed >= 5.0 -> "Moderate"
-            else -> "Low"
-        }
-    }
-    return if (isInZone) "High" else "Low"
+private fun windRiskLevel(windSpeed: Double?): RiskLevel = when {
+    windSpeed == null -> RiskLevel.UNKNOWN
+    windSpeed >= 8.0 -> RiskLevel.HIGH
+    windSpeed >= 5.0 -> RiskLevel.MODERATE
+    else -> RiskLevel.LOW
 }
 
-private fun riskColor(level: String): Color {
-    return when (level) {
-        "High" -> RiskHigh
-        "Moderate" -> RiskModerate
-        "Low" -> RiskLow
-        else -> RiskUnknown
-    }
+private fun riskColor(level: RiskLevel): Color = when (level) {
+    RiskLevel.HIGH -> RiskHigh
+    RiskLevel.MODERATE -> RiskModerate
+    RiskLevel.LOW -> RiskLow
+    RiskLevel.UNKNOWN -> RiskUnknown
 }
 
 @Composable
-private fun riskLevelLabel(level: String): String {
-    return when (level) {
-        "High" -> stringResource(R.string.risk_high)
-        "Moderate" -> stringResource(R.string.risk_moderate)
-        "Low" -> stringResource(R.string.risk_low)
-        else -> stringResource(R.string.risk_unknown)
-    }
+private fun riskLevelLabel(level: RiskLevel): String = when (level) {
+    RiskLevel.HIGH -> stringResource(R.string.risk_high)
+    RiskLevel.MODERATE -> stringResource(R.string.risk_moderate)
+    RiskLevel.LOW -> stringResource(R.string.risk_low)
+    RiskLevel.UNKNOWN -> stringResource(R.string.risk_unknown)
 }
 
-private fun overallRisk(vararg levels: String): String {
-    return when {
-        levels.any { it == "High" } -> "High"
-        levels.any { it == "Moderate" } -> "Moderate"
-        levels.any { it == "Low" } -> "Low"
-        else -> "Unknown"
-    }
+private fun overallRisk(vararg levels: RiskLevel): RiskLevel = when {
+    levels.any { it == RiskLevel.HIGH } -> RiskLevel.HIGH
+    levels.any { it == RiskLevel.MODERATE } -> RiskLevel.MODERATE
+    levels.any { it == RiskLevel.LOW } -> RiskLevel.LOW
+    else -> RiskLevel.UNKNOWN
 }
 
 @Composable
@@ -98,12 +88,12 @@ fun SavedPlacesLocationCard(
     savedPlacesCount: Int
 ) {
     val loading = status == null
-    val floodLevel = status?.floodLevel ?: "Unknown"
-    val landslideLevel = status?.landslideLevel ?: "Unknown"
-    val avalancheLevel = status?.avalancheLevel ?: "Unknown"
-    val quickClayLevel = status?.quickClayLevel ?: "Unknown"
-    val radonLevel = status?.radonLevel ?: "Unknown"
-    val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
+    val floodLevel = status?.floodLevel ?: RiskLevel.UNKNOWN
+    val landslideLevel = status?.landslideLevel ?: RiskLevel.UNKNOWN
+    val avalancheLevel = status?.avalancheLevel ?: RiskLevel.UNKNOWN
+    val quickClayLevel = status?.quickClayLevel ?: RiskLevel.UNKNOWN
+    val radonLevel = status?.radonLevel ?: RiskLevel.UNKNOWN
+    val windLevel = windRiskLevel(status?.avgWindSpeed)
     val overall = overallRisk(
         floodLevel, landslideLevel, avalancheLevel, quickClayLevel, radonLevel, windLevel
     )
@@ -239,7 +229,7 @@ fun SavedPlacesLocationCard(
 }
 
 @Composable
-private fun RiskPill(level: String) {
+private fun RiskPill(level: RiskLevel) {
     Box(
         modifier = Modifier
             .background(riskColor(level), RoundedCornerShape(12.dp))
@@ -257,7 +247,7 @@ private fun RiskPill(level: String) {
 @Composable
 private fun RiskCategoryBox(
     label: String,
-    level: String,
+    level: RiskLevel,
     loading: Boolean,
     onInfoClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier

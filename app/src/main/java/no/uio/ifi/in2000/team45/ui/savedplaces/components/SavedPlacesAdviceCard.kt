@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.savedplaces.RiskLevel
 import no.uio.ifi.in2000.team45.ui.theme.LinkBlue
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
@@ -60,28 +61,28 @@ data class AdviceCategory(
     val linkUrl: String
 )
 
-private fun riskColor(level: String): Color = when (level) {
-    "High" -> RiskHigh
-    "Moderate" -> RiskModerate
-    "Low" -> RiskLow
-    else -> RiskUnknown
+private fun riskColor(level: RiskLevel): Color = when (level) {
+    RiskLevel.HIGH -> RiskHigh
+    RiskLevel.MODERATE -> RiskModerate
+    RiskLevel.LOW -> RiskLow
+    RiskLevel.UNKNOWN -> RiskUnknown
 }
 
 @Composable
-private fun floodAdvice(level: String): AdviceCategory {
+private fun floodAdvice(level: RiskLevel): AdviceCategory {
     val bullets = when (level) {
-        "High" -> listOf(
+        RiskLevel.HIGH -> listOf(
             stringResource(R.string.flood_advice_backflow_valve),
             stringResource(R.string.flood_advice_raise_threshold),
             stringResource(R.string.flood_advice_drainage_direction),
             stringResource(R.string.flood_advice_insurance)
         )
-        "Moderate" -> listOf(
+        RiskLevel.MODERATE -> listOf(
             stringResource(R.string.flood_advice_drainage_direction),
             stringResource(R.string.flood_advice_insurance),
             stringResource(R.string.flood_advice_gutters)
         )
-        else -> listOf(
+        RiskLevel.LOW, RiskLevel.UNKNOWN -> listOf(
             stringResource(R.string.flood_advice_gutters),
             stringResource(R.string.flood_advice_evacuation_routes)
         )
@@ -96,20 +97,20 @@ private fun floodAdvice(level: String): AdviceCategory {
 }
 
 @Composable
-private fun landslideAdvice(level: String): AdviceCategory {
+private fun landslideAdvice(level: RiskLevel): AdviceCategory {
     val bullets = when (level) {
-        "High" -> listOf(
+        RiskLevel.HIGH -> listOf(
             stringResource(R.string.landslide_advice_hazard_maps_high),
             stringResource(R.string.landslide_advice_geotechnical),
             stringResource(R.string.landslide_advice_slopes_vegetation),
             stringResource(R.string.landslide_advice_evacuation_plan)
         )
-        "Moderate" -> listOf(
+        RiskLevel.MODERATE -> listOf(
             stringResource(R.string.landslide_advice_hazard_maps_moderate),
             stringResource(R.string.landslide_advice_slopes_vegetation),
             stringResource(R.string.landslide_advice_monitor_cracks)
         )
-        else -> listOf(
+        RiskLevel.LOW, RiskLevel.UNKNOWN -> listOf(
             stringResource(R.string.landslide_advice_remove_vegetation),
             stringResource(R.string.landslide_advice_nve_warnings)
         )
@@ -128,20 +129,20 @@ private fun landslideAdvice(level: String): AdviceCategory {
 // user sees a dot matching their quick clay risk level alongside the other
 // hazard rows.
 @Composable
-private fun quickClayAdvice(level: String): AdviceCategory {
+private fun quickClayAdvice(level: RiskLevel): AdviceCategory {
     val bullets = when (level) {
-        "High" -> listOf(
+        RiskLevel.HIGH -> listOf(
             stringResource(R.string.landslide_advice_hazard_maps_high),
             stringResource(R.string.landslide_advice_geotechnical),
             stringResource(R.string.landslide_advice_slopes_vegetation),
             stringResource(R.string.landslide_advice_evacuation_plan)
         )
-        "Moderate" -> listOf(
+        RiskLevel.MODERATE -> listOf(
             stringResource(R.string.landslide_advice_hazard_maps_moderate),
             stringResource(R.string.landslide_advice_slopes_vegetation),
             stringResource(R.string.landslide_advice_monitor_cracks)
         )
-        else -> listOf(
+        RiskLevel.LOW, RiskLevel.UNKNOWN -> listOf(
             stringResource(R.string.landslide_advice_remove_vegetation),
             stringResource(R.string.landslide_advice_nve_warnings)
         )
@@ -156,20 +157,20 @@ private fun quickClayAdvice(level: String): AdviceCategory {
 }
 
 @Composable
-private fun windAdvice(level: String): AdviceCategory {
+private fun windAdvice(level: RiskLevel): AdviceCategory {
     val bullets = when (level) {
-        "High" -> listOf(
+        RiskLevel.HIGH -> listOf(
             stringResource(R.string.wind_advice_secure_loose),
             stringResource(R.string.wind_advice_inspect_roof),
             stringResource(R.string.wind_advice_trim_trees),
             stringResource(R.string.wind_advice_fencing)
         )
-        "Moderate" -> listOf(
+        RiskLevel.MODERATE -> listOf(
             stringResource(R.string.wind_advice_secure_loose),
             stringResource(R.string.wind_advice_inspect_roof),
             stringResource(R.string.wind_advice_trim_trees)
         )
-        else -> listOf(
+        RiskLevel.LOW, RiskLevel.UNKNOWN -> listOf(
             stringResource(R.string.wind_advice_inspect_roof),
             stringResource(R.string.wind_advice_garden_furniture)
         )
@@ -185,10 +186,10 @@ private fun windAdvice(level: String): AdviceCategory {
 
 @Composable
 fun adviceForRiskLevels(
-    floodLevel: String,
-    landslideLevel: String,
-    quickClayLevel: String,
-    windLevel: String
+    floodLevel: RiskLevel,
+    landslideLevel: RiskLevel,
+    quickClayLevel: RiskLevel,
+    windLevel: RiskLevel
 ): List<AdviceCategory> = listOf(
     floodAdvice(floodLevel),
     landslideAdvice(landslideLevel),
@@ -198,10 +199,10 @@ fun adviceForRiskLevels(
 
 @Composable
 fun WhatCanIDoSection(
-    floodLevel: String,
-    landslideLevel: String,
-    quickClayLevel: String,
-    windLevel: String,
+    floodLevel: RiskLevel,
+    landslideLevel: RiskLevel,
+    quickClayLevel: RiskLevel,
+    windLevel: RiskLevel,
     savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
