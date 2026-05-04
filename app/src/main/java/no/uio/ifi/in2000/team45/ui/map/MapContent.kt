@@ -2,7 +2,6 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged

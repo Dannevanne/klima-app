@@ -2,7 +2,6 @@ package no.uio.ifi.in2000.team45.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.SoundPreferenceRepository
 
 class SoundViewModelFactory (

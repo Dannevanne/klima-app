@@ -3,13 +3,11 @@ package no.uio.ifi.in2000.team45.ui.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
