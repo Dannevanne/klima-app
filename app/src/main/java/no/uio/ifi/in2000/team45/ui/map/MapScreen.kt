@@ -43,7 +43,6 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.mapbox.maps.CameraOptions
@@ -74,11 +73,12 @@ fun MapStateScreen(
     // clicks the location button without permission
     if (showDialog) {
         AlertDialog(
-            onDismissRequest = {},
+            onDismissRequest = { showDialog = false },
             title = { Text(stringResource(R.string.location_permission_required)) },
             text = { Text(stringResource(R.string.permission_settings)) },
             confirmButton = {
                 Button(onClick = {
+                    showDialog = false
 
                     // Opens the apps settings in systems settings
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -92,7 +92,7 @@ fun MapStateScreen(
                 }
             },
             dismissButton = {
-                Button(onClick = {}) {
+                Button(onClick = { showDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             }
@@ -113,6 +113,8 @@ fun MapStateScreen(
                 onLocationClick = {
                     if (locationGranted){
                         mapViewModel.moveToUserLocation()
+                    } else {
+                        showDialog = true
                     }
                 },
                 onSettingsClick = onSettingsClick,
@@ -120,6 +122,7 @@ fun MapStateScreen(
                 onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onSavedPlacesClick = onSavedPlacesClick,
+                modifier = modifier
             )
             when (uiState) {
                 is MapUiState.Error -> Text("Error", color = Color.Red)
@@ -141,6 +144,7 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
+    modifier: Modifier = Modifier
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
@@ -239,8 +243,8 @@ fun DataMap(
     // Long-press save dialog state
     var pendingPoint by remember { mutableStateOf<Point?>(null) }
     var locationName by remember { mutableStateOf("") }
-    var mapWidth by remember { mutableIntStateOf(0) }
-    var mapHeight by remember { mutableIntStateOf(0) }
+    var mapWidth by remember { mutableStateOf(0) }
+    var mapHeight by remember { mutableStateOf(0) }
     var mapViewRef by remember { mutableStateOf<com.mapbox.maps.MapView?>(null) }
 
     // Sets the cameras start position
@@ -412,6 +416,7 @@ fun DataMap(
                     selectedSavedPlace = null
                     onSavedPlacesClick()
                 },
+                onDismiss = { selectedSavedPlace = null },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 96.dp, start = 16.dp, end = 16.dp)
@@ -449,8 +454,8 @@ fun DataMap(
     MapSaveLocationDialog(
         point = pendingPoint,
         locationName = locationName,
-        onLocationNameChange = {},
-        onDismiss = {},
+        onLocationNameChange = { locationName = it },
+        onDismiss = { pendingPoint = null },
         savedPlacesViewModel = savedPlacesViewModel,
     )
 }

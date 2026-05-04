@@ -26,6 +26,7 @@ import no.uio.ifi.in2000.team45.ui.theme.LoadingBlue
 fun SavedPlacePopup(
     place: SavedPlacesLocation,
     onOpenSavedPlaces: () -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // onDismiss is the contract; the actual dismissal is wired to a tap on
@@ -57,7 +58,7 @@ fun SavedPlacePopup(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             // The app theme has primary == onPrimary (both black or both
-             // white), which makes default Button text invisible. Pin colors
+             // white), which makes default Button text invisible. Pin colours
             // so the label is readable on both light and dark.
             Button(
                 onClick = onOpenSavedPlaces,
