@@ -71,13 +71,6 @@
     <string name="open_map">Åpne kart</string>
     <string name="show_on_map">Vis på kart</string>
     <string name="open_in_saved_places">Åpne i Lagrede steder</string>
-    <string name="radon_info_title">Radonsone</string>
-    <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_particularly_high_explanation">Særlig høy: Området har høyeste aktsomhetsklasse for radon. Sannsynligheten for at innendørs radon overstiger tiltaksgrensen er klart høyere enn snittet. Mål radon og gjør tiltak ved forhøyede verdier.</string>
-    <string name="radon_high_explanation">Høy: Minst 20%% av boligene overstiger tiltaksgrensen på 200 Bq/m³. Mål radon innendørs, særlig i kjeller og soverom.</string>
-    <string name="radon_moderate_explanation">Moderat til lav: Radonnivåene ligger som regel under tiltaksgrensen. En måling er likevel eneste måte å være sikker på i din egen bolig.</string>
-    <string name="radon_unsure_explanation">Usikker: NGU har for lite data til å klassifisere området. Behandle som ukjent og vurder å måle.</string>
-    <string name="radon_source">Kilde: NGU RadonWMS2</string>
     <string name="overlay_legend">Tegnforklaring</string>
     <string name="overlay_legend_title">Tegnforklaring for %1$s</string>
     <string name="legend_flood_body">Heldekkede blå polygoner viser NVEs flomaktsomhetsområder. NVE har identifisert disse som steder der flom kan oppstå. Datakilden gir ingen alvorlighetsgrad — alle polygoner vises likt.</string>

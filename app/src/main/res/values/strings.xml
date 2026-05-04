@@ -87,13 +87,6 @@
     <string name="open_map">Open map</string>
     <string name="show_on_map">Show on map</string>
     <string name="open_in_saved_places">Open in Saved places</string>
-    <string name="radon_info_title">Radon zone</string>
-    <string name="radon_class_label">Awareness</string>
-    <string name="radon_particularly_high_explanation">Particularly high: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon level and add mitigation if elevated.</string>
-    <string name="radon_high_explanation">High: At least 20‰ of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
-    <string name="radon_moderate_explanation">Moderate to low: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
-    <string name="radon_unsure_explanation">Unsure: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
-    <string name="radon_source">Source: NGU RadonWMS2</string>
     <string name="overlay_legend">Legend</string>
     <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas. NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>

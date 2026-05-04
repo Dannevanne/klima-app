@@ -70,13 +70,6 @@
     <string name="open_map">Raba kártta</string>
     <string name="show_on_map">čájehit kárttas</string>
     <string name="open_in_saved_places">rahpat du bealde vurkejuvvon báikkiiguin</string>
-    <string name="radon_info_title">Radonguovlu</string>
-    <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_particularly_high_explanation">Erenoamáš allat: Dán guovllus lea alimus radon-dovdamušluohkká. Sisáibmoradon badjel doaibmadási lea olu eambbo jáhkehahtti go gaskamearálaš. Mihtidit radona ja lasihit hehttehusa jus lea loktanan.</string>
-    <string name="radon_high_explanation">Alimus: Unnimusat 20% visttiin leat badjel 200 Bq/m3 doaibmadási. Mihtidit sisáibmorádona, erenoamážit vuolit gearddis ja idjadanlanjain.</string>
-    <string name="radon_moderate_explanation">Gaskamearálaš dahje allat: Radonkonsentrašuvnnat leat dábálaččat vuollel akšuvdnadási. Mihtideapmi lea ain áidna vuohki duođaštit dásiid ruovttus.</string>
-    <string name="radon_unsure_explanation">Eahpesihkar: NGU:s leat menddo unnán dieđut klassifiseret dán guovllu. Gieđahallat dovdatmeahttumin ja árvvoštala mihtideami.</string>
-    <string name="radon_source">Gáldu: NGU RadonWMS2</string>
     <string name="overlay_legend">Máinnas</string>
     <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Čáhppes čáhppes polygonat merkejit NVE dulvefuomášumi guovlluid (Flom_aktsomhetsomraade). NVE lea identifiseren dáid báikkiid gos dulvi sáhttá dáhpáhuvvat. Gáldodieđuin ii leat garravuođaárvosáni — juohke polygona čájehuvvo seamma ládje.</string>
