@@ -91,7 +91,6 @@ fun MapContent(
         )
 
         MapSavedPlacesEffect(
-            mapView = mapViewRef,
             savedPlaces = savedPlaces,
             onPlaceClick = onSavedPlaceClick
         )
