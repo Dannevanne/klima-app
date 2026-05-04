@@ -36,7 +36,7 @@ object StationPicker {
             val avail = availability[station.id].orEmpty()
             val covered = avail.map { it.elementId }.toSet()
             if (!covered.containsAll(targetElements)) continue
-            // Use the shortest per-element history. Otherwise Sola passes
+            // Use the shortest per-element history. Otherwise, Sola passes
             // Phase 1 for Stavanger because its temp goes back to 1935, even
             // though gust starts in 1982 (44 yr -- under the 50 yr threshold).
             val targets = avail.filter { it.elementId in targetElements }
