@@ -256,11 +256,11 @@ private fun RiskPill(level: String) {
 
 @Composable
 private fun RiskCategoryBox(
+    modifier: Modifier = Modifier,
     label: String,
     level: String,
     loading: Boolean,
     onInfoClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
