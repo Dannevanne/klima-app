@@ -36,7 +36,7 @@ fun ResetAppDataSection(
 
     if(showDialog) {
         BasicAlertDialog(
-            onDismissRequest = { showDialog = false }
+            onDismissRequest = {}
         ) {
             Surface(
                 shape = MaterialTheme.shapes.large,
@@ -68,7 +68,7 @@ fun ResetAppDataSection(
                         horizontalArrangement = Arrangement.End
                     ) {
                         TextButton(
-                            onClick = { showDialog = false }
+                            onClick = {}
                         ) {
                             Text(stringResource(R.string.cancel_button))
                         }
@@ -78,7 +78,6 @@ fun ResetAppDataSection(
                         TextButton(
                             onClick = {
                                 onResetConfirmed()
-                                showDialog = false
                             }
                         ) {
                             Text(stringResource(R.string.reset_button))
@@ -110,7 +109,7 @@ fun ResetAppDataSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedButton(
-            onClick = { showDialog = true }
+            onClick = {}
         ) {
             Text(stringResource(R.string.reset_button))
         }
