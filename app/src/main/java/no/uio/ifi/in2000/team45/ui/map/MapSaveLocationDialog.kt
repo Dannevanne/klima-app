@@ -2,7 +2,6 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.media.RingtoneManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,12 +20,16 @@ import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
+import no.uio.ifi.in2000.team45.ui.common.AnimatedConfirmDialog
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
-// Naming dialog for saved location
+// Naming dialog for saved location. `point` is nullable so the OK-only
+// warning branches can stay mounted during their exit animation; the parent
+// nulls out pendingPoint right when OK is tapped, but AnimatedConfirmDialog
+// keeps its window alive until the fade-out finishes.
 @Composable
 fun MapSaveLocationDialog(
-    point: Point,
+    point: Point?,
     locationName: String,
     onLocationNameChange: (String) -> Unit,
     onDismiss: () -> Unit,
@@ -34,42 +37,35 @@ fun MapSaveLocationDialog(
 ) {
     val limitReached = !savedPlacesViewModel.canAddLocation()
     val context = LocalContext.current
-    val outsideNorway = !NorwayLocationValidator.isInsideNorway(point.latitude(),point.longitude())
+    val outsideNorway = point?.let {
+        !NorwayLocationValidator.isInsideNorway(it.latitude(), it.longitude())
+    } == true
 
     val soundEnabled = context
         .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         .getBoolean("sound_enabled", true)
 
-    when {
-        outsideNorway -> AlertDialog(
-            onDismissRequest = onDismiss,
-            title = { Text(text = stringResource(R.string.save_location)) },
-            text = { Text(text = stringResource(R.string.you_can_not_save_a_place_outside_of_norway)) },
-            confirmButton = {
-                TextButton(onClick = onDismiss) {
-                    Text(text = stringResource(R.string.ok))
-                }
-            }
-        )
+    AnimatedConfirmDialog(
+        visible = point != null && outsideNorway,
+        onDismissed = onDismiss,
+        title = stringResource(R.string.save_location),
+        text = stringResource(R.string.you_can_not_save_a_place_outside_of_norway),
+        confirmText = stringResource(R.string.ok)
+    )
 
-        limitReached -> AlertDialog(
-            onDismissRequest = onDismiss,
-            title = { Text(text = stringResource(R.string.save_location)) },
-            text = {
-                Text(
-                    text = stringResource(
-                        R.string.max_saved_places_message,
-                        SavedPlacesViewModel.MAX_SAVED_PLACES
-                    )
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = onDismiss) {
-                    Text(text = stringResource(R.string.ok))
-                }
-            }
-        )
-    else -> AlertDialog(
+    AnimatedConfirmDialog(
+        visible = point != null && !outsideNorway && limitReached,
+        onDismissed = onDismiss,
+        title = stringResource(R.string.save_location),
+        text = stringResource(
+            R.string.max_saved_places_message,
+            SavedPlacesViewModel.MAX_SAVED_PLACES
+        ),
+        confirmText = stringResource(R.string.ok)
+    )
+
+    if (point != null && !outsideNorway && !limitReached) {
+        AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(text = stringResource(R.string.save_location)) },
             text = {
