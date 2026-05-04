@@ -83,6 +83,9 @@ class StatisticViewModel @JvmOverloads constructor(
         searchQuery = ""
         selectedPeriod = 30
         uiState = StatisticUiState.Idle
+        viewModelScope.launch {
+            recentSearchRepository.clearHistory()
+        }
     }
 
     fun updatePeriod(years: Int) {
