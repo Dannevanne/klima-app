@@ -7,8 +7,8 @@ import com.mapbox.maps.CoordinateBounds
 import com.mapbox.maps.extension.compose.MapEffect
 
 private val NORWAY_AREA_BOUNDS = CoordinateBounds(
-    Point.fromLngLat(-5.0, 53.0),
-    Point.fromLngLat(40.0, 75.0)
+    Point.fromLngLat(-10.0, 53.0),
+    Point.fromLngLat(45.0, 82.0)
 )
 
 private const val MIN_MAP_ZOOM = 3.25
