@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import kotlinx.coroutines.flow.SharingStarted
@@ -101,16 +100,9 @@ class StatisticViewModel @JvmOverloads constructor(
 
     fun updateSearchQuery(query: String) {
         searchQuery = query
-        searchJob?.cancel()
         if (query.isEmpty()) {
+            searchJob?.cancel()
             uiState = StatisticUiState.Idle
-            return
-        }
-        if (query.length >= 2) {
-            searchJob = viewModelScope.launch {
-                delay(400)
-                performSearch(query)
-            }
         }
     }
 
