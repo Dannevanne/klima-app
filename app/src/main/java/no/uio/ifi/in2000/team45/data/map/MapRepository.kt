@@ -32,16 +32,8 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         )
     }
 
-    suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
+    suspend fun isInFloodZone(lat: Double, lon: Double): HazardCheck {
         return identifyHasResults("Flomaktsomhet", "1", lat, lon)
-    }
-
-    suspend fun isInRadonZone(lat: Double, lon: Double): Boolean? {
-        return getRadonHazard(lat, lon)?.let { true }
-    }
-
-    suspend fun isInQuickClayZone(lat: Double, lon: Double): Boolean? {
-        return identifyHasResults("SkredKvikkleire2", "0,1", lat, lon)
     }
 
     // Highest `faregrad` ("Lav" / "Middels" / "Hoy") at the point, or null
@@ -75,27 +67,29 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
     // is a coarse raster whose pixel can be ~100m, so identifying against it
     // false-positives in cities near slopes. We hit only the vector layer for
     // a cleaner in/out answer.
-    suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
+    suspend fun isInLandslideZone(lat: Double, lon: Double): HazardCheck {
         return identifyHasResults("JordFlomskredAktsomhet", "1", lat, lon)
     }
 
     // Layer 1 is the S3 snowslide aktsomhet polygons (the main vector layer
     // visible at usable zoom levels). Layer 0 is a coarse raster meant for
     // overviews; we skip it for identify to avoid false positives.
-    suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
+    suspend fun isInAvalancheZone(lat: Double, lon: Double): HazardCheck {
         return identifyHasResults("SnoskredAktsomhet", "1", lat, lon)
     }
 
-    // True/false if the NVE identify response had any features at the point,
-    // null when the call itself failed so callers can render "unknown" instead
-    // of a misleading "Low".
+    // IN_ZONE/OUT_OF_ZONE if the NVE identify response had any features at the
+    // point, UNKNOWN when the call itself failed so callers can render "no
+    // data" instead of a misleading "Low".
     private suspend fun identifyHasResults(
         service: String, layers: String, lat: Double, lon: Double
-    ): Boolean? {
-        val body = mapDatasource.fetchNveIdentifyBody(service, layers, lat, lon) ?: return null
-        return body.contains("\"results\"") &&
+    ): HazardCheck {
+        val body = mapDatasource.fetchNveIdentifyBody(service, layers, lat, lon)
+            ?: return HazardCheck.UNKNOWN
+        val hasResults = body.contains("\"results\"") &&
                 !body.contains("\"results\":[]") &&
                 !body.contains("\"results\": []")
+        return if (hasResults) HazardCheck.IN_ZONE else HazardCheck.OUT_OF_ZONE
     }
 
     // Pulls the radon "aktsomhet" class out of NGU's WMS GetFeatureInfo body.
