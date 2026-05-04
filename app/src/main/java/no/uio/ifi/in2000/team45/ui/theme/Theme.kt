@@ -1,17 +1,10 @@
 package no.uio.ifi.in2000.team45.ui.theme
 
-import android.R
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import no.uio.ifi.in2000.team45.ui.theme.IconWhite
 
 // primary is the brand accent (Material Blue 700/200) so default Buttons read
 // as a real button -- previously primary == onPrimary collapsed Button text
