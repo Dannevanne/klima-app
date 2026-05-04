@@ -14,31 +14,29 @@ fun MapUserLocationEffect(
     locationGranted: Boolean,
     onUserLocationChanged: (Point) -> Unit
 ) {
+    if (mapView == null) return
+
     // Activates the blue location-dot.
     // Rerun every time locationGranted changes.
     DisposableEffect(mapView, locationGranted) {
-        if (mapView == null) {
-            onDispose {  }
-        } else {
-            mapView.location.updateSettings {
-                locationPuck = createDefault2DPuck(withBearing = false)
-                enabled = locationGranted
-                pulsingEnabled = true
-            }
+        mapView.location.updateSettings {
+            locationPuck = createDefault2DPuck(withBearing = false)
+            enabled = locationGranted
+            pulsingEnabled = true
+        }
 
-            // Listens to location changes from MapBox
-            // and updates userLocation in ViewModel
-            val locationListener = OnIndicatorPositionChangedListener { point ->
-               onUserLocationChanged(point)
-            }
+        // Listens to location changes from MapBox
+        // and updates userLocation in ViewModel
+        val locationListener = OnIndicatorPositionChangedListener { point ->
+           onUserLocationChanged(point)
+        }
 
-            if (locationGranted) {
-                mapView.location.addOnIndicatorPositionChangedListener(locationListener)
-            }
+        if (locationGranted) {
+            mapView.location.addOnIndicatorPositionChangedListener(locationListener)
+        }
 
-            onDispose {
-                mapView.location.removeOnIndicatorPositionChangedListener(locationListener)
-            }
+        onDispose {
+            mapView.location.removeOnIndicatorPositionChangedListener(locationListener)
         }
     }
 }

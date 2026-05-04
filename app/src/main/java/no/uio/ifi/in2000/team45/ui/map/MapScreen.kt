@@ -28,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapEffect
-import kotlinx.coroutines.Job
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -247,8 +245,6 @@ fun DataMap(
     var locationName by remember { mutableStateOf("") }
     var mapWidth by remember { mutableStateOf(0) }
     var mapHeight by remember { mutableStateOf(0) }
-    val currentMapWidth by rememberUpdatedState(mapWidth)
-    val currentMapHeight by rememberUpdatedState(mapHeight)
     var mapViewRef by remember { mutableStateOf<com.mapbox.maps.MapView?>(null) }
 
     // Sets the cameras start position
@@ -287,13 +283,8 @@ fun DataMap(
     val searchSuggestions = mapViewModel.searchSuggestions
     val isSearching = mapViewModel.isSearching
 
-    // Saving the bitmap creating as a job, so it is cancellable.
-    // But this "DataMap" should have its own viewmodel for all of this state hosting.
-    var imageJob by remember {mutableStateOf<Job?>(null)}
-
     DisposableEffect(Unit) {
         onDispose {
-            imageJob?.cancel()
             mapViewModel.cancelMapScreenWork()
         }
     }
@@ -346,8 +337,8 @@ fun DataMap(
             pendingBitmap = bitmap,
             overlayBBox = overlayBBox,
             useDarkMap = useDarkMap,
-            currentMapWidth = currentMapWidth,
-            currentMapHeight = currentMapHeight,
+            currentMapWidth = mapWidth,
+            currentMapHeight = mapHeight,
             locationGranted = locationGranted,
             mapViewModel = mapViewModel,
             savedPlaces = savedPlaces,

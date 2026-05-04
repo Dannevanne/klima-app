@@ -13,21 +13,17 @@ fun MapLongPressEffect(
     mapView: MapView?,
     onMapLongClick: (Point) -> Unit
 ) {
+    if (mapView == null) return
     DisposableEffect(mapView) {
-        if (mapView == null) {
-            onDispose {  }
+        val longClickListener = OnMapLongClickListener { point ->
+            onMapLongClick(point)
+            true
         }
-        else {
-            val longClickListener = OnMapLongClickListener { point ->
-                onMapLongClick(point)
-                true
-            }
 
-            mapView.mapboxMap.addOnMapLongClickListener(longClickListener)
+        mapView.mapboxMap.addOnMapLongClickListener(longClickListener)
 
-            onDispose {
-                mapView.mapboxMap.removeOnMapLongClickListener(longClickListener)
-            }
+        onDispose {
+            mapView.mapboxMap.removeOnMapLongClickListener(longClickListener)
         }
     }
 }
