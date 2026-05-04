@@ -284,7 +284,6 @@ fun StatisticContent(
                 onPeriodChange = { statisticViewModel.updatePeriod(it) },
                 onShowOnMap = onShowOnMap,
                 placeName = state.place?.name,
-                distanceFromPlaceMeters = state.distanceFromPlaceMeters,
                 stationsUsed = state.stationsUsed,
                 contentPadding = listPadding,
                 modifier = modifier,

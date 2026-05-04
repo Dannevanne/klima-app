@@ -38,6 +38,7 @@ private val PERIOD_OPTIONS = listOf(5, 10, 20, 30, 50)
 
 @Composable
 fun ClimateDataView(
+    modifier: Modifier = Modifier,
     station: WeatherStation,
     stats: List<MonthlyClimateStats>,
     annualData: List<AnnualObservation>,
@@ -45,11 +46,9 @@ fun ClimateDataView(
     onPeriodChange: (Int) -> Unit,
     onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     placeName: String? = null,
-    distanceFromPlaceMeters: Int? = null,
     stationsUsed: List<WeatherStation> = emptyList(),
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
-    modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         item { header() }
@@ -146,7 +145,6 @@ fun ClimateDataView(
                 annualData = annualData,
                 onShowOnMap = onShowOnMap,
                 placeName = placeName,
-                distanceFromPlaceMeters = distanceFromPlaceMeters,
                 stationsUsed = stationsUsed
             )
         }

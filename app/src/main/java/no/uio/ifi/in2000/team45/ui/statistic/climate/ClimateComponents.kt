@@ -43,7 +43,7 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
 // Chart tick labels need higher contrast than M3's onSurfaceVariant gives in
-// dark mode (purple-grey on a dark blue card reads dim). Light mode keeps the
+// dark mode (purple-gray on a dark blue card reads dim). Light mode keeps the
 // secondary onSurfaceVariant tone so labels don't fight the chart line.
 @Composable
 private fun chartAxisColor(): Color =
@@ -301,7 +301,7 @@ fun TrendChart(
                         Offset(x, y)
                     }
 
-                    // Fill area under line
+                    // Fill area underline
                     if (fillColor != null && points.size >= 2) {
                         val path = Path().apply {
                             moveTo(points.first().x, chartH)
@@ -357,7 +357,6 @@ fun StationsUsedCard(
     annualData: List<AnnualObservation>,
     onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     placeName: String? = null,
-    distanceFromPlaceMeters: Int? = null,
     stationsUsed: List<WeatherStation> = emptyList()
 ) {
     val obsCount = annualData.size
@@ -467,7 +466,7 @@ private fun StationsUsedRow(
 }
 
 
-// If selected place dont have data for all years in chosen periode,
+// If selected place don't have data for all years in chosen periode,
 // a warning-message appear telling this
 @Composable
 fun MissingData(
