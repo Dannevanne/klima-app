@@ -229,8 +229,10 @@ fun SavedPlacesLocationCard(
                 WhatCanIDoSection(
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
+                    avalancheLevel = avalancheLevel,
                     quickClayLevel = quickClayLevel,
                     windLevel = windLevel,
+                    radonLevel = radonLevel,
                     savedPlacesCount = savedPlacesCount
                 )
             }

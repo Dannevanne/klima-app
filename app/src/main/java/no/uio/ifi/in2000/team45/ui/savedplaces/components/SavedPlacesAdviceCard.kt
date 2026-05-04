@@ -243,26 +243,35 @@ private fun windAdvice(level: String): AdviceCategory {
 fun adviceForRiskLevels(
     floodLevel: String,
     landslideLevel: String,
+    avalancheLevel: String,
     quickClayLevel: String,
-    windLevel: String
+    windLevel: String,
+    radonLevel: String
 ): List<AdviceCategory> = listOf(
     floodAdvice(floodLevel),
     landslideAdvice(landslideLevel),
+    avalancheAdvice(avalancheLevel),
     quickClayAdvice(quickClayLevel),
-    windAdvice(windLevel)
+    windAdvice(windLevel),
+    radonAdvice(radonLevel)
 )
 
 @Composable
 fun WhatCanIDoSection(
     floodLevel: String,
     landslideLevel: String,
+    avalancheLevel: String,
     quickClayLevel: String,
     windLevel: String,
+    radonLevel: String,
     savedPlacesCount: Int
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     var adviceExpanded by remember { mutableStateOf(false) }
-    val categories = adviceForRiskLevels(floodLevel, landslideLevel, quickClayLevel, windLevel)
+    val categories = adviceForRiskLevels(
+        floodLevel, landslideLevel, avalancheLevel,
+        quickClayLevel, windLevel, radonLevel
+    )
 
     Row(
         modifier = Modifier
