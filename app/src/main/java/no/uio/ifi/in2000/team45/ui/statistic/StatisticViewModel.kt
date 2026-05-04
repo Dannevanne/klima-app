@@ -460,9 +460,10 @@ class StatisticViewModel @JvmOverloads constructor(
 
     // Tap-outside on Stats: drop the query, cancel any in-flight search,
     // and bounce back to Idle. Don't disturb the user when they're already
-    // looking at climate data for a specific station.
+    // looking at climate data, or when a search is still in flight.
     fun exitSearch() {
         if (uiState is StatisticUiState.ClimateData) return
+        if (uiState is StatisticUiState.Loading) return
         searchJob?.cancel()
         searchQuery = ""
         uiState = StatisticUiState.Idle
