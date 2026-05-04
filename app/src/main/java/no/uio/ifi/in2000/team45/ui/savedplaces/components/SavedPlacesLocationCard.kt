@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -25,10 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -107,8 +102,6 @@ fun SavedPlacesLocationCard(
     val overall = overallRisk(
         floodLevel, landslideLevel, avalancheLevel, quickClayLevel, radonLevel, windLevel
     )
-
-    var showRadonInfo by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -211,17 +204,7 @@ fun SavedPlacesLocationCard(
                     label = stringResource(R.string.radon),
                     level = radonLevel,
                     loading = loading,
-                    onInfoClick = if (status?.radonClass != null) {
-                        { showRadonInfo = true }
-                    } else null,
                     modifier = Modifier.weight(1f).fillMaxHeight()
-                )
-            }
-
-            if (showRadonInfo && status?.radonClass != null) {
-                RadonInfoDialog(
-                    radonClass = status.radonClass,
-                    onDismiss = { showRadonInfo = false }
                 )
             }
 
@@ -229,8 +212,10 @@ fun SavedPlacesLocationCard(
                 WhatCanIDoSection(
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
+                    avalancheLevel = avalancheLevel,
                     quickClayLevel = quickClayLevel,
                     windLevel = windLevel,
+                    radonLevel = radonLevel,
                     savedPlacesCount = savedPlacesCount
                 )
             }
@@ -259,7 +244,6 @@ private fun RiskCategoryBox(
     label: String,
     level: String,
     loading: Boolean,
-    onInfoClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -270,21 +254,6 @@ private fun RiskCategoryBox(
             )
             .padding(horizontal = 12.dp, vertical = 10.dp)
     ) {
-        if (onInfoClick != null) {
-            IconButton(
-                onClick = onInfoClick,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = stringResource(R.string.info),
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
         Column(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
