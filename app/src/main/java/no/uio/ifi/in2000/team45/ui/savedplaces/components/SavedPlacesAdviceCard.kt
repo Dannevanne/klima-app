@@ -7,6 +7,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -267,6 +268,7 @@ fun WhatCanIDoSection(
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     var adviceExpanded by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
     val categories = adviceForRiskLevels(
         floodLevel, landslideLevel, avalancheLevel,
         quickClayLevel, windLevel, radonLevel
@@ -275,7 +277,10 @@ fun WhatCanIDoSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { adviceExpanded = !adviceExpanded }
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) { adviceExpanded = !adviceExpanded }
             .padding(top = 12.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
