@@ -94,7 +94,7 @@ fun MapSaveLocationDialog(
                             label = locationName.trim()
                         )
                         if (soundEnabled) {
-                            MediaPlayer.create(context, R.raw.sound).apply {
+                            MediaPlayer.create(context, R.raw.ding).apply {
                                 setOnCompletionListener { it.release() }
                                 start()
                             }
