@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 
 // primary is the brand accent (Material Blue 700/200) so default Buttons read
 // as a real button -- previously primary == onPrimary collapsed Button text
-// to invisible. surface/background colours are unchanged.
+// to invisible. surface/background colors are unchanged.
 private val DarkColorScheme = darkColorScheme(
     primary = LoadingBlueLight,
     secondary = DarkOnSurface,
