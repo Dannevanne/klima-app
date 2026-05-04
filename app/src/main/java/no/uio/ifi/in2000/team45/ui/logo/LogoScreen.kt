@@ -27,7 +27,7 @@ fun LogoScreen(modifier: Modifier = Modifier) {
         ) {
             Image(
                 painter = painterResource(R.drawable.safeproperty_logo_v6),
-                contentDescription = stringResource(R.string.trygg_eiendom),
+                contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier.size(350.dp)
             )
             CircularProgressIndicator(
