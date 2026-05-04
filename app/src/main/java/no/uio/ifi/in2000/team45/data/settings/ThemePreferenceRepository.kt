@@ -12,7 +12,7 @@ private val Context.dataStore by preferencesDataStore(name = "user_settings")
 
 class ThemePreferenceRepository(private val context: Context) {
     companion object {
-        // Key kept as "map_theme" so existing installs don't lose their preference.
+        // Key kept as "map_theme" so existing installations don't lose their preference.
         private val THEME_KEY = stringPreferencesKey("map_theme")
     }
 
