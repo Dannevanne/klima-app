@@ -247,7 +247,7 @@ private fun InfoAvailabilityHelpText(
 @Composable
 fun VersionSection(){
     Text(
-        text = stringResource(R.string.versjon_1_0_0),
+        text = stringResource(R.string.version_1_0_0),
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center,

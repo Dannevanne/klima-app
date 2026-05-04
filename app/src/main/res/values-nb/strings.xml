@@ -73,10 +73,10 @@
     <string name="open_in_saved_places">Åpne i Lagrede steder</string>
     <string name="radon_info_title">Radonsone</string>
     <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_saerlig_hoy_explanation">Særlig høy: Området har høyeste aktsomhetsklasse for radon. Sannsynligheten for at innendørs radon overstiger tiltaksgrensen er klart høyere enn snittet. Mål radon og gjør tiltak ved forhøyede verdier.</string>
-    <string name="radon_hoy_explanation">Høy: Minst 20%% av boligene overstiger tiltaksgrensen på 200 Bq/m³. Mål radon innendørs, særlig i kjeller og soverom.</string>
-    <string name="radon_moderat_explanation">Moderat til lav: Radonnivåene ligger som regel under tiltaksgrensen. En måling er likevel eneste måte å være sikker på i din egen bolig.</string>
-    <string name="radon_usikker_explanation">Usikker: NGU har for lite data til å klassifisere området. Behandle som ukjent og vurder å måle.</string>
+    <string name="radon_particularly_high_explanation">Særlig høy: Området har høyeste aktsomhetsklasse for radon. Sannsynligheten for at innendørs radon overstiger tiltaksgrensen er klart høyere enn snittet. Mål radon og gjør tiltak ved forhøyede verdier.</string>
+    <string name="radon_high_explanation">Høy: Minst 20%% av boligene overstiger tiltaksgrensen på 200 Bq/m³. Mål radon innendørs, særlig i kjeller og soverom.</string>
+    <string name="radon_moderate_explanation">Moderat til lav: Radonnivåene ligger som regel under tiltaksgrensen. En måling er likevel eneste måte å være sikker på i din egen bolig.</string>
+    <string name="radon_unsure_explanation">Usikker: NGU har for lite data til å klassifisere området. Behandle som ukjent og vurder å måle.</string>
     <string name="radon_source">Kilde: NGU RadonWMS2</string>
     <string name="overlay_legend">Tegnforklaring</string>
     <string name="overlay_legend_title">Tegnforklaring for %1$s</string>
@@ -98,9 +98,9 @@
     <string name="legend_flood_src">NVE Flomaktsomhet (lag 1)</string>
 
     <string name="legend_quickclay_what">Tre lag stables: faregrad, risikoklasse og kartlagt-område-status.</string>
-    <string name="legend_quickclay_cat_lav">Heldekket (Lav) — lav fare for kvikkleireskred</string>
-    <string name="legend_quickclay_cat_middels">Heldekket (Middels) — middels fare</string>
-    <string name="legend_quickclay_cat_hoy">Heldekket (Høy) — høy fare</string>
+    <string name="legend_quickclay_cat_low">Heldekket (Lav) — lav fare for kvikkleireskred</string>
+    <string name="legend_quickclay_cat_moderate">Heldekket (Middels) — middels fare</string>
+    <string name="legend_quickclay_cat_high">Heldekket (Høy) — høy fare</string>
     <string name="legend_quickclay_cat_safe">Skravert + "Område uten fare" — undersøkt og funnet trygt</string>
     <string name="legend_quickclay_cat_other">Andre skraverte mønstre — under undersøkelse</string>
     <string name="legend_quickclay_src">NVE SkredKvikkleire2 (faregrad-attributt)</string>
@@ -214,7 +214,7 @@
     <string name="save">Lagre</string>
     <string name="place_name">Stedsnavn</string>
     <string name="the_team">Teamet</string>
-    <string name="versjon_1_0_0">Versjon 1.0.0</string>
+    <string name="version_1_0_0">Versjon 1.0.0</string>
     <string name="app_description">Applikasjon for hus- og hytteeiere som ønsker å sjekke klimarisiko og klimastatistikk for sitt område</string>
     <string name="datasources">Datakilder</string>
     <string name="flood_landslides_quick_clay_wind">Flom, jord- og flomskred, snøskred, kvikkleire, vind</string>

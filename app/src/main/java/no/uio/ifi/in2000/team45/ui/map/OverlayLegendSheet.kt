@@ -219,9 +219,9 @@ private fun legendCategories(overlay: OverlayType): List<String> = when (overlay
     OverlayType.NONE -> listOf(stringResource(R.string.legend_none_cat_pick))
     OverlayType.FLOOD -> listOf(stringResource(R.string.legend_flood_cat_polygon))
     OverlayType.QUICK_CLAY -> listOf(
-        stringResource(R.string.legend_quickclay_cat_lav),
-        stringResource(R.string.legend_quickclay_cat_middels),
-        stringResource(R.string.legend_quickclay_cat_hoy),
+        stringResource(R.string.legend_quickclay_cat_low),
+        stringResource(R.string.legend_quickclay_cat_moderate),
+        stringResource(R.string.legend_quickclay_cat_high),
         stringResource(R.string.legend_quickclay_cat_safe),
         stringResource(R.string.legend_quickclay_cat_other)
     )

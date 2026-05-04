@@ -75,7 +75,7 @@
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Location data is used only locally and is not shared with third parties</string>
     <string name="the_app_does_not_require_a_login_or_account">The app does not require a login or account</string>
     <string name="the_team">The team</string>
-    <string name="versjon_1_0_0">Version 1.0.0</string>
+    <string name="version_1_0_0">Version 1.0.0</string>
     <string name="t45" translatable="false">T45</string>
     <string name="team_45_in2000_uio_2026" translatable="false">Team 45 — IN2000, UiO 2026</string>
     <string name="language">Language</string>
@@ -89,17 +89,17 @@
     <string name="open_in_saved_places">Open in Saved places</string>
     <string name="radon_info_title">Radon zone</string>
     <string name="radon_class_label">Awareness</string>
-    <string name="radon_saerlig_hoy_explanation">Saerlig hoy: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon level and add mitigation if elevated.</string>
-    <string name="radon_hoy_explanation">Hoy: At least 20‰ of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
-    <string name="radon_moderat_explanation">Moderat til lav: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
-    <string name="radon_usikker_explanation">Usikker: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
+    <string name="radon_particularly_high_explanation">Particularly high: This area has the highest radon awareness class. Indoor radon over the action level is much more likely than average. Measure radon level and add mitigation if elevated.</string>
+    <string name="radon_high_explanation">High: At least 20‰ of dwellings exceed the 200 Bq/m³ action level. Measure indoor radon, especially in lower floors and bedrooms.</string>
+    <string name="radon_moderate_explanation">Moderate to low: Radon concentrations are usually below the action level. A measurement is still the only way to confirm levels in your home.</string>
+    <string name="radon_unsure_explanation">Unsure: NGU has too little data to classify this area. Treat as unknown and consider measuring.</string>
     <string name="radon_source">Source: NGU RadonWMS2</string>
     <string name="overlay_legend">Legend</string>
     <string name="overlay_legend_title">%1$s</string>
-    <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas (Flom_aktsomhetsomraade). NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
-    <string name="legend_quickclay_body">Three sub-layers are stacked. Solid color = mapped quick-clay zone with hazard degree (Lav / Middels / Hoey). Striped patterns = areas NVE has investigated; a striped polygon labelled "Omraade uten fare" was checked and found safe.</string>
-    <string name="legend_radon_body">Four classes from NGU. Purple = Saerlig hoy aktsomhet (highest concern). Red = Hoy aktsomhet (>=20%% of dwellings exceed the 200 Bq/m^3 threshold). Yellow = Moderat til lav. Grey = Usikker (insufficient data). The map cannot predict radon in a specific building — measure the building.</string>
-    <string name="legend_landslide_body">NVE jord/flomskred awareness areas. Polygons mark terrain where soil or debris flows are physically possible based on slope and soil. Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
+    <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas. NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
+    <string name="legend_quickclay_body">Three sub-layers are stacked. Solid color = mapped quick-clay zone with hazard degree (Low / Moderate / High). Striped patterns = areas NVE has investigated; a striped polygon labelled "Place without danger" was checked and found safe.</string>
+    <string name="legend_radon_body">Four classes from NGU. Purple = Particularly high awareness (highest concern). Red = High awareness (≥ 20‰ of dwellings exceed the 200 Bq/m^3 threshold). Yellow = Moderate to low. Grey = Unsure (insufficient data). The map cannot predict radon in a specific building — measure the building.</string>
+    <string name="legend_landslide_body">NVE landslide awareness areas. Polygons mark terrain where soil or debris flows are physically possible based on slope and soil. Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
     <string name="legend_wind_body">NVE wind resource raster — average wind speed at 50 m above ground. Color scale increases with wind strength. Used as a long-term wind potential indicator, not a current weather snapshot.</string>
     <string name="legend_none_body">No overlay is selected. Pick a layer from the pill to see hazard data on the map.</string>
 
@@ -111,15 +111,15 @@
     <string name="legend_flood_what">Polygons mark places where NVE has identified that flooding could occur.</string>
     <string name="legend_flood_cat_polygon">Marked area — mapped flood zone</string>
     <string name="legend_flood_caveat">No severity grading from the source. Every polygon is shown the same.</string>
-    <string name="legend_flood_src">NVE Flomaktsomhet (layer 1)</string>
+    <string name="legend_flood_src">NVE Flomaktsomhet</string>
 
     <string name="legend_quickclay_what">Three sub-layers stacked: hazard degree, risk class, and mapped-area status.</string>
-    <string name="legend_quickclay_cat_lav">Solid (Low) — low quick-clay hazard</string>
-    <string name="legend_quickclay_cat_middels">Solid (Medium) — medium hazard</string>
-    <string name="legend_quickclay_cat_hoy">Solid (High) — high hazard</string>
+    <string name="legend_quickclay_cat_low">Solid (Low) — low quick-clay hazard</string>
+    <string name="legend_quickclay_cat_moderate">Solid (Medium) — medium hazard</string>
+    <string name="legend_quickclay_cat_high">Solid (High) — high hazard</string>
     <string name="legend_quickclay_cat_safe">Striped + Area without danger — investigated and found safe</string>
     <string name="legend_quickclay_cat_other">Other striped patterns — under investigation</string>
-    <string name="legend_quickclay_src">NVE SkredKvikkleire2 (danger level attribute)</string>
+    <string name="legend_quickclay_src">NVE SkredKvikkleire2</string>
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
     <string name="legend_radon_cat_purple">Purple — particularly high caution (highest concern)</string>
@@ -132,7 +132,7 @@
     <string name="legend_landslide_what">Awareness areas for soil and debris flows, based on slope and soil type.</string>
     <string name="legend_landslide_cat_polygon">Marked area — terrain where a slide is physically possible</string>
     <string name="legend_landslide_caveat">Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
-    <string name="legend_landslide_src">NVE JordFlomskredAktsomhet (vector layer)</string>
+    <string name="legend_landslide_src">NVE JordFlomskredAktsomhet</string>
 
     <string name="legend_wind_what">Long-term average wind speed at 50 m above ground.</string>
     <string name="legend_wind_cat_scale">Color scale — blue is calm wind, red is strong wind</string>
