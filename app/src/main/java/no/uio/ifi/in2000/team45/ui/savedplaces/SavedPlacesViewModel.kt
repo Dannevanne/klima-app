@@ -165,7 +165,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 val radonLevel = when (radonClass) {
                     "Særlig høy aktsomhet", "Høy aktsomhet" -> "High"
                     "Moderat til lav aktsomhet" -> "Moderate"
-                    null -> "Unknown"
+                    // NGU returns "Usikker aktsomhet" when they have too
+                    // little data to classify the area. Treat as Unknown,
+                    // not Low, so we don't pretend the place is safe.
+                    "Usikker aktsomhet", null -> "Unknown"
                     else -> "Low"
                 }
 
