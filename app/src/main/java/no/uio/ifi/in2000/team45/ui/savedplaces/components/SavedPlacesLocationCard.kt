@@ -89,8 +89,7 @@ fun SavedPlacesLocationCard(
     location: SavedPlacesLocation,
     status: LocationStatus?,
     onRemove: () -> Unit,
-    onShowOnMap: () -> Unit,
-    savedPlacesCount: Int
+    onShowOnMap: () -> Unit
 ) {
     val loading = status == null
     val floodLevel = status?.floodLevel ?: "Unknown"
@@ -215,8 +214,7 @@ fun SavedPlacesLocationCard(
                     avalancheLevel = avalancheLevel,
                     quickClayLevel = quickClayLevel,
                     windLevel = windLevel,
-                    radonLevel = radonLevel,
-                    savedPlacesCount = savedPlacesCount
+                    radonLevel = radonLevel
                 )
             }
         }
