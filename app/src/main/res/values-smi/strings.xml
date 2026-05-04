@@ -194,7 +194,7 @@
     <string name="error_no_climate_data">Eai leat dálkkádatdáhtat olámuttos stašuvnnaide %1$s lahka</string>
     <string name="error_fetch_data">Feaila dáhtaid viežžamis: %1$s</string>
     <string name="close">Gidde</string>
-    <string name="no_internettconnection">Ii leat interneahttasamband</string>
+    <string name="no_internet_connection">Ii leat interneahttasamband</string>
     <string name="reset_app_data_title">Máhcat appdáhtaid</string>
     <string name="reset_app_data_description">Dát sihkku buot vurkejuvvon báikkiid, du ohcanhistorihka ja buot dálkkádatstatistihka.</string>
     <string name="reset_app_data_section_title">Appdáhtat</string>
