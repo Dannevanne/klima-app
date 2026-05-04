@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.background
@@ -56,7 +55,6 @@ import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
-import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable
 fun MapStateScreen(

@@ -3,7 +3,6 @@ package no.uio.ifi.in2000.team45.ui.map.util
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.core.graphics.drawable.toBitmap
-import coil.ImageLoader
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult

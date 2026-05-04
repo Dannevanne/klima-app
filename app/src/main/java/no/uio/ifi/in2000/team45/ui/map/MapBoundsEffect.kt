@@ -2,9 +2,7 @@ package no.uio.ifi.in2000.team45.ui.map
 
 import androidx.compose.runtime.Composable
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraBounds
 import com.mapbox.maps.CameraBoundsOptions
-import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.CoordinateBounds
 import com.mapbox.maps.extension.compose.MapEffect
 

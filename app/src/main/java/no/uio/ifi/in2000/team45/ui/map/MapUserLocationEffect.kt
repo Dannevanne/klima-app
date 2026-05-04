@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team45.ui.map
 
-import android.app.admin.TargetUser
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
