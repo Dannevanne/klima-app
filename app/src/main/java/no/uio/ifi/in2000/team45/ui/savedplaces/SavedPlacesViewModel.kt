@@ -15,6 +15,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesRepository
 import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
+import no.uio.ifi.in2000.team45.data.map.HazardCheck
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
@@ -174,11 +175,11 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
 
                 // emit zones first so risk chips update before frost finishes
                 locationStatuses[key] = LocationStatus(
-                    inFloodZone = floodZone == true,
+                    inFloodZone = floodZone.isIn,
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
-                    inLandslideZone = landslideZone == true,
-                    inAvalancheZone = avalancheZone == true,
+                    inLandslideZone = landslideZone.isIn,
+                    inAvalancheZone = avalancheZone.isIn,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     avalancheLevel = avalancheLevel,
@@ -195,10 +196,10 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 if (stations.isEmpty()) {
                     locationStatuses[key] = LocationStatus(
                         stationName = getApplication<Application>().getString(R.string.station_not_found),
-                        inFloodZone = floodZone == true,
+                        inFloodZone = floodZone.isIn,
                         inRadonZone = radonClass != null,
                         inQuickClayZone = quickClayHazard != null,
-                        inLandslideZone = landslideZone == true,
+                        inLandslideZone = landslideZone.isIn,
                         floodLevel = floodLevel,
                         landslideLevel = landslideLevel,
                         quickClayLevel = quickClayLevel,
@@ -240,11 +241,11 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     temperature = temp,
                     windSpeed = wind,
                     precipitation = precip,
-                    inFloodZone = floodZone == true,
+                    inFloodZone = floodZone.isIn,
                     inRadonZone = radonClass != null,
                     inQuickClayZone = quickClayHazard != null,
-                    inLandslideZone = landslideZone == true,
-                    inAvalancheZone = avalancheZone == true,
+                    inLandslideZone = landslideZone.isIn,
+                    inAvalancheZone = avalancheZone.isIn,
                     floodLevel = floodLevel,
                     landslideLevel = landslideLevel,
                     avalancheLevel = avalancheLevel,
@@ -269,18 +270,18 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
     private suspend fun zoneRiskLevel(
         lat: Double,
         lon: Double,
-        atPoint: Boolean?,
-        check: suspend (Double, Double) -> Boolean?
+        atPoint: HazardCheck,
+        check: suspend (Double, Double) -> HazardCheck
     ): String {
-        if (atPoint == null) return "Unknown"
-        if (atPoint) return "High"
+        if (!atPoint.isKnown) return "Unknown"
+        if (atPoint.isIn) return "High"
         val offsetMeters = 500.0
         val offsetLat = offsetMeters / 111_000.0
         val offsetLon = offsetLat / kotlin.math.cos(Math.toRadians(lat))
-        val nearbyHit = check(lat + offsetLat, lon) == true ||
-                check(lat - offsetLat, lon) == true ||
-                check(lat, lon + offsetLon) == true ||
-                check(lat, lon - offsetLon) == true
+        val nearbyHit = check(lat + offsetLat, lon).isIn ||
+                check(lat - offsetLat, lon).isIn ||
+                check(lat, lon + offsetLon).isIn ||
+                check(lat, lon - offsetLon).isIn
         return if (nearbyHit) "Moderate" else "Low"
     }
 }
