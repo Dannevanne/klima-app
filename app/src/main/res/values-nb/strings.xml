@@ -45,7 +45,7 @@
     <string name="select_an_overlay_by_pushing_the_bottom_left_button">Velg et lag ved å trykke på knappen nederst til venstre. Noen lag vises bare på bestemte zoomnivåer, avhengig av hva datakilden leverer.</string>
     <string name="select_overlay">Velg lag</string>
     <string name="search_for_places">Søk etter steder</string>
-    <string name="paste_a_placename_in_the_searchbar_to_navigate_on_the_map">Lim inn et stedsnavn i søkefeltet for å navigere på kartet</string>
+    <string name="paste_a_place_name_in_the_search_bar_to_navigate_on_the_map">Lim inn et stedsnavn i søkefeltet for å navigere på kartet</string>
     <string name="save_location">Lagre sted</string>
     <string name="tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places">Trykk og hold på et sted på kartet for å lagre det</string>
     <string name="my_location">Min lokasjon</string>
