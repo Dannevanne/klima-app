@@ -26,10 +26,6 @@ class StatisticRepository(
         return PlaceSelector.pickBest(query, candidates)?.let { listOf(it) } ?: emptyList()
     }
 
-    suspend fun findNearestStation(lat: Double, lon: Double, clientId: String): WeatherStation? {
-        return datasource.findNearestStation(lat, lon, clientId)
-    }
-
     suspend fun findNearestStations(
         lat: Double, lon: Double, clientId: String, count: Int = 5
     ): List<WeatherStation> {
