@@ -30,15 +30,15 @@ data class LocationStatus(
     val inQuickClayZone: Boolean = false,
     val inLandslideZone: Boolean = false,
     val inAvalancheZone: Boolean = false,
-    // Gradated risk: "High" if the saved point itself is in the zone,
-    // "Moderate" if a hazard zone sits within ~500 m, "Low" otherwise.
+    // Gradated risk: HIGH if the saved point itself is in the zone,
+    // MODERATE if a hazard zone sits within ~500 m, LOW otherwise.
     // Kvikkleire and radon read straight off the polygon attributes
     // (faregrad / aktsomhet class) so they don't need an offset hack.
-    val floodLevel: String = "Unknown",
-    val landslideLevel: String = "Unknown",
-    val avalancheLevel: String = "Unknown",
-    val quickClayLevel: String = "Unknown",
-    val radonLevel: String = "Unknown",
+    val floodLevel: RiskLevel = RiskLevel.UNKNOWN,
+    val landslideLevel: RiskLevel = RiskLevel.UNKNOWN,
+    val avalancheLevel: RiskLevel = RiskLevel.UNKNOWN,
+    val quickClayLevel: RiskLevel = RiskLevel.UNKNOWN,
+    val radonLevel: RiskLevel = RiskLevel.UNKNOWN,
     // Raw radon class string from NGU, kept so the radon info dialog can show
     // the exact wording.
     val radonClass: String? = null,
@@ -156,20 +156,20 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                     mapRepository.isInAvalancheZone(la, lo)
                 }
                 val quickClayLevel = when (quickClayHazard) {
-                    "Høy" -> "High"
-                    "Middels" -> "Moderate"
-                    "Lav" -> "Low"
-                    null -> "Unknown"
-                    else -> "Low"
+                    "Høy" -> RiskLevel.HIGH
+                    "Middels" -> RiskLevel.MODERATE
+                    "Lav" -> RiskLevel.LOW
+                    null -> RiskLevel.UNKNOWN
+                    else -> RiskLevel.LOW
                 }
                 val radonLevel = when (radonClass) {
-                    "Særlig høy aktsomhet", "Høy aktsomhet" -> "High"
-                    "Moderat til lav aktsomhet" -> "Moderate"
+                    "Særlig høy aktsomhet", "Høy aktsomhet" -> RiskLevel.HIGH
+                    "Moderat til lav aktsomhet" -> RiskLevel.MODERATE
                     // NGU returns "Usikker aktsomhet" when they have too
                     // little data to classify the area. Treat as Unknown,
                     // not Low, so we don't pretend the place is safe.
-                    "Usikker aktsomhet", null -> "Unknown"
-                    else -> "Low"
+                    "Usikker aktsomhet", null -> RiskLevel.UNKNOWN
+                    else -> RiskLevel.LOW
                 }
 
                 // emit zones first so risk chips update before frost finishes
@@ -271,9 +271,9 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         lon: Double,
         atPoint: Boolean?,
         check: suspend (Double, Double) -> Boolean?
-    ): String {
-        if (atPoint == null) return "Unknown"
-        if (atPoint) return "High"
+    ): RiskLevel {
+        if (atPoint == null) return RiskLevel.UNKNOWN
+        if (atPoint) return RiskLevel.HIGH
         val offsetMeters = 500.0
         val offsetLat = offsetMeters / 111_000.0
         val offsetLon = offsetLat / kotlin.math.cos(Math.toRadians(lat))
@@ -281,6 +281,6 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
                 check(lat - offsetLat, lon) == true ||
                 check(lat, lon + offsetLon) == true ||
                 check(lat, lon - offsetLon) == true
-        return if (nearbyHit) "Moderate" else "Low"
+        return if (nearbyHit) RiskLevel.MODERATE else RiskLevel.LOW
     }
 }
