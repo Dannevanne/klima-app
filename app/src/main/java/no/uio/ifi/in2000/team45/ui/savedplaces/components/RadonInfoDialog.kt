@@ -62,10 +62,10 @@ fun RadonInfoDialog(
                 )
 
                 val explanation = when (radonClass) {
-                    "Særlig høy aktsomhet" -> stringResource(R.string.radon_saerlig_hoy_explanation)
-                    "Høy aktsomhet" -> stringResource(R.string.radon_hoy_explanation)
-                    "Moderat til lav aktsomhet" -> stringResource(R.string.radon_moderat_explanation)
-                    "Usikker aktsomhet" -> stringResource(R.string.radon_usikker_explanation)
+                    "Særlig høy aktsomhet" -> stringResource(R.string.radon_particularly_high_explanation)
+                    "Høy aktsomhet" -> stringResource(R.string.radon_high_explanation)
+                    "Moderat til lav aktsomhet" -> stringResource(R.string.radon_moderate_explanation)
+                    "Usikker aktsomhet" -> stringResource(R.string.radon_unsure_explanation)
                     else -> ""
                 }
                 if (explanation.isNotEmpty()) {
