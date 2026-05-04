@@ -263,8 +263,7 @@ fun WhatCanIDoSection(
     avalancheLevel: String,
     quickClayLevel: String,
     windLevel: String,
-    radonLevel: String,
-    savedPlacesCount: Int
+    radonLevel: String
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     var adviceExpanded by remember { mutableStateOf(false) }
@@ -276,6 +275,7 @@ fun WhatCanIDoSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { adviceExpanded = !adviceExpanded }
             .padding(top = 12.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -288,25 +288,19 @@ fun WhatCanIDoSection(
             modifier = Modifier.weight(1f)
         )
 
-        if (savedPlacesCount > 2) {
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = if (adviceExpanded) {
-                    stringResource(R.string.collapse)
-                } else {
-                    stringResource(R.string.expand)
-                       },
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .rotate(if (adviceExpanded) 180f else 0f)
-                    .clickable { adviceExpanded = !adviceExpanded }
-            )
-        }
+        Icon(
+            imageVector = Icons.Filled.KeyboardArrowDown,
+            contentDescription = if (adviceExpanded) {
+                stringResource(R.string.collapse)
+            } else {
+                stringResource(R.string.expand)
+            },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.rotate(if (adviceExpanded) 180f else 0f)
+        )
     }
 
-    val showAdvice = savedPlacesCount <= 2 || adviceExpanded
-
-    if (showAdvice) {
+    if (adviceExpanded) {
         categories.forEachIndexed { index, category ->
             AdviceAccordionCard(
                 category = category,

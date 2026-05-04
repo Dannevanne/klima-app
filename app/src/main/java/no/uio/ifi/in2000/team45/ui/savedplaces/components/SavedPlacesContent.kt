@@ -139,7 +139,6 @@ private fun PopulatedSavedPlacesContent(
     scrollToTopTick: Int,
     modifier: Modifier
 ) {
-    val savedPlacesCount = locations.size
     val listState = rememberLazyListState()
     val pendingFocus = savedPlacesViewModel.pendingFocus
 
@@ -177,8 +176,7 @@ private fun PopulatedSavedPlacesContent(
                 location = location,
                 status = status,
                 onRemove = { savedPlacesViewModel.removeLocation(location) },
-                onShowOnMap = { onShowOnMap(location.latitude, location.longitude) },
-                savedPlacesCount = savedPlacesCount
+                onShowOnMap = { onShowOnMap(location.latitude, location.longitude) }
             )
         }
     }
