@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
