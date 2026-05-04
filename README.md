@@ -1,79 +1,77 @@
 # Team 45 -- Naturhendelser
 
-Android-app for Case 3 (Naturhendelser) i IN2000 ved UiO.
-Appen lar huseiere og hytteeiere sjekke klimarisiko (flom, skred) og klimastatistikk for sitt omrade.
+Android app for Case 3 (Naturhendelser) in IN2000 at UiO.
+The app lets homeowners and cabin owners check climate risk (flood, landslide)
+and climate statistics for their area.
 
-## Funksjonalitet
+## Features
 
-Appen har to hovedskjermer tilgjengelig via en bunnnavigasjonsbar:
+The app has two main screens accessible from a bottom navigation bar:
 
-### Kart (venstre knapp)
-- Mapbox-kart over Norge
-- NVE flomsone-overlay som viser flomsonekart oppaa kartet
-- Overlayet oppdateres dynamisk nar brukeren flytter kartet
+### Map (left button)
+- Mapbox map of Norway
+- NVE flood-zone overlay rendered on top of the map
+- The overlay updates dynamically as the user moves the map
 
-### Klimastatistikk (hoyre knapp)
-- Sok etter vaerstasjon etter navn
-- Viser klimanormaler (30-ars gjennomsnitt) for temperatur, nedbor og vind
-- Faller tilbake til historiske observasjoner (2010-2024) om normaler ikke finnes
+### Climate statistics (right button)
+- Search for a weather station by name
+- Shows climate normals (30-year averages) for temperature, precipitation and wind
+- Falls back to historical observations (2010-2024) when normals are not available
 
-## Teknisk stack
+## Tech stack
 
 - Kotlin + Jetpack Compose + Material 3
-- Mapbox SDK for kart
-- Ktor (CIO) + kotlinx.serialization for nettverkskall
-- MVVM-arkitektur med datasource/repository/viewmodel-lag
+- Mapbox SDK for the map
+- Ktor (CIO) + kotlinx.serialization for network calls
+- MVVM architecture with datasource / repository / view-model layers
 
-## APIer
+## APIs
 
-- **MET Frost API v0** - Klimadata (stasjoner, normaler, observasjoner)
-- **NVE flomsone-tjeneste** - Flomsonekart som overlay
+- **MET Frost API v0** -- climate data (stations, normals, observations)
+- **NVE flood-zone service** -- flood-zone map as overlay
 
-## Algoritmer
+## Algorithms
 
-### Stasjonsvalg for et stedssoek
+### Station picking for a place search
 
-Naar brukeren soeker paa et sted (f.eks. "Stavanger") henter vi en liste
-med naerliggende vaerstasjoner sortert paa avstand. `StationPicker`
-velger sa hvilke stasjoner som faktisk skal brukes:
+When the user searches for a place (for example "Stavanger") we fetch a list
+of nearby weather stations sorted by distance. `StationPicker` then decides
+which stations actually get used:
 
-1. Foerst leter vi etter en enkelt stasjon som dekker alle maalinger
-   (temperatur, nedboer, vind, snoedybde) og har minst 50 aars historikk.
-   For Oslo treffer Blindern her, og vi slipper aa blande data.
-2. Hvis ingen enkelt stasjon er god nok, splitter vi per element og
-   plukker stasjonen med lengst historikk for hvert maaleelement. Sola
-   havner f.eks. paa temperatur (1935-) mens vinden hentes fra en annen
-   stasjon for Stavanger.
+1. First we look for a single station that covers all measurements
+   (temperature, precipitation, wind, snow depth) and has at least 50 years
+   of history. For Oslo, Blindern fits, and we avoid mixing data.
+2. If no single station is good enough, we split per element and pick the
+   station with the longest history for each measurement. For Stavanger,
+   Sola wins on temperature (1935-) while wind comes from another station.
 
-Resultatet er en liten liste med `StationAssignment`, der hver stasjon
-er tagget med akkurat de elementene den skal levere. Det holder
-nettverkstrafikken nede.
+The result is a small list of `StationAssignment`, where each station is
+tagged with the elements it should serve. That keeps network traffic low.
 
-### Dager med kraftig nedboer
+### Days with heavy precipitation
 
-Aarsstatistikken inkluderer "dager med >= 20 mm nedboer", omtrent
-det nivaaet som overbelaster urban drenering. Vi henter daglige
-sumverdier fra Frost for nedboerstasjonen og teller dagene per aar.
-Tallene varierer kraftig mellom regioner (Bergen ~40 dager/aar,
-Karasjok ~1), saa det fungerer som en konkret risikoindikator for
-huseiere.
+The yearly statistics include "days with >= 20 mm precipitation", roughly
+the level that overloads urban drainage. We pull daily sums from Frost for
+the precipitation station and count days per year. Numbers vary heavily
+between regions (Bergen ~40 days/yr, Karasjok ~1), so it works as a
+concrete risk indicator for homeowners.
 
-## Bygg og kjor
+## Build and run
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-Krever:
-- **Mapbox access token** i `app/src/main/res/values/mapbox_access_token.xml`
-- **Frost client ID** i `app/src/main/res/values/frost_client_id.xml`
-  - Registrer deg paa https://frost.met.no/auth/requestCredentials.html
+Requires:
+- **Mapbox access token** in `app/src/main/res/values/mapbox_access_token.xml`
+- **Frost client ID** in `app/src/main/res/values/frost_client_id.xml`
+  - Register at https://frost.met.no/auth/requestCredentials.html
 
-## Viktig: Emulator-oppsett for tastatur
+## Note: emulator keyboard setup
 
-For at søkefeltet og tekstinntasting skal fungere korrekt i emulatoren,
-kan det være nødvendig å endre følgende innstillinger på emulatoren:
-- Gå til `Setting` -> `System` -> `Keyboard` -> `On-screen keyboard` -> `Gboard`   
-- Klikk på `Physical keyboard` og skru PÅ bryteren for `Show on-screen keyboard`
-- Gå ett steg tilbake (til Gboards innstillinger)
-- Klikk på `Write in text fields` og skru AV for `Use stylus to write in text fields`
+For the search bar and other text inputs to work properly in the emulator,
+you may need to change the following emulator settings:
+- Go to `Settings` -> `System` -> `Keyboard` -> `On-screen keyboard` -> `Gboard`
+- Tap `Physical keyboard` and turn ON the `Show on-screen keyboard` switch
+- Go one step back (to Gboard's settings)
+- Tap `Write in text fields` and turn OFF `Use stylus to write in text fields`
