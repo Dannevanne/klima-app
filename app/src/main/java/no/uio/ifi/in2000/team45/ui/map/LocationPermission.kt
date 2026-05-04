@@ -25,6 +25,6 @@ fun LocationPermission(
         permissionState.launchMultiplePermissionRequest()
     }
 
-    //Gives content a boolean based on whether or not both permissions are granted
+    //Gives content a boolean based on whether both permissions are granted
     content(permissionState.allPermissionsGranted)
 }
