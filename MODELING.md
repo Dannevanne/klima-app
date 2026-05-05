@@ -35,3 +35,21 @@
 | **Alternate flow 3** | User deletes a saved place -> it is removed from local storage and disappears from SavedPlacesScreen. |
  
 ---
+
+### UC6 – Explore Historical Climate Statistics
+ 
+| Field | Content |
+|---|---|
+| **System** | Climate Risk App – StatisticScreen |
+| **Primary actor** | User (home or cabin owner) |
+| **Secondary actor** | External climate data provider (MET Frost) |
+| **Goal** | Explore aggregated historical climate data for a chosen place, presented as graphs over time |
+| **Stakeholders** | User wants to understand long-term climate trends for a location |
+| **Preconditions** | App is open and device has network access |
+| **Trigger** | User searches for a place |
+| **Basic flow** | 1. User opens the statistics feature. 2. System displays a search field and recent searches. 3. User enters a place name and submits the search. 4. System saves the search in recent search history. 5. System shows a loading indicator. 6. System requests historical climate data from the external data provider. 7. System receives aggregated data (e.g. temperature, precipitation, wind, snow depth). 8. System displays the data as graphs over time.|
+| **Alternate flow 1** | Search field is empty -> system does not perform a search and keeps the input active. |
+| **Alternate flow 2** | Incomplete data is returned for the query -> system shows an error message and shows what it got. |
+| **Alternate flow 3** | User resets the view → system clears displayed data but retains the search history and returns to the initial state|
+ 
+---
