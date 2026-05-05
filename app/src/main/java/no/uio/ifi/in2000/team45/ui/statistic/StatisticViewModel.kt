@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
 import kotlinx.coroutines.flow.SharingStarted
@@ -84,6 +83,9 @@ class StatisticViewModel @JvmOverloads constructor(
         searchQuery = ""
         selectedPeriod = 30
         uiState = StatisticUiState.Idle
+        viewModelScope.launch {
+            recentSearchRepository.clearHistory()
+        }
     }
 
     fun updatePeriod(years: Int) {
@@ -102,16 +104,9 @@ class StatisticViewModel @JvmOverloads constructor(
 
     fun updateSearchQuery(query: String) {
         searchQuery = query
-        searchJob?.cancel()
         if (query.isEmpty()) {
+            searchJob?.cancel()
             uiState = StatisticUiState.Idle
-            return
-        }
-        if (query.length >= 2) {
-            searchJob = viewModelScope.launch {
-                delay(400)
-                performSearch(query)
-            }
         }
     }
 
@@ -138,10 +133,6 @@ class StatisticViewModel @JvmOverloads constructor(
             if (stations.isNotEmpty()) {
                 recentSearchRepository.addSearch(query)
                 val places = groupStationsToPlaces(stations)
-                if (places.size == 1) {
-                    selectPlace(places.first())
-                    return
-                }
                 uiState = if (places.isNotEmpty()) {
                     StatisticUiState.PlaceResults(places)
                 } else {
@@ -151,11 +142,6 @@ class StatisticViewModel @JvmOverloads constructor(
             }
 
             val geocoded = geocodePlaces(query)
-            if (geocoded.size == 1) {
-                recentSearchRepository.addSearch(query)
-                selectPlace(geocoded.first())
-                return
-            }
             uiState = if (geocoded.isNotEmpty()) {
                 recentSearchRepository.addSearch(query)
                 StatisticUiState.PlaceResults(geocoded)
@@ -478,9 +464,10 @@ class StatisticViewModel @JvmOverloads constructor(
 
     // Tap-outside on Stats: drop the query, cancel any in-flight search,
     // and bounce back to Idle. Don't disturb the user when they're already
-    // looking at climate data for a specific station.
+    // looking at climate data, or when a search is still in flight.
     fun exitSearch() {
         if (uiState is StatisticUiState.ClimateData) return
+        if (uiState is StatisticUiState.Loading) return
         searchJob?.cancel()
         searchQuery = ""
         uiState = StatisticUiState.Idle

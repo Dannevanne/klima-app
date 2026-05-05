@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -155,6 +156,62 @@ private fun quickClayAdvice(level: String): AdviceCategory {
 }
 
 @Composable
+private fun avalancheAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            stringResource(R.string.avalanche_advice_check_varsom),
+            stringResource(R.string.avalanche_advice_avoid_steep),
+            stringResource(R.string.avalanche_advice_carry_gear),
+            stringResource(R.string.avalanche_advice_terrain_traps)
+        )
+        "Moderate" -> listOf(
+            stringResource(R.string.avalanche_advice_warnings),
+            stringResource(R.string.avalanche_advice_avoid_steep),
+            stringResource(R.string.avalanche_advice_keep_distance)
+        )
+        else -> listOf(
+            stringResource(R.string.avalanche_advice_check_varsom),
+            stringResource(R.string.avalanche_advice_terrain_traps)
+        )
+    }
+    return AdviceCategory(
+        title = stringResource(R.string.avalanche_precautions),
+        dotColor = riskColor(level),
+        bullets = bullets,
+        linkText = stringResource(R.string.varsom_avalanche_link),
+        linkUrl = "https://www.varsom.no/snoskred/"
+    )
+}
+
+@Composable
+private fun radonAdvice(level: String): AdviceCategory {
+    val bullets = when (level) {
+        "High" -> listOf(
+            stringResource(R.string.radon_advice_measure_long),
+            stringResource(R.string.radon_advice_mitigate),
+            stringResource(R.string.radon_advice_lower_floors),
+            stringResource(R.string.radon_advice_ventilation)
+        )
+        "Moderate" -> listOf(
+            stringResource(R.string.radon_advice_measure_baseline),
+            stringResource(R.string.radon_advice_ventilation),
+            stringResource(R.string.radon_advice_followup)
+        )
+        else -> listOf(
+            stringResource(R.string.radon_advice_older_homes),
+            stringResource(R.string.radon_advice_below_ground)
+        )
+    }
+    return AdviceCategory(
+        title = stringResource(R.string.radon_measures),
+        dotColor = riskColor(level),
+        bullets = bullets,
+        linkText = stringResource(R.string.dsa_radon_link),
+        linkUrl = "https://www.dsa.no/radon/"
+    )
+}
+
+@Composable
 private fun windAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
         "High" -> listOf(
@@ -186,30 +243,43 @@ private fun windAdvice(level: String): AdviceCategory {
 fun adviceForRiskLevels(
     floodLevel: String,
     landslideLevel: String,
+    avalancheLevel: String,
     quickClayLevel: String,
-    windLevel: String
+    windLevel: String,
+    radonLevel: String
 ): List<AdviceCategory> = listOf(
     floodAdvice(floodLevel),
     landslideAdvice(landslideLevel),
+    avalancheAdvice(avalancheLevel),
     quickClayAdvice(quickClayLevel),
-    windAdvice(windLevel)
+    windAdvice(windLevel),
+    radonAdvice(radonLevel)
 )
 
 @Composable
 fun WhatCanIDoSection(
     floodLevel: String,
     landslideLevel: String,
+    avalancheLevel: String,
     quickClayLevel: String,
     windLevel: String,
-    savedPlacesCount: Int
+    radonLevel: String
 ) {
     var expandedIndex by remember { mutableStateOf<Int?>(null) }
     var adviceExpanded by remember { mutableStateOf(false) }
-    val categories = adviceForRiskLevels(floodLevel, landslideLevel, quickClayLevel, windLevel)
+    val interactionSource = remember { MutableInteractionSource() }
+    val categories = adviceForRiskLevels(
+        floodLevel, landslideLevel, avalancheLevel,
+        quickClayLevel, windLevel, radonLevel
+    )
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) { adviceExpanded = !adviceExpanded }
             .padding(top = 12.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -222,25 +292,19 @@ fun WhatCanIDoSection(
             modifier = Modifier.weight(1f)
         )
 
-        if (savedPlacesCount > 2) {
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = if (adviceExpanded) {
-                    stringResource(R.string.collapse)
-                } else {
-                    stringResource(R.string.expand)
-                       },
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .rotate(if (adviceExpanded) 180f else 0f)
-                    .clickable { adviceExpanded = !adviceExpanded }
-            )
-        }
+        Icon(
+            imageVector = Icons.Filled.KeyboardArrowDown,
+            contentDescription = if (adviceExpanded) {
+                stringResource(R.string.collapse)
+            } else {
+                stringResource(R.string.expand)
+            },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.rotate(if (adviceExpanded) 180f else 0f)
+        )
     }
 
-    val showAdvice = savedPlacesCount <= 2 || adviceExpanded
-
-    if (showAdvice) {
+    if (adviceExpanded) {
         categories.forEachIndexed { index, category ->
             AdviceAccordionCard(
                 category = category,

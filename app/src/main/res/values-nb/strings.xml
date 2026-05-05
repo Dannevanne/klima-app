@@ -71,18 +71,11 @@
     <string name="open_map">Åpne kart</string>
     <string name="show_on_map">Vis på kart</string>
     <string name="open_in_saved_places">Åpne i Lagrede steder</string>
-    <string name="radon_info_title">Radonsone</string>
-    <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_particularly_high_explanation">Særlig høy: Området har høyeste aktsomhetsklasse for radon. Sannsynligheten for at innendørs radon overstiger tiltaksgrensen er klart høyere enn snittet. Mål radon og gjør tiltak ved forhøyede verdier.</string>
-    <string name="radon_high_explanation">Høy: Minst 20%% av boligene overstiger tiltaksgrensen på 200 Bq/m³. Mål radon innendørs, særlig i kjeller og soverom.</string>
-    <string name="radon_moderate_explanation">Moderat til lav: Radonnivåene ligger som regel under tiltaksgrensen. En måling er likevel eneste måte å være sikker på i din egen bolig.</string>
-    <string name="radon_unsure_explanation">Usikker: NGU har for lite data til å klassifisere området. Behandle som ukjent og vurder å måle.</string>
-    <string name="radon_source">Kilde: NGU RadonWMS2</string>
     <string name="overlay_legend">Tegnforklaring</string>
     <string name="overlay_legend_title">Tegnforklaring for %1$s</string>
     <string name="legend_flood_body">Heldekkede blå polygoner viser NVEs flomaktsomhetsområder. NVE har identifisert disse som steder der flom kan oppstå. Datakilden gir ingen alvorlighetsgrad — alle polygoner vises likt.</string>
     <string name="legend_quickclay_body">Tre lag stables oppå hverandre. Heldekket farge = kartlagt kvikkleiresone med faregrad (Lav / Middels / Høy). Skraverte mønstre = områder NVE har undersøkt; et skravert polygon merket "Område uten fare" er undersøkt og funnet trygt.</string>
-    <string name="legend_radon_body">Fire klasser fra NGU. Lilla = Særlig høy aktsomhet. Rødt = Høy aktsomhet (>=20%% av boliger over grenseverdien 200 Bq/m^3). Gult = Moderat til lav. Grått = Usikker (lite data). Kartet kan ikke forutsi radon i en bestemt bygning — mål bygningen.</string>
+    <string name="legend_radon_body">Fire klasser fra NGU. Lilla = Særlig høy aktsomhet. Rødt = Høy aktsomhet (≥ 20‰ av boliger over grenseverdien 200 Bq/m³). Gult = Moderat til lav. Grått = Usikker (lite data). Kartet kan ikke forutsi radon i en bestemt bygning — mål bygningen.</string>
     <string name="legend_landslide_body">NVEs aktsomhetsområder for jord- og flomskred. Polygoner viser terreng der jord- eller løsmasseskred er fysisk mulig ut fra helning og grunnforhold. Ikke en målt prognose — et "kan skje"-område, ikke et "vil skje"-område.</string>
     <string name="legend_wind_body">NVEs vindressurskart — gjennomsnittlig vindstyrke 50 m over bakken. Fargeskalaen øker med vindstyrke. Brukes som en langtidsindikator for vindpotensial, ikke som dagens vær.</string>
     <string name="legend_none_body">Ingen lag er valgt. Velg et lag fra pillen for å se faredata på kartet.</string>
@@ -142,11 +135,15 @@
     <string name="expand">Utvid</string>
     <string name="flood_measures">Tiltak mot flom</string>
     <string name="landslide_prevention">Tiltak mot skred</string>
+    <string name="avalanche_precautions">Tiltak mot snøskred</string>
     <string name="quick_clay_precautions">Tiltak mot kvikkleire</string>
     <string name="wind_protection">Tiltak mot vind</string>
+    <string name="radon_measures">Tiltak mot radon</string>
     <string name="nve_flood_link">Les mer om sikringstiltak mot flom hos DiBK</string>
     <string name="nve_landslide_link">Les mer om sikringstiltak mot skred hos DiBK</string>
     <string name="dsb_storm_link">Les mer om stormberedskap hos DSB</string>
+    <string name="varsom_avalanche_link">Les skredvarsel på varsom.no</string>
+    <string name="dsa_radon_link">Les mer om radon hos DSA</string>
     <string name="flood_advice_backflow_valve">Installer en tilbakeslagsventil på avløpet for å hindre at kloakk kommer inn i huset.</string>
     <string name="flood_advice_raise_threshold">Hev dørterskelen til kjeller og krypkjeller.</string>
     <string name="flood_advice_drainage_direction">Sørg for at drenering rundt huset leder vann bort fra veggene.</string>
@@ -166,6 +163,20 @@
     <string name="wind_advice_trim_trees">Beskjær store trær nær huset for å redusere vindlast.</string>
     <string name="wind_advice_fencing">Vurder vindbestandige gjerder og konstruksjoner.</string>
     <string name="wind_advice_garden_furniture">Sikre lette hagemøbler ved stormvarsel.</string>
+    <string name="avalanche_advice_check_varsom">Sjekk varsom.no før du går ut i terrenget om vinteren.</string>
+    <string name="avalanche_advice_avoid_steep">Unngå brattheng og leheng etter store snøfall eller mye vind.</string>
+    <string name="avalanche_advice_carry_gear">Ha med sender, søkestang og spade i skredutsatt terreng.</string>
+    <string name="avalanche_advice_terrain_traps">Lær deg lokale skredbaner og terrengfeller i nærområdet.</string>
+    <string name="avalanche_advice_warnings">Følg med på varsom.no og lokale skredvarsler på vinterturer.</string>
+    <string name="avalanche_advice_keep_distance">Hold avstand fra skredutsatt terreng under turer.</string>
+    <string name="radon_advice_measure_long">Mål radon innendørs med langtidssporfilm i minst to måneder om vinteren.</string>
+    <string name="radon_advice_mitigate">Hvis nivået er over 200 Bq/m³, bør du tette mot grunnen og montere radonbrønn.</string>
+    <string name="radon_advice_lower_floors">Vær særlig oppmerksom på soverom og oppholdsrom i lavere etasjer.</string>
+    <string name="radon_advice_ventilation">Luft kjeller og oppholdsrom regelmessig.</string>
+    <string name="radon_advice_measure_baseline">Mål radon innendørs hvis det ikke allerede er gjort.</string>
+    <string name="radon_advice_followup">Følg opp en kortmåling med en langtidsmåling.</string>
+    <string name="radon_advice_older_homes">Vurder en grunnmåling, særlig i eldre boliger.</string>
+    <string name="radon_advice_below_ground">Mål alltid hvis du har rom under bakkenivå.</string>
     <string name="station_not_found">Ingen stasjon funnet</string>
     <string name="fetch_error">Feil ved henting</string>
     <string name="nearby">I nærheten</string>

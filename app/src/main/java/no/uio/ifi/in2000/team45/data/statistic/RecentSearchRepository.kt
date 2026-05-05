@@ -53,4 +53,10 @@ class RecentSearchRepository(private val context: Context) {
             ?.filter { it.isNotBlank() }
             ?: emptyList()
     }
+
+    suspend fun clearHistory() {
+        context.statisticDataStore.edit { preferences ->
+            preferences.remove(RECENT_SEARCHES_KEY)
+        }
+    }
 }

@@ -70,18 +70,11 @@
     <string name="open_map">Raba kártta</string>
     <string name="show_on_map">čájehit kárttas</string>
     <string name="open_in_saved_places">rahpat du bealde vurkejuvvon báikkiiguin</string>
-    <string name="radon_info_title">Radonguovlu</string>
-    <string name="radon_class_label">Aktsomhet</string>
-    <string name="radon_particularly_high_explanation">Erenoamáš allat: Dán guovllus lea alimus radon-dovdamušluohkká. Sisáibmoradon badjel doaibmadási lea olu eambbo jáhkehahtti go gaskamearálaš. Mihtidit radona ja lasihit hehttehusa jus lea loktanan.</string>
-    <string name="radon_high_explanation">Alimus: Unnimusat 20% visttiin leat badjel 200 Bq/m3 doaibmadási. Mihtidit sisáibmorádona, erenoamážit vuolit gearddis ja idjadanlanjain.</string>
-    <string name="radon_moderate_explanation">Gaskamearálaš dahje allat: Radonkonsentrašuvnnat leat dábálaččat vuollel akšuvdnadási. Mihtideapmi lea ain áidna vuohki duođaštit dásiid ruovttus.</string>
-    <string name="radon_unsure_explanation">Eahpesihkar: NGU:s leat menddo unnán dieđut klassifiseret dán guovllu. Gieđahallat dovdatmeahttumin ja árvvoštala mihtideami.</string>
-    <string name="radon_source">Gáldu: NGU RadonWMS2</string>
     <string name="overlay_legend">Máinnas</string>
     <string name="overlay_legend_title">%1$s</string>
-    <string name="legend_flood_body">Čáhppes čáhppes polygonat merkejit NVE dulvefuomášumi guovlluid (Flom_aktsomhetsomraade). NVE lea identifiseren dáid báikkiid gos dulvi sáhttá dáhpáhuvvat. Gáldodieđuin ii leat garravuođaárvosáni — juohke polygona čájehuvvo seamma ládje.</string>
+    <string name="legend_flood_body">Čáhppes polygonat merkejit NVE dulvefuomášumi guovlluid. NVE lea identifiseren dáid báikkiid gos dulvi sáhttá dáhpáhuvvat. Gáldodieđuin ii leat garravuođaárvosáni — juohke polygona čájehuvvo seamma ládje.</string>
     <string name="legend_quickclay_body">Golbma oasselávkki leat čohkkejuvvon. Čielga ivdni = kártejuvvon jođánit-muorraguovlu mas lea váralašvuođadássi (Alla / Gaskamearálaš / Alit). Rievdaduvvon ivdni = guovllut maid NVE lea guorahallan; område uten fare merkejuvvon stripe polygona dárkkistuvvui ja gávnnahuvvui dorvvolaš.</string>
-    <string name="legend_radon_body">Njeallje luohká NGU:s. Lilla = erenoamáš alla fuomášupmi (alimus fuolla). Rukses = alla diehtu (>=20%% visttiin badjel 200 Bq/m^3 ráji). Guldal = Gaskamearálaš gitta allat. Grána = Eahpesihkar (váilevaš dieđut). Kárta ii sáhte einnostit radona dihto visttis — mihtidit vistti.</string>
+    <string name="legend_radon_body">Njeallje luohká NGU:s. Lilla = erenoamáš alla fuomášupmi (alimus fuolla). Rukses = alla diehtu (≥ 20‰ visttiin badjel 200 Bq/m³ ráji). Guldal = Gaskamearálaš gitta allat. Grána = Eahpesihkar (váilevaš dieđut). Kárta ii sáhte einnostit radona dihto visttis — mihtidit vistti.</string>
     <string name="legend_landslide_body">NVE jord/flomskred diđolašvuođasurggiin. Máŋggačuoggát merkejit muohttaga gos eana dahje ruskkat leat fysalaččat vejolaš vuolgit čáhce- ja eatnama vuođul. Ii mihtiduvvon einnostus — "sáhttá dáhpáhuvvat" guovlu, ii "dáhpáhuvvá".</string>
     <string name="legend_wind_body">NVE bieggafámu raster — gaskamearálaš bieggafápmu 50 m eatnama badjel. Ivdneskála lassána bieggafámu mielde. Geavahuvvo guhkesáigásaš bieggafámu indikáhtorin, ii dálá dálkkádatgovva.</string>
     <string name="legend_none_body">Dušše kárta lea válljejuvvon. Vállje lávkki tableahtas vai oainnát váralašvuođadieđuid kárttas.</string>
@@ -102,7 +95,7 @@
     <string name="legend_quickclay_src">NVE SkredKvikkleire2</string>
     <string name="legend_radon_what">Sisáibmoradonfuomášuhttinluohkát guovllu várás.</string>
     <string name="legend_radon_cat_purple">Lilla — erenoamáš alla fuomášupmi (eanemus fuolastuhtti)</string>
-    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m3)</string>
+    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m³)</string>
     <string name="legend_radon_cat_yellow">Galbma — ivdni lea gaskamearálaččat gitta allat</string>
     <string name="legend_radon_cat_grey">Grána — eahpesihkar (váilevaš dieđut)</string>
     <string name="legend_radon_caveat">Kárta ii sáhte einnostit radona dihto visttis — dušše mihtideapmi sáhttá.</string>
@@ -134,11 +127,15 @@
     <string name="expand">Viiddid</string>
     <string name="flood_measures">Doaibmabijut dulvvi vuostá</string>
     <string name="landslide_prevention">Doaibmabijut eanačielggadeami vuostá</string>
+    <string name="avalanche_precautions">Doaibmabijut muohttaga vuostá</string>
     <string name="quick_clay_precautions">Doaibmabijut jođánit muohta vuostá</string>
     <string name="wind_protection">Doaibmabijut bieggavahágiid vuostá</string>
+    <string name="radon_measures">Doaibmabijut radona vuostá</string>
     <string name="nve_flood_link">Loga eanet dulvesihkkarastindoaibmabijuid birra DiBK:s</string>
     <string name="nve_landslide_link">Loga eanet uđassihkkarastindoaibmabijuid birra DiBK:s</string>
     <string name="dsb_storm_link">Loga eanet stoarmmagearggusvuođa birra DSB:s</string>
+    <string name="varsom_avalanche_link">Loga muohtaváruhusa varsom.no</string>
+    <string name="dsa_radon_link">Loga eanet radona birra DSA:s</string>
     <string name="flood_advice_backflow_valve">Sajáiduhte maŋásgolganventiilla čáhcegolgii eastadan dihte ahte ruskalihtti boahtá vissui.</string>
     <string name="flood_advice_raise_threshold">Lokte kjellára ja vuolliviesu uksaráji.</string>
     <string name="flood_advice_drainage_direction">Fuomáš ahte viesu birra drenáša jođiha čázi eret seinniin.</string>
@@ -158,6 +155,20 @@
     <string name="wind_advice_trim_trees">Čuohpa stuora muoraid viesu lahka unnit biegganođu várás.</string>
     <string name="wind_advice_fencing">Árvvoštala bieggagierdevaš áiddi ja huksehusaid.</string>
     <string name="wind_advice_garden_furniture">Sihkkarastte geahppis šilljobiergasiid stoarmmavárrehusas.</string>
+    <string name="avalanche_advice_check_varsom">Geahča varsom.no ovdal go vuolggát muohttagii dálvet.</string>
+    <string name="avalanche_advice_avoid_steep">Váldde eret ceakko láhtuid ja ceakko láhtuid maŋŋel garra muohttaga dahje garra biekkaid.</string>
+    <string name="avalanche_advice_carry_gear">Váldde mielde sáddejeaddji, ohcanrusttega ja skohtera muohtaváralaš muohttagis.</string>
+    <string name="avalanche_advice_terrain_traps">Oahpa báikkálaš muohtačuozáhagaid ja muohtačuozáhagaid birra lagaš guovllus.</string>
+    <string name="avalanche_advice_warnings">Čuovo varsom.no ja báikkálaš muohtaváruhusaid dálvemátkkiin.</string>
+    <string name="avalanche_advice_keep_distance">Doala gaskka mátkkiid áigge muohttaga váralaš eatnamiin.</string>
+    <string name="radon_advice_measure_long">Mihtidit radona sisáimmuin guhkesáigásaš čuovgafilmmain unnimustá guokte mánu dálvet.</string>
+    <string name="radon_advice_mitigate">Jus dássi lea badjel 200 Bq/m³, de galggat giddet eatnama ja bidjat radonfápmorusttega.</string>
+    <string name="radon_advice_lower_floors">Fuomáš erenoamážit vuolit gearddis idjadanlanjaid ja orrunlanjaid.</string>
+    <string name="radon_advice_ventilation">Luoitte keallárii ja stohpui dábálaččat.</string>
+    <string name="radon_advice_measure_baseline">Mihtidit radona sisáimmuin jus dat ii leat juo dahkkon.</string>
+    <string name="radon_advice_followup">Čuovvut oanehisáiggi mihtideami guhkesáiggi mihtidemiin.</string>
+    <string name="radon_advice_older_homes">Árvvoštallat eatnama iskkadeami, erenoamážit boares ruovttuin.</string>
+    <string name="radon_advice_below_ground">Mihtida álo jus dus lea latnja vuollel eatnama.</string>
     <string name="station_not_found">Ii gávdnon stašuvdna</string>
     <string name="fetch_error">Feaila viežžamis</string>
     <string name="nearby">Lagas</string>
