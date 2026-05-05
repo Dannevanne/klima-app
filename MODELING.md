@@ -1,7 +1,7 @@
-
 ## 1. Use Case Diagram
  
 **Choice and rationale:** The use case diagram provides a high-level overview of the functions the system offers and the actors involved. The six use cases shown represent the core functional requirements of the app. `«include»` is used where one use case *always* requires another, and `«extend»` where a use case is optional or conditional.
+
 ```mermaid
 flowchart LR
     User(["👤 User"])
@@ -25,6 +25,7 @@ flowchart LR
     UC5 -.->|«include»| UC4
 
 ```
+
 **`«extend»` explained:**
 - `Save place` extends `Search for place` — the user can optionally search for a place before saving it, but may also long-press directly on the map.
 
