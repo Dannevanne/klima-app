@@ -30,10 +30,10 @@ fun LanguageSetting(
         )
 
         LanguageOptionRow(
-            selected = selectedLanguage == LanguageOption.BOKMÅL,
+            selected = selectedLanguage == LanguageOption.BOKMAL,
             text = stringResource(R.string.language_bokmal),
             flagRes = R.drawable.norway_flag,
-            onClick = { onLanguageSelected(LanguageOption.BOKMÅL) }
+            onClick = { onLanguageSelected(LanguageOption.BOKMAL) }
         )
 
         LanguageOptionRow(

@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.team45.ui.statistic
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
@@ -61,7 +62,7 @@ class StatisticViewModel @JvmOverloads constructor(
     var searchQuery: String by mutableStateOf("")
         private set
 
-    var selectedPeriod: Int by mutableStateOf(30)
+    var selectedPeriod: Int by mutableIntStateOf(30)
         private set
 
     // Fetched once per station for the longest selectable period; period
@@ -153,7 +154,7 @@ class StatisticViewModel @JvmOverloads constructor(
             }
         } catch (e: kotlinx.coroutines.CancellationException) {
             // The user typed another character or moved on. Don't paint Error
-            // for a cancelled search; just let the next coroutine take over.
+            // for a canceled search; just let the next coroutine take over.
             throw e
         } catch (e: Exception) {
             Log.e("StatisticVM", "Search failed", e)
@@ -175,7 +176,7 @@ class StatisticViewModel @JvmOverloads constructor(
         }
         return byKey.values.map { group ->
             val first = group.first()
-            // Centre = mean of station coords. Lets us compute a sensible
+            // Center = mean of station coords. Lets us compute a sensible
             // distance from "Oslo" to each station in Oslo, instead of a
             // distance-to-first-station that's near zero for one station.
             val centerLat = group.map { it.latitude }.average()
@@ -214,7 +215,7 @@ class StatisticViewModel @JvmOverloads constructor(
         climateJob = viewModelScope.launch {
             try {
                 val maxDistanceMeters = 30_000
-                // Always pull spatial neighbours, even when place.stations
+                // Always pull spatial neighbors, even when place.stations
                 // is non-empty. City searches group by municipality, so
                 // Stavanger's stations don't include Sola airport 9.5km away
                 // -- and Sola is the only one near Stavanger with gust data.

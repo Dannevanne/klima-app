@@ -133,11 +133,6 @@ class MapDatasource {
         width: Int,
         height: Int
     ): String {
-        val minLon = bbox[0]
-        val minLat = bbox[1]
-        val maxLon = bbox[2]
-        val maxLat = bbox[3]
-
         return when (type) {
             OverlayType.NONE -> error("buildOverlayURL should not be called for NONE")
             OverlayType.FLOOD -> buildNveExportURL(

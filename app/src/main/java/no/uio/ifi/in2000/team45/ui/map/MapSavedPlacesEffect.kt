@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapView
 import com.mapbox.maps.ViewAnnotationOptions
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.viewannotation.geometry
@@ -27,7 +26,6 @@ import no.uio.ifi.in2000.team45.R
 // is small (a handful of saved places at most).
 @Composable
 fun MapSavedPlacesEffect(
-    mapView: MapView?,
     savedPlaces: List<SavedPlacesLocation>,
     onPlaceClick: (SavedPlacesLocation) -> Unit
 ) {

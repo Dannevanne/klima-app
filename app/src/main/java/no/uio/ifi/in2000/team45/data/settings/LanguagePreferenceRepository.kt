@@ -18,7 +18,7 @@ class LanguagePreferenceRepository(private val context: Context) {
         // Picks a sensible starting language based on the phone's locale,
         // used on first launch before the user has chosen anything.
         fun systemDefault(): LanguageOption = when (Locale.getDefault().language) {
-            "nb", "no" -> LanguageOption.BOKMÅL
+            "nb", "no" -> LanguageOption.BOKMAL
             "smi" -> LanguageOption.SAMI
             "nn" -> LanguageOption.NYNORSK
             else -> LanguageOption.ENGLISH
@@ -27,7 +27,9 @@ class LanguagePreferenceRepository(private val context: Context) {
 
     val languageFlow: Flow<LanguageOption> = context.languageDataStore.data.map { preferences ->
         when (preferences[LANGUAGE_KEY]) {
-            LanguageOption.BOKMÅL.name -> LanguageOption.BOKMÅL
+            LanguageOption.BOKMAL.name -> LanguageOption.BOKMAL
+            // Existing installs stored "BOKMÅL" before the enum was renamed.
+            "BOKMÅL" -> LanguageOption.BOKMAL
             LanguageOption.NYNORSK.name -> LanguageOption.NYNORSK
             LanguageOption.ENGLISH.name -> LanguageOption.ENGLISH
             LanguageOption.SAMI.name -> LanguageOption.SAMI

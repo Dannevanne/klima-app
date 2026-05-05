@@ -36,6 +36,7 @@ import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticScreen(
+    modifier: Modifier = Modifier,
     statisticViewModel: StatisticViewModel,
     onSettingsClick: () -> Unit,
     onInfoClick: () -> Unit,
@@ -44,7 +45,6 @@ fun StatisticScreen(
     onSavedPlacesClick: () -> Unit,
     onShowOnMap: ((lat: Double, lon: Double) -> Unit)? = null,
     savedPlacesViewModel: SavedPlacesViewModel,
-    modifier: Modifier = Modifier
 ) {
     val favoriteStations by savedPlacesViewModel.stations.collectAsState()
 

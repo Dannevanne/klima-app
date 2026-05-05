@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.map
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
 import com.mapbox.maps.MapView
@@ -11,10 +10,8 @@ import no.uio.ifi.in2000.team45.data.map.OverlayType
 fun MapZoomControlsSection(
     mapView: MapView?,
     viewportState: MapViewportState,
-    mapViewModel: MapViewModel,
     activeOverlay: OverlayType,
     onZoomOutBlocked: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     MapZoomControls(
         onZoomIn = {
@@ -24,6 +21,5 @@ fun MapZoomControlsSection(
             val blocked = zoomMap(mapView, viewportState, -1.0, activeOverlay)
             if (blocked) onZoomOutBlocked()
         },
-        modifier = modifier
     )
 }

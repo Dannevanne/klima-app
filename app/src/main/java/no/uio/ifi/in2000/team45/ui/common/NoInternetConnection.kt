@@ -10,10 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.getSystemService
 
 @Composable
-fun IsOnline(): Boolean {
+fun isOnline(): Boolean {
 
     // Retrieves the Android context needed to access system services
     val context = LocalContext.current

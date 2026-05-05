@@ -239,10 +239,10 @@ private fun RiskPill(level: String) {
 
 @Composable
 private fun RiskCategoryBox(
+    modifier: Modifier = Modifier,
     label: String,
     level: String,
     loading: Boolean,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier

@@ -37,13 +37,13 @@ private fun String.toDisplayCase(): String {
 
 @Composable
 fun StationList(
+    modifier: Modifier = Modifier,
     stations: List<WeatherStation>,
     favoriteIds: Set<String>,
     onStationClick: (WeatherStation) -> Unit,
     onToggleFavorite: (WeatherStation) -> Unit,
     header: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
-    modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         item { header() }

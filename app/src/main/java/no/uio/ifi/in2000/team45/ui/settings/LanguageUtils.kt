@@ -6,7 +6,7 @@ import no.uio.ifi.in2000.team45.data.settings.LanguageOption
 
 fun applyAppLanguage(language: LanguageOption) {
     val localeTag = when (language) {
-        LanguageOption.BOKMÅL -> "nb"
+        LanguageOption.BOKMAL -> "nb"
         LanguageOption.NYNORSK -> "nn"
         LanguageOption.ENGLISH -> "en"
         LanguageOption.SAMI -> "smi"

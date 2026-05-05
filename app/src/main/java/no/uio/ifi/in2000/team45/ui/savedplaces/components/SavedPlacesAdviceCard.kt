@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.savedplaces.components
 
 import android.content.Intent
-import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -46,12 +45,12 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
+import androidx.core.net.toUri
 
 private val RiskHigh = StatisticsRed
 private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
 private val RiskUnknown = StatisticsGray
-private val LinkBlue = LinkBlue
 
 data class AdviceCategory(
     val title: String,
@@ -393,10 +392,10 @@ private fun AdviceAccordionCard(
                             try {
                                 // prøver å åpne med CustomTabsIntent
                                 val customTabsIntent = CustomTabsIntent.Builder().build()
-                                customTabsIntent.launchUrl(context, Uri.parse(category.linkUrl))
-                            } catch (e: Exception) {
+                                customTabsIntent.launchUrl(context, category.linkUrl.toUri())
+                            } catch (_: Exception) {
                                 // hvis customtabsintent ikke starter, bruker vi vanlige launchingen
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(category.linkUrl))
+                                val intent = Intent(Intent.ACTION_VIEW, category.linkUrl.toUri())
                                 context.startActivity(intent)
                             }
                         }

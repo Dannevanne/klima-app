@@ -379,7 +379,6 @@ fun DataMap(
             MapZoomControlsSection(
                 mapView = mapViewRef,
                 viewportState = viewportState,
-                mapViewModel = mapViewModel,
                 activeOverlay = mapViewModel.activeOverlay,
                 onZoomOutBlocked = { zoomBlockedVisible = true }
             )

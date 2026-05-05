@@ -37,7 +37,7 @@ fun MapCameraOverlayEffect(
         )
     }
 
-    // Force a fetch when the user picks a different overlay. Otherwise the
+    // Force a fetch when the user picks a different overlay. Otherwise, the
     // viewmodel sits in Loading until the next MapIdle event -- which never
     // fires unless the user actually pans, so the overlay appears stuck.
     LaunchedEffect(mapView, mapWidth, mapHeight, mapViewModel.activeOverlay) {

@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 // Makes Bitmap from the URL from the repository / datasource
-// so it can be showed as an overlay on the map.
+// so it can be shown as an overlay on the map.
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap? = withContext(Dispatchers.IO) {
     val request = ImageRequest.Builder(context)
         .data(imageURL)

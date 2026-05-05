@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +41,7 @@ fun SavedPlacesScreen(
 ) {
     val stations by savedPlacesViewModel.stations.collectAsState()
     val locations by savedPlacesViewModel.locations.collectAsState()
-    var scrollToTopTick by remember { mutableStateOf(0) }
+    var scrollToTopTick by remember { mutableIntStateOf(0) }
 
     var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
