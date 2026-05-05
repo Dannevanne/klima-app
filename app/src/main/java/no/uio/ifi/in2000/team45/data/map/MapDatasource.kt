@@ -133,11 +133,6 @@ class MapDatasource {
         width: Int,
         height: Int
     ): String {
-        bbox[0]
-        bbox[1]
-        bbox[2]
-        bbox[3]
-
         return when (type) {
             OverlayType.NONE -> error("buildOverlayURL should not be called for NONE")
             OverlayType.FLOOD -> buildNveExportURL(

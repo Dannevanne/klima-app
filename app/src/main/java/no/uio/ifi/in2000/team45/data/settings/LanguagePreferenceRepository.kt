@@ -28,6 +28,8 @@ class LanguagePreferenceRepository(private val context: Context) {
     val languageFlow: Flow<LanguageOption> = context.languageDataStore.data.map { preferences ->
         when (preferences[LANGUAGE_KEY]) {
             LanguageOption.BOKMAL.name -> LanguageOption.BOKMAL
+            // Existing installs stored "BOKMÅL" before the enum was renamed.
+            "BOKMÅL" -> LanguageOption.BOKMAL
             LanguageOption.NYNORSK.name -> LanguageOption.NYNORSK
             LanguageOption.ENGLISH.name -> LanguageOption.ENGLISH
             LanguageOption.SAMI.name -> LanguageOption.SAMI
