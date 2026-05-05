@@ -81,11 +81,11 @@ fun InfoScreen(
                     icon = datasource.icon,
                     onClick = {
                         try {
-                            // prøver her å åpne med customtabsintent
+                            // open with CustomTabsIntent first
                             val customTabsIntent = CustomTabsIntent.Builder().build()
                             customTabsIntent.launchUrl(context, datasource.url.toUri())
                         } catch (_: Exception) {
-                            // hvis det feiler så bruker vi standard approach
+                            // fall back to a plain ACTION_VIEW if it fails
                             val intent = Intent(Intent.ACTION_VIEW, datasource.url.toUri())
                             context.startActivity(intent)
                         }

@@ -33,24 +33,24 @@ fun isOnline(): Boolean {
 
     DisposableEffect(Unit) {
 
-        // A callback when internettconnection changes
+        // A callback when the internet connection state changes
         val callback = object : ConnectivityManager.NetworkCallback() {
 
-            // Sets isOnline to true when internett is available
+            // Sets isOnline to true when the internet is available
             override fun onAvailable(network: Network) {
                 isOnline = true
             }
 
-            // Sets isOnline to false when internett not available
+            // Sets isOnline to false when the internet is not available
             override fun onLost(network: Network) {
                 isOnline = false
             }
         }
-        // Register callback on standard internettconnection
-        // Sends a message to the callback when changes
+        // Register callback on the default internet connection.
+        // Sends a message to the callback when state changes.
         connectivityManager.registerDefaultNetworkCallback(callback)
 
-        // Removes the callback when not
+        // Remove the callback when the composable leaves.
         onDispose {
             connectivityManager.unregisterNetworkCallback(callback)
         }

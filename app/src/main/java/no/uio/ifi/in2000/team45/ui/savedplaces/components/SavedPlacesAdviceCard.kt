@@ -390,11 +390,11 @@ private fun AdviceAccordionCard(
                         color = LinkBlue,
                         modifier = Modifier.clickable {
                             try {
-                                // prøver å åpne med CustomTabsIntent
+                                // open with CustomTabsIntent first
                                 val customTabsIntent = CustomTabsIntent.Builder().build()
                                 customTabsIntent.launchUrl(context, category.linkUrl.toUri())
                             } catch (_: Exception) {
-                                // hvis customtabsintent ikke starter, bruker vi vanlige launchingen
+                                // fall back to a plain ACTION_VIEW if it fails
                                 val intent = Intent(Intent.ACTION_VIEW, category.linkUrl.toUri())
                                 context.startActivity(intent)
                             }
