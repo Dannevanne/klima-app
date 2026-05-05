@@ -47,7 +47,7 @@ fun SavedPlacesContent(
     scrollToTopTick: Int,
     modifier: Modifier
 ) {
-    if (locations.isEmpty() && stations.isEmpty()) {
+    if (locations.isEmpty()) {
         EmptySavedPlacesContent(
             onMapClick = onMapClick,
             topInset = topInset,
