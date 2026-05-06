@@ -9,7 +9,7 @@ flowchart LR
     UC1(["Show map with overlay"])
     UC2(["Search for place"])
     UC3(["Save place"])
-    UC4(["Show climatestatistics\nfor saved place"])
+    UC4(["View risk overview for saved place"])
     UC5(["Show measures and\nrecommendations"])
     UC6(["Explore historical\nclimate statistics"])
 
@@ -22,6 +22,8 @@ flowchart LR
 
     %% <<extend>>
     UC3 -.->|«extend»| UC2
+
+    %% <<include>>
     UC5 -.->|«include»| UC4
 
 ```
@@ -30,4 +32,4 @@ flowchart LR
 - `Save place` extends `Search for place` — the user can optionally search for a place before saving it, but may also long-press directly on the map.
 
 **`«include»` explained:**
-- `Show measures and recommendations` always requires `Show climate statistics for saved place` — relevant recommendations are always derived from the identified risk level and cannot be shown without it.
+- `Show measures and recommendations` always requires `View risko verview for saved place` — relevant recommendations are always derived from the identified risk level and will show default without it.
