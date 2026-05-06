@@ -14,7 +14,7 @@ enum class OverlayType(@StringRes val labelRes: Int, val minZoom: Double, val ma
     QUICK_CLAY(R.string.quick_clay, 12.5, 20.0),
     RADON(R.string.radon, 10.9, 20.0),
     WIND(R.string.wind, 5.0, 20.0),
-    LANDSLIDE(R.string.landslide, 7.5, 20.0),
+    LANDSLIDE(R.string.landslide, 10.0, 20.0),
     AVALANCHE(R.string.avalanche, 10.0, 20.0)
 }
 
