@@ -249,6 +249,8 @@
     <string name="without_internet_connection">Utan internettforbinding</string>
     <string name="offline_limitations_description">Kartdata, søk, klimastatistikk og eksterne datakjelder kan hende ikkje blir lasta utan internettforbinding. Du kan framleis opne appen, sjå lagra stader og lese hjelp- og infosider</string>
     <string name="zoom">Zoom</string>
+    <string name="zoom_in">Zoom inn</string>
+    <string name="zoom_out">Zoom ut</string>
     <string name="zoom_explanation">Bruk + og - knappene på høgre side for å zooma. Ver merksam på at enkelte overlegg har avgrensa utviding. Vel «Ingen lag» for å zooma fritt</string>
     <string name="show_on_map_help">Trykk på posisjonsnåla i ein lagra stad for å sjå han på kartet</string>
     <string name="remove_saved_place_help">Trykk på søppelbøtte-ikonet for å sletta ein lagra stad</string>
