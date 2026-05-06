@@ -7,12 +7,15 @@ import androidx.compose.runtime.remember
 import kotlinx.coroutines.delay
 import no.uio.ifi.in2000.team45.ui.logo.LogoScreen
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
+import no.uio.ifi.in2000.team45.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 
 @Composable
 fun AppRoot(
     mapViewModel: MapViewModel,
+    onboardingCompleted: Boolean?,
+    onOnboardingFinished: () -> Unit,
     musicEnabled: Boolean,
     onMusicEnabledChanged: (Boolean) -> Unit,
     soundEnabled: Boolean,
@@ -25,10 +28,11 @@ fun AppRoot(
         showLoadingScreen = false
     }
 
-    if (showLoadingScreen) {
-        LogoScreen()
-    } else {
-        AppNavigation(mapViewModel = mapViewModel,
+    when {
+        showLoadingScreen || onboardingCompleted == null -> LogoScreen()
+        !onboardingCompleted -> OnboardingScreen(onFinished = onOnboardingFinished)
+        else -> AppNavigation(
+            mapViewModel = mapViewModel,
             musicEnabled = musicEnabled,
             onMusicEnabledChanged = onMusicEnabledChanged,
             soundEnabled = soundEnabled,

@@ -255,4 +255,19 @@
     <string name="show_on_map_help">Trykk på posisjonsnåla i ein lagra stad for å sjå han på kartet</string>
     <string name="remove_saved_place_help">Trykk på søppelbøtte-ikonet for å sletta ein lagra stad</string>
     <string name="expand_advice_help">Trykk på pila ned for å vise eller skjule råd for den lagra staden</string>
+
+    <string name="onboarding_skip">Hopp over</string>
+    <string name="onboarding_next">Neste</string>
+    <string name="onboarding_get_started">Kom i gang</string>
+    <string name="onboarding_progress">%1$d av 3</string>
+    <string name="onboarding_welcome_title">Velkomen til SafeProperty</string>
+    <string name="onboarding_welcome_subtitle">Utforsk kart, klimadata og tryggleiksinformasjon for stader som betyr noko for deg.</string>
+    <string name="onboarding_map_subtitle">Slik brukar du kartvisinga</string>
+    <string name="onboarding_saved_subtitle">Slik brukar du lagra stader</string>
+    <string name="onboarding_stats_subtitle">Slik brukar du klimastatistikk</string>
+    <string name="onboarding_select_overlay_desc">Trykk knappen nede til venstre for å velje kartoverlegg</string>
+    <string name="onboarding_my_location_desc">Trykk knappen nede til høgre for å sjå posisjonen din</string>
+    <string name="onboarding_overlay_explanation_desc">Trykk info-ikonet for å lese forklaring på valt overlegg</string>
+    <string name="safety_information">Tryggleiksinformasjon</string>
+    <string name="onboarding_footer_help">Om du vil finne tilbake til denne informasjonen seinare, finn du han i hamburgermenyen under \"Hjelp\"</string>
 </resources>
