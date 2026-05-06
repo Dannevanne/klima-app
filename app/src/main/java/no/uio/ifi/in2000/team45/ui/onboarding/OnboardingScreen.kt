@@ -172,7 +172,7 @@ private fun WelcomePage() {
 private fun MapPage() {
     OnboardingListPage(
         title = stringResource(R.string.map),
-        subtitle = stringResource(R.string.onboarding_kart_subtitle),
+        subtitle = stringResource(R.string.onboarding_map_subtitle),
         items = listOf(
             OnboardingItem(
                 icon = Icons.Filled.Search,

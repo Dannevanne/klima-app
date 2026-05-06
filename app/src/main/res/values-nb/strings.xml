@@ -260,7 +260,7 @@
     <string name="onboarding_progress">%1$d av 3</string>
     <string name="onboarding_welcome_title">Velkommen til SafeProperty</string>
     <string name="onboarding_welcome_subtitle">Utforsk kart, klimadata og sikkerhetsinformasjon for steder som betyr noe for deg.</string>
-    <string name="onboarding_kart_subtitle">Slik bruker du kartvisningen</string>
+    <string name="onboarding_map_subtitle">Slik bruker du kartvisningen</string>
     <string name="onboarding_saved_subtitle">Slik bruker du lagrede steder</string>
     <string name="onboarding_stats_subtitle">Slik bruker du klimastatistikk</string>
     <string name="onboarding_select_overlay_desc">Trykk knappen nede til venstre for å velge kartoverlegg</string>

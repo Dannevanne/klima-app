@@ -265,7 +265,7 @@
     <string name="onboarding_progress">%1$d of 3</string>
     <string name="onboarding_welcome_title">Welcome to SafeProperty</string>
     <string name="onboarding_welcome_subtitle">Explore maps, climate data and safety information for places that matter to you.</string>
-    <string name="onboarding_kart_subtitle">How to use the map view</string>
+    <string name="onboarding_map_subtitle">How to use the map view</string>
     <string name="onboarding_saved_subtitle">How to use saved places</string>
     <string name="onboarding_stats_subtitle">How to use climate statistics</string>
     <string name="onboarding_select_overlay_desc">Tap the bottom-left button to choose a map overlay</string>
