@@ -22,7 +22,11 @@ import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.AppRoot
 import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
+import no.uio.ifi.in2000.team45.data.settings.OnboardingPreferenceRepository
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModel
 import no.uio.ifi.in2000.team45.ui.settings.MusicViewModelFactory
 import no.uio.ifi.in2000.team45.data.music.MusicManager
@@ -49,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val cameraRepository = MapCameraRepository(applicationContext)
         val musicPreferenceRepository = MusicPreferenceRepository(applicationContext)
         val soundPreferenceRepository = SoundPreferenceRepository(applicationContext)
+        val onboardingPreferenceRepository = OnboardingPreferenceRepository(applicationContext)
 
         // MapBox token must be set before the map is used in app
         MapboxOptions.accessToken = getString(R.string.mapbox_access_token)
@@ -78,6 +83,12 @@ class MainActivity : AppCompatActivity() {
 
             val soundEnabled by soundViewModel.soundEnabledFlow.collectAsState(initial = true)
 
+            // null = not loaded yet, false = onboarding pending, true = done
+            val onboardingCompleted by produceState<Boolean?>(initialValue = null) {
+                onboardingPreferenceRepository.onboardingCompletedFlow.collect { value = it }
+            }
+            val coroutineScope = rememberCoroutineScope()
+
             LaunchedEffect(musicEnabled) {
                 musicManager.updateMusicState(musicEnabled)
             }
@@ -98,6 +109,12 @@ class MainActivity : AppCompatActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     AppRoot(
                         mapViewModel = mapViewModel,
+                        onboardingCompleted = onboardingCompleted,
+                        onOnboardingFinished = {
+                            coroutineScope.launch {
+                                onboardingPreferenceRepository.setCompleted()
+                            }
+                        },
                         musicEnabled = musicEnabled,
                         onMusicEnabledChanged = { enabled ->
                             musicViewModel.updateMusicEnabled(enabled)
