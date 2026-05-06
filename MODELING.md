@@ -65,12 +65,14 @@ sequenceDiagram
     actor User
     participant UI
     participant ViewModel
+    participant Repository
     participant Mapbox
     participant NVE_NGU as NVE / NGU API
  
     Note over User, Mapbox: App launch
     User->>UI: Opens app
-    ViewModel->>ViewModel: Restores last saved camera position
+    ViewModel->>Repository: Fetch last saved camera position
+    Repository-->>ViewModel: Camera position restored
     UI->>Mapbox: Load map with last camera position
     Mapbox-->>UI: Base map rendered
  
@@ -78,8 +80,10 @@ sequenceDiagram
     User->>UI: Selects overlay (e.g. Flood)
     UI->>ViewModel: setOverlay(FLOOD)
     ViewModel->>ViewModel: Adjusts zoom to overlay's valid range
-    ViewModel->>NVE_NGU: Request overlay data
-    NVE_NGU-->>ViewModel: Overlay data returned
+    ViewModel->>Repository: Request overlay data
+    Repository->>NVE_NGU: Fetch overlay tiles
+    NVE_NGU-->>Repository: Overlay data returned
+    Repository-->>ViewModel: Overlay data
     ViewModel-->>UI: Update state with overlay
     UI->>Mapbox: Display overlay on map
     Mapbox-->>User: Map shown with colour-coded risk overlay
