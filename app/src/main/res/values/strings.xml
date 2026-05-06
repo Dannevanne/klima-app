@@ -258,4 +258,19 @@
     <string name="show_on_map_help">Tap the location pin on a saved place to view it on the map</string>
     <string name="remove_saved_place_help">Tap the trash icon to delete a saved place</string>
     <string name="expand_advice_help">Tap the down arrow to show or hide safety advice for the saved place</string>
+
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get started</string>
+    <string name="onboarding_progress">%1$d of 3</string>
+    <string name="onboarding_welcome_title">Welcome to SafeProperty</string>
+    <string name="onboarding_welcome_subtitle">Explore maps, climate data and safety information for places that matter to you.</string>
+    <string name="onboarding_kart_subtitle">How to use the map view</string>
+    <string name="onboarding_saved_subtitle">How to use saved places</string>
+    <string name="onboarding_stats_subtitle">How to use climate statistics</string>
+    <string name="onboarding_select_overlay_desc">Tap the bottom-left button to choose a map overlay</string>
+    <string name="onboarding_my_location_desc">Tap the button at the bottom right to see your position</string>
+    <string name="onboarding_overlay_explanation_desc">Tap the info icon to read the explanation for the selected overlay</string>
+    <string name="safety_information">Safety information</string>
+    <string name="onboarding_footer_help">If you want to find this information again later, you can find it in the hamburger menu under \"Help\"</string>
 </resources>
