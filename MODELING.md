@@ -90,3 +90,36 @@ sequenceDiagram
 ```
  
 ---
+
+### 3.2 Save Place and View Risk Overview (UC3 / UC4)
+ 
+**Choice and rationale:** Shows the long-press flow from user interaction to local storage and retrieval of risk data, including interaction between the Saved Places feature and external hazard data APIs. UC5 has a `«include»` relation to UC4, but is not taken into account here to simplify the diagram.
+ 
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant NVE_NGU as NVE / NGU API
+ 
+    Note over User, NVE_NGU: User saves a place
+    User->>UI: Long-press on map
+    UI->>ViewModel: onLongPress(location)
+    ViewModel->>Repository: Save location locally
+    Repository-->>ViewModel: Saved OK
+    ViewModel-->>UI: Show confirmation dialog
+ 
+    Note over User, NVE_NGU: User views risk overview
+    User->>UI: Navigates to Saved Places
+    UI->>ViewModel: Load saved places
+    ViewModel->>Repository: Fetch saved locations
+    Repository-->>ViewModel: List of saved places
+    ViewModel->>NVE_NGU: Request hazard data per coordinate
+    NVE_NGU-->>ViewModel: Hazard zone data per category
+    ViewModel->>ViewModel: Calculate risk level\n(High / Moderate / Low)
+    ViewModel-->>UI: Update state with risk overview
+    UI-->>User: Display risk levels
+```
+ 
+---
