@@ -123,3 +123,55 @@ sequenceDiagram
 ```
  
 ---
+
+### 3.3 Explore Historical Climate Statistics (UC6)
+ 
+**Choice and rationale:** Illustrates the search and retrieval flow for historical climate statistics, including fallback geocoding when no matching weather stations are found, and how climate data is aggregated and presented through the MVVM architecture.
+ 
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant Frost as Frost API (MET)
+    participant Mapbox
+ 
+    Note over User, Frost: User searches for a place
+    User->>UI: Types place name and submits search
+    UI->>ViewModel: searchStations(query)
+    ViewModel->>Repository: searchStations(query, clientId)
+    Repository->>Frost: searchStations(query, clientId)
+    Frost-->>Repository: Station results
+    Repository-->>ViewModel: List of WeatherStation
+ 
+    alt No stations found
+        ViewModel->>Repository: geocodePlaces(query, mapboxToken)
+        Repository->>Mapbox: geocode(query)
+        Mapbox-->>Repository: Place coordinates
+        Repository-->>ViewModel: List of Place
+    end
+ 
+    ViewModel->>Repository: addSearch(query)
+    ViewModel-->>UI: uiState = PlaceResults / StationResults
+    UI-->>User: Display list of matching places or stations
+ 
+    Note over User, Frost: User selects a place
+    User->>UI: Selects a place from results
+    UI->>ViewModel: selectPlace(place)
+    ViewModel->>Repository: findNearestStations(lat, lon, clientId)
+    Repository->>Frost: findNearestStations(lat, lon)
+    Frost-->>Repository: Nearby stations
+    Repository->>Frost: getAvailableTimeSeries(stationIds, elements)
+    Frost-->>Repository: Station availability data
+    Repository-->>ViewModel: StationAssignment (best stations per element)
+    ViewModel->>Repository: getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+    ViewModel->>Repository: getClimateStats(stationId, clientId)
+    Repository->>Frost: Fetch observations per station
+    Frost-->>Repository: Climate data
+    Repository-->>ViewModel: Aggregated climate statistics
+    ViewModel-->>UI: uiState = ClimateData(station, stats, annualData)
+    UI-->>User: Display climate graphs over time
+```
+
+---
