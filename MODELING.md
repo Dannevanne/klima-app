@@ -56,6 +56,8 @@
 
 ## 3. Sequence Diagrams
 
+To improve clarity, the sequence diagrams use a simplified architectural view consisting of UI, ViewModel, Repository, and external APIs. The Repository layer encapsulates access to both remote data sources and local persistence, and lower-level components such as DataSources are intentionally omitted
+
 ### 3.1 Show Map with Overlay (UC1)
  
 **Choice and rationale:** Shows the asynchronous flow between the user, UI layer, ViewModel, Repository (including local storage) and external APIs when selecting a map overlay. Illustrates how the MVVM pattern handles network calls and state updates, and how zoom is constrained per overlay type.
