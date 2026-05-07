@@ -137,7 +137,10 @@ private fun OverlayPillButton(
             Icon(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowDown
                 else Icons.Filled.KeyboardArrowUp,
-                contentDescription = null
+                contentDescription = stringResource(
+                    if (expanded) no.uio.ifi.in2000.team45.R.string.collapse
+                    else no.uio.ifi.in2000.team45.R.string.expand
+                )
             )
         }
     }
