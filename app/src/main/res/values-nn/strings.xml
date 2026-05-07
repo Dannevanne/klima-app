@@ -72,6 +72,8 @@
     <string name="open_map">Opne kart</string>
     <string name="show_on_map">Vis på kart</string>
     <string name="open_in_saved_places">Opne i Lagra stader</string>
+    <string name="open_in_statistics">Opne i Statistikk</string>
+    <string name="show_in_statistics">Vis i statistikk</string>
     <string name="overlay_legend">Teiknforklaring</string>
     <string name="overlay_legend_title">Teiknforklaring for %1$s</string>
     <string name="legend_flood_body">Heildekkjande blå polygon viser NVE sine flomaktsomheitsområde. NVE har identifisert desse som stader der flom kan oppstå. Datakjelda gjev ingen alvorsgrad — alle polygon vert vist likt.</string>
