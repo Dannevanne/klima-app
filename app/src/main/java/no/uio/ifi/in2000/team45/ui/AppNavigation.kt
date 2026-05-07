@@ -119,6 +119,10 @@ fun AppNavigation(
                 onHelpClick = { navigateTo(ROUTE_HELP) },
                 onStatisticClick = { navigateTo(ROUTE_STATISTICS) },
                 onSavedPlacesClick = { navigateTo(ROUTE_SAVED) },
+                onShowInStatistics = { lat, lon, label ->
+                    statisticViewModel.selectSavedPlace(lat, lon, label)
+                    navigateTo(ROUTE_STATISTICS)
+                },
                 mapViewModel = mapViewModel,
                 savedPlacesViewModel = savedPlacesViewModel
             )
