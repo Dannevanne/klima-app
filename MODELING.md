@@ -105,21 +105,23 @@ sequenceDiagram
  
     Note over User, NVE_NGU: User saves a place
     User->>UI: Long-press on map
-    UI->>ViewModel: onLongPress(location)
-    ViewModel->>Repository: Save location locally
-    Repository-->>ViewModel: Saved OK
+    UI->>ViewModel: addLocation(lat, lng, label)
+    ViewModel->>Repository: addLocation(SavedPlacesLocation)
+    Repository-->>ViewModel: Saved OK (DataStore)
     ViewModel-->>UI: Show confirmation dialog
  
     Note over User, NVE_NGU: User views risk overview
     User->>UI: Navigates to Saved Places
-    UI->>ViewModel: Load saved places
-    ViewModel->>Repository: Fetch saved locations
-    Repository-->>ViewModel: List of saved places
-    ViewModel->>NVE_NGU: Request hazard data per coordinate
-    NVE_NGU-->>ViewModel: Hazard zone data per category
-    ViewModel->>ViewModel: Calculate risk level\n(High / Moderate / Low)
-    ViewModel-->>UI: Update state with risk overview
-    UI-->>User: Display risk levels
+    UI->>ViewModel: fetchStatusForLocation(location)
+    ViewModel->>Repository: Get saved locations
+    Repository-->>ViewModel: List of SavedPlacesLocation
+    ViewModel->>Repository: fetching hazard data
+    Repository->>NVE_NGU: WMS/GeoJSON identify requests per hazard type
+    NVE_NGU-->>Repository: Hazard zone data per category
+    Repository-->>ViewModel: Hazard results
+    ViewModel->>ViewModel: Calculate risk level (High / Moderate / Low)
+    ViewModel-->>UI: Update UI with risk overview
+    UI-->>User: Display risk levels and recommended measures
 ```
  
 ---
