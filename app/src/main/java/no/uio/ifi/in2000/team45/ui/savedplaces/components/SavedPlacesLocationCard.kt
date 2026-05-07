@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -89,7 +90,8 @@ fun SavedPlacesLocationCard(
     location: SavedPlacesLocation,
     status: LocationStatus?,
     onRemove: () -> Unit,
-    onShowOnMap: () -> Unit
+    onShowOnMap: () -> Unit,
+    onShowInStatistics: () -> Unit
 ) {
     val loading = status == null
     val floodLevel = status?.floodLevel ?: "Unknown"
@@ -123,6 +125,13 @@ fun SavedPlacesLocationCard(
                     fontSize = 18.sp,
                     modifier = Modifier.weight(1f)
                 )
+                IconButton(onClick = onShowInStatistics) {
+                    Icon(
+                        painter = painterResource(R.drawable.outline_analytics),
+                        contentDescription = stringResource(R.string.show_in_statistics),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 IconButton(onClick = onShowOnMap) {
                     Icon(
                         Icons.Outlined.Place,

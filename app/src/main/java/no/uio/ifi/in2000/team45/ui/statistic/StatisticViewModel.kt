@@ -371,6 +371,26 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    // Entry point used when navigating to statistics from a saved place.
+    // Builds a Place at the saved coords and runs the same pipeline that
+    // search-and-pick uses, so the user lands on climate data without an
+    // extra tap.
+    fun selectSavedPlace(lat: Double, lon: Double, label: String) {
+        val name = label.ifBlank {
+            getApplication<Application>().getString(R.string.map_location_placeholder)
+        }
+        searchQuery = name
+        selectPlace(
+            Place(
+                name = name,
+                subtitle = "",
+                latitude = lat,
+                longitude = lon,
+                stations = emptyList()
+            )
+        )
+    }
+
     fun searchNearbyStations(lat: Double, lon: Double) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {

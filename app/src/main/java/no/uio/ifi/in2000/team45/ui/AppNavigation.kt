@@ -151,6 +151,10 @@ fun AppNavigation(
                         mapViewModel.showLocation(Point.fromLngLat(lon, lat), context)
                         navigateTo(ROUTE_MAP)
                     },
+                    onShowInStatistics = { lat, lon, label ->
+                        statisticViewModel.selectSavedPlace(lat, lon, label)
+                        navigateTo(ROUTE_STATISTICS)
+                    },
                     modifier = modifier
                 )
             }
