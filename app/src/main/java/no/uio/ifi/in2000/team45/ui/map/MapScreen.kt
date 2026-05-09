@@ -156,7 +156,7 @@ fun MapScreen(
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Place,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.map),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
@@ -187,12 +187,12 @@ fun MapScreen(
                     BottomBarItemData(
                         label = stringResource(R.string.nav_map),
                         onClick = {},
-                        icon = { Icon(Icons.Filled.Place, contentDescription = null) }
+                        icon = { Icon(Icons.Filled.Place, contentDescription = stringResource(R.string.nav_map)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.saved_places),
                         onClick = onSavedPlacesClick,
-                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = stringResource(R.string.saved_places)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
@@ -200,7 +200,7 @@ fun MapScreen(
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.outline_analytics),
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.nav_statistics)
                             )
                         }
                     )
