@@ -79,6 +79,7 @@ fun InfoScreen(
                     containerColor = datasource.containerColor,
                     iconColor = datasource.iconColor,
                     icon = datasource.icon,
+                    iconContentDescription = datasource.title,
                     onClick = {
                         try {
                             // open with CustomTabsIntent first
@@ -155,6 +156,7 @@ private fun InfoDataCard(
     containerColor: Color,
     iconColor: Color,
     icon: ImageVector,
+    iconContentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -184,7 +186,7 @@ private fun InfoDataCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = iconContentDescription,
                 tint = iconColor,
                 modifier = Modifier.size(18.dp)
             )
