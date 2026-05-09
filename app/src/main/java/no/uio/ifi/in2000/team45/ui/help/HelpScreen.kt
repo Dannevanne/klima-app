@@ -177,7 +177,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.select_a_time_period),
-                    description = stringResource(R.string.use_10_30_or_50_years_to_see_climate_trends)
+                    description = stringResource(R.string.use_10_30_or_50_years_to_see_climate_trends),
+                    iconContentDescription = stringResource(R.string.select_a_time_period)
                 )
             }
             item {
