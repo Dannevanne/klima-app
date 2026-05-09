@@ -184,7 +184,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.Star,
                     title = stringResource(R.string.save_area),
-                    description = stringResource(R.string.press_the_star_to_save_an_area)
+                    description = stringResource(R.string.press_the_star_to_save_an_area),
+                    iconContentDescription = stringResource(R.string.save_area)
                 )
             }
             item {
