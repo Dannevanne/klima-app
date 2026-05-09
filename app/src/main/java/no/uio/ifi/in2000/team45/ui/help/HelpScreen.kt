@@ -170,7 +170,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Search,
                     title = stringResource(R.string.search_for_places),
-                    description = stringResource(R.string.search_for_a_place_to_see_climate_statistics)
+                    description = stringResource(R.string.search_for_a_place_to_see_climate_statistics),
+                    iconContentDescription = stringResource(R.string.search_for_places)
                 )
             }
             item {
