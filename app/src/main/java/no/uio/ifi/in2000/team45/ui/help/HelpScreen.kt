@@ -149,7 +149,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Delete,
                     title = stringResource(R.string.remove_saved_place),
-                    description = stringResource(R.string.remove_saved_place_help)
+                    description = stringResource(R.string.remove_saved_place_help),
+                    iconContentDescription = stringResource(R.string.remove_saved_place)
                 )
             }
             item {
