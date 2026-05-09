@@ -135,7 +135,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.saved_places),
-                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access)
+                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access),
+                    iconContentDescription = stringResource(R.string.saved_places)
                 )
             }
             item {
