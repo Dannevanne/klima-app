@@ -156,7 +156,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.KeyboardArrowDown,
                     title = stringResource(R.string.expand),
-                    description = stringResource(R.string.expand_advice_help)
+                    description = stringResource(R.string.expand_advice_help),
+                    iconContentDescription = stringResource(R.string.expand)
                 )
             }
 
