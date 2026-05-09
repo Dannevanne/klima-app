@@ -216,7 +216,8 @@ private fun HelpSectionTitle(title: String){
 private fun HelpItem(
     iconImage: ImageVector,
     title: String,
-    description: String
+    description: String,
+    iconContentDescription: String
 ){
     Row(
         modifier = Modifier
@@ -236,7 +237,7 @@ private fun HelpItem(
         ){
             Icon(
                 imageVector = iconImage,
-                contentDescription = null,
+                contentDescription = iconContentDescription,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.size(18.dp)
             )
