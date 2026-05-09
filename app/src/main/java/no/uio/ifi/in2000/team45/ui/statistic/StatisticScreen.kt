@@ -64,7 +64,7 @@ fun StatisticScreen(
                 navigationIcon = {
                     Icon(
                         painterResource(R.drawable.bar_chart),
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.climate_statistics),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
@@ -104,19 +104,19 @@ fun StatisticScreen(
                 ) {
                     NavBarItem(
                         onClick = onMapClick,
-                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = stringResource(R.string.nav_map)) },
                         label = stringResource(R.string.nav_map),
                         modifier = Modifier.weight(1f)
                     )
                     NavBarItem(
                         onClick = onSavedPlacesClick,
-                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) },
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = stringResource(R.string.saved_places)) },
                         label = stringResource(R.string.saved_places),
                         modifier = Modifier.weight(1f)
                     )
                     NavBarItem(
                         onClick = { statisticViewModel.resetAllStatisticData() },
-                        icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = null) },
+                        icon = { Icon(painterResource(R.drawable.filled_analytics), contentDescription = stringResource(R.string.nav_statistics)) },
                         label = stringResource(R.string.nav_statistics),
                         modifier = Modifier.weight(1f)
                     )
