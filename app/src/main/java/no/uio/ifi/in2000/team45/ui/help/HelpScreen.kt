@@ -191,7 +191,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.Warning,
                     title = stringResource(R.string.missing_data),
-                    description = stringResource(R.string.warning_when_missing_data)
+                    description = stringResource(R.string.warning_when_missing_data),
+                    iconContentDescription = stringResource(R.string.missing_data)
                 )
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
