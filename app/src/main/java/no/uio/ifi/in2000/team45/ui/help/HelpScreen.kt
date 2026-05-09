@@ -74,7 +74,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.WifiOff,
                     title = stringResource(R.string.without_internet_connection),
-                    description = stringResource(R.string.offline_limitations_description)
+                    description = stringResource(R.string.offline_limitations_description),
+                    iconContentDescription = stringResource(R.string.without_internet_connection)
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -87,42 +88,48 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Search,
                     title = stringResource(R.string.search_for_places),
-                    description = stringResource(R.string.paste_a_place_name_in_the_search_bar_to_navigate_on_the_map)
+                    description = stringResource(R.string.paste_a_place_name_in_the_search_bar_to_navigate_on_the_map),
+                    iconContentDescription = stringResource(R.string.search_for_places)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.KeyboardArrowUp,
                     title = stringResource(R.string.select_overlay),
-                    description = stringResource(R.string.select_an_overlay_by_pushing_the_bottom_left_button)
+                    description = stringResource(R.string.select_an_overlay_by_pushing_the_bottom_left_button),
+                    iconContentDescription = stringResource(R.string.select_overlay)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.overlay_explanation),
-                    description = stringResource(R.string.press_to_see_explanation_for_selected_overlay)
+                    description = stringResource(R.string.press_to_see_explanation_for_selected_overlay),
+                    stringResource(R.string.overlay_explanation)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.ZoomOutMap,
                     title = stringResource(R.string.zoom),
-                    description = stringResource(R.string.zoom_explanation)
+                    description = stringResource(R.string.zoom_explanation),
+                    iconContentDescription = stringResource(R.string.zoom)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.save_place),
-                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places)
+                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places),
+                    iconContentDescription = stringResource(R.string.save_place)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.LocationOn,
                     title = stringResource(R.string.my_location),
-                    description = stringResource(R.string.button_to_see_location_or_give_permission)
+                    description = stringResource(R.string.button_to_see_location_or_give_permission),
+                    iconContentDescription = stringResource(R.string.my_location)
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
