@@ -142,7 +142,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.Place,
                     title = stringResource(R.string.show_on_map),
-                    description = stringResource(R.string.show_on_map_help)
+                    description = stringResource(R.string.show_on_map_help),
+                    iconContentDescription = stringResource(R.string.show_on_map)
                 )
             }
             item {
