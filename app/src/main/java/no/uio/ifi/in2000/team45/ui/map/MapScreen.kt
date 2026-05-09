@@ -62,6 +62,7 @@ fun MapStateScreen(
     onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -122,6 +123,7 @@ fun MapStateScreen(
                 onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onSavedPlacesClick = onSavedPlacesClick,
+                onShowInStatistics = onShowInStatistics,
                 modifier = modifier
             )
             when (uiState) {
@@ -143,6 +145,7 @@ fun MapScreen(
     onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -213,6 +216,7 @@ fun MapScreen(
             locationGranted = locationGranted,
             onLocationClick = onLocationClick,
             onSavedPlacesClick = onSavedPlacesClick,
+            onShowInStatistics = onShowInStatistics,
             savedPlacesViewModel = savedPlacesViewModel,
             modifier = Modifier
                 .fillMaxSize()
@@ -227,6 +231,7 @@ fun DataMap(
     locationGranted: Boolean,
     onLocationClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -415,6 +420,10 @@ fun DataMap(
                     savedPlacesViewModel.requestFocus(place)
                     selectedSavedPlace = null
                     onSavedPlacesClick()
+                },
+                onOpenStatistics = {
+                    onShowInStatistics(place.latitude, place.longitude, place.label)
+                    selectedSavedPlace = null
                 },
                 onDismiss = { selectedSavedPlace = null },
                 modifier = Modifier

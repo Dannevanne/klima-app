@@ -87,6 +87,8 @@
     <string name="open_map">Open map</string>
     <string name="show_on_map">Show on map</string>
     <string name="open_in_saved_places">Open in Saved places</string>
+    <string name="open_in_statistics">Open in Statistics</string>
+    <string name="show_in_statistics">Show in statistics</string>
     <string name="overlay_legend">Legend</string>
     <string name="overlay_legend_title">%1$s</string>
     <string name="legend_flood_body">Solid blue polygons mark NVE flood awareness areas. NVE has identified these as places where flooding could occur. There is no severity grading from the source data — every polygon is shown the same.</string>
