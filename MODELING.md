@@ -52,4 +52,174 @@
 | **Alternate flow 2** | Incomplete data is returned for the query -> system shows an error message and shows what it got. |
 | **Alternate flow 3** | User resets the view → system clears displayed data but retains the search history and returns to the initial state|
  
+## 4. Class Diagram
+ 
+**Choice and rationale:** The class diagram reflects the MVVM architecture with manual factory classes and the Repository pattern. It shows the central classes from the three most important use cases and their dependencies. Only the most central classes are included to keep the diagram readable.
+ 
+```mermaid
+classDiagram
+    class MapViewModel {
+        -mapRepository: MapRepository
+        -cameraRepository: MapCameraRepository
+        -activeOverlay: OverlayType
+        +setOverlay(type: OverlayType, context: Context)
+        +updateOverlay(bbox: List~Double~, width: Int, height: Int, context: Context)
+        +saveCamera(center: Point, zoom: Double)
+    }
+ 
+    class MapCameraRepository {
+        -dataStore: DataStore
+        +cameraFlow: Flow~Triple~Double, Double, Double~~
+        +saveCamera(lat: Double, lng: Double, zoom: Double)
+    }
+ 
+    class MapRepository {
+        -mapDatasource: MapDatasource
+        +getOverlayURL(type: OverlayType, bbox: List~Double~, width: Int, height: Int): String
+        +isInFloodZone(lat: Double, lon: Double): Boolean?
+        +isInLandslideZone(lat: Double, lon: Double): Boolean?
+        +isInAvalancheZone(lat: Double, lon: Double): Boolean?
+        +getQuickClayHazard(lat: Double, lon: Double): String?
+        +getRadonHazard(lat: Double, lon: Double): String?
+    }
+ 
+    class MapDatasource {
+        +buildOverlayURL(type: OverlayType, bbox: List~Double~, width: Int, height: Int): String
+        +fetchNveIdentifyBody(service: String, layers: String, lat: Double, lon: Double): String?
+        +fetchRadonHazardBody(lat: Double, lon: Double): String?
+        +fetchQuickClayHazardBody(lat: Double, lon: Double): String?
+    }
+ 
+    class OverlayType {
+        <<enumeration>>
+        NONE
+        FLOOD
+        QUICK_CLAY
+        RADON
+        WIND
+        LANDSLIDE
+        AVALANCHE
+        +minZoom: Double
+        +maxZoom: Double
+    }
+ 
+    class SavedPlacesViewModel {
+        -repository: SavedPlacesRepository
+        -mapRepository: MapRepository
+        +locations: StateFlow~List~SavedPlacesLocation~~
+        +locationStatuses: Map~String, LocationStatus~
+        +addLocation(lat: Double, lng: Double, label: String): Boolean
+        +removeLocation(location: SavedPlacesLocation)
+        +fetchStatusForLocation(location: SavedPlacesLocation)
+        +removeAllSavedPlaces()
+    }
+ 
+    class SavedPlacesRepository {
+        -dataStore: DataStore
+        +savedPlacesLocationsFlow: Flow~List~SavedPlacesLocation~~
+        +addLocation(location: SavedPlacesLocation)
+        +removeLocation(location: SavedPlacesLocation)
+        +removeAll()
+    }
+ 
+    class SavedPlacesLocation {
+        <<data class>>
+        +latitude: Double
+        +longitude: Double
+        +label: String
+    }
+ 
+    class LocationStatus {
+        <<data class>>
+        +floodLevel: String
+        +landslideLevel: String
+        +avalancheLevel: String
+        +quickClayLevel: String
+        +radonLevel: String
+        +temperature: Double?
+        +windSpeed: Double?
+        +precipitation: Double?
+    }
+ 
+    class StatisticViewModel {
+        -repository: StatisticRepository
+        -recentSearchRepository: RecentSearchRepository
+        +uiState: StatisticUiState
+        +searchStations()
+        +selectPlace(place: Place)
+        +selectStation(station: WeatherStation)
+        +resetAllStatisticData()
+    }
+ 
+    class StatisticRepository {
+        +searchStations(query: String, clientId: String): List~WeatherStation~
+        +findNearestStations(lat: Double, lon: Double, clientId: String, count: Int): List~WeatherStation~
+        +getAnnualObservations(stationId: String, clientId: String, yearFrom: Int, yearTo: Int): List~AnnualObservation~
+        +getClimateStats(stationId: String, clientId: String): List~MonthlyClimateStats~
+        +geocodePlaces(query: String, mapboxToken: String): List~Place~
+    }
+ 
+    class RecentSearchRepository {
+        -dataStore: DataStore
+        +recentSearchesFlow: Flow~List~String~~
+        +addSearch(query: String)
+        +clearHistory()
+    }
+ 
+    class WeatherStation {
+        <<data class>>
+        +id: String
+        +name: String
+        +latitude: Double
+        +longitude: Double
+        +municipality: String
+        +county: String
+    }
+ 
+    class Place {
+        <<data class>>
+        +name: String
+        +subtitle: String
+        +latitude: Double
+        +longitude: Double
+        +stations: List~WeatherStation~
+    }
+ 
+    class AnnualObservation {
+        <<data class>>
+        +year: Int
+        +meanTemp: Double?
+        +totalPrecip: Double?
+        +maxWindGust: Double?
+        +maxSnowDepth: Double?
+    }
+ 
+    class MonthlyClimateStats {
+        <<data class>>
+        +month: Int
+        +meanTemp: Double?
+        +precipitation: Double?
+        +windSpeed: Double?
+        +snowDepth: Double?
+    }
+ 
+    MapViewModel --> MapRepository : uses
+    MapViewModel --> MapCameraRepository : uses
+    MapViewModel --> OverlayType : uses
+    MapRepository --> MapDatasource : uses
+    MapRepository --> OverlayType : uses
+    SavedPlacesViewModel --> SavedPlacesRepository : uses
+    SavedPlacesViewModel --> MapRepository : uses
+    SavedPlacesViewModel --> LocationStatus : produces
+    SavedPlacesViewModel --> SavedPlacesLocation : uses
+    SavedPlacesRepository --> SavedPlacesLocation : stores
+    StatisticViewModel --> StatisticRepository : uses
+    StatisticViewModel --> RecentSearchRepository : uses
+    StatisticRepository --> WeatherStation : returns
+    StatisticRepository --> Place : returns
+    StatisticRepository --> AnnualObservation : returns
+    StatisticRepository --> MonthlyClimateStats : returns
+    Place --> WeatherStation : contains
+```
+ 
 ---
