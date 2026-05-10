@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable

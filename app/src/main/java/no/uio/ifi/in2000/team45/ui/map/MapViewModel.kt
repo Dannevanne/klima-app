@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
-import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.first
 import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguageOption
+import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
 import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
 import no.uio.ifi.in2000.team45.ui.theme.AppTheme
 
@@ -37,14 +37,6 @@ sealed interface MapUiState {
     object Loading : MapUiState
     object Idle : MapUiState
 }
-
-// UI model. suggestion gives access to the original object so
-// it can be sent to placeAutocomplete.select()
-data class SearchSuggestionUi(
-    val suggestion: PlaceAutocompleteSuggestion,
-    val title: String,
-    val subtitle: String?
-)
 
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
