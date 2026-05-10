@@ -8,11 +8,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.search.autocomplete.PlaceAutocomplete
+import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
+import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
@@ -55,11 +59,23 @@ class StatisticViewModel @JvmOverloads constructor(
 
     private var searchJob: Job? = null
     private var climateJob: Job? = null
+    private var suggestionsJob: Job? = null
+    private var selectSuggestionJob: Job? = null
+
+    // Mapbox autocomplete client. Same API the map screen uses, so typing
+    // here surfaces the same place suggestions a user sees on the map.
+    private val placeAutocomplete = PlaceAutocomplete.create()
 
     var uiState: StatisticUiState by mutableStateOf(StatisticUiState.Idle)
         private set
 
     var searchQuery: String by mutableStateOf("")
+        private set
+
+    var searchSuggestions: List<SearchSuggestionUi> by mutableStateOf(emptyList())
+        private set
+
+    var isSearching: Boolean by mutableStateOf(false)
         private set
 
     var selectedPeriod: Int by mutableIntStateOf(30)
@@ -80,7 +96,11 @@ class StatisticViewModel @JvmOverloads constructor(
     fun resetAllStatisticData() {
         searchJob?.cancel()
         climateJob?.cancel()
+        suggestionsJob?.cancel()
+        selectSuggestionJob?.cancel()
         searchQuery = ""
+        searchSuggestions = emptyList()
+        isSearching = false
         selectedPeriod = 30
         uiState = StatisticUiState.Idle
         viewModelScope.launch {
@@ -104,9 +124,48 @@ class StatisticViewModel @JvmOverloads constructor(
 
     fun updateSearchQuery(query: String) {
         searchQuery = query
-        if (query.isEmpty()) {
+        if (query.isBlank()) {
             searchJob?.cancel()
+            suggestionsJob?.cancel()
+            searchSuggestions = emptyList()
+            isSearching = false
             uiState = StatisticUiState.Idle
+            return
+        }
+
+        suggestionsJob?.cancel()
+        suggestionsJob = viewModelScope.launch {
+            isSearching = true
+            try {
+                val response = placeAutocomplete.suggestions(
+                    query = query,
+                    options = PlaceAutocompleteOptions(
+                        limit = 8,
+                        countries = listOf(IsoCountryCode.NORWAY)
+                    )
+                )
+                response.onValue { suggestions ->
+                    if (searchQuery != query) return@onValue
+                    searchSuggestions = suggestions.map { s ->
+                        SearchSuggestionUi(
+                            suggestion = s,
+                            title = s.name,
+                            subtitle = s.formattedAddress
+                        )
+                    }
+                    isSearching = false
+                }.onError {
+                    if (searchQuery == query) {
+                        searchSuggestions = emptyList()
+                        isSearching = false
+                    }
+                }
+            } catch (_: Exception) {
+                if (searchQuery == query) {
+                    searchSuggestions = emptyList()
+                    isSearching = false
+                }
+            }
         }
     }
 
@@ -479,6 +538,8 @@ class StatisticViewModel @JvmOverloads constructor(
 
     fun goBack() {
         searchQuery = ""
+        searchSuggestions = emptyList()
+        isSearching = false
         uiState = StatisticUiState.Idle
     }
 
@@ -489,18 +550,25 @@ class StatisticViewModel @JvmOverloads constructor(
         if (uiState is StatisticUiState.ClimateData) return
         if (uiState is StatisticUiState.Loading) return
         searchJob?.cancel()
+        suggestionsJob?.cancel()
         searchQuery = ""
+        searchSuggestions = emptyList()
+        isSearching = false
         uiState = StatisticUiState.Idle
     }
 
     fun cancelStatisticScreenWork() {
         searchJob?.cancel()
         climateJob?.cancel()
+        suggestionsJob?.cancel()
+        selectSuggestionJob?.cancel()
     }
 
     override fun onCleared() {
         searchJob?.cancel()
         climateJob?.cancel()
+        suggestionsJob?.cancel()
+        selectSuggestionJob?.cancel()
         super.onCleared()
     }
 
