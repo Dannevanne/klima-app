@@ -105,7 +105,7 @@ fun HelpScreen(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.overlay_explanation),
                     description = stringResource(R.string.press_to_see_explanation_for_selected_overlay),
-                    stringResource(R.string.overlay_explanation)
+                    iconContentDescription = stringResource(R.string.overlay_explanation)
                 )
             }
             item {
