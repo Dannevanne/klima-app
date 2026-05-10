@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.DeviceThermostat
 import androidx.compose.material.icons.outlined.Engineering
 import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.Storm
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.Water
@@ -85,5 +86,13 @@ val infoDatasources = listOf(
         containerColor = IconLightGreen,
         iconColor = IconGreen,
         icon = Icons.Outlined.HealthAndSafety
+    ),
+    InfoDatasource(
+        title = "DSB",
+        url = "https://www.dsb.no/sikkerhverdag/produkter-utstyr-og-fritid/slik-forbereder-du-deg-pa-storm/",
+        descriptionId = R.string.storm_preparedness,
+        containerColor = IconLightPurple,
+        iconColor = IconPurple,
+        icon = Icons.Outlined.Storm
     )
 )
