@@ -71,6 +71,14 @@
     <string name="map_and_search">Map and search</string>
     <string name="ngu_radonwms" translatable="false">NGU / RadonWMS</string>
     <string name="radon_gas">Radon gas</string>
+    <string name="dibk" translatable="false">DiBK</string>
+    <string name="building_in_hazard_areas">Building in hazard areas</string>
+    <string name="varsom" translatable="false">Varsom</string>
+    <string name="avalanche_warnings">Avalanche warnings</string>
+    <string name="dsa" translatable="false">DSA</string>
+    <string name="radon_and_radiation_safety">Radon and radiation safety</string>
+    <string name="dsb" translatable="false">DSB</string>
+    <string name="storm_preparedness">Storm preparedness</string>
     <string name="privacy">Privacy</string>
     <string name="location_data_is_used_only_locally_and_is_not_shared_with_third_parties">Location data is used only locally and is not shared with third parties</string>
     <string name="the_app_does_not_require_a_login_or_account">The app does not require a login or account</string>
