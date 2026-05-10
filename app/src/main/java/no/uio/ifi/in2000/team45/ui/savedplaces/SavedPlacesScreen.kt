@@ -54,7 +54,7 @@ fun SavedPlacesScreen(
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Favorite,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.saved_places),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
@@ -86,12 +86,12 @@ fun SavedPlacesScreen(
                     BottomBarItemData(
                         label = stringResource(R.string.nav_map),
                         onClick = onMapClick,
-                        icon = { Icon(Icons.Outlined.Place, contentDescription = null) }
+                        icon = { Icon(Icons.Outlined.Place, contentDescription = stringResource(R.string.nav_map)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.saved_places),
                         onClick = { scrollToTopTick++ },
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) }
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = stringResource(R.string.saved_places)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
@@ -99,7 +99,7 @@ fun SavedPlacesScreen(
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.outline_analytics),
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.nav_statistics)
                             )
                         }
                     )

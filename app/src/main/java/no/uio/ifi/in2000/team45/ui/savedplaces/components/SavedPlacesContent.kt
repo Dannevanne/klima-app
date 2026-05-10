@@ -96,7 +96,7 @@ private fun EmptySavedPlacesContent(
             ) {
                 Icon(
                     Icons.Outlined.Place,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.no_saved_places_yet),
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )

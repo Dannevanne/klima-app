@@ -74,7 +74,8 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Outlined.WifiOff,
                     title = stringResource(R.string.without_internet_connection),
-                    description = stringResource(R.string.offline_limitations_description)
+                    description = stringResource(R.string.offline_limitations_description),
+                    iconContentDescription = stringResource(R.string.without_internet_connection)
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -87,42 +88,48 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Search,
                     title = stringResource(R.string.search_for_places),
-                    description = stringResource(R.string.paste_a_place_name_in_the_search_bar_to_navigate_on_the_map)
+                    description = stringResource(R.string.paste_a_place_name_in_the_search_bar_to_navigate_on_the_map),
+                    iconContentDescription = stringResource(R.string.search_for_places)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.KeyboardArrowUp,
                     title = stringResource(R.string.select_overlay),
-                    description = stringResource(R.string.select_an_overlay_by_pushing_the_bottom_left_button)
+                    description = stringResource(R.string.select_an_overlay_by_pushing_the_bottom_left_button),
+                    iconContentDescription = stringResource(R.string.select_overlay)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.overlay_explanation),
-                    description = stringResource(R.string.press_to_see_explanation_for_selected_overlay)
+                    description = stringResource(R.string.press_to_see_explanation_for_selected_overlay),
+                    iconContentDescription = stringResource(R.string.overlay_explanation)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.ZoomOutMap,
                     title = stringResource(R.string.zoom),
-                    description = stringResource(R.string.zoom_explanation)
+                    description = stringResource(R.string.zoom_explanation),
+                    iconContentDescription = stringResource(R.string.zoom)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.save_place),
-                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places)
+                    description = stringResource(R.string.tap_and_hold_on_a_location_on_the_map_to_save_it_to_your_saved_places),
+                    iconContentDescription = stringResource(R.string.save_place)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.LocationOn,
                     title = stringResource(R.string.my_location),
-                    description = stringResource(R.string.button_to_see_location_or_give_permission)
+                    description = stringResource(R.string.button_to_see_location_or_give_permission),
+                    iconContentDescription = stringResource(R.string.my_location)
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -135,28 +142,32 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.FavoriteBorder,
                     title = stringResource(R.string.saved_places),
-                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access)
+                    description = stringResource(R.string.section_for_your_saved_places_for_quick_access),
+                    iconContentDescription = stringResource(R.string.saved_places)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Place,
                     title = stringResource(R.string.show_on_map),
-                    description = stringResource(R.string.show_on_map_help)
+                    description = stringResource(R.string.show_on_map_help),
+                    iconContentDescription = stringResource(R.string.show_on_map)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.Delete,
                     title = stringResource(R.string.remove_saved_place),
-                    description = stringResource(R.string.remove_saved_place_help)
+                    description = stringResource(R.string.remove_saved_place_help),
+                    iconContentDescription = stringResource(R.string.remove_saved_place)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Filled.KeyboardArrowDown,
                     title = stringResource(R.string.expand),
-                    description = stringResource(R.string.expand_advice_help)
+                    description = stringResource(R.string.expand_advice_help),
+                    iconContentDescription = stringResource(R.string.expand)
                 )
             }
 
@@ -170,28 +181,32 @@ fun HelpScreen(
                 HelpItem(
                     iconImage = Icons.Filled.Search,
                     title = stringResource(R.string.search_for_places),
-                    description = stringResource(R.string.search_for_a_place_to_see_climate_statistics)
+                    description = stringResource(R.string.search_for_a_place_to_see_climate_statistics),
+                    iconContentDescription = stringResource(R.string.search_for_places)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Info,
                     title = stringResource(R.string.select_a_time_period),
-                    description = stringResource(R.string.use_10_30_or_50_years_to_see_climate_trends)
+                    description = stringResource(R.string.use_10_30_or_50_years_to_see_climate_trends),
+                    iconContentDescription = stringResource(R.string.select_a_time_period)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Star,
                     title = stringResource(R.string.save_area),
-                    description = stringResource(R.string.press_the_star_to_save_an_area)
+                    description = stringResource(R.string.press_the_star_to_save_an_area),
+                    iconContentDescription = stringResource(R.string.save_area)
                 )
             }
             item {
                 HelpItem(
                     iconImage = Icons.Outlined.Warning,
                     title = stringResource(R.string.missing_data),
-                    description = stringResource(R.string.warning_when_missing_data)
+                    description = stringResource(R.string.warning_when_missing_data),
+                    iconContentDescription = stringResource(R.string.missing_data)
                 )
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -216,7 +231,8 @@ private fun HelpSectionTitle(title: String){
 private fun HelpItem(
     iconImage: ImageVector,
     title: String,
-    description: String
+    description: String,
+    iconContentDescription: String
 ){
     Row(
         modifier = Modifier
@@ -236,7 +252,7 @@ private fun HelpItem(
         ){
             Icon(
                 imageVector = iconImage,
-                contentDescription = null,
+                contentDescription = iconContentDescription,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.size(18.dp)
             )

@@ -79,6 +79,7 @@ fun InfoScreen(
                     containerColor = datasource.containerColor,
                     iconColor = datasource.iconColor,
                     icon = datasource.icon,
+                    iconContentDescription = datasource.title,
                     onClick = {
                         try {
                             // open with CustomTabsIntent first
@@ -97,7 +98,8 @@ fun InfoScreen(
             item {
                 InfoTextRow(
                     icon = Icons.Outlined.Wifi,
-                    text = stringResource(R.string.internet_connection_needed_for_full_functionality)
+                    text = stringResource(R.string.internet_connection_needed_for_full_functionality),
+                    iconContentDescription = stringResource(R.string.offline_support)
                 )
             }
             item {
@@ -111,13 +113,15 @@ fun InfoScreen(
             item {
                 InfoTextRow(
                     icon = Icons.Outlined.Lock,
-                    text = stringResource(R.string.location_data_is_used_only_locally_and_is_not_shared_with_third_parties)
+                    text = stringResource(R.string.location_data_is_used_only_locally_and_is_not_shared_with_third_parties),
+                    iconContentDescription = stringResource(R.string.privacy)
                 )
             }
             item {
                 InfoTextRow(
                     icon = Icons.Outlined.NoAccounts,
-                    text = stringResource(R.string.the_app_does_not_require_a_login_or_account)
+                    text = stringResource(R.string.the_app_does_not_require_a_login_or_account),
+                    iconContentDescription = stringResource(R.string.privacy)
                 )
             }
             // The team
@@ -155,6 +159,7 @@ private fun InfoDataCard(
     containerColor: Color,
     iconColor: Color,
     icon: ImageVector,
+    iconContentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -184,7 +189,7 @@ private fun InfoDataCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = iconContentDescription,
                 tint = iconColor,
                 modifier = Modifier.size(18.dp)
             )
@@ -200,7 +205,8 @@ private fun InfoDataCard(
 @Composable
 private fun InfoTextRow(
     icon: ImageVector,
-    text: String
+    text: String,
+    iconContentDescription: String
 ) {
     Row(
         modifier = Modifier
@@ -212,7 +218,7 @@ private fun InfoTextRow(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = iconContentDescription,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp)
         )
@@ -320,7 +326,7 @@ fun AppRepresentation(){
             ) {
                 Icon(
                     imageVector = Icons.Filled.Home,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.app_name),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(28.dp)
                 )
