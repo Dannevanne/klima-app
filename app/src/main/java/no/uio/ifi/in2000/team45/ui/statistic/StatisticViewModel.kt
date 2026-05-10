@@ -169,6 +169,41 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    // Picking a Mapbox suggestion: resolve to coordinates, wrap as a Place,
+    // and hand off to the existing climate pipeline. Mirrors the saved-place
+    // entry point so the user lands on climate data without an extra tap.
+    fun selectSuggestion(item: SearchSuggestionUi) {
+        selectSuggestionJob?.cancel()
+        selectSuggestionJob = viewModelScope.launch {
+            try {
+                val response = placeAutocomplete.select(item.suggestion)
+                var lat: Double? = null
+                var lon: Double? = null
+                response.onValue { result ->
+                    lat = result.coordinate.latitude()
+                    lon = result.coordinate.longitude()
+                }
+                val latitude = lat ?: return@launch
+                val longitude = lon ?: return@launch
+
+                searchSuggestions = emptyList()
+                isSearching = false
+                searchQuery = item.title
+                recentSearchRepository.addSearch(item.title)
+                selectPlace(
+                    Place(
+                        name = item.title,
+                        subtitle = item.subtitle.orEmpty(),
+                        latitude = latitude,
+                        longitude = longitude,
+                        stations = emptyList()
+                    )
+                )
+            } catch (_: Exception) {
+            }
+        }
+    }
+
     fun searchStations() {
         val query = searchQuery
         if (query.isBlank()) return
