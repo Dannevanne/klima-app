@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.DeviceThermostat
 import androidx.compose.material.icons.outlined.Engineering
 import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.Water
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -67,5 +68,13 @@ val infoDatasources = listOf(
         containerColor = IconLightBlue,
         iconColor = IconBlue,
         icon = Icons.Outlined.Engineering
+    ),
+    InfoDatasource(
+        title = "Varsom",
+        url = "https://www.varsom.no/snoskred/",
+        descriptionId = R.string.avalanche_warnings,
+        containerColor = IconLightOrange,
+        iconColor = IconOrange,
+        icon = Icons.Outlined.Warning
     )
 )
