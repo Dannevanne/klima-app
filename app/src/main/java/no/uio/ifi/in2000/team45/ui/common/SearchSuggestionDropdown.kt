@@ -39,7 +39,7 @@ fun SearchSuggestionDropdown(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -51,7 +51,7 @@ fun SearchSuggestionDropdown(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                            .background(MaterialTheme.colorScheme.surface)
                             .clickable { onSuggestionClick(item) }
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
