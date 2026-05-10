@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.team45.ui.info
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.DeviceThermostat
+import androidx.compose.material.icons.outlined.Engineering
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.Water
 import androidx.compose.ui.graphics.Color
@@ -58,5 +59,13 @@ val infoDatasources = listOf(
         containerColor = IconLightOrange,
         iconColor = IconOrange,
         icon = Icons.Outlined.Cloud
+    ),
+    InfoDatasource(
+        title = "DiBK",
+        url = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/",
+        descriptionId = R.string.building_in_hazard_areas,
+        containerColor = IconLightBlue,
+        iconColor = IconBlue,
+        icon = Icons.Outlined.Engineering
     )
 )
