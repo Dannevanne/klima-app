@@ -33,7 +33,7 @@ fun SearchSuggestionDropdown(
             .fillMaxWidth()
             .padding(top = 8.dp),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         if (isSearching) {
             Box(
