@@ -74,6 +74,9 @@ Requires:
 - **Frost client ID** in `app/src/main/res/values/frost_client_id.xml`
   - Register at https://frost.met.no/auth/requestCredentials.html
 
+## Warnings from IDE
+The project contains some warnings in the Android Studio IDE. These warnings do not affect functionality, but indicate parts of the code that could be cleaned up to improve readability and maintainability. The warning and the corresponding file are listed below:
+
 ## Note: emulator keyboard setup
 
 For the search bar and other text inputs to work properly in the emulator,
