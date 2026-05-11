@@ -10,7 +10,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 
 @Composable
 fun MapContent(

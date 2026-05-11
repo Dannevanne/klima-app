@@ -46,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.mapbox.maps.CameraOptions
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.common.AnimatedConfirmDialog
 import no.uio.ifi.in2000.team45.ui.common.AppBottomBar
 import no.uio.ifi.in2000.team45.ui.common.AppTopBar
@@ -326,7 +327,7 @@ fun DataMap(
 
     var overlayPillExpanded by remember { mutableStateOf(false) }
     val savedPlaces by savedPlacesViewModel.locations.collectAsState()
-    var selectedSavedPlace by remember { mutableStateOf<no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation?>(null) }
+    var selectedSavedPlace by remember { mutableStateOf<SavedPlacesLocation?>(null) }
     var showOverlayLegend by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {

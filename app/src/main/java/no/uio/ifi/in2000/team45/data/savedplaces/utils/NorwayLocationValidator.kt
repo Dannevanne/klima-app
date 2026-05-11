@@ -6,7 +6,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.turf.TurfJoins
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 
 object NorwayLocationValidator {
 

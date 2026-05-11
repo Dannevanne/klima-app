@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.theme.LoadingBlue
 
 @Composable

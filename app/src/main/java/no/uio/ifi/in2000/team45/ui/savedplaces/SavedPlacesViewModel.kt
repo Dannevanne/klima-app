@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesRepository
-import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.FavoriteStation
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation

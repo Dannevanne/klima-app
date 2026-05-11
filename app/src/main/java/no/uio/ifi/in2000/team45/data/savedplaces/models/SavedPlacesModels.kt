@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.data.savedplaces
+package no.uio.ifi.in2000.team45.data.savedplaces.models
 
 data class FavoriteStation(
     val stationId: String,

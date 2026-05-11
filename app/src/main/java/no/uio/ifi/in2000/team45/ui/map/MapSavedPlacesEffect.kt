@@ -18,7 +18,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.ViewAnnotationOptions
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.viewannotation.geometry
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.R
 
 // Renders one filled circle per saved place and reports clicks via a callback.
