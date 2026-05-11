@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.settings.LanguageOption
+import no.uio.ifi.in2000.team45.data.settings.models.LanguageOption
 
 @Composable
 fun LanguageSetting(
