@@ -300,12 +300,6 @@ class StatisticDatasource {
         }
     }
 
-    // Find nearest station to given coordinates
-    suspend fun findNearestStation(
-        lat: Double, lon: Double, clientId: String
-    ): WeatherStation? {
-        return findNearestStations(lat, lon, clientId, count = 1).firstOrNull()
-    }
 
     // Find N nearest stations to given coordinates
     suspend fun findNearestStations(
