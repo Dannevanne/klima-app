@@ -421,3 +421,38 @@ flowchart TD
 ```
  
 ---
+
+## 6. State Diagram – Map Overlay (UC1)
+ 
+**Choice and rationale:** The state diagram shows the possible states the map overlay can be in, and which events trigger transitions. This complements the sequence diagram by focusing on the state machine aspect of MapViewModel, and shows how zoom constraints and error recovery are handled.
+ 
+```mermaid
+stateDiagram-v2
+    [*] --> NoOverlay : App launches
+ 
+    NoOverlay : NoOverlay
+    NoOverlay : do/ Show base map only
+ 
+    LoadingOverlay : LoadingOverlay
+    LoadingOverlay : do/ Fetch overlay tiles from NVE / NGU
+    LoadingOverlay : exit/ Show loading indicator
+ 
+    OverlayActive : OverlayActive
+    OverlayActive : do/ Display colour-coded risk overlay
+    OverlayActive : do/ Adjust zoom to overlay's valid range
+ 
+    Error : Error
+    Error : do/ Show error message to user
+ 
+    NoOverlay --> LoadingOverlay : User selects overlay
+    LoadingOverlay --> OverlayActive : Data fetched successfully
+    LoadingOverlay --> Error : API error / network failure
+ 
+    OverlayActive --> LoadingOverlay : User switches overlay
+    OverlayActive --> NoOverlay : User deactivates overlay
+ 
+    Error --> NoOverlay : User dismisses error
+    Error --> LoadingOverlay : User retries
+ 
+    NoOverlay --> [*] : App closes
+```
