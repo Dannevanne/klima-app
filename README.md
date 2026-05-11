@@ -6,7 +6,7 @@ and climate statistics for their area.
 
 ## Features
 
-The app has two main screens accessible from a bottom navigation bar:
+The app has three main screens accessible from a bottom navigation bar:
 
 ### Map (left button)
 - Mapbox map of Norway
@@ -17,6 +17,11 @@ The app has two main screens accessible from a bottom navigation bar:
 - Search for a weather station by name
 - Shows climate normals (30-year averages) for temperature, precipitation and wind
 - Falls back to historical observations (2010-2024) when normals are not available
+
+### Saved Places (middle button)
+- See risk assessment for places saved in the map screen
+- Jump to saved places in either the map or the statistics screen to see in-depth climate statistics
+- Receive precautionary measures based on risk assessment profile
 
 ## Tech stack
 
@@ -29,6 +34,8 @@ The app has two main screens accessible from a bottom navigation bar:
 
 - **MET Frost API v0** -- climate data (stations, normals, observations)
 - **NVE flood-zone service** -- flood-zone map as overlay
+- **NGU** -- Radon information
+- **MapBox** -- Geographical information (map and search suggestions)
 
 ## Algorithms
 
