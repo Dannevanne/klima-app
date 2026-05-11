@@ -1,9 +1,9 @@
 package no.uio.ifi.in2000.team45
 
-import no.uio.ifi.in2000.team45.data.statistic.StationAssignment
-import no.uio.ifi.in2000.team45.data.statistic.StationPicker
-import no.uio.ifi.in2000.team45.data.statistic.TimeSeriesAvailability
-import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.utils.StationAssignment
+import no.uio.ifi.in2000.team45.data.statistic.utils.StationPicker
+import no.uio.ifi.in2000.team45.data.statistic.models.TimeSeriesAvailability
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

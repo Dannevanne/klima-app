@@ -17,7 +17,7 @@ import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesRepository
 import no.uio.ifi.in2000.team45.data.savedplaces.FavoriteStation
 import no.uio.ifi.in2000.team45.data.map.MapRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
-import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
 
 data class LocationStatus(

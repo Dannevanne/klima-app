@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.data.statistic
+package no.uio.ifi.in2000.team45.data.statistic.models
 
 data class WeatherStation(
     val id: String,

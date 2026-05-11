@@ -1,4 +1,6 @@
-package no.uio.ifi.in2000.team45.data.statistic
+package no.uio.ifi.in2000.team45.data.statistic.utils
+
+import no.uio.ifi.in2000.team45.data.statistic.models.Place
 
 object PlaceSelector {
 

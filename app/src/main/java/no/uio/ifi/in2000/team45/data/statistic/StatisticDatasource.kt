@@ -12,6 +12,12 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
+import no.uio.ifi.in2000.team45.data.statistic.models.AnnualObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.ClimateNormal
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.Place
+import no.uio.ifi.in2000.team45.data.statistic.models.TimeSeriesAvailability
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 
 private const val TAG = "StatisticDatasource"
 private const val FROST_BASE = "https://frost.met.no"

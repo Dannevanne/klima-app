@@ -5,8 +5,8 @@ import org.junit.Test
 import org.junit.Assert.*
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import no.uio.ifi.in2000.team45.data.statistic.ClimateNormal
-import no.uio.ifi.in2000.team45.data.statistic.MonthlyObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.ClimateNormal
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyObservation
 import no.uio.ifi.in2000.team45.data.statistic.StatisticDatasource
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 

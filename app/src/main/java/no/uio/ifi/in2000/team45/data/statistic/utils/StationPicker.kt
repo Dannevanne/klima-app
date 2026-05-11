@@ -1,4 +1,8 @@
-package no.uio.ifi.in2000.team45.data.statistic
+package no.uio.ifi.in2000.team45.data.statistic.utils
+
+import no.uio.ifi.in2000.team45.data.statistic.models.TimeSeriesAvailability
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
+import kotlin.collections.iterator
 
 data class StationAssignment(
     val station: WeatherStation,
