@@ -1,11 +1,12 @@
-package no.uio.ifi.in2000.team45.data.savedplaces
+package no.uio.ifi.in2000.team45.data.savedplaces.utils
 
-import com.mapbox.geojson.FeatureCollection
 import android.content.Context
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.turf.TurfJoins
 import no.uio.ifi.in2000.team45.R
+import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
 
 object NorwayLocationValidator {
 

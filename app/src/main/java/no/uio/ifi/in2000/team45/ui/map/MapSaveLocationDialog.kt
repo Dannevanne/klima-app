@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mapbox.geojson.Point
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.savedplaces.NorwayLocationValidator
+import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 import no.uio.ifi.in2000.team45.ui.common.AnimatedConfirmDialog
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
