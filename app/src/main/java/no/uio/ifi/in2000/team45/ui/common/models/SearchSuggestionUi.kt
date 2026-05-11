@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.common
+package no.uio.ifi.in2000.team45.ui.common.models
 
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 

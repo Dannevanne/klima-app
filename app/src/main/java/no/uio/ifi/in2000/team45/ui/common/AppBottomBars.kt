@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
-import no.uio.ifi.in2000.team45.ui.NavBarItem
 import androidx.compose.ui.unit.dp
 
 data class BottomBarItemData(

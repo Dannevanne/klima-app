@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionDropdown
-import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
+import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 
 @Composable
 fun MapSearchSection(

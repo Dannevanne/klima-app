@@ -16,7 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
+import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import no.uio.ifi.in2000.team45.data.statistic.models.AnnualObservation
