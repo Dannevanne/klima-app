@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.info
+package no.uio.ifi.in2000.team45.data.info
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
