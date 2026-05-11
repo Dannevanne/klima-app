@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.effects
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

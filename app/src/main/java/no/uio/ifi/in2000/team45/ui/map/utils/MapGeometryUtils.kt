@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map.util
+package no.uio.ifi.in2000.team45.ui.map.utils
 
 // MapBox ImageSource needs the corners for the picture in the correct order,
 // not just the bbox values. This function does this conversion for us.

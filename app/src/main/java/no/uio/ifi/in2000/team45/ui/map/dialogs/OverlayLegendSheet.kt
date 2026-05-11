@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
+import no.uio.ifi.in2000.team45.ui.map.components.overlayEmoji
 import no.uio.ifi.in2000.team45.ui.theme.IconBlue
 import no.uio.ifi.in2000.team45.ui.theme.IconPurple
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGray

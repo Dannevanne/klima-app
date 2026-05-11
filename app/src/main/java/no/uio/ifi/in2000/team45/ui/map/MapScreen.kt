@@ -53,7 +53,15 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.BottomBarItemData
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
-import no.uio.ifi.in2000.team45.ui.map.util.moveToPoint
+import no.uio.ifi.in2000.team45.ui.map.components.MapLocationButton
+import no.uio.ifi.in2000.team45.ui.map.components.MapOverlaySelector
+import no.uio.ifi.in2000.team45.ui.map.components.MapSearchSection
+import no.uio.ifi.in2000.team45.ui.map.components.MapZoomControlsSection
+import no.uio.ifi.in2000.team45.ui.map.components.SavedPlacePopup
+import no.uio.ifi.in2000.team45.ui.map.dialogs.LocationPermission
+import no.uio.ifi.in2000.team45.ui.map.dialogs.MapSaveLocationDialog
+import no.uio.ifi.in2000.team45.ui.map.dialogs.OverlayLegendSheet
+import no.uio.ifi.in2000.team45.ui.map.utils.moveToPoint
 
 @Composable
 fun MapStateScreen(
@@ -113,7 +121,7 @@ fun MapStateScreen(
                 savedPlacesViewModel = savedPlacesViewModel,
                 locationGranted = locationGranted,
                 onLocationClick = {
-                    if (locationGranted){
+                    if (locationGranted) {
                         mapViewModel.moveToUserLocation()
                     } else {
                         showDialog = true
@@ -132,7 +140,8 @@ fun MapStateScreen(
                 else -> {}
             }
 
-        }}
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

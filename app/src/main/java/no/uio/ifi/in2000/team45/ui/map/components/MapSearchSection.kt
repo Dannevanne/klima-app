@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState

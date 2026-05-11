@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.dialogs
 
 import android.Manifest
 import androidx.compose.material3.ExperimentalMaterial3Api

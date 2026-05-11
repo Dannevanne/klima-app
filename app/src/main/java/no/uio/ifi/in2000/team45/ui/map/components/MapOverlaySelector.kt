@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 
 @Composable
@@ -100,7 +101,7 @@ fun MapOverlaySelector(
                     Icon(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = stringResource(
-                            no.uio.ifi.in2000.team45.R.string.overlay_legend
+                            R.string.overlay_legend
                         ),
                         modifier = Modifier.size(18.dp)
                     )
@@ -138,8 +139,8 @@ private fun OverlayPillButton(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowDown
                 else Icons.Filled.KeyboardArrowUp,
                 contentDescription = stringResource(
-                    if (expanded) no.uio.ifi.in2000.team45.R.string.collapse
-                    else no.uio.ifi.in2000.team45.R.string.expand
+                    if (expanded) R.string.collapse
+                    else R.string.expand
                 )
             )
         }

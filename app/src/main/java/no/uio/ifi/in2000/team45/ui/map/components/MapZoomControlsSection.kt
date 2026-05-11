@@ -1,8 +1,8 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.components
 
 import androidx.compose.runtime.Composable
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
-import no.uio.ifi.in2000.team45.ui.map.util.zoomMap
+import no.uio.ifi.in2000.team45.ui.map.utils.zoomMap
 import com.mapbox.maps.MapView
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 

@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map.util
+package no.uio.ifi.in2000.team45.ui.map.utils
 
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions

@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.effects
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
@@ -12,7 +12,7 @@ import com.mapbox.maps.extension.style.sources.generated.ImageSource
 import com.mapbox.maps.extension.style.sources.getSource
 import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
-import no.uio.ifi.in2000.team45.ui.map.util.cornersFromBBox
+import no.uio.ifi.in2000.team45.ui.map.utils.cornersFromBBox
 
 // When the bitmap and style is ready,
 // a temporary overlay is built over the map.

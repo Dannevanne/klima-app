@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.map
+package no.uio.ifi.in2000.team45.ui.map.effects
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.CameraChangedCallback
 import com.mapbox.maps.MapIdleCallback
 import com.mapbox.maps.toCameraOptions
+import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 
 @Composable
 fun MapCameraOverlayEffect(
