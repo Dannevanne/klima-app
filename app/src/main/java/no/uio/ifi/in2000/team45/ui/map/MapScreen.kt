@@ -62,6 +62,7 @@ fun MapStateScreen(
     onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -122,6 +123,7 @@ fun MapStateScreen(
                 onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onSavedPlacesClick = onSavedPlacesClick,
+                onShowInStatistics = onShowInStatistics,
                 modifier = modifier
             )
             when (uiState) {
@@ -143,6 +145,7 @@ fun MapScreen(
     onHelpClick: () -> Unit,
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -156,7 +159,7 @@ fun MapScreen(
                 navigationIcon = {
                     Icon(
                         Icons.Filled.Place,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.map),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
@@ -187,12 +190,12 @@ fun MapScreen(
                     BottomBarItemData(
                         label = stringResource(R.string.nav_map),
                         onClick = {},
-                        icon = { Icon(Icons.Filled.Place, contentDescription = null) }
+                        icon = { Icon(Icons.Filled.Place, contentDescription = stringResource(R.string.nav_map)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.saved_places),
                         onClick = onSavedPlacesClick,
-                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = null) }
+                        icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = stringResource(R.string.saved_places)) }
                     ),
                     BottomBarItemData(
                         label = stringResource(R.string.nav_statistics),
@@ -200,7 +203,7 @@ fun MapScreen(
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.outline_analytics),
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.nav_statistics)
                             )
                         }
                     )
@@ -213,6 +216,7 @@ fun MapScreen(
             locationGranted = locationGranted,
             onLocationClick = onLocationClick,
             onSavedPlacesClick = onSavedPlacesClick,
+            onShowInStatistics = onShowInStatistics,
             savedPlacesViewModel = savedPlacesViewModel,
             modifier = Modifier
                 .fillMaxSize()
@@ -227,6 +231,7 @@ fun DataMap(
     locationGranted: Boolean,
     onLocationClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     savedPlacesViewModel: SavedPlacesViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -415,6 +420,10 @@ fun DataMap(
                     savedPlacesViewModel.requestFocus(place)
                     selectedSavedPlace = null
                     onSavedPlacesClick()
+                },
+                onOpenStatistics = {
+                    onShowInStatistics(place.latitude, place.longitude, place.label)
+                    selectedSavedPlace = null
                 },
                 onDismiss = { selectedSavedPlace = null },
                 modifier = Modifier

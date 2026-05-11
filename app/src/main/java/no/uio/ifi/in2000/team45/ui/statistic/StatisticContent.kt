@@ -356,8 +356,11 @@ fun StatisticContent(
 private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
     SearchBar(
         query = statisticViewModel.searchQuery,
+        suggestions = statisticViewModel.searchSuggestions,
+        isSearching = statisticViewModel.isSearching,
         onQueryChange = { statisticViewModel.updateSearchQuery(it) },
-        onSearch = { statisticViewModel.searchStations() }
+        onSearch = { statisticViewModel.searchStations() },
+        onSuggestionClick = { statisticViewModel.selectSuggestion(it) }
     )
     Spacer(modifier = Modifier.height(12.dp))
 }

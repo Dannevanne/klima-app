@@ -26,6 +26,7 @@ import no.uio.ifi.in2000.team45.ui.theme.LoadingBlue
 fun SavedPlacePopup(
     place: SavedPlacesLocation,
     onOpenSavedPlaces: () -> Unit,
+    onOpenStatistics: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,6 +70,16 @@ fun SavedPlacePopup(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.open_in_saved_places))
+            }
+            Button(
+                onClick = onOpenStatistics,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LoadingBlue,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.open_in_statistics))
             }
         }
     }

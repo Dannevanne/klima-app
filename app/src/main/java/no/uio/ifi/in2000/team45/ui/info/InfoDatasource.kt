@@ -3,7 +3,11 @@ package no.uio.ifi.in2000.team45.ui.info
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.DeviceThermostat
+import androidx.compose.material.icons.outlined.Engineering
+import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.Storm
 import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.Water
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -58,5 +62,37 @@ val infoDatasources = listOf(
         containerColor = IconLightOrange,
         iconColor = IconOrange,
         icon = Icons.Outlined.Cloud
+    ),
+    InfoDatasource(
+        title = "DiBK",
+        url = "https://www.dibk.no/saksbehandling-tilsyn-og-kontroll/temaveiledning-utbygging-i-fareomrader/",
+        descriptionId = R.string.building_in_hazard_areas,
+        containerColor = IconLightBlue,
+        iconColor = IconBlue,
+        icon = Icons.Outlined.Engineering
+    ),
+    InfoDatasource(
+        title = "Varsom",
+        url = "https://www.varsom.no/snoskred/",
+        descriptionId = R.string.avalanche_warnings,
+        containerColor = IconLightOrange,
+        iconColor = IconOrange,
+        icon = Icons.Outlined.Warning
+    ),
+    InfoDatasource(
+        title = "DSA",
+        url = "https://www.dsa.no/radon/",
+        descriptionId = R.string.radon_and_radiation_safety,
+        containerColor = IconLightGreen,
+        iconColor = IconGreen,
+        icon = Icons.Outlined.HealthAndSafety
+    ),
+    InfoDatasource(
+        title = "DSB",
+        url = "https://www.dsb.no/sikkerhverdag/produkter-utstyr-og-fritid/slik-forbereder-du-deg-pa-storm/",
+        descriptionId = R.string.storm_preparedness,
+        containerColor = IconLightPurple,
+        iconColor = IconPurple,
+        icon = Icons.Outlined.Storm
     )
 )

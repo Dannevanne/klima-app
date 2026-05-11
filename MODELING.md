@@ -1,3 +1,38 @@
+## 1. Use Case Diagram
+ 
+**Choice and rationale:** The use case diagram provides a high-level overview of the functions the system offers and the actors involved. The six use cases shown represent the core functional requirements of the app. `«include»` is used where one use case *always* requires another, and `«extend»` where a use case is optional or conditional.
+
+```mermaid
+flowchart LR
+    User(["👤 User"])
+
+    UC1(["Show map with overlay"])
+    UC2(["Search for place"])
+    UC3(["Save place"])
+    UC4(["View risk overview for saved place"])
+    UC5(["Show measures and\nrecommendations"])
+    UC6(["Explore historical\nclimate statistics"])
+
+    User --- UC1
+    User --- UC2
+    User --- UC3
+    User --- UC4
+    User --- UC5
+    User --- UC6
+
+    %% <<extend>>
+    UC3 -.->|«extend»| UC2
+
+    %% <<include>>
+    UC5 -.->|«include»| UC4
+
+```
+
+**`«extend»` explained:**
+- `Save place` extends `Search for place` — the user can optionally search for a place before saving it, but may also long-press directly on the map.
+
+**`«include»` explained:**
+- `Show measures and recommendations` always requires `View risko verview for saved place` — relevant recommendations are always derived from the identified risk level and will show default without it.
 ## 2. Textual Description of the Most Important Use Cases
 
 ### UC1 – Show Map with Overlay
@@ -178,4 +213,175 @@ sequenceDiagram
     UI-->>User: Display climate graphs over time
 ```
 
+---
+## 4. Class Diagram
+ 
+**Choice and rationale:** The class diagram reflects the MVVM architecture with manual factory classes and the Repository pattern. It shows the central classes from the three most important use cases and their dependencies. Only the most central classes are included to keep the diagram readable.
+ 
+```mermaid
+classDiagram
+    class MapViewModel {
+        -mapRepository: MapRepository
+        -cameraRepository: MapCameraRepository
+        -activeOverlay: OverlayType
+        +setOverlay(type: OverlayType, context: Context)
+        +updateOverlay(bbox: List~Double~, width: Int, height: Int, context: Context)
+        +saveCamera(center: Point, zoom: Double)
+    }
+ 
+    class MapCameraRepository {
+        -dataStore: DataStore
+        +cameraFlow: Flow~Triple~Double, Double, Double~~
+        +saveCamera(lat: Double, lng: Double, zoom: Double)
+    }
+ 
+    class MapRepository {
+        -mapDatasource: MapDatasource
+        +getOverlayURL(type: OverlayType, bbox: List~Double~, width: Int, height: Int): String
+        +isInFloodZone(lat: Double, lon: Double): Boolean?
+        +isInLandslideZone(lat: Double, lon: Double): Boolean?
+        +isInAvalancheZone(lat: Double, lon: Double): Boolean?
+        +getQuickClayHazard(lat: Double, lon: Double): String?
+        +getRadonHazard(lat: Double, lon: Double): String?
+    }
+ 
+    class MapDatasource {
+        +buildOverlayURL(type: OverlayType, bbox: List~Double~, width: Int, height: Int): String
+        +fetchNveIdentifyBody(service: String, layers: String, lat: Double, lon: Double): String?
+        +fetchRadonHazardBody(lat: Double, lon: Double): String?
+        +fetchQuickClayHazardBody(lat: Double, lon: Double): String?
+    }
+ 
+    class OverlayType {
+        <<enumeration>>
+        NONE
+        FLOOD
+        QUICK_CLAY
+        RADON
+        WIND
+        LANDSLIDE
+        AVALANCHE
+        +minZoom: Double
+        +maxZoom: Double
+    }
+ 
+    class SavedPlacesViewModel {
+        -repository: SavedPlacesRepository
+        -mapRepository: MapRepository
+        +locations: StateFlow~List~SavedPlacesLocation~~
+        +locationStatuses: Map~String, LocationStatus~
+        +addLocation(lat: Double, lng: Double, label: String): Boolean
+        +removeLocation(location: SavedPlacesLocation)
+        +fetchStatusForLocation(location: SavedPlacesLocation)
+        +removeAllSavedPlaces()
+    }
+ 
+    class SavedPlacesRepository {
+        -dataStore: DataStore
+        +savedPlacesLocationsFlow: Flow~List~SavedPlacesLocation~~
+        +addLocation(location: SavedPlacesLocation)
+        +removeLocation(location: SavedPlacesLocation)
+        +removeAll()
+    }
+ 
+    class SavedPlacesLocation {
+        <<data class>>
+        +latitude: Double
+        +longitude: Double
+        +label: String
+    }
+ 
+    class LocationStatus {
+        <<data class>>
+        +floodLevel: String
+        +landslideLevel: String
+        +avalancheLevel: String
+        +quickClayLevel: String
+        +radonLevel: String
+        +temperature: Double?
+        +windSpeed: Double?
+        +precipitation: Double?
+    }
+ 
+    class StatisticViewModel {
+        -repository: StatisticRepository
+        -recentSearchRepository: RecentSearchRepository
+        +uiState: StatisticUiState
+        +searchStations()
+        +selectPlace(place: Place)
+        +selectStation(station: WeatherStation)
+        +resetAllStatisticData()
+    }
+ 
+    class StatisticRepository {
+        +searchStations(query: String, clientId: String): List~WeatherStation~
+        +findNearestStations(lat: Double, lon: Double, clientId: String, count: Int): List~WeatherStation~
+        +getAnnualObservations(stationId: String, clientId: String, yearFrom: Int, yearTo: Int): List~AnnualObservation~
+        +getClimateStats(stationId: String, clientId: String): List~MonthlyClimateStats~
+        +geocodePlaces(query: String, mapboxToken: String): List~Place~
+    }
+ 
+    class RecentSearchRepository {
+        -dataStore: DataStore
+        +recentSearchesFlow: Flow~List~String~~
+        +addSearch(query: String)
+        +clearHistory()
+    }
+ 
+    class WeatherStation {
+        <<data class>>
+        +id: String
+        +name: String
+        +latitude: Double
+        +longitude: Double
+        +municipality: String
+        +county: String
+    }
+ 
+    class Place {
+        <<data class>>
+        +name: String
+        +subtitle: String
+        +latitude: Double
+        +longitude: Double
+        +stations: List~WeatherStation~
+    }
+ 
+    class AnnualObservation {
+        <<data class>>
+        +year: Int
+        +meanTemp: Double?
+        +totalPrecip: Double?
+        +maxWindGust: Double?
+        +maxSnowDepth: Double?
+    }
+ 
+    class MonthlyClimateStats {
+        <<data class>>
+        +month: Int
+        +meanTemp: Double?
+        +precipitation: Double?
+        +windSpeed: Double?
+        +snowDepth: Double?
+    }
+ 
+    MapViewModel --> MapRepository : uses
+    MapViewModel --> MapCameraRepository : uses
+    MapViewModel --> OverlayType : uses
+    MapRepository --> MapDatasource : uses
+    MapRepository --> OverlayType : uses
+    SavedPlacesViewModel --> SavedPlacesRepository : uses
+    SavedPlacesViewModel --> MapRepository : uses
+    SavedPlacesViewModel --> LocationStatus : produces
+    SavedPlacesViewModel --> SavedPlacesLocation : uses
+    SavedPlacesRepository --> SavedPlacesLocation : stores
+    StatisticViewModel --> StatisticRepository : uses
+    StatisticViewModel --> RecentSearchRepository : uses
+    StatisticRepository --> WeatherStation : returns
+    StatisticRepository --> Place : returns
+    StatisticRepository --> AnnualObservation : returns
+    StatisticRepository --> MonthlyClimateStats : returns
+    Place --> WeatherStation : contains
+```
+ 
 ---
