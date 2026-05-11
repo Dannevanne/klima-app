@@ -18,7 +18,7 @@ class MusicManager(private val context: Context) {
 
     private fun startMusic() {
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.sound).apply {
+            mediaPlayer = MediaPlayer.create(context, R.raw.glem_alt).apply {
                 isLooping = true
                 start()
             }
