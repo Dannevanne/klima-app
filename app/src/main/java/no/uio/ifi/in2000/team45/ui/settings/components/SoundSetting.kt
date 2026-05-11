@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.settings
+package no.uio.ifi.in2000.team45.ui.settings.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

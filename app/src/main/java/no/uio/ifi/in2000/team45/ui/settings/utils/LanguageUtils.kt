@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.team45.ui.settings
+package no.uio.ifi.in2000.team45.ui.settings.utils
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat

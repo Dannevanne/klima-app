@@ -20,7 +20,7 @@ import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.map.MapViewModelFactory
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 import no.uio.ifi.in2000.team45.ui.AppRoot
-import no.uio.ifi.in2000.team45.ui.settings.applyAppLanguage
+import no.uio.ifi.in2000.team45.ui.settings.utils.applyAppLanguage
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
