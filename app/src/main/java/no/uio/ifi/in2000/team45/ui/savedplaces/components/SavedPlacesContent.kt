@@ -42,6 +42,7 @@ fun SavedPlacesContent(
     savedPlacesViewModel: SavedPlacesViewModel,
     onMapClick: () -> Unit,
     onShowOnMap: (lat: Double, lon: Double) -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
     scrollToTopTick: Int,
@@ -59,6 +60,7 @@ fun SavedPlacesContent(
             locations = locations,
             savedPlacesViewModel = savedPlacesViewModel,
             onShowOnMap = onShowOnMap,
+            onShowInStatistics = onShowInStatistics,
             topInset = topInset,
             bottomInset = bottomInset,
             scrollToTopTick = scrollToTopTick,
@@ -94,7 +96,7 @@ private fun EmptySavedPlacesContent(
             ) {
                 Icon(
                     Icons.Outlined.Place,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.no_saved_places_yet),
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
@@ -134,6 +136,7 @@ private fun PopulatedSavedPlacesContent(
     locations: List<SavedPlacesLocation>,
     savedPlacesViewModel: SavedPlacesViewModel,
     onShowOnMap: (lat: Double, lon: Double) -> Unit,
+    onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     topInset: Dp,
     bottomInset: Dp,
     scrollToTopTick: Int,
@@ -176,7 +179,10 @@ private fun PopulatedSavedPlacesContent(
                 location = location,
                 status = status,
                 onRemove = { savedPlacesViewModel.removeLocation(location) },
-                onShowOnMap = { onShowOnMap(location.latitude, location.longitude) }
+                onShowOnMap = { onShowOnMap(location.latitude, location.longitude) },
+                onShowInStatistics = {
+                    onShowInStatistics(location.latitude, location.longitude, location.label)
+                }
             )
         }
     }

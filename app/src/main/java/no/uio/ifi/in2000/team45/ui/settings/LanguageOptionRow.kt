@@ -43,7 +43,7 @@ fun LanguageOptionRow(
 
         Image(
             painter = painterResource(id = flagRes),
-            contentDescription = null,
+            contentDescription = text,
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
