@@ -53,3 +53,39 @@
 | **Alternate flow 3** | User resets the view → system clears displayed data but retains the search history and returns to the initial state|
  
 ---
+
+## 5. Activity Diagram – Search and View Climate Statistics (UC6)
+ 
+**Choice and rationale:** The activity diagram shows the step-by-step flow when the user searches for a place in StatisticScreen, including decision points for empty searches, missing results and API failures. This perspective complements the sequence diagram by highlighting the business-level flow and branching logic rather than the technical implementation.
+ 
+```mermaid
+flowchart TD
+    Start(( )) --> ShowSearch[Show search field and history]
+    ShowSearch --> TypeSearch[User types place name and submits]
+    TypeSearch --> EmptyCheck{Search empty?}
+    EmptyCheck -- No --> SearchStations[Search for matching stations]
+    EmptyCheck -- Yes --> TypeSearch
+ 
+    SearchStations --> StationsFound{Stations found?}
+    StationsFound -- Yes --> ShowResults[Show list of matching places]
+    StationsFound -- No --> Geocode[Geocode place name via Mapbox]
+ 
+    Geocode --> GeoFound{Place found?}
+    GeoFound -- Yes --> ShowResults
+    GeoFound -- No --> ShowError[Show error message]
+    ShowError --> ShowSearch
+ 
+    ShowResults --> SelectPlace[User selects a place]
+    SelectPlace --> FetchClimate[Fetch climate data from Frost API]
+    FetchClimate --> FetchOK{Data available?}
+    FetchOK -- No --> ShowError
+    FetchOK -- Yes --> ShowGraphs[Display climate graphs over time]
+ 
+    ShowGraphs --> UserAction{User action}
+    UserAction -- New search --> ShowSearch
+    UserAction -- Reset --> ClearData[Clear data and search history]
+    UserAction -- Exit --> End((( )))
+    ClearData --> ShowSearch
+```
+ 
+---
