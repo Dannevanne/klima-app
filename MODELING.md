@@ -87,6 +87,133 @@ flowchart LR
 | **Alternate flow 2** | Incomplete data is returned for the query -> system shows an error message and shows what it got. |
 | **Alternate flow 3** | User resets the view → system clears displayed data but retains the search history and returns to the initial state|
  
+---
+
+## 3. Sequence Diagrams
+
+To improve clarity, the sequence diagrams use a simplified architectural view consisting of UI, ViewModel, Repository, and external APIs. The Repository layer encapsulates access to both remote data sources and local persistence, and lower-level components such as DataSources are intentionally omitted
+
+### 3.1 Show Map with Overlay (UC1)
+ 
+**Choice and rationale:** Shows the asynchronous flow between the user, UI layer, ViewModel, Repository (including local storage) and external APIs when selecting a map overlay. Illustrates how the MVVM pattern handles network calls and state updates, and how zoom is constrained per overlay type.
+ 
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant Mapbox
+    participant NVE_NGU as NVE / NGU API
+ 
+    Note over User, Mapbox: App launch
+    User->>UI: Opens app
+    ViewModel->>Repository: Fetch last saved camera position
+    Repository-->>ViewModel: Camera position restored
+    UI->>Mapbox: Load map with last camera position
+    Mapbox-->>UI: Base map rendered
+ 
+    Note over User, NVE_NGU: User selects overlay
+    User->>UI: Selects overlay (e.g. Flood)
+    UI->>ViewModel: setOverlay(FLOOD)
+    ViewModel->>ViewModel: Adjusts zoom to overlay's valid range
+    ViewModel->>Repository: Request overlay data
+    Repository->>NVE_NGU: Fetch overlay tiles
+    NVE_NGU-->>Repository: Overlay data returned
+    Repository-->>ViewModel: Overlay data
+    ViewModel-->>UI: Update state with overlay
+    UI->>Mapbox: Display overlay on map
+    Mapbox-->>User: Map shown with colour-coded risk overlay
+```
+ 
+---
+
+### 3.2 Save Place and View Risk Overview (UC3 / UC4)
+ 
+**Choice and rationale:** Shows the long-press flow from user interaction to local storage and retrieval of risk data, including interaction between the Saved Places feature and external hazard data APIs. UC5 has a `«include»` relation to UC4, but is not taken into account here to simplify the diagram.
+ 
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant NVE_NGU as NVE / NGU API
+ 
+    Note over User, NVE_NGU: User saves a place
+    User->>UI: Long-press on map
+    UI->>ViewModel: addLocation(lat, lng, label)
+    ViewModel->>Repository: addLocation(SavedPlacesLocation)
+    Repository-->>ViewModel: Saved OK (DataStore)
+    ViewModel-->>UI: Show confirmation dialog
+ 
+    Note over User, NVE_NGU: User views risk overview
+    User->>UI: Navigates to Saved Places
+    UI->>ViewModel: fetchStatusForLocation(location)
+    ViewModel->>Repository: Get saved locations
+    Repository-->>ViewModel: List of SavedPlacesLocation
+    ViewModel->>Repository: fetching hazard data
+    Repository->>NVE_NGU: WMS/GeoJSON identify requests per hazard type
+    NVE_NGU-->>Repository: Hazard zone data per category
+    Repository-->>ViewModel: Hazard results
+    ViewModel->>ViewModel: Calculate risk level (High / Moderate / Low)
+    ViewModel-->>UI: Update UI with risk overview
+    UI-->>User: Display risk levels and recommended measures
+```
+ 
+---
+
+### 3.3 Explore Historical Climate Statistics (UC6)
+ 
+**Choice and rationale:** Illustrates the search and retrieval flow for historical climate statistics, including fallback geocoding when no matching weather stations are found, and how climate data is aggregated and presented through the MVVM architecture.
+ 
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant Frost as Frost API (MET)
+    participant Mapbox
+ 
+    Note over User, Frost: User searches for a place
+    User->>UI: Types place name and submits search
+    UI->>ViewModel: searchStations(query)
+    ViewModel->>Repository: searchStations(query, clientId)
+    Repository->>Frost: searchStations(query, clientId)
+    Frost-->>Repository: Station results
+    Repository-->>ViewModel: List of WeatherStation
+ 
+    alt No stations found
+        ViewModel->>Repository: geocodePlaces(query, mapboxToken)
+        Repository->>Mapbox: geocode(query)
+        Mapbox-->>Repository: Place coordinates
+        Repository-->>ViewModel: List of Place
+    end
+ 
+    ViewModel->>Repository: addSearch(query)
+    ViewModel-->>UI: uiState = PlaceResults / StationResults
+    UI-->>User: Display list of matching places or stations
+ 
+    Note over User, Frost: User selects a place
+    User->>UI: Selects a place from results
+    UI->>ViewModel: selectPlace(place)
+    ViewModel->>Repository: findNearestStations(lat, lon, clientId)
+    Repository->>Frost: findNearestStations(lat, lon)
+    Frost-->>Repository: Nearby stations
+    Repository->>Frost: getAvailableTimeSeries(stationIds, elements)
+    Frost-->>Repository: Station availability data
+    Repository-->>ViewModel: StationAssignment (best stations per element)
+    ViewModel->>Repository: getAnnualObservations(stationId, clientId, yearFrom, yearTo)
+    ViewModel->>Repository: getClimateStats(stationId, clientId)
+    Repository->>Frost: Fetch observations per station
+    Frost-->>Repository: Climate data
+    Repository-->>ViewModel: Aggregated climate statistics
+    ViewModel-->>UI: uiState = ClimateData(station, stats, annualData)
+    UI-->>User: Display climate graphs over time
+```
+
+---
 ## 4. Class Diagram
  
 **Choice and rationale:** The class diagram reflects the MVVM architecture with manual factory classes and the Repository pattern. It shows the central classes from the three most important use cases and their dependencies. Only the most central classes are included to keep the diagram readable.
