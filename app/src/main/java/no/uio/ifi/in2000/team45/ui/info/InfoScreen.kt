@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.core.net.toUri
+import no.uio.ifi.in2000.team45.data.info.infoDatasources
 
 
 @OptIn(ExperimentalMaterial3Api::class)

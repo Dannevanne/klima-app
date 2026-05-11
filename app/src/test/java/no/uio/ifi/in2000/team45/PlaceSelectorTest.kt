@@ -1,7 +1,7 @@
 package no.uio.ifi.in2000.team45
 
-import no.uio.ifi.in2000.team45.data.statistic.Place
-import no.uio.ifi.in2000.team45.data.statistic.PlaceSelector
+import no.uio.ifi.in2000.team45.data.statistic.models.Place
+import no.uio.ifi.in2000.team45.data.statistic.utils.PlaceSelector
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

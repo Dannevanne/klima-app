@@ -1,5 +1,14 @@
 package no.uio.ifi.in2000.team45.data.statistic
 
+import no.uio.ifi.in2000.team45.data.statistic.models.AnnualObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.ClimateNormal
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.Place
+import no.uio.ifi.in2000.team45.data.statistic.models.TimeSeriesAvailability
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.utils.PlaceSelector
+
 private val ALL_ANNUAL_ELEMENTS = setOf(
     "mean(air_temperature P1Y)",
     "sum(precipitation_amount P1Y)",

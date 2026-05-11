@@ -14,6 +14,9 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import no.uio.ifi.in2000.team45.data.savedplaces.models.FavoriteStation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 
 private val Context.favoritesDataStore by preferencesDataStore(name = "savedplaces")
 class SavedPlacesRepository(private val context: Context) {

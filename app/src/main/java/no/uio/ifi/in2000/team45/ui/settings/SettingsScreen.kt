@@ -22,6 +22,9 @@ import androidx.compose.material3.MaterialTheme
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
+import no.uio.ifi.in2000.team45.ui.settings.components.LanguageSetting
+import no.uio.ifi.in2000.team45.ui.settings.components.ResetAppDataSection
+import no.uio.ifi.in2000.team45.ui.settings.components.SoundSetting
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

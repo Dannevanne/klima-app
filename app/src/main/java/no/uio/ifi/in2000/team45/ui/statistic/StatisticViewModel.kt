@@ -16,17 +16,17 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
+import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
-import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
-import no.uio.ifi.in2000.team45.data.statistic.Place
+import no.uio.ifi.in2000.team45.data.statistic.models.AnnualObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.models.Place
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
-import no.uio.ifi.in2000.team45.data.statistic.StationAssignment
-import no.uio.ifi.in2000.team45.data.statistic.StationPicker
+import no.uio.ifi.in2000.team45.data.statistic.utils.StationAssignment
+import no.uio.ifi.in2000.team45.data.statistic.utils.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
-import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import java.util.Calendar
 
 sealed interface StatisticUiState {

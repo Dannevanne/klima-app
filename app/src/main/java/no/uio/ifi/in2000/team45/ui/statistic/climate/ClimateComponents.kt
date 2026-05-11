@@ -36,9 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.data.statistic.AnnualObservation
-import no.uio.ifi.in2000.team45.data.statistic.MonthlyClimateStats
-import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.models.AnnualObservation
+import no.uio.ifi.in2000.team45.data.statistic.models.MonthlyClimateStats
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 

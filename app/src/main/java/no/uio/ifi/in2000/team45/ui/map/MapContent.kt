@@ -10,7 +10,15 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
-import no.uio.ifi.in2000.team45.data.savedplaces.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
+import no.uio.ifi.in2000.team45.ui.map.effects.MapBoundsEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapCameraOverlayEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapClickEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapLongPressEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapOverlayEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapSavedPlacesEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapSelectedLocationEffect
+import no.uio.ifi.in2000.team45.ui.map.effects.MapUserLocationEffect
 
 @Composable
 fun MapContent(

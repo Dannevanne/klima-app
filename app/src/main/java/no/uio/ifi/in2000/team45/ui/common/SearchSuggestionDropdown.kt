@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
 @Composable

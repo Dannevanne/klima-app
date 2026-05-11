@@ -23,9 +23,9 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
-import no.uio.ifi.in2000.team45.data.settings.LanguageOption
-import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionUi
-import no.uio.ifi.in2000.team45.ui.map.util.makeBitmap
+import no.uio.ifi.in2000.team45.data.settings.models.LanguageOption
+import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
+import no.uio.ifi.in2000.team45.ui.map.utils.makeBitmap
 import no.uio.ifi.in2000.team45.ui.theme.AppTheme
 
 sealed interface MapUiState {

@@ -14,7 +14,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import no.uio.ifi.in2000.team45.data.statistic.RecentSearchRepository
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
-import no.uio.ifi.in2000.team45.data.statistic.WeatherStation
+import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticUiState
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 import org.junit.After

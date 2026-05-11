@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
-import no.uio.ifi.in2000.team45.ui.NavBarItem
+import no.uio.ifi.in2000.team45.ui.common.NavBarItem
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
