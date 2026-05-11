@@ -33,7 +33,11 @@ fun MapSavedPlacesEffect(
         ViewAnnotation(
             options = ViewAnnotationOptions.Builder()
                 .geometry(Point.fromLngLat(place.longitude, place.latitude))
-                .allowOverlap(false)
+                // Without these, the location puck's pulsing halo collides
+                // with the home icon and hides it -- the icon flickers when
+                // the user is nearby and disappears when standing on top.
+                .allowOverlap(true)
+                .allowOverlapWithPuck(true)
                 .build()
         ) {
             Box(

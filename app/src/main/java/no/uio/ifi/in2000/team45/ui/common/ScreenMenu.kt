@@ -48,7 +48,7 @@ fun OverflowMenu(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
-                    contentDescription = null
+                    contentDescription = stringResource(R.string.settings)
                 )
             },
             text = { Text(text = stringResource(R.string.settings)) }
@@ -58,7 +58,7 @@ fun OverflowMenu(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = null
+                    contentDescription = stringResource(R.string.info)
                 )
             },
             text = { Text(text = stringResource(R.string.info)) }
@@ -68,7 +68,7 @@ fun OverflowMenu(
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.outline_help),
-                    contentDescription = null
+                    contentDescription = stringResource(R.string.help)
                 )
             },
             text = { Text(text = stringResource(R.string.help)) }
