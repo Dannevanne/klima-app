@@ -40,7 +40,6 @@ class StatisticDatasource {
     // suspend functions. UTF-8 is guaranteed to exist on every JVM so it can't throw.
     // The Charset overload would avoid the warning but is API 33+ on Android (we are
     // on minSdk 24).
-    @Suppress("BlockingMethodInNonBlockingContext")
     private fun encodeUtf8(s: String): String =
         java.net.URLEncoder.encode(s, Charsets.UTF_8.name())
 
@@ -313,13 +312,6 @@ class StatisticDatasource {
                 normal = normal
             )
         }
-    }
-
-    // Find nearest station to given coordinates
-    suspend fun findNearestStation(
-        lat: Double, lon: Double, clientId: String
-    ): WeatherStation? {
-        return findNearestStations(lat, lon, clientId, count = 1).firstOrNull()
     }
 
     // Find N nearest stations to given coordinates
