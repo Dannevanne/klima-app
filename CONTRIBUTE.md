@@ -19,4 +19,8 @@
 
 **Do** commit incrementally -- we favor small commits over big ones.
 
+**Do** use trunk-based development: short-lived feature branches off `main`, merged fast.
+
+**Do** keep PRs focused: one logical change per PR.
+
 Written by Mateus Boergeson 07.04.2026
