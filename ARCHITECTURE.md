@@ -1,1 +1,3 @@
-
+#Architecture - Team 45: SafeProperty
+This document describes the architecture used in SafeProperty, an Android application developed in the course IN2000. The document is intended for people who will work with the codebase, further develop the application, or maintain it over time. It provides an overview of the project structure, the architectural decisions that were made, and the principles and patterns that were followed.
+The document assumes familiarity with Kotlin and basic Android development, but explains all key decisions so that new developers and future maintainers can quickly become familiar with the project.
