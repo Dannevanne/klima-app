@@ -40,7 +40,6 @@ fun SavedPlacesScreen(
     onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val stations by savedPlacesViewModel.stations.collectAsState()
     val locations by savedPlacesViewModel.locations.collectAsState()
     var scrollToTopTick by remember { mutableIntStateOf(0) }
 
