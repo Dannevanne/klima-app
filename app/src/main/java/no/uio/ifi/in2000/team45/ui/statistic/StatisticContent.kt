@@ -63,8 +63,8 @@ import androidx.compose.runtime.getValue
  * @param favoriteStations list of user-saved favorite stations
  * @param statisticViewModel ViewModel controlling search and statistics logic
  * @param savedPlacesViewModel ViewModel controlling saved stations and places
- * @param topInset top system inset padding
- * @param bottomInset bottom system inset padding
+ * @param topInset vertical offset to avoid overlap with the Top Bar.
+ * @param bottomInset vertical offset to avoid overlap with the Bottom Navigation.
  * @param onShowOnMap optional callback for showing coordinates on map
  */
 @Composable

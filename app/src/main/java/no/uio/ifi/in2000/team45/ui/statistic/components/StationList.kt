@@ -38,13 +38,13 @@ private fun String.toDisplayCase(): String {
 /**
  * Displays a scrollable list of weather stations and allow toggling favorite status.
  *
- * @param stations list of weather stations to display
- * @param favoriteIds set of station IDs marked as favorites
- * @param onStationClick callback invoked when a station is selected
- * @param onToggleFavorite callback invoked when favorite icon is pressed
- * @param modifier layout modifier for the LazyColumn
- * @param header composable header displayed above the list
- * @param contentPadding padding applied to the LazyColumn content
+ * @param modifier layout modifier for the underlying [LazyColumn].
+ * @param stations the source list of weather stations. Only the first 20 are displayed for performance.
+ * @param favoriteIds a set of unique IDs used to identify which stations are currently bookmarked.
+ * @param onStationClick callback triggered when a station card is pressed.
+ * @param onToggleFavorite callback triggered when the star/delete icon is pressed.
+ * @param header an optional composable slot to place content (like a search bar) at the top of the list.
+ * @param contentPadding padding applied around the list content, useful for avoiding overlaps with system bars.
  */
 @Composable
 fun StationList(
