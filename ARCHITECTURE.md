@@ -86,41 +86,16 @@ The diagram shows the UI layer and data layer, the shared Ktor client, on-device
 flowchart TB
     subgraph UI["UI layer (Jetpack Compose)"]
         direction TB
-        MapScreen
-        StatisticScreen
-        SavedPlacesScreen
-        SettingsScreen
-        Onboarding[OnboardingScreen]
-
-        MapVM[MapViewModel]
-        StatVM[StatisticViewModel]
-        SaveVM[SavedPlacesViewModel]
-        SoundVM[SoundViewModel]
-
-        MapScreen --> MapVM
-        StatisticScreen --> StatVM
-        SavedPlacesScreen --> SaveVM
-        SettingsScreen --> SoundVM
+        Screens["Screens / Composables<br/>MapScreen, StatisticScreen,<br/>SavedPlacesScreen, SettingsScreen,<br/>OnboardingScreen"]
+        VMs["ViewModels<br/>MapViewModel, StatisticViewModel,<br/>SavedPlacesViewModel, SoundViewModel"]
+        Screens --> VMs
     end
 
-    subgraph DATA["Data layer (repositories + datasources)"]
+    subgraph DATA["Data layer"]
         direction TB
-        MapRepo[MapRepository]
-        CamRepo[MapCameraRepository]
-        StatRepo[StatisticRepository]
-        RecentRepo[RecentSearchRepository]
-        SaveRepo[SavedPlacesRepository]
-        ThemeRepo[ThemePreferenceRepository]
-        LangRepo[LanguagePreferenceRepository]
-        SoundRepo[SoundPreferenceRepository]
-        OnbRepo[OnboardingPreferenceRepository]
-
-        MapDS[MapDatasource]
-        StatDS[StatisticDatasource]
-        InfoDS[InfoDatasource]
-
-        MapRepo --> MapDS
-        StatRepo --> StatDS
+        Repos["Repositories<br/>MapRepository, MapCameraRepository,<br/>StatisticRepository, RecentSearchRepository,<br/>SavedPlacesRepository,<br/>ThemePreferenceRepository, LanguagePreferenceRepository,<br/>SoundPreferenceRepository, OnboardingPreferenceRepository"]
+        DSrcs["Datasources<br/>MapDatasource, StatisticDatasource, InfoDatasource"]
+        Repos --> DSrcs
     end
 
     subgraph NET["network/"]
@@ -132,40 +107,21 @@ flowchart TB
     end
 
     subgraph EXT["External services"]
+        direction TB
         Frost[(MET Frost API)]
         NVE[(NVE flood / landslide / avalanche)]
         NGU[(NGU radon / quick clay)]
         MB[(Mapbox: maps + search)]
     end
 
-    MapVM --> MapRepo
-    MapVM --> CamRepo
-    MapVM --> ThemeRepo
-    MapVM --> LangRepo
-    StatVM --> StatRepo
-    StatVM --> RecentRepo
-    SaveVM --> SaveRepo
-    SaveVM --> MapRepo
-    SaveVM --> StatRepo
-    SoundVM --> SoundRepo
-
-    MapDS --> Ktor
-    StatDS --> Ktor
-    InfoDS --> Ktor
-
-    CamRepo --> DS
-    SaveRepo --> DS
-    RecentRepo --> DS
-    ThemeRepo --> DS
-    LangRepo --> DS
-    SoundRepo --> DS
-    OnbRepo --> DS
-
+    VMs --> Repos
+    DSrcs --> Ktor
+    Repos --> DS
     Ktor --> Frost
     Ktor --> NVE
     Ktor --> NGU
-    MapScreen --> MB
-    StatVM --> MB
+    Screens -.-> MB
+    VMs -.-> MB
 ```
 
 Read top to bottom: a composable touches its ViewModel; the ViewModel touches one or more repositories; repositories either call a datasource (remote, via Ktor) or DataStore (local). Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
