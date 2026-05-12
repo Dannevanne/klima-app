@@ -273,7 +273,7 @@ private fun legendCategories(overlay: OverlayType): List<String> = when (overlay
 }
 
 /**
- * Returns caveat text for the overlay, if any.
+ * Returns caveat text for the overlay based on the overlay type, if any.
  *
  * @param overlay The overlay type.
  */
