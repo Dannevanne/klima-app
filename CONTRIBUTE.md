@@ -9,11 +9,14 @@
 - `docs: <what was documented?>`
 - `chore: <housekeeping task>`
 
-**Do** prefix all branches with their respective type, followed by a slash Examples:
+**Do** prefix all branches with their respective type, followed by a slash. Examples:
 - `feat/<a-new-branch>`
 - `fix/<a-new-fix-branch>`
+- `add/<new-file-or-feature>`
 - `refactor/<something-something>`
 - `test/<new-tests>`
+- `docs/<what-was-documented>`
+- `chore/<housekeeping-task>`
 
 **Do not** squash commits in the PR unless totally necessary
 
