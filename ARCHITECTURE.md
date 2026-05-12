@@ -66,7 +66,9 @@ The application implements the Model-View-ViewModel (MVVM) architecture, which i
 - One Ktor client (`network/KtorClient.kt`) is shared so timeouts, serialization and the engine config exist in exactly one place.
 
 ### Single source of truth
-...
+The ViewModel is the only source of truth for screen state. The View never holds business state. State flows down (data layer to ViewModel to View) and events flow up (View to ViewModel), which is the unidirectional data flow described in the MVVM section.
+
+For continuous data (DataStore-backed preferences, saved places list, last camera position), the source of truth is the `Flow<T>` exposed by the repository. The ViewModel turns it into a `StateFlow` via `stateIn` so the View observes a single hot stream.
 
 ## Project structure
 (diagram here)
