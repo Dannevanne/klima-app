@@ -2,12 +2,19 @@ package no.uio.ifi.in2000.team45.data.statistic.utils
 
 import no.uio.ifi.in2000.team45.data.statistic.models.Place
 
+/**
+ * Utility responsible for selecting the best matching Place from a list of candidates
+ * based on a user search query.
+ */
 object PlaceSelector {
 
-    // Mapbox Geocoding can return loosely matching candidates ahead of the
-    // actual queried place ("Åbestad" before "Ibestad" for query "Ibestad").
-    // Prefer exact match, then a candidate whose name starts with the query,
-    // then one that contains it, falling back to Mapbox's first result.
+    /**
+     * Selects the most relevant Place match for a given query using some matching rules.
+     *
+     * @param query The user search query.
+     * @param candidates List of candidate places returned from search.
+     * @return The best matching Place, or null if the list is empty.
+     */
     fun pickBest(query: String, candidates: List<Place>): Place? {
         if (candidates.isEmpty()) return null
         val q = query.trim().lowercase()
