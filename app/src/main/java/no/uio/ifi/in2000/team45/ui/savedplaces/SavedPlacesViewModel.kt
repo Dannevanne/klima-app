@@ -23,7 +23,7 @@ import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 /**
  * Holds computed environmental and weather risk data for a saved location.
  *
- * This includes both raw hazard flags (zone membership) and derived risk
+ * This includes both raw hazard flags, if user is in zone and derived risk
  * levels used by the UI.
  */
 data class LocationStatus(
