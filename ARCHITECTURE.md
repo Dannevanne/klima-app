@@ -55,7 +55,10 @@ The application implements the Model-View-ViewModel (MVVM) architecture, which i
 ## Object-oriented principles
 
 ### Low coupling
-...
+- The UI never imports from `network/` directly; it routes through a repository.
+- Datasources never import UI.
+- Each feature folder under `data/` mirrors a feature folder under `ui/`, so changes to climate logic don't touch the map code and vice versa.
+- Cross-feature reuse happens through plain function calls. For example, `SavedPlacesViewModel` reuses `MapRepository` for hazard checks and `StatisticRepository` for nearest stations.
 
 ### High cohesion
 ...
