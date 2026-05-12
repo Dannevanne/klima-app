@@ -7,6 +7,12 @@ import androidx.compose.runtime.LaunchedEffect
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
+/**
+ * Wrapper composable that handles runtime location permission request
+ * and exposes the result to its content.
+ *
+ * @param content UI content that receives the current permission state.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun LocationPermission(
