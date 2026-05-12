@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Displays an idle state when no search or data is available.
+ * Shows an icon and explanatory text prompting the user to search.
+ */
 @Composable
 fun IdleContent() {
     Box(
