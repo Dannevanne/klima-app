@@ -8,6 +8,14 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.MapView
 import com.mapbox.geojson.Point
 
+/**
+ * Handles the Mapbox user location indicator.
+ * Enables or disables the location puck based on permission state.
+ *
+ * @param mapView Mapbox MapView used for location rendering.
+ * @param locationGranted Whether location permission is granted.
+ * @param onUserLocationChanged Called when the user location updates.
+ */
 @Composable
 fun MapUserLocationEffect(
     mapView: MapView?,
