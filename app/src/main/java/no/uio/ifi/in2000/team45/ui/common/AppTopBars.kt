@@ -22,6 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Top app bar component used throughout the application with actions.
+ *
+ * @param title Title text displayed in top bar.
+ * @param titleFontSize Font size used for the title text.
+ * @param navigationIcon Optional composable navigation icon.
+ * @param actions Actions displayed on the right side of the top bar.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
@@ -57,6 +65,13 @@ fun AppTopBar(
     )
 }
 
+/**
+ * Top app bar variant with a built-in back button navigation icon.
+ * Used for settings, help and info screens.
+ *
+ * @param title Title text displayed in the top bar.
+ * @param onBackClick Callback invoked when the back button is pressed.
+ */
 @Composable
 fun BackButtonTopBar(
     title: String,
