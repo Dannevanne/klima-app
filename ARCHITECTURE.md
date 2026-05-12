@@ -13,7 +13,11 @@ The user interface is built using Jetpack Compose, Google’s modern declarative
 ## Android API-level
 The application requires a minimum API level of 36 (Android 16.0 “Baklava”). This API level was chosen to ensure access to modern Android functionality and APIs used throughout the project, including improved UI handling, performance optimizations, updated security mechanisms, and better support for contemporary development tools and libraries. Using a recent API level also simplifies development by reducing the need for backward compatibility handling and legacy support.
 
-##Architecture – Layered Structure
+We use compileSdk 36 and targetSdk 36 (Android 16.0 “Baklava”, API level 36.1), meaning the app is built and tested against the latest Android version to ensure compatibility with current system behavior, security updates, and API changes.
+
+The application is tested on a Medium Phone emulator running Android 16.0 (API level 36.1, arm64) to ensure stability on newer Android versions.
+
+## Architecture – Layered Structure
 ...
 # UI-layer
 ...
