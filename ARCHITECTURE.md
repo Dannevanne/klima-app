@@ -79,6 +79,97 @@ data/      repositories, datasources, models
 network/   shared Ktor client (KtorClient.kt)
 ```
 
+### Architecture sketch
+The diagram shows the UI layer and data layer, the shared Ktor client, on-device storage, and the external services we depend on.
+
+```mermaid
+flowchart TB
+    subgraph UI["UI layer (Jetpack Compose)"]
+        direction TB
+        MapScreen
+        StatisticScreen
+        SavedPlacesScreen
+        SettingsScreen
+        Onboarding[OnboardingScreen]
+
+        MapVM[MapViewModel]
+        StatVM[StatisticViewModel]
+        SaveVM[SavedPlacesViewModel]
+        SoundVM[SoundViewModel]
+
+        MapScreen --> MapVM
+        StatisticScreen --> StatVM
+        SavedPlacesScreen --> SaveVM
+        SettingsScreen --> SoundVM
+    end
+
+    subgraph DATA["Data layer (repositories + datasources)"]
+        direction TB
+        MapRepo[MapRepository]
+        CamRepo[MapCameraRepository]
+        StatRepo[StatisticRepository]
+        RecentRepo[RecentSearchRepository]
+        SaveRepo[SavedPlacesRepository]
+        ThemeRepo[ThemePreferenceRepository]
+        LangRepo[LanguagePreferenceRepository]
+        SoundRepo[SoundPreferenceRepository]
+        OnbRepo[OnboardingPreferenceRepository]
+
+        MapDS[MapDatasource]
+        StatDS[StatisticDatasource]
+        InfoDS[InfoDatasource]
+
+        MapRepo --> MapDS
+        StatRepo --> StatDS
+    end
+
+    subgraph NET["network/"]
+        Ktor[KtorClient]
+    end
+
+    subgraph STORE["On-device storage"]
+        DS[(DataStore Preferences)]
+    end
+
+    subgraph EXT["External services"]
+        Frost[(MET Frost API)]
+        NVE[(NVE flood / landslide / avalanche)]
+        NGU[(NGU radon / quick clay)]
+        MB[(Mapbox: maps + search)]
+    end
+
+    MapVM --> MapRepo
+    MapVM --> CamRepo
+    MapVM --> ThemeRepo
+    MapVM --> LangRepo
+    StatVM --> StatRepo
+    StatVM --> RecentRepo
+    SaveVM --> SaveRepo
+    SaveVM --> MapRepo
+    SaveVM --> StatRepo
+    SoundVM --> SoundRepo
+
+    MapDS --> Ktor
+    StatDS --> Ktor
+    InfoDS --> Ktor
+
+    CamRepo --> DS
+    SaveRepo --> DS
+    RecentRepo --> DS
+    ThemeRepo --> DS
+    LangRepo --> DS
+    SoundRepo --> DS
+    OnbRepo --> DS
+
+    Ktor --> Frost
+    Ktor --> NVE
+    Ktor --> NGU
+    MapScreen --> MB
+    StatVM --> MB
+```
+
+Read top to bottom: a composable touches its ViewModel; the ViewModel touches one or more repositories; repositories either call a datasource (remote, via Ktor) or DataStore (local). Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
+
 ## Guidelines for further development
 ...
 
