@@ -5,6 +5,9 @@
 - `fix: <something something>`
 - `add: <new file>`
 - `refactor: <what was refactored?>`
+- `remove: <what was removed?>`
+- `docs: <what was documented?>`
+- `chore: <housekeeping task>`
 
 **Do** prefix all branches with their respective type, followed by a slash Examples:
 - `feat/<a-new-branch>`
