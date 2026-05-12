@@ -12,8 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
 
-// Locationbutton (only UI).
-// What happens on click is decided based on callbacks.
+/**
+ * Map location button used to show or request access to the user's location.
+ *
+ * @param locationGranted Whether location permission is currently granted.
+ * @param onClick Callback invoked when the button is pressed.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 fun MapLocationButton(
     locationGranted: Boolean,
