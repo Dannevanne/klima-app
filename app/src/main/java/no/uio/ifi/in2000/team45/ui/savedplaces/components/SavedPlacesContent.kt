@@ -34,6 +34,11 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
+/**
+ * Displays saved places screen content.
+ *
+ * Switches between empty state and populated list.
+ */
 @Composable
 fun SavedPlacesContent(
     locations: List<SavedPlacesLocation>,
@@ -67,6 +72,15 @@ fun SavedPlacesContent(
     }
 }
 
+/**
+ * Empty state for saved places screen.
+ * Shown when no saved locations exist.
+ *
+ * @param onMapClick Opens map screen.
+ * @param topInset Top system padding.
+ * @param bottomInset Bottom system padding.
+ * @param modifier UI modifier.
+ */
 @Composable
 private fun EmptySavedPlacesContent(
     onMapClick: () -> Unit,
@@ -129,6 +143,19 @@ private fun EmptySavedPlacesContent(
     }
 }
 
+/**
+ * Populated list of saved places.
+ * Displays saved locations in a scrollable list with actions.
+ *
+ * @param locations List of saved locations.
+ * @param savedPlacesViewModel ViewModel managing saved places state.
+ * @param onShowOnMap Centers map on a location.
+ * @param onShowInStatistics Opens statistics for a location.
+ * @param topInset Top system padding.
+ * @param bottomInset Bottom system padding.
+ * @param scrollToTopTick Trigger for scrolling to top.
+ * @param modifier UI modifier.
+ */
 @Composable
 private fun PopulatedSavedPlacesContent(
     locations: List<SavedPlacesLocation>,
