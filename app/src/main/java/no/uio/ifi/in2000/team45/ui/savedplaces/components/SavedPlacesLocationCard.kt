@@ -45,16 +45,11 @@ private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
 private val RiskUnknown = StatisticsGray
 
-private fun riskLevel(isInZone: Boolean, windSpeed: Double? = null, isWind: Boolean = false): String {
-    if (isWind) {
-        return when {
-            windSpeed == null -> "Unknown"
-            windSpeed >= 8.0 -> "High"
-            windSpeed >= 5.0 -> "Moderate"
-            else -> "Low"
-        }
-    }
-    return if (isInZone) "High" else "Low"
+private fun windRiskLevel(windSpeed: Double?): String = when {
+    windSpeed == null -> "Unknown"
+    windSpeed >= 8.0 -> "High"
+    windSpeed >= 5.0 -> "Moderate"
+    else -> "Low"
 }
 
 private fun riskColor(level: String): Color {
@@ -99,7 +94,7 @@ fun SavedPlacesLocationCard(
     val avalancheLevel = status?.avalancheLevel ?: "Unknown"
     val quickClayLevel = status?.quickClayLevel ?: "Unknown"
     val radonLevel = status?.radonLevel ?: "Unknown"
-    val windLevel = riskLevel(false, status?.avgWindSpeed, isWind = true)
+    val windLevel = windRiskLevel(status?.avgWindSpeed)
     val overall = overallRisk(
         floodLevel, landslideLevel, avalancheLevel, quickClayLevel, radonLevel, windLevel
     )
