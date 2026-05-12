@@ -19,6 +19,13 @@ import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 
 private val Context.favoritesDataStore by preferencesDataStore(name = "savedplaces")
+
+/**
+ * Repository for storing and retrieving saved stations and locations
+ * using DataStore.
+ *
+ * @property context Application context used to access DataStore and resources.
+ */
 class SavedPlacesRepository(private val context: Context) {
 
     companion object {
@@ -32,16 +39,31 @@ class SavedPlacesRepository(private val context: Context) {
         NorwayLocationValidator.loadBoundary(context)
     }
 
+    /**
+     * Retrieves a flow of saved favorite weather stations.
+     *
+     * @return A flow emitting the current list of favorite stations.
+     */
     val favoriteStationsFlow: Flow<List<FavoriteStation>> =
         context.favoritesDataStore.data.map { prefs ->
             prefs[STATIONS_KEY]?.let { parseStations(it) } ?: emptyList()
         }
 
+    /**
+     * Retrieves a flow of saved user-defined locations.
+     *
+     * @return A flow emitting the current list of saved locations.
+     */
     val savedPlacesLocationsFlow: Flow<List<SavedPlacesLocation>> =
         context.favoritesDataStore.data.map { prefs ->
             prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
         }
 
+    /**
+     * Adds a new station to favorites if it is not already saved.
+     *
+     * @param station The station to add.
+     */
     suspend fun addStation(station: FavoriteStation) {
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[STATIONS_KEY]?.let { parseStations(it) } ?: emptyList()
@@ -51,6 +73,11 @@ class SavedPlacesRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Removes a station from favorites by its station ID.
+     *
+     * @param stationId The unique identifier of the station to remove.
+     */
     suspend fun removeStation(stationId: String) {
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[STATIONS_KEY]?.let { parseStations(it) } ?: emptyList()
@@ -58,6 +85,11 @@ class SavedPlacesRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Adds a new saved location if it is inside Norway.
+     *
+     * @param location The location to save.
+     */
     suspend fun addLocation(location: SavedPlacesLocation) {
         if (!NorwayLocationValidator.isInsideNorway(location)) return
         context.favoritesDataStore.edit { prefs ->
@@ -66,6 +98,11 @@ class SavedPlacesRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Removes a saved location matching the given coordinates.
+     *
+     * @param location The location to remove.
+     */
     suspend fun removeLocation(location: SavedPlacesLocation) {
         context.favoritesDataStore.edit { prefs ->
             val current = prefs[LOCATIONS_KEY]?.let { parseLocations(it) } ?: emptyList()
@@ -77,6 +114,9 @@ class SavedPlacesRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Removes all saved stations and locations from storage.
+     */
     suspend fun removeAll() {
         context.favoritesDataStore.edit { prefs ->
             prefs.remove(STATIONS_KEY)
@@ -84,6 +124,12 @@ class SavedPlacesRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Parses a JSON string into a list of FavoriteStation objects.
+     *
+     * @param raw The raw JSON string.
+     * @return A list of parsed stations, or an empty list if parsing fails.
+     */
     // Manual JSON - no serialization compiler plugin needed
     private fun parseStations(raw: String): List<FavoriteStation> {
         return try {
@@ -99,6 +145,12 @@ class SavedPlacesRepository(private val context: Context) {
         } catch (_: Exception) { emptyList() }
     }
 
+    /**
+     * Encodes a list of FavoriteStation objects into a Json string.
+     *
+     * @param list The list of stations to encode.
+     * @return A Json string representation of the stations.
+     */
     private fun encodeStations(list: List<FavoriteStation>): String {
         return buildJsonArray {
             list.forEach { s ->
@@ -112,6 +164,13 @@ class SavedPlacesRepository(private val context: Context) {
         }.toString()
     }
 
+    /**
+     * Parses a Json string into a list of SavedPlacesLocation objects,
+     * filtering out locations outside Norway.
+     *
+     * @param raw The raw Json string.
+     * @return A list of valid saved locations, or an empty list if parsing fails.
+     */
     private fun parseLocations(raw: String): List<SavedPlacesLocation> {
         return try {
             json.parseToJsonElement(raw).jsonArray.mapNotNull { el ->
@@ -127,6 +186,12 @@ class SavedPlacesRepository(private val context: Context) {
         } catch (_: Exception) { emptyList() }
     }
 
+    /**
+     * Encodes a list of SavedPlacesLocation objects into a Json string.
+     *
+     * @param list The list of locations to encode.
+     * @return A JSON string representation of the locations.
+     */
     private fun encodeLocations(list: List<SavedPlacesLocation>): String {
         return buildJsonArray {
             list.forEach { l ->
