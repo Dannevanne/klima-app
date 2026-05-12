@@ -35,8 +35,6 @@ fun SettingsScreen(
     onClick: () -> Unit,
     statisticViewModel: StatisticViewModel,
     savedPlacesViewModel: SavedPlacesViewModel,
-    musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit,
     soundEnabled: Boolean,
     onSoundEnabledChanged: (Boolean) -> Unit
 ) {
@@ -72,15 +70,6 @@ fun SettingsScreen(
                     onLanguageSelected = { language ->
                         mapViewModel.updateLanguage(language)
                     }
-                )
-            }
-            item {
-                HorizontalDivider()
-            }
-            item {
-                MusicSetting(
-                    musicEnabled = musicEnabled,
-                    onMusicEnabledChanged = onMusicEnabledChanged
                 )
             }
             item {

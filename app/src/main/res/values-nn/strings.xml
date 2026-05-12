@@ -244,7 +244,6 @@
     <string name="language_sami">Samisk</string>
     <string name="change_layer_to_zoom_out">Maksimalt utzoomingsnivå for dette laget er nådd. Velg «Ingen lag» for å sjå heile kartet</string>
     <string name="use_without_internet">Bruk likevel</string>
-    <string name="background_music">Bakgrunnsmusikk</string>
     <string name="ok">Greitt</string>
     <string name="max_saved_places_message">Du kan berre lagre opptil %1$d stader. Fjern ein stad for å leggje til ein ny.</string>
     <string name="sound_effect">Lydeffekt</string>

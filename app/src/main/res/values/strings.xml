@@ -253,7 +253,6 @@
     <string name="language_sami">Sami</string>
     <string name="change_layer_to_zoom_out">Max zoom out level for this overlay reached. To see the full map, please select "No overlay"</string>
     <string name="use_without_internet">Use anyway</string>
-    <string name="background_music">Background music</string>
     <string name="sound_effect">Sound effects</string>
     <string name="ok">Ok</string>
     <string name="max_saved_places_message">You can only save up to %1$d places. Remove a place to add a new one.</string>

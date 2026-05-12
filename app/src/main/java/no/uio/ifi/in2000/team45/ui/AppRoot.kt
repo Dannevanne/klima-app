@@ -16,8 +16,6 @@ fun AppRoot(
     mapViewModel: MapViewModel,
     onboardingCompleted: Boolean?,
     onOnboardingFinished: () -> Unit,
-    musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit,
     soundEnabled: Boolean,
     onSoundEnabledChanged: (Boolean) -> Unit
 ) {
@@ -33,8 +31,6 @@ fun AppRoot(
         !onboardingCompleted -> OnboardingScreen(onFinished = onOnboardingFinished)
         else -> AppNavigation(
             mapViewModel = mapViewModel,
-            musicEnabled = musicEnabled,
-            onMusicEnabledChanged = onMusicEnabledChanged,
             soundEnabled = soundEnabled,
             onSoundEnabledChanged = onSoundEnabledChanged
         )
