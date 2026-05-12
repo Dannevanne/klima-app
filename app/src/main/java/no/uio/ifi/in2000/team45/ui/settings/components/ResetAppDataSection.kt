@@ -26,6 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Settings section that allows the user to reset all stored app data.
+ *
+ * @param onResetConfirmed Callback triggered when the user confirms the reset action.
+ * @param modifier Optional modifier for layout customization.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetAppDataSection(
