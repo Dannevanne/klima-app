@@ -36,6 +36,10 @@ The app has three main screens accessible from a bottom navigation bar:
 - **NVE flood-zone service** -- flood-zone map as overlay
 - **NGU** -- Radon information
 - **MapBox** -- Geographical information (map and search suggestions)
+
+## API-level 
+We use compileSdk 36 and targetSdk 36 (Android 16.0 “Baklava”, API level 36.1). This means the app is built and tested against the latest Android version, ensuring compatibility with current system behavior, security updates, and API changes. 
+The app is tested on a Medium Phone emulator running Android 16.0 (API level 36.1, arm64) to ensure stability on newer Android versions.
   
 ## Location Restriction Using GeoJSON Boundary Data
 The application only allows saving locations within Norway, based on GeoJSON boundary data. This prevents users from saving areas without available underlying data and ensures valid and consistent risk assessments. Link to the repo used: https://github.com/georgique/world-geojson
