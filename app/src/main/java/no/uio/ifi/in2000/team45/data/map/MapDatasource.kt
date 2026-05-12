@@ -7,7 +7,13 @@ import io.ktor.client.request.get
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.network.KtorClient
 
-// Every overlay-type with its own max- and minZoom
+/**
+ * Represents the available map overlay types and their supported zoom ranges.
+ *
+ * @property labelRes String resource ID used as the overlay label.
+ * @property minZoom Minimum zoom level required for the overlay to be visible.
+ * @property maxZoom Maximum zoom level supported for the overlay.
+ */
 enum class OverlayType(@field:StringRes val labelRes: Int, val minZoom: Double, val maxZoom: Double) {
     NONE(R.string.no_overlay, 3.25, 20.0),
     FLOOD(R.string.flood, 11.5, 20.0),
@@ -18,13 +24,21 @@ enum class OverlayType(@field:StringRes val labelRes: Int, val minZoom: Double, 
     AVALANCHE(R.string.avalanche, 10.0, 20.0)
 }
 
+/**
+ * Datasource responsible for fetching hazard and overlay map data
+ * from external GIS services.
+ */
 class MapDatasource {
 
-    // NVE ArcGIS identify for a point against specific layers of a service.
-    // The layer IDs must match what the corresponding overlay renders, or the
-    // check returns true for background/mask layers that the user never sees.
-    // Returns the raw JSON body, or null when the call failed; the repository
-    // turns that into the in/out Boolean.
+    /**
+     * Fetches raw identify data from an NVE ArcGIS service for a specific map point.
+     *
+     * @param service The ArcGIS service name.
+     * @param layers The visible layer IDs to query.
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The raw JSON response body, or null if the request fails.
+     */
     suspend fun fetchNveIdentifyBody(
         service: String, layers: String, lat: Double, lon: Double
     ): String? {
@@ -50,8 +64,13 @@ class MapDatasource {
         }
     }
 
-    // Raw identify JSON for the SkredKvikkleire2 layers at the given point.
-    // The repository pulls the highest `faregrad` attribute out of it.
+    /**
+     * Fetches raw quick clay hazard data for a specific map point.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The raw JSON response body, or null if the request fails.
+     */
     suspend fun fetchQuickClayHazardBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
@@ -76,8 +95,13 @@ class MapDatasource {
         }
     }
 
-    // Raw identify JSON for the NVE wind resource raster at the given point.
-    // The repository pulls the pixel value (m/s at 50 m height) out of it.
+    /**
+     * Fetches raw wind speed data for a specific map point.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The raw JSON response body, or null if the request fails.
+     */
     suspend fun fetchWindSpeedBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
@@ -101,10 +125,13 @@ class MapDatasource {
         }
     }
 
-    // Raw GML body from NGU's WMS GetFeatureInfo at the given point. The
-    // repository turns the body into an aktsomhet class string. text/plain
-    // only returns a feature id with no attributes, which silently mapped
-    // every in-zone point to Unknown.
+    /**
+     * Fetches raw radon hazard data for a specific map point.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The raw GML response body, or null if the request fails.
+     */
     suspend fun fetchRadonHazardBody(lat: Double, lon: Double): String? {
         val tolerance = 0.001
         val url = buildString {
@@ -127,6 +154,15 @@ class MapDatasource {
         }
     }
 
+    /**
+     * Builds the overlay image URL for the selected overlay type.
+     *
+     * @param type The overlay type to generate a URL for.
+     * @param bbox The bounding box coordinates.
+     * @param width The image width in pixels.
+     * @param height The image height in pixels.
+     * @return The generated overlay URL.
+     */
     fun buildOverlayURL(
         type: OverlayType,
         bbox: List<Double>,
@@ -168,7 +204,16 @@ class MapDatasource {
         }
     }
 
-    // NVE ArcGIS REST export (flood, quick clay, wind)
+    /**
+     * Builds an NVE ArcGIS export URL for map overlays.
+     *
+     * @param service The ArcGIS service name.
+     * @param layers The layer IDs to include.
+     * @param bbox The bounding box coordinates.
+     * @param width The image width in pixels.
+     * @param height The image height in pixels.
+     * @return The generated export URL.
+     */
     private fun buildNveExportURL(
         service: String,
         layers: String,
@@ -189,7 +234,14 @@ class MapDatasource {
         }
     }
 
-    // NGU WMS (radon)
+    /**
+     * Builds a WMS URL for the radon overlay service.
+     *
+     * @param bbox The bounding box coordinates.
+     * @param width The image width in pixels.
+     * @param height The image height in pixels.
+     * @return The generated WMS URL.
+     */
     private fun buildRadonWmsURL(
         bbox: List<Double>,
         width: Int,
