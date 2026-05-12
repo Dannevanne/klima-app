@@ -22,6 +22,18 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.ui.theme.LoadingBlue
 
+/**
+ * Popup card shown when a saved location is selected on the map.
+ *
+ * @param place The saved location.
+ * @param onOpenSavedPlaces Invoked when the user wants to view this location
+ * in the Saved Places screen.
+ * @param onOpenStatistics Invoked when the user wants to view statistics
+ * for this location.
+ * @param onDismiss Contract callback for dismissing the popup. The actual
+ * dismissal is controlled externally by the parent.
+ * @param modifier Optional modifier for styling.
+ */
 @Composable
 fun SavedPlacePopup(
     place: SavedPlacesLocation,
