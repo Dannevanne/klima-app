@@ -85,7 +85,6 @@ The project contains some warnings in the Android Studio IDE. These warnings do 
 - MapScreen.kt: "Assigned value is never read" Warning for multiple variables (showDialog, locationName, pendingPoint) that are assigned values but never read, indicating unused or incomplete UI state handling. 
 - SavedPlacePopup.kt: "Parameter "onDismiss" is never used. (onDismiss is the contract" Warning that the onDismiss parameter is never directly used in the function body; dismissal is instead handled through map interaction, but the parameter is kept to allow external control of popup lifecycle.
 - OnBoardingScreen.kt: "Value of parameter "total" is always "OnBoardingScrenn.kt.PAGE_COUNT"" Warning that the total parameter is always equal to OnBoardingScreen.PAGE_COUNT, making it redundant and unnecessary as a parameter. 
-- SavedPlacesLocationCard.kt: "Value of parameter "isInZone" is always 'false', Value of parameter "isWind" is always 'true'" Warning that parameters such as isInZone and isWind always have constant values, suggesting unnecessary parameterization or hardcoded logic.
 - ResetAppDataSection.kt: "Assigned value is never read (four are showDialog)" Warning that multiple showDialog state variables are assigned but never read, indicating unused or incomplete dialog state management in the UI logic.
 
 ## Note: emulator keyboard setup
