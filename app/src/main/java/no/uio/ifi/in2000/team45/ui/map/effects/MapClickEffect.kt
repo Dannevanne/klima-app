@@ -7,6 +7,12 @@ import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.removeOnMapClickListener
 
+/**
+ * Handles map click events from the Mapbox map.
+
+ * @param mapView Mapbox MapView to attach the click listener to.
+ * @param onMapClick Called when the user taps on the map.
+ */
 @Composable
 fun MapClickEffect(
     mapView: MapView?,
