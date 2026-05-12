@@ -1,4 +1,4 @@
-# PLEASE READ BEFORE COMMITING
+# PLEASE READ BEFORE COMMITTING
 
 **Do** prefix all commit messages with their respective type, followed by a colon. Examples:
 - `feat: <something something>`
@@ -15,7 +15,7 @@
 
 **Do not** squash commits in the PR unless totally necessary
 
-**Do** comment thoroughtly, *and only in English*
+**Do** comment thoroughly, *and only in English*
 
 **Do** commit incrementally -- we favor small commits over big ones.
 
