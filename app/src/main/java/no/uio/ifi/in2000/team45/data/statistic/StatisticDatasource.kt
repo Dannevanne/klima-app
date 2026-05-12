@@ -35,6 +35,15 @@ class StatisticDatasource {
         return "Basic $encoded"
     }
 
+    // URLEncoder.encode(String, String) declares throws UnsupportedEncodingException,
+    // which trips the IDE's "blocking call in non-blocking context" warning inside
+    // suspend functions. UTF-8 is guaranteed to exist on every JVM so it can't throw.
+    // The Charset overload would avoid the warning but is API 33+ on Android (we are
+    // on minSdk 24).
+    @Suppress("BlockingMethodInNonBlockingContext")
+    private fun encodeUtf8(s: String): String =
+        java.net.URLEncoder.encode(s, Charsets.UTF_8.name())
+
     // Expand query to handle Norwegian letter substitutions (o->oe, a->aa, etc.)
     private fun norwegianVariants(query: String): List<String> {
         val trimmed = query.trim()
@@ -62,7 +71,7 @@ class StatisticDatasource {
         val seenIds = mutableSetOf<String>()
 
         for (variant in norwegianVariants(query)) {
-            val encodedName = java.net.URLEncoder.encode(variant, "UTF-8")
+            val encodedName = encodeUtf8(variant)
             val url = "$FROST_BASE/sources/v0.jsonld" +
                     "?types=SensorSystem" +
                     "&name=$encodedName*" +
@@ -103,7 +112,7 @@ class StatisticDatasource {
         if (stationIds.isEmpty() || elementIds.isEmpty()) return emptyList()
         val sources = stationIds.joinToString(",")
         val elements = elementIds.joinToString(",") {
-            java.net.URLEncoder.encode(it, "UTF-8")
+            encodeUtf8(it)
         }
         val url = "$FROST_BASE/observations/availableTimeSeries/v0.jsonld" +
             "?sources=$sources" +
@@ -160,7 +169,7 @@ class StatisticDatasource {
             "mean(surface_snow_thickness P1M)",
             "max(wind_speed_of_gust P1M)",
             "mean(cloud_area_fraction P1M)"
-        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        ).joinToString(",") { encodeUtf8(it) }
 
         val url = "$FROST_BASE/climatenormals/v0.jsonld" +
                 "?sources=$stationId" +
@@ -192,7 +201,7 @@ class StatisticDatasource {
         val elements = listOf(
             "mean(air_temperature P1M)",
             "sum(precipitation_amount P1M)"
-        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        ).joinToString(",") { encodeUtf8(it) }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
@@ -220,7 +229,7 @@ class StatisticDatasource {
     // SDK with limit=1 ranked phonetic mismatches (Åbestad for Ibestad) above the
     // real place; v6 with the type filter resolves Ibestad correctly.
     suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
-        val encoded = java.net.URLEncoder.encode(query.trim(), "UTF-8")
+        val encoded = encodeUtf8(query.trim())
         val url = MAPBOX_GEOCODE_BASE +
                 "?q=$encoded" +
                 "&country=no" +
@@ -317,7 +326,7 @@ class StatisticDatasource {
     suspend fun findNearestStations(
         lat: Double, lon: Double, clientId: String, count: Int = 5
     ): List<WeatherStation> {
-        val geometry = java.net.URLEncoder.encode("nearest(POINT($lon $lat))", "UTF-8")
+        val geometry = encodeUtf8("nearest(POINT($lon $lat))")
         val url = "$FROST_BASE/sources/v0.jsonld" +
                 "?types=SensorSystem" +
                 "&geometry=$geometry" +
@@ -346,7 +355,7 @@ class StatisticDatasource {
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=latest" +
-                "&elements=${java.net.URLEncoder.encode(elements, "UTF-8")}"
+                "&elements=${encodeUtf8(elements)}"
         return try {
             val response = KtorClient.client.get(url) {
                 header("Authorization", authHeader(clientId))
@@ -381,7 +390,7 @@ class StatisticDatasource {
         val elements = listOf(
             "mean(air_temperature P1Y)",
             "sum(precipitation_amount P1Y)"
-        ).joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        ).joinToString(",") { encodeUtf8(it) }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
@@ -418,7 +427,7 @@ class StatisticDatasource {
     ): List<MonthlyObservation> {
         val toFetch = wantedElements.filter { it.contains("P1M") }
         if (toFetch.isEmpty()) return emptyList()
-        val elements = toFetch.joinToString(",") { java.net.URLEncoder.encode(it, "UTF-8") }
+        val elements = toFetch.joinToString(",") { encodeUtf8(it) }
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
@@ -449,7 +458,7 @@ class StatisticDatasource {
         yearFrom: Int,
         yearTo: Int
     ): Map<Int, List<Double>> {
-        val element = java.net.URLEncoder.encode("sum(precipitation_amount P1D)", "UTF-8")
+        val element = encodeUtf8("sum(precipitation_amount P1D)")
         val url = "$FROST_BASE/observations/v0.jsonld" +
                 "?sources=$stationId" +
                 "&referencetime=$yearFrom-01-01/$yearTo-12-31" +
