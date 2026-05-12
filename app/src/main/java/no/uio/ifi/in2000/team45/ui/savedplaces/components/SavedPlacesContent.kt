@@ -37,7 +37,6 @@ import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 @Composable
 fun SavedPlacesContent(
-    stations: List<FavoriteStation>,
     locations: List<SavedPlacesLocation>,
     savedPlacesViewModel: SavedPlacesViewModel,
     onMapClick: () -> Unit,

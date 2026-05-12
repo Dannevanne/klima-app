@@ -108,7 +108,6 @@ fun SavedPlacesScreen(
         }
     ) { innerPadding ->
         SavedPlacesContent(
-            stations = stations,
             locations = locations,
             savedPlacesViewModel = savedPlacesViewModel,
             onMapClick = onMapClick,
