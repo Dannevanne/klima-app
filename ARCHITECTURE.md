@@ -18,19 +18,37 @@ We use compileSdk 36 and targetSdk 36 (Android 16.0 “Baklava”, API level 36.
 The application is tested on a Medium Phone emulator running Android 16.0 (API level 36.1, arm64) to ensure stability on newer Android versions.
 
 ## Architecture – Layered Structure
-...
+The application follows Google’s recommended layered architecture with two main layers:
+  - UI layer – handles everything the user sees and interacts with
+  - Data layer – manages all data handling, fetching, and storage
+    
+Each layer has clearly defined responsibilities (Separation of Concerns) and communicates only downwards in the hierarchy. The UI layer depends on the data layer, but never the other way around.
+
 # UI-layer
-...
+The UI layer consists of two parts: Composable functions (UI elements) and ViewModels (state holders), which communicate through Unidirectional Data Flow (UDF).
+
+Composables: 
+All screens are implemented as Composable functions. A Composable is a stateless function that describes the UI based on the state it receives. When the state changes, Jetpack Compose automatically recomposes only the affected parts of the UI tree, resulting in efficient rendering.
+Where possible, Composables are designed to be stateless. They receive data as parameters and propagate events upward through lambda functions, keeping a clear separation between UI and state management.
+
+ViewModel and State: 
+Each screen has a corresponding ViewModel that holds and manages UI-related state. The ViewModel survives configuration changes such as screen rotation, unlike Composables, ensuring that state is preserved during lifecycle events.
 
 # Data-layer
-...
+The data layer is responsible for fetching, storing, and providing data to the UI layer. It consists of two sublayers: DataSources and Repositories.
+
+DataSource: 
+
+Repository: 
+
 
 ## Designpattern: MVVM
-...
-
+The application implements the Model–View–ViewModel (MVVM) architecture, which is Google’s recommended architectural pattern for Android development.
+- Model: Repository, DataSource, and data classes
+- View: The visual presentation layer, including Composable functions
+- ViewModel: ViewModel classes using StateFlow and UI state management
 
 ## Object-Oriented Principles
-...
 
 # Low Coupling
 ...
@@ -42,6 +60,7 @@ The application is tested on a Medium Phone emulator running Android 16.0 (API l
 ...
 
 ## Project Structure
+(diagram here)
 ..
 
 ## Guidelines for Further Development
