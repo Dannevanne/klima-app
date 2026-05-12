@@ -57,6 +57,7 @@ import no.uio.ifi.in2000.team45.ui.settings.SettingsScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticScreen
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
+// navigation root identifiers for all the available screens
 private const val ROUTE_MAP = "MapScreen"
 private const val ROUTE_STATISTICS = "StatisticScreen"
 private const val ROUTE_SAVED = "SavedPlacesScreen"
@@ -64,6 +65,17 @@ private const val ROUTE_SETTINGS = "SettingsScreen"
 private const val ROUTE_INFO = "InfoScreen"
 private const val ROUTE_HELP = "HelpScreen"
 
+/**
+ * Root composable that manages app navigation and screen layering.
+ *
+ * @param modifier Modifier applied to the root container.
+ * @param navController Navigation controller used only for initial state sync.
+ * @param mapViewModel ViewModel controlling map state and interactions.
+ * @param statisticViewModel ViewModel managing statistics search and data.
+ * @param savedPlacesViewModel ViewModel managing saved places.
+ * @param soundEnabled Current sound enabled state.
+ * @param onSoundEnabledChanged Callback for toggling sound setting.
+ */
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
@@ -260,9 +272,12 @@ fun AppNavigation(
     }
 }
 
-// Renders the screen always (so it stays in memory) but pushes inactive
-// screens behind everything and absorbs no input. The active layer floats on
-// top with full opacity.
+/**
+ * Renders a screen layer that is always composed but conditionally visible.
+ *
+ * @param visible Whether this layer is currently active and interactive.
+ * @param content Screen content to render inside the layer.
+ */
 @Composable
 private fun ScreenLayer(visible: Boolean, content: @Composable () -> Unit) {
     Box(
