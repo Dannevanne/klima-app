@@ -6,6 +6,13 @@ import com.mapbox.maps.CameraOptions
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 
+/**
+ * Moves the map camera to a selected geographic location and animates the camera.
+ *
+ * @param selectedLocation Target map position to fly to.
+ * @param viewportState Map viewport controller used for camera movement.
+ * @param onFlyToComplete Called after the camera animation is started.
+ */
 @Composable
 fun MapSelectedLocationEffect(
     selectedLocation: Point?,
