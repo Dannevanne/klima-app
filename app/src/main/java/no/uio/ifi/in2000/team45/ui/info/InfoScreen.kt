@@ -45,7 +45,14 @@ import androidx.compose.material.icons.outlined.Wifi
 import androidx.core.net.toUri
 import no.uio.ifi.in2000.team45.data.info.infoDatasources
 
-
+/**
+ * Information screen displaying app data, data sources, privacy information,
+ * team details, and etc.
+ *
+ * @param onClick Callback invoked when navigating back from the screen.
+ * @param modifier Optional modifier for layout.
+ * @param onHelpClick Optional callback to navigate to the help screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoScreen(
@@ -139,6 +146,11 @@ fun InfoScreen(
     }
 }
 
+/**
+ * Section name used in the information screen to group related content.
+ *
+ * @param title Title text displayed in uppercase as a section label.
+ */
 @Composable
 private fun InfoSectionName(
     title: String
@@ -152,7 +164,19 @@ private fun InfoSectionName(
     )
 }
 
-// Structure for info-cards
+/**
+ * Card representing a data source with an icon, description, and clickable link.
+ * Opens the provided URL using a custom tab or external browser when clicked.
+ *
+ * @param name Name of the data source.
+ * @param description Short description of the data source.
+ * @param containerColor Background color of the icon container.
+ * @param iconColor Tint color for the icon.
+ * @param icon Icon representing the data source.
+ * @param iconContentDescription Accessibility description for the icon.
+ * @param onClick Callback invoked when the card is clicked.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 private fun InfoDataCard(
     name: String,
@@ -202,7 +226,13 @@ private fun InfoDataCard(
     }
 }
 
-// Structure for text rows
+/**
+ * Row displaying an icon and descriptive text.
+ *
+ * @param icon Icon shown at the start of the row.
+ * @param text Text content describing the information.
+ * @param iconContentDescription Accessibility description for the icon.
+ */
 @Composable
 private fun InfoTextRow(
     icon: ImageVector,
@@ -232,6 +262,12 @@ private fun InfoTextRow(
     }
 }
 
+/**
+ * Clickable informational text row used for help or navigation hints.
+ *
+ * @param text Text displayed to the user.
+ * @param onClick Optional callback invoked when the text is clicked.
+ */
 @Composable
 private fun InfoAvailabilityHelpText(
     text: String,
@@ -251,6 +287,9 @@ private fun InfoAvailabilityHelpText(
     )
 }
 
+/**
+ * Displays the current application version.
+ */
 @Composable
 fun VersionSection(){
     Text(
@@ -264,6 +303,9 @@ fun VersionSection(){
     )
 }
 
+/**
+ * Displays information about the application team.
+ */
 @Composable
 fun TeamSection(){
     Row(
@@ -307,6 +349,9 @@ fun TeamSection(){
     }
 }
 
+/**
+ * Section showing the application name, icon, and short description.
+ */
 @Composable
 fun AppRepresentation(){
     Box(
