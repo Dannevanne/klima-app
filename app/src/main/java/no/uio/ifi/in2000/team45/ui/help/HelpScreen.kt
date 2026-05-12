@@ -42,6 +42,13 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.BackButtonTopBar
 
+/**
+ * Help screen displaying guidance for app features such as map usage,
+ * saved places, and statistics.
+ *
+ * @param onClick Callback invoked when navigating back from the screen.
+ * @param modifier Optional modifier for layout.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpScreen(
@@ -56,6 +63,8 @@ fun HelpScreen(
                 onBackClick = onClick
             )
         },
+        // All the help items are displayed bellow
+        // using the correct title, icon and description
     ) { innerpadding ->
         LazyColumn(
             modifier = modifier
@@ -214,7 +223,11 @@ fun HelpScreen(
     }
 }
 
-// Structure for section-title
+/**
+ * Section title used within the help screen to show grouped items.
+ *
+ * @param title Text displayed as the section header.
+ */
 @Composable
 private fun HelpSectionTitle(title: String){
     Text(
@@ -226,7 +239,14 @@ private fun HelpSectionTitle(title: String){
     )
 }
 
-// Structure for help-cards in help-screen
+/**
+ * A help item row displaying an icon, title, and description.
+ *
+ * @param iconImage Icon representing the help topic.
+ * @param title Short title describing the feature.
+ * @param description Detailed explanation of the feature.
+ * @param iconContentDescription Accessibility description for the icon.
+ */
 @Composable
 private fun HelpItem(
     iconImage: ImageVector,
