@@ -43,6 +43,7 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.mapbox.maps.CameraOptions
@@ -132,8 +133,7 @@ fun MapStateScreen(
                 onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onSavedPlacesClick = onSavedPlacesClick,
-                onShowInStatistics = onShowInStatistics,
-                modifier = modifier
+                onShowInStatistics = onShowInStatistics
             )
             when (uiState) {
                 is MapUiState.Error -> Text("Error", color = Color.Red)
@@ -156,8 +156,7 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
     onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
-    savedPlacesViewModel: SavedPlacesViewModel,
-    modifier: Modifier = Modifier
+    savedPlacesViewModel: SavedPlacesViewModel
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
@@ -258,8 +257,8 @@ fun DataMap(
     // Long-press save dialog state
     var pendingPoint by remember { mutableStateOf<Point?>(null) }
     var locationName by remember { mutableStateOf("") }
-    var mapWidth by remember { mutableStateOf(0) }
-    var mapHeight by remember { mutableStateOf(0) }
+    var mapWidth by remember { mutableIntStateOf(0) }
+    var mapHeight by remember { mutableIntStateOf(0) }
     var mapViewRef by remember { mutableStateOf<com.mapbox.maps.MapView?>(null) }
 
     // Sets the cameras start position

@@ -32,12 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
-import no.uio.ifi.in2000.team45.data.savedplaces.models.FavoriteStation
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
 @Composable
 fun SavedPlacesContent(
-    stations: List<FavoriteStation>,
     locations: List<SavedPlacesLocation>,
     savedPlacesViewModel: SavedPlacesViewModel,
     onMapClick: () -> Unit,
