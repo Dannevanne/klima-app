@@ -38,6 +38,12 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
+/**
+ * Bottom sheet showing information for the selected overlay.
+ *
+ * @param overlay Selected map overlay type.
+ * @param onDismiss Called when the sheet is dismissed.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverlayLegendSheet(
@@ -112,6 +118,15 @@ fun OverlayLegendSheet(
     }
 }
 
+/**
+ * A section with icon, heading, and items.
+ *
+ * @param icon Section icon.
+ * @param heading Section title.
+ * @param items List of entries.
+ * @param boldPrefix Whether to bold the prefix before the em dash.
+ * @param bulletColors Optional colors for category swatches.
+ */
 @Composable
 private fun LegendSection(
     icon: String,
@@ -160,6 +175,11 @@ private fun LegendSection(
     }
 }
 
+/**
+ * Formats a legend item with bold prefix before an em dash if present.
+ *
+ * @param text Input legend text.
+ */
 private fun bulletAnnotated(text: String): AnnotatedString = buildAnnotatedString {
     val emDash = " — "
     val idx = text.indexOf(emDash)
@@ -173,6 +193,11 @@ private fun bulletAnnotated(text: String): AnnotatedString = buildAnnotatedStrin
     }
 }
 
+/**
+ * Returns a short description of what the overlay shows.
+ *
+ * @param overlay The overlay type.
+ */
 @Composable
 private fun legendWhatShows(overlay: OverlayType): String? = when (overlay) {
     OverlayType.NONE -> stringResource(R.string.legend_none_what)
@@ -194,6 +219,11 @@ private val LegendYellow = Color(0xFFFCD34D)
 private val LegendAvalanchePink = Color(0xFFFF7F7F)
 private val LegendLandslideBrick = Color(0xFF732600)
 
+/**
+ * Returns color swatches for legend categories.
+ *
+ * @param overlay The overlay type.
+ */
 private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (overlay) {
     OverlayType.NONE -> listOf(null)
     OverlayType.FLOOD -> listOf(IconBlue)
@@ -215,6 +245,11 @@ private fun legendCategoryColors(overlay: OverlayType): List<Color?> = when (ove
     OverlayType.AVALANCHE -> listOf(LegendAvalanchePink)
 }
 
+/**
+ * Returns the legend categories for the overlay.
+ *
+ * @param overlay The overlay type.
+ */
 @Composable
 private fun legendCategories(overlay: OverlayType): List<String> = when (overlay) {
     OverlayType.NONE -> listOf(stringResource(R.string.legend_none_cat_pick))
@@ -237,6 +272,11 @@ private fun legendCategories(overlay: OverlayType): List<String> = when (overlay
     OverlayType.AVALANCHE -> listOf(stringResource(R.string.legend_avalanche_cat_polygon))
 }
 
+/**
+ * Returns caveat text for the overlay, if any.
+ *
+ * @param overlay The overlay type.
+ */
 @Composable
 private fun legendCaveat(overlay: OverlayType): String? = when (overlay) {
     OverlayType.FLOOD -> stringResource(R.string.legend_flood_caveat)
@@ -247,6 +287,11 @@ private fun legendCaveat(overlay: OverlayType): String? = when (overlay) {
     else -> null
 }
 
+/**
+ * Returns data source text for the overlay, if any.
+ *
+ * @param overlay The overlay type.
+ */
 @Composable
 private fun legendSource(overlay: OverlayType): String? = when (overlay) {
     OverlayType.FLOOD -> stringResource(R.string.legend_flood_src)
