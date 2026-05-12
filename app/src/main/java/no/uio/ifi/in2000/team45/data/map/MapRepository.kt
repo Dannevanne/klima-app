@@ -7,6 +7,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
+// list of all the different radon hazard danger levels
 private val RADON_HAZARD_CLASSES = listOf(
     "Særlig høy aktsomhet",
     "Høy aktsomhet",
@@ -14,13 +15,30 @@ private val RADON_HAZARD_CLASSES = listOf(
     "Usikker aktsomhet"
 )
 
+// map that connects different quick clay danger level to numbers
 private val QUICK_CLAY_FAREGRAD_RANK = mapOf(
     "Lav" to 1, "Middels" to 2, "Høy" to 3
 )
 
 private val lenientJson = Json { ignoreUnknownKeys = true }
 
+/**
+ * Repository responsible for retrieving and processing hazard and overlay data
+ * from the map datasource.
+ *
+ * @property mapDatasource Datasource used for map and hazard data requests.
+ */
 class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) {
+
+    /**
+     * Returns the overlay image URL for the selected overlay type.
+     *
+     * @param type The selected overlay type.
+     * @param bbox The bounding box coordinates.
+     * @param width The image width in pixels.
+     * @param height The image height in pixels.
+     * @return The generated overlay URL.
+     */
     fun getOverlayURL(
         type: OverlayType,
         bbox: List<Double>,
@@ -32,13 +50,25 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         )
     }
 
+    /**
+     * Checks whether the specified location is inside a flood zone.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return True if the location is inside a flood zone, false if not,
+     * or null if the request fails.
+     */
     suspend fun isInFloodZone(lat: Double, lon: Double): Boolean? {
         return identifyHasResults("Flomaktsomhet", "1", lat, lon)
     }
 
-    // Highest `faregrad` ("Lav" / "Middels" / "Hoy") at the point, or null
-    // if it isn't in any mapped polygon. Picks the highest if a point hits
-    // multiple polygons.
+    /**
+     * Retrieves the highest quick clay hazard level for the specified location.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The highest hazard level, or null if no hazard data exists.
+     */
     suspend fun getQuickClayHazard(lat: Double, lon: Double): String? {
         val body = mapDatasource.fetchQuickClayHazardBody(lat, lon) ?: return null
         return try {
@@ -63,24 +93,39 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
         }
     }
 
-    // Layer 1 is the vector polygon dataset (real aktsomhet zones); layer 0
-    // is a coarse raster whose pixel can be ~100m, so identifying against it
-    // false-positives in cities near slopes. We hit only the vector layer for
-    // a cleaner in/out answer.
+    /**
+     * Checks whether the specified location is inside a landslide hazard zone.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return True if the location is inside a landslide zone, false if not,
+     * or null if the request fails.
+     */
     suspend fun isInLandslideZone(lat: Double, lon: Double): Boolean? {
         return identifyHasResults("JordFlomskredAktsomhet", "1", lat, lon)
     }
 
-    // Layer 1 is the S3 snowslide aktsomhet polygons (the main vector layer
-    // visible at usable zoom levels). Layer 0 is a coarse raster meant for
-    // overviews; we skip it for identify to avoid false positives.
+    /**
+     * Checks whether the specified location is inside an avalanche hazard zone.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return True if the location is inside an avalanche zone, false if not,
+     * or null if the request fails.
+     */
     suspend fun isInAvalancheZone(lat: Double, lon: Double): Boolean? {
         return identifyHasResults("SnoskredAktsomhet", "1", lat, lon)
     }
 
-    // True/false if the NVE identify response had any features at the point,
-    // null when the call itself failed so callers can render "unknown" instead
-    // of a misleading "Low".
+    /**
+     * Checks whether an NVE identify request returned any matching results.
+     *
+     * @param service The ArcGIS service name.
+     * @param layers The visible layer IDs to query.
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return True if results were found, false if not, or null if the request fails.
+     */
     private suspend fun identifyHasResults(
         service: String, layers: String, lat: Double, lon: Double
     ): Boolean? {
@@ -90,17 +135,25 @@ class MapRepository(private val mapDatasource: MapDatasource = MapDatasource()) 
                 !body.contains("\"results\": []")
     }
 
-    // Pulls the radon "aktsomhet" class out of NGU's WMS GetFeatureInfo body.
-    // Returns one of "Saerlig hoey aktsomhet", "Hoey aktsomhet",
-    // "Moderat til lav aktsomhet", "Usikker aktsomhet", or null when the
-    // point isn't in any mapped pixel.
+    /**
+     * Retrieves the radon hazard level for the specified location.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The radon hazard classification, or null if no data exists.
+     */
     suspend fun getRadonHazard(lat: Double, lon: Double): String? {
         val body = mapDatasource.fetchRadonHazardBody(lat, lon) ?: return null
         return RADON_HAZARD_CLASSES.firstOrNull { body.contains(it, ignoreCase = true) }
     }
 
-    // Average wind speed at 50m height (m/s), parsed out of the NVE identify
-    // response. Returns null if no data at this point or the call failed.
+    /**
+     * Retrieves the average wind speed for the specified location.
+     *
+     * @param lat The latitude of the selected point.
+     * @param lon The longitude of the selected point.
+     * @return The average wind speed in m/s, or null if no data exists.
+     */
     suspend fun getWindSpeed(lat: Double, lon: Double): Double? {
         val body = mapDatasource.fetchWindSpeedBody(lat, lon) ?: return null
         return try {
