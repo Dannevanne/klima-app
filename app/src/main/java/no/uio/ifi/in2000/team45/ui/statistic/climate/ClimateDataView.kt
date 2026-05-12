@@ -34,8 +34,13 @@ import no.uio.ifi.in2000.team45.ui.theme.LineColorOrange
 import no.uio.ifi.in2000.team45.ui.theme.LineColorPurple
 import no.uio.ifi.in2000.team45.ui.theme.LineColorTurquoise
 
+// list of available time period to get information from the station
 private val PERIOD_OPTIONS = listOf(5, 10, 20, 30, 50)
 
+/**
+ * Displays the full climate data view including charts, overview cards,
+ * period selection, and supporting station information.
+ */
 @Composable
 fun ClimateDataView(
     modifier: Modifier = Modifier,
@@ -151,6 +156,14 @@ fun ClimateDataView(
     }
 }
 
+/**
+ * Displays a selectable chip representing a time period in years.
+ *
+ * @param years number of years shown in the chip.
+ * @param selected whether this chip is currently selected.
+ * @param onClick callback invoked when the chip is clicked.
+ * @param modifier optional modifier for layout and styling.
+ */
 @Composable
 private fun PeriodChip(
     years: Int,
