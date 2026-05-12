@@ -13,6 +13,7 @@ import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team45.R
@@ -28,6 +29,10 @@ import no.uio.ifi.in2000.team45.data.statistic.utils.StationPicker
 import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import java.util.Calendar
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 sealed interface StatisticUiState {
     object Idle : StatisticUiState
@@ -376,7 +381,7 @@ class StatisticViewModel @JvmOverloads constructor(
                             }
                             Triple(assignment.station, a.await(), s.await())
                         }
-                    }.map { it.await() }
+                    }.awaitAll()
                 }
 
                 val annualByYear = mutableMapOf<Int, AnnualObservation>()
@@ -613,10 +618,10 @@ class StatisticViewModel @JvmOverloads constructor(
         val r = 6371000.0
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return (r * c).toInt()
     }
 
