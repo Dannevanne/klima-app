@@ -83,7 +83,6 @@ Requires:
 
 ## Warnings from IDE
 The project contains some warnings in the Android Studio IDE. These warnings do not affect functionality, but indicate parts of the code that could be cleaned up to improve readability and maintainability. The warning and the corresponding file are listed below:
-- StatisticDatasource.kt: "Possibly blocking call in non-blocking could lead to thread starvation" Warning about a possibly blocking call inside a non-blocking (coroutine) context, which could potentially affect performance by blocking a background thread.
 - MapContent.kt: "Calling a Mapbox Map Composable function where a UI Composable composable was expected" Warning due to incorrect composable usage, where a Mapbox composable is used in a context expecting a standard UI composable, indicating a mismatch in composable scope.
 - MapSavedPlacesEffect.kt: "Calling a UI Composable composable function where a Mapbox Map Composable was expected" Similar composable scope warning where a UI composable is called inside a Mapbox-specific composable context, which may lead to unexpected UI behavior.
 - MapScreen.kt: "Assigned value is never read" Warning for multiple variables (showDialog, locationName, pendingPoint) that are assigned values but never read, indicating unused or incomplete UI state handling. 
