@@ -71,8 +71,6 @@ fun AppNavigation(
     mapViewModel: MapViewModel,
     statisticViewModel: StatisticViewModel = viewModel(),
     savedPlacesViewModel: SavedPlacesViewModel = viewModel(),
-    musicEnabled: Boolean,
-    onMusicEnabledChanged: (Boolean) -> Unit,
     soundEnabled: Boolean,
     onSoundEnabledChanged: (Boolean) -> Unit
 ) {
@@ -169,8 +167,6 @@ fun AppNavigation(
                     onClick = { popBack() },
                     statisticViewModel = statisticViewModel,
                     savedPlacesViewModel = savedPlacesViewModel,
-                    musicEnabled = musicEnabled,
-                    onMusicEnabledChanged = onMusicEnabledChanged,
                     soundEnabled = soundEnabled,
                     onSoundEnabledChanged = onSoundEnabledChanged
                 )

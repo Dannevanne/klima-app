@@ -25,24 +25,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.team45.data.settings.MusicPreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.OnboardingPreferenceRepository
-import no.uio.ifi.in2000.team45.ui.settings.MusicViewModel
-import no.uio.ifi.in2000.team45.ui.settings.MusicViewModelFactory
-import no.uio.ifi.in2000.team45.data.music.MusicManager
 import no.uio.ifi.in2000.team45.data.settings.SoundPreferenceRepository
 import no.uio.ifi.in2000.team45.ui.settings.SoundViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SoundViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var musicManager: MusicManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        musicManager = MusicManager(applicationContext)
 
         // Creates ThemePreferenceRepository for the MapViewModelFactory
         val themePreferenceRepository = ThemePreferenceRepository(applicationContext)
@@ -51,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         val languagePreferenceRepository = LanguagePreferenceRepository(applicationContext)
 
         val cameraRepository = MapCameraRepository(applicationContext)
-        val musicPreferenceRepository = MusicPreferenceRepository(applicationContext)
         val soundPreferenceRepository = SoundPreferenceRepository(applicationContext)
         val onboardingPreferenceRepository = OnboardingPreferenceRepository(applicationContext)
 
@@ -67,19 +58,11 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            val musicViewModel: MusicViewModel = viewModel(
-                factory = MusicViewModelFactory(
-                    musicPreferenceRepository = musicPreferenceRepository
-                )
-            )
-
             val soundViewModel: SoundViewModel = viewModel(
                 factory = SoundViewModelFactory(
                     soundPreferenceRepository = soundPreferenceRepository
                 )
             )
-
-            val musicEnabled by musicViewModel.musicEnabledFlow.collectAsState(initial = false)
 
             val soundEnabled by soundViewModel.soundEnabledFlow.collectAsState(initial = true)
 
@@ -88,10 +71,6 @@ class MainActivity : AppCompatActivity() {
                 onboardingPreferenceRepository.onboardingCompletedFlow.collect { value = it }
             }
             val coroutineScope = rememberCoroutineScope()
-
-            LaunchedEffect(musicEnabled) {
-                musicManager.updateMusicState(musicEnabled)
-            }
 
             LaunchedEffect(mapViewModel.selectedLanguage, mapViewModel.isLanguageInitialized) {
                 if (mapViewModel.isLanguageInitialized) {
@@ -115,10 +94,6 @@ class MainActivity : AppCompatActivity() {
                                 onboardingPreferenceRepository.setCompleted()
                             }
                         },
-                        musicEnabled = musicEnabled,
-                        onMusicEnabledChanged = { enabled ->
-                            musicViewModel.updateMusicEnabled(enabled)
-                        },
                         soundEnabled = soundEnabled,
                         onSoundEnabledChanged = { soundViewModel.updateSoundEnabled(it) }
                     )
@@ -127,8 +102,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        musicManager.release()
-    }
 }
