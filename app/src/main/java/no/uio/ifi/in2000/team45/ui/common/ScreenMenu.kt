@@ -17,6 +17,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Icon button that opens an overflow menu.
+ *
+ * @param onClick Callback invoked when the menu button is clicked.
+ */
 @Composable
 fun OverflowMenuButton(
     onClick: () -> Unit
@@ -29,6 +34,15 @@ fun OverflowMenuButton(
     }
 }
 
+/**
+ * Overflow dropdown menu containing actions such as settings, info, and help.
+ *
+ * @param expanded Whether the menu is currently visible.
+ * @param onDismissRequest Callback invoked when the menu should be dismissed.
+ * @param onSettingsClick Callback invoked when the settings screen is selected.
+ * @param onInfoClick Callback invoked when the info screen is selected.
+ * @param onHelpClick Callback invoked when the help screen is selected.
+ */
 @Composable
 fun OverflowMenu(
     expanded: Boolean,
