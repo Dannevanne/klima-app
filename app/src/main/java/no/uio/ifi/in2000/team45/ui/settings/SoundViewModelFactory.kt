@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import no.uio.ifi.in2000.team45.data.settings.SoundPreferenceRepository
 
+/**
+ * Factory for creating instances of [SoundViewModel] with required dependencies.
+ */
 class SoundViewModelFactory (
     private val soundPreferenceRepository: SoundPreferenceRepository
 ) : ViewModelProvider.Factory{
