@@ -17,6 +17,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.RadioButton
 import androidx.compose.ui.draw.clip
 
+/**
+ * Row representing a selectable language option in the settings screen.
+ * Displays a radio button, label, and corresponding flag icon.
+ *
+ * @param selected Whether this language is currently selected.
+ * @param text Display name of the language.
+ * @param flagRes Drawable resource ID for the language flag.
+ * @param onClick Callback triggered when the row is selected.
+ */
 @Composable
 fun LanguageOptionRow(
     selected: Boolean,
