@@ -11,6 +11,15 @@ import no.uio.ifi.in2000.team45.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 
+/**
+ * Root composable responsible for app startup flow and initial screen selection.
+ *
+ * @param mapViewModel ViewModel managing map-related state and interactions.
+ * @param onboardingCompleted Whether the onboarding process has been completed.
+ * @param onOnboardingFinished Callback invoked when onboarding is completed.
+ * @param soundEnabled Current sound enabled setting.
+ * @param onSoundEnabledChanged Callback for updating sound preference state.
+ */
 @Composable
 fun AppRoot(
     mapViewModel: MapViewModel,
