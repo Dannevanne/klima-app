@@ -6,10 +6,16 @@ import no.uio.ifi.in2000.team45.data.map.MapCameraRepository
 import no.uio.ifi.in2000.team45.data.settings.ThemePreferenceRepository
 import no.uio.ifi.in2000.team45.data.settings.LanguagePreferenceRepository
 
-// Factory is needed because our MapViewModel needs dependency.
-// The MapViewModel therefore can't be made automatically with Androids ViewModel system.
-// MainActivity can now create a repository once, and send it in to this factory.
-// The regular MapViewModel doesn't need to know how the repository was made.
+/**
+ * Factory for creating MapViewModel with required dependencies.
+ *
+ * Used because MapViewModel cannot be constructed by default ViewModelProvider.
+ * Allows injection of repositories from Activity or DI layer.
+ *
+ * @param themePreferenceRepository Provides theme storage.
+ * @param languagePreferenceRepository Provides language storage.
+ * @param cameraRepository Provides camera state storage.
+ */
 class MapViewModelFactory(
     private val themePreferenceRepository: ThemePreferenceRepository,
     private val languagePreferenceRepository: LanguagePreferenceRepository,
