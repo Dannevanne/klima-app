@@ -61,7 +61,9 @@ The application implements the Model-View-ViewModel (MVVM) architecture, which i
 - Cross-feature reuse happens through plain function calls. For example, `SavedPlacesViewModel` reuses `MapRepository` for hazard checks and `StatisticRepository` for nearest stations.
 
 ### High cohesion
-...
+- Files under `data/<feature>/` all deal with that feature's persistence and network calls.
+- Helpers used by only one feature live next to it (`data/statistic/utils/StationPicker.kt`, `data/savedplaces/utils/NorwayLocationValidator.kt`).
+- One Ktor client (`network/KtorClient.kt`) is shared so timeouts, serialization and the engine config exist in exactly one place.
 
 ### Single source of truth
 ...
