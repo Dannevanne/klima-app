@@ -27,6 +27,19 @@ import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 import no.uio.ifi.in2000.team45.ui.savedplaces.components.SavedPlacesContent
 
+/**
+ * Screen that displays all saved locations with risk information.
+ *
+ * @param savedPlacesViewModel ViewModel that provides saved locations and actions.
+ * @param onSettingsClick Callback when settings is selected from menu.
+ * @param onInfoClick Callback when info screen is requested.
+ * @param onHelpClick Callback when help screen is requested.
+ * @param onMapClick Callback for navigating back to map screen.
+ * @param onStatisticClick Callback for opening statistics screen.
+ * @param onShowOnMap Callback to show a saved location on the map.
+ * @param onShowInStatistics Callback to show a location in statistics.
+ * @param modifier Optional Compose modifier for styling/layout.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedPlacesScreen(
