@@ -132,8 +132,7 @@ fun MapStateScreen(
                 onHelpClick = onHelpClick,
                 onStatisticClick = onStatisticClick,
                 onSavedPlacesClick = onSavedPlacesClick,
-                onShowInStatistics = onShowInStatistics,
-                modifier = modifier
+                onShowInStatistics = onShowInStatistics
             )
             when (uiState) {
                 is MapUiState.Error -> Text("Error", color = Color.Red)
@@ -156,8 +155,7 @@ fun MapScreen(
     onStatisticClick: () -> Unit,
     onSavedPlacesClick: () -> Unit,
     onShowInStatistics: (lat: Double, lon: Double, label: String) -> Unit,
-    savedPlacesViewModel: SavedPlacesViewModel,
-    modifier: Modifier = Modifier
+    savedPlacesViewModel: SavedPlacesViewModel
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Scaffold(
