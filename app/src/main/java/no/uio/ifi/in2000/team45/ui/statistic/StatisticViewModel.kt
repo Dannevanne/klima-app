@@ -34,6 +34,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/**
+ * UI state holder for the statistic screen.
+ *
+ * Represents all possible screen states including idle, loading, search results,
+ * place results, climate data display, and error conditions.
+ */
 sealed interface StatisticUiState {
     object Idle : StatisticUiState
     object Loading : StatisticUiState
@@ -98,6 +104,9 @@ class StatisticViewModel @JvmOverloads constructor(
         initialValue = emptyList()
     )
 
+    /**
+     * Cancels any ongoing search or selection work and resets UI state.
+     */
     fun resetAllStatisticData() {
         searchJob?.cancel()
         climateJob?.cancel()
@@ -113,6 +122,11 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Updates the selected time period for climate data visualization.
+     *
+     * @param years Number of years to display in charts.
+     */
     fun updatePeriod(years: Int) {
         selectedPeriod = years
         val current = uiState
@@ -127,6 +141,11 @@ class StatisticViewModel @JvmOverloads constructor(
         return fullAnnualData.filter { it.year >= from }
     }
 
+    /**
+     * Updates the search query and triggers autocomplete suggestions.
+     *
+     * @param query Current user input in the search field.
+     */
     fun updateSearchQuery(query: String) {
         searchQuery = query
         if (query.isBlank()) {
@@ -174,9 +193,11 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
-    // Picking a Mapbox suggestion: resolve to coordinates, wrap as a Place,
-    // and hand off to the existing climate pipeline. Mirrors the saved-place
-    // entry point so the user lands on climate data without an extra tap.
+    /**
+     * Processes a selected autocomplete suggestion and resolves it into a place.
+     *
+     * @param item Selected search suggestion from Mapbox autocomplete.
+     */
     fun selectSuggestion(item: SearchSuggestionUi) {
         selectSuggestionJob?.cancel()
         selectSuggestionJob = viewModelScope.launch {
@@ -209,6 +230,9 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Performs a search for stations or places using the current query.
+     */
     fun searchStations() {
         val query = searchQuery
         if (query.isBlank()) return
@@ -308,6 +332,12 @@ class StatisticViewModel @JvmOverloads constructor(
         "max(surface_snow_thickness P1M)"
     )
 
+    /**
+     * Selects a geographic place and loads associated climate data.
+     * This triggers station resolution, data aggregation, and UI update.
+     *
+     * @param place Place selected from search results.
+     */
     fun selectPlace(place: Place) {
         climateJob?.cancel()
         uiState = StatisticUiState.Loading
@@ -490,6 +520,12 @@ class StatisticViewModel @JvmOverloads constructor(
         )
     }
 
+    /**
+     * Performs a nearby station search based on geographic coordinates.
+     *
+     * @param lat Latitude of the reference location.
+     * @param lon Longitude of the reference location.
+     */
     fun searchNearbyStations(lat: Double, lon: Double) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
@@ -525,6 +561,11 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Selects a specific weather station and loads its climate data.
+     *
+     * @param station Station chosen from search results.
+     */
     fun selectStation(station: WeatherStation) {
         // Get the full candidate list from StationResults if available
         val candidates = (uiState as? StatisticUiState.StationResults)?.stations ?: listOf(station)
@@ -576,6 +617,9 @@ class StatisticViewModel @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Resets navigation state back to idle search screen.
+     */
     fun goBack() {
         searchQuery = ""
         searchSuggestions = emptyList()
@@ -583,9 +627,9 @@ class StatisticViewModel @JvmOverloads constructor(
         uiState = StatisticUiState.Idle
     }
 
-    // Tap-outside on Stats: drop the query, cancel any in-flight search,
-    // and bounce back to Idle. Don't disturb the user when they're already
-    // looking at climate data, or when a search is still in flight.
+    /**
+     * Exits search mode and returns to idle state if not viewing climate data.
+     */
     fun exitSearch() {
         if (uiState is StatisticUiState.ClimateData) return
         if (uiState is StatisticUiState.Loading) return
@@ -597,6 +641,9 @@ class StatisticViewModel @JvmOverloads constructor(
         uiState = StatisticUiState.Idle
     }
 
+    /**
+     * Cancels all ongoing background work related to this screen.
+     */
     fun cancelStatisticScreenWork() {
         searchJob?.cancel()
         climateJob?.cancel()
@@ -612,6 +659,15 @@ class StatisticViewModel @JvmOverloads constructor(
         super.onCleared()
     }
 
+    /**
+     * Calculates distance between two geographic coordinates in meters.
+     *
+     * @param lat1 Latitude of first point.
+     * @param lon1 Longitude of first point.
+     * @param lat2 Latitude of second point.
+     * @param lon2 Longitude of second point.
+     * @return Distance in meters.
+     */
     private fun distanceInMeters(
         lat1: Double, lon1: Double, lat2: Double, lon2: Double
     ): Int {
@@ -625,6 +681,11 @@ class StatisticViewModel @JvmOverloads constructor(
         return (r * c).toInt()
     }
 
+    /**
+     * Removes a query from recent search history.
+     *
+     * @param query Search term to remove.
+     */
     fun removeRecentSearch(query: String) {
         viewModelScope.launch {
             recentSearchRepository.removeSearch(query)
