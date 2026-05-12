@@ -1,4 +1,4 @@
-# PLEASE READ BEFORE COMMITTING
+# Please read before committing
 
 **Do** prefix all commit messages with their respective type, followed by a colon. Examples:
 - `feat: <something something>`
