@@ -6,7 +6,6 @@
 - `add: <new file>`
 - `refactor: <what was refactored?>`
 
-
 **Do** prefix all branches with their respective type, followed by a slash Examples:
 - `feat/<a-new-branch>`
 - `fix/<a-new-fix-branch>`
