@@ -171,6 +171,13 @@ flowchart TB
 Read top to bottom: a composable touches its ViewModel; the ViewModel touches one or more repositories; repositories either call a datasource (remote, via Ktor) or DataStore (local). Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
 
 ## Guidelines for further development
-...
+- Trunk-based: short-lived feature branches off `main`, merged fast. See [CONTRIBUTE.md](CONTRIBUTE.md).
+- Keep PRs small. One logical change per commit.
+- Don't add a domain layer just because. If logic that derives state grows large, factor it into helpers under `data/<feature>/utils/` first. Promote it to a separate layer only when there is real duplication.
+- A new external API goes in a new `<feature>/Datasource` + `<feature>/Repository` pair. Don't call HTTP from a ViewModel.
+- Persistence goes through DataStore via a `*PreferenceRepository`. Don't read or write SharedPreferences directly.
+- The `StationPicker` logic in `data/statistic/utils` is the trickiest part of the app. Test changes against both Oslo (single Blindern station) and Stavanger (multi-station). See [README.md](README.md).
+- Mapbox composables and plain Compose composables are different scopes. The IDE warnings listed in README.md describe the few places the two cross.
+- DataStore writes must be on the IO dispatcher; all repository write helpers are already suspend functions, so call them from `viewModelScope.launch`.
 
 
