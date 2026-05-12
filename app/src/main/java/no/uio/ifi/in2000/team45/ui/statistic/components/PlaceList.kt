@@ -19,6 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.data.statistic.models.Place
 
+/**
+ * Displays a scrollable list of places.
+ *
+ * @param places list of places to display
+ * @param onPlaceClick callback triggered when a place is selected
+ * @param modifier layout modifier for the root LazyColumn
+ * @param header composable header displayed above the list
+ * @param contentPadding padding applied to the LazyColumn content
+ */
 @Composable
 fun PlaceList(
     modifier: Modifier = Modifier,
