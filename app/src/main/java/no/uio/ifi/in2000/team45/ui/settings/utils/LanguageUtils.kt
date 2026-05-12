@@ -4,6 +4,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import no.uio.ifi.in2000.team45.data.settings.models.LanguageOption
 
+/**
+ * Applies the selected application language using AppCompat locale system.
+ *
+ * @param language Selected language option to apply.
+ */
 fun applyAppLanguage(language: LanguageOption) {
     val localeTag = when (language) {
         LanguageOption.BOKMAL -> "nb"
