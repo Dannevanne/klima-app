@@ -242,7 +242,6 @@
     <string name="the_app_does_not_require_a_login_or_account">Appen krever ikke innlogging eller konto</string>
     <string name="language_sami">Samisk</string>
     <string name="language_bokmal">Norsk bokmål</string>
-    <string name="background_music">Bakgrunnsmusikk</string>
     <string name="change_layer_to_zoom_out">Maksimalt utzoomingsnivå for dette laget er nådd. Velg «Ingen lag» for å se hele kartet</string>
     <string name="use_without_internet">Bruk likevel</string>
     <string name="sound_effect">Lydeffekt</string>
