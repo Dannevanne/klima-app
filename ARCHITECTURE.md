@@ -71,8 +71,13 @@ The ViewModel is the only source of truth for screen state. The View never holds
 For continuous data (DataStore-backed preferences, saved places list, last camera position), the source of truth is the `Flow<T>` exposed by the repository. The ViewModel turns it into a `StateFlow` via `stateIn` so the View observes a single hot stream.
 
 ## Project structure
-(diagram here)
-..
+```
+ui/        screens, view-models, navigation, theme
+  map/, statistic/, savedplaces/, settings/, info/, onboarding/, ...
+data/      repositories, datasources, models
+  map/, statistic/, savedplaces/, settings/, info/
+network/   shared Ktor client (KtorClient.kt)
+```
 
 ## Guidelines for further development
 ...
