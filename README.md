@@ -90,28 +90,6 @@ Testing
 - `androidx.test.espresso:espresso-core`
 - `androidx.compose.ui:ui-test-junit4`
 
-## Dependency injection
-
-We do not use Hilt or Dagger. Dependencies are wired manually:
-
-- `MainActivity` creates the long-lived repositories
-  (`ThemePreferenceRepository`, `LanguagePreferenceRepository`,
-  `MapCameraRepository`, `SoundPreferenceRepository`, ...).
-- Those repositories are passed to a `*ViewModelFactory`
-  (`MapViewModelFactory`, `SoundViewModelFactory`) that constructs the
-  matching ViewModel.
-- `viewModel(factory = ...)` inside the Composable obtains the
-  instance, scoped to the `NavBackStackEntry` or Activity.
-
-ViewModels with no expensive dependencies use `AndroidViewModel` with
-default constructor arguments. `StatisticViewModel` uses `@JvmOverloads`
-so the default `AndroidViewModelFactory` finds the single-arg
-`Application` constructor.
-
-We picked manual DI because the dependency graph is small. Hilt would
-add an annotation processor and Kapt config without payoff at this
-scale.
-
 ## APIs
 
 - **MET Frost API v0** -- climate data (stations, normals, observations)
