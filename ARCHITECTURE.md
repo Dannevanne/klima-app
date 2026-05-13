@@ -106,47 +106,113 @@ The diagram shows the UI layer and data layer, the shared Ktor client, on-device
 
 ```mermaid
 flowchart TB
-    subgraph UI["UI layer (Jetpack Compose)"]
+    %% =========== UI LAYER ===========
+    subgraph UI["UI layer"]
         direction TB
-        Screens["Screens / Composables<br/>MapScreen, StatisticScreen,<br/>SavedPlacesScreen, SettingsScreen,<br/>OnboardingScreen"]
-        VMs["ViewModels<br/>MapViewModel, StatisticViewModel,<br/>SavedPlacesViewModel, SoundViewModel"]
-        Screens --> VMs
+
+        AppNav["AppNavigation"]:::navhost
+
+        OnbScreen["OnboardingScreen"]:::screen
+        MapScreen["MapScreen"]:::screen
+        StatScreen["StatisticScreen"]:::screen
+        SavScreen["SavedPlacesScreen"]:::screen
+        SetScreen["SettingsScreen"]:::screen
+
+        MapVM["MapViewModel"]:::vm
+        StatVM["StatisticViewModel"]:::vm
+        SavVM["SavedPlacesViewModel"]:::vm
+        SoundVM["SoundViewModel"]:::vm
+
+        AppNav --> OnbScreen
+        AppNav --> MapScreen
+        AppNav --> StatScreen
+        AppNav --> SavScreen
+        AppNav --> SetScreen
+
+        MapScreen --> MapVM
+        StatScreen --> StatVM
+        SavScreen --> SavVM
+        SetScreen --> SoundVM
     end
 
+    %% =========== DATA LAYER ===========
     subgraph DATA["Data layer"]
         direction TB
-        Repos["Repositories<br/>MapRepository, MapCameraRepository,<br/>StatisticRepository, RecentSearchRepository,<br/>SavedPlacesRepository,<br/>ThemePreferenceRepository, LanguagePreferenceRepository,<br/>SoundPreferenceRepository, OnboardingPreferenceRepository"]
-        DSrcs["Datasources<br/>MapDatasource, StatisticDatasource, InfoDatasource"]
-        Repos --> DSrcs
+
+        MapRepo["MapRepository"]:::repo
+        CamRepo["MapCameraRepository"]:::repo
+        StatRepo["StatisticRepository"]:::repo
+        RecentRepo["RecentSearchRepository"]:::repo
+        SavRepo["SavedPlacesRepository"]:::repo
+        ThemeRepo["ThemePreferenceRepository"]:::repo
+        LangRepo["LanguagePreferenceRepository"]:::repo
+        SoundRepo["SoundPreferenceRepository"]:::repo
+        OnbRepo["OnboardingPreferenceRepository"]:::repo
+
+        MapDS["MapDatasource"]:::ds
+        StatDS["StatisticDatasource"]:::ds
+        InfoDS["InfoDatasource"]:::ds
+
+        Ktor["KtorClient"]:::net
+
+        MapRepo --> MapDS
+        StatRepo --> StatDS
+        MapDS --> Ktor
+        StatDS --> Ktor
+        InfoDS --> Ktor
     end
 
-    subgraph NET["network/"]
-        Ktor[KtorClient]
-    end
+    %% =========== EXTERNAL ===========
+    Frost(("MET Frost API")):::ext
+    NVE(("NVE")):::ext
+    NGU(("NGU")):::ext
+    Mapbox(("Mapbox")):::ext
+    DS[("DataStore Preferences")]:::store
 
-    subgraph STORE["On-device storage"]
-        DS[(DataStore Preferences)]
-    end
+    %% UI to Data edges
+    MapVM --> MapRepo
+    MapVM --> CamRepo
+    MapVM --> ThemeRepo
+    MapVM --> LangRepo
+    StatVM --> StatRepo
+    StatVM --> RecentRepo
+    SavVM --> SavRepo
+    SavVM --> MapRepo
+    SavVM --> StatRepo
+    SoundVM --> SoundRepo
 
-    subgraph EXT["External services"]
-        direction TB
-        Frost[(MET Frost API)]
-        NVE[(NVE flood / landslide / avalanche)]
-        NGU[(NGU radon / quick clay)]
-        MB[(Mapbox: maps + search)]
-    end
-
-    VMs --> Repos
-    DSrcs --> Ktor
-    Repos --> DS
+    %% External edges
     Ktor --> Frost
     Ktor --> NVE
     Ktor --> NGU
-    Screens -.-> MB
-    VMs -.-> MB
+    MapScreen -.-> Mapbox
+    StatVM -.-> Mapbox
+
+    %% DataStore edges
+    CamRepo --> DS
+    SavRepo --> DS
+    RecentRepo --> DS
+    ThemeRepo --> DS
+    LangRepo --> DS
+    SoundRepo --> DS
+    OnbRepo --> DS
+
+    %% Subgraph backgrounds: no grey fill, just a clear border per layer
+    style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px
+    style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px
+
+    %% Node colors
+    classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
+    classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
+    classDef vm fill:#a5d6a7,stroke:#1b5e20,color:#000
+    classDef repo fill:#bbdefb,stroke:#1565c0,color:#000
+    classDef ds fill:#90caf9,stroke:#0d47a1,color:#000
+    classDef net fill:#64b5f6,stroke:#0d47a1,color:#000
+    classDef ext fill:#eceff1,stroke:#37474f,color:#000
+    classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom: a composable touches its ViewModel; the ViewModel touches one or more repositories; repositories either call a datasource (remote, via Ktor) or DataStore (local). Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to one or more repositories; repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
