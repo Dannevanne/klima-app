@@ -95,7 +95,7 @@
     <string name="legend_quickclay_src">NVE SkredKvikkleire2</string>
     <string name="legend_radon_what">Sisáibmoradonfuomášuhttinluohkát guovllu várás.</string>
     <string name="legend_radon_cat_purple">Lilla — erenoamáš alla fuomášupmi (eanemus fuolastuhtti)</string>
-    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20% visttiin badjel 200 Bq/m³)</string>
+    <string name="legend_radon_cat_red">Rukses — stuorra diđolašvuohta (≥20‰ visttiin badjel 200 Bq/m³)</string>
     <string name="legend_radon_cat_yellow">Galbma — ivdni lea gaskamearálaččat gitta allat</string>
     <string name="legend_radon_cat_grey">Grána — eahpesihkar (váilevaš dieđut)</string>
     <string name="legend_radon_caveat">Kárta ii sáhte einnostit radona dihto visttis — dušše mihtideapmi sáhttá.</string>
