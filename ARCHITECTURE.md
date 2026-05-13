@@ -1,7 +1,7 @@
 # Architecture - Team 45: Naturhendelser
 This document describes the architecture of the Naturhendelser app, developed for case 3 in IN2000. It is intended for people who will work with the codebase, add features, or maintain it over time. It gives an overview of the project structure, the architectural decisions, and the patterns we follow.
 
-The reader is assumed to be familiar with Kotlin and basic Android development. For the library list and how dependency injection is wired, see [README.md](README.md). For use cases, sequence diagrams and the class diagram, see [MODELING.md](MODELING.md). For git and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
+The reader is assumed to be familiar with Kotlin and basic Android development. For the library list, see [README.md](README.md). For use cases, sequence diagrams and the class diagram, see [MODELING.md](MODELING.md). For git and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
 
 ## Technologies and dependencies
 ### Programming language and UI framework
