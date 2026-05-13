@@ -159,19 +159,33 @@ flowchart TB
 
             Ktor["KtorClient"]:::net
 
+            DS[("DataStore Preferences")]:::store
+
             MapRepo --> MapDS
             StatRepo --> StatDS
             MapDS --> Ktor
             StatDS --> Ktor
             InfoDS --> Ktor
+
+            CamRepo --> DS
+            SavRepo --> DS
+            RecentRepo --> DS
+            ThemeRepo --> DS
+            LangRepo --> DS
+            SoundRepo --> DS
+            OnbRepo --> DS
         end
 
-        %% =========== EXTERNAL (inside canvas) ===========
-        Frost(("MET Frost API")):::ext
-        NVE(("NVE")):::ext
-        NGU(("NGU")):::ext
-        Mapbox(("Mapbox")):::ext
-        DS[("DataStore Preferences")]:::store
+        %% =========== EXTERNAL APIS (bottom) ===========
+        subgraph EXT["External APIs"]
+            direction LR
+            Frost@{ shape: cloud, label: "MET Frost API" }
+            NVE@{ shape: cloud, label: "NVE" }
+            NGU@{ shape: cloud, label: "NGU" }
+            Mapbox@{ shape: cloud, label: "Mapbox" }
+        end
+
+        class Frost,NVE,NGU,Mapbox api
     end
 
     %% UI to Data edges
@@ -186,28 +200,23 @@ flowchart TB
     SavVM --> StatRepo
     SoundVM --> SoundRepo
 
-    %% External edges
+    %% Data to External APIs edges (bottom)
     Ktor --> Frost
     Ktor --> NVE
     Ktor --> NGU
     MapScreen -.-> Mapbox
     StatVM -.-> Mapbox
 
-    %% DataStore edges
-    CamRepo --> DS
-    SavRepo --> DS
-    RecentRepo --> DS
-    ThemeRepo --> DS
-    LangRepo --> DS
-    SoundRepo --> DS
-    OnbRepo --> DS
+    %% Darken all arrows
+    linkStyle default stroke:#333333,stroke-width:1.5px
 
-    %% Outer canvas: white fill, no visible border (covers full diagram bounds)
+    %% Outer canvas: white fill, no visible border
     style CANVAS fill:#ffffff,stroke:#ffffff
 
     %% Inner layer subgraphs: white fill, colored border per layer
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px
+    style EXT fill:#ffffff,stroke:#455a64,stroke-width:2px
 
     %% Node colors
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
@@ -216,7 +225,7 @@ flowchart TB
     classDef repo fill:#bbdefb,stroke:#1565c0,color:#000
     classDef ds fill:#90caf9,stroke:#0d47a1,color:#000
     classDef net fill:#64b5f6,stroke:#0d47a1,color:#000
-    classDef ext fill:#eceff1,stroke:#37474f,color:#000
+    classDef api fill:#eceff1,stroke:#37474f,color:#000
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
