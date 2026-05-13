@@ -106,11 +106,9 @@ The app is developed and tested on API level 36.1 (Android 16, “Baklava”) us
 
 We use compileSdk 36 and targetSdk 36, with a minimum SDK of minSdk 24 (Android 7.0, “Nougat”). minSdk 24 was chosen to support modern Android development with Jetpack Compose, Material 3, and coroutines, while still covering the majority of actively used devices. Lower API levels would require legacy solutions, while higher levels would exclude a significant portion of users without a major benefit. targetSdk 36 ensures the app follows the latest Android 16 behavior changes (such as predictive back, edge-to-edge rendering, notification permissions, and scoped storage) and meets Google Play requirements.
 
-## Architecture & Lifecycle
-(Activity Lifecycle + DataStore-persistering)
 
 ## Accessibility
-(WCAG 2.1-tiltak, adaptivt layout, skjermstørrelser testet)
+The app is built with WCAG 2.1 (levels A and AA) in mind. The app aldo uses adaptive layouts and scalable units to support varying screen sizes.
 
 ## Location Permission
 The app requests access to the device's location to center the map on the
