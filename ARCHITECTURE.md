@@ -115,16 +115,16 @@ flowchart TB
 
             AppNav["AppNavigation"]:::navhost
 
-            OnbScreen["OnboardingScreen"]:::screen
-            MapScreen["MapScreen"]:::screen
-            StatScreen["StatisticScreen"]:::screen
-            SavScreen["SavedPlacesScreen"]:::screen
-            SetScreen["SettingsScreen"]:::screen
+            OnbScreen["Onboarding<br>Screen"]:::screen
+            MapScreen["Map<br>Screen"]:::screen
+            StatScreen["Statistic<br>Screen"]:::screen
+            SavScreen["SavedPlaces<br>Screen"]:::screen
+            SetScreen["Settings<br>Screen"]:::screen
 
-            MapVM["MapViewModel"]:::vm
-            StatVM["StatisticViewModel"]:::vm
-            SavVM["SavedPlacesViewModel"]:::vm
-            SoundVM["SoundViewModel"]:::vm
+            MapVM["Map<br>ViewModel"]:::vm
+            StatVM["Statistic<br>ViewModel"]:::vm
+            SavVM["SavedPlaces<br>ViewModel"]:::vm
+            SoundVM["Sound<br>ViewModel"]:::vm
 
             AppNav --> OnbScreen
             AppNav --> MapScreen
@@ -142,33 +142,25 @@ flowchart TB
         subgraph DATA["Data layer"]
             direction TB
 
-            subgraph REPOS[" "]
-                direction LR
-                MapRepo["MapRepository"]:::repo
-                MapCameraRepo["MapCameraRepository"]:::repo
-                ThemeRepo["ThemePreferenceRepository"]:::repo
-                LangRepo["LanguagePreferenceRepository"]:::repo
-                StatRepo["StatisticRepository"]:::repo
-                RecentRepo["RecentSearchRepository"]:::repo
-                SavRepo["SavedPlacesRepository"]:::repo
-                SoundRepo["SoundPreferenceRepository"]:::repo
-                OnbRepo["OnboardingPreferenceRepository"]:::repo
-            end
+            MapRepo["Map<br>Repository"]:::repo
+            MapCameraRepo["MapCamera<br>Repository"]:::repo
+            ThemeRepo["Theme<br>Preference<br>Repository"]:::repo
+            LangRepo["Language<br>Preference<br>Repository"]:::repo
+            StatRepo["Statistic<br>Repository"]:::repo
+            RecentRepo["RecentSearch<br>Repository"]:::repo
+            SavRepo["SavedPlaces<br>Repository"]:::repo
+            SoundRepo["Sound<br>Preference<br>Repository"]:::repo
+            OnbRepo["Onboarding<br>Preference<br>Repository"]:::repo
 
-            subgraph DSRCS[" "]
-                direction LR
-                MapDS["MapDatasource"]:::ds
-                StatDS["StatisticDatasource"]:::ds
-                DS[("DataStore Preferences")]:::store
-            end
+            MapDS["Map<br>Datasource"]:::ds
+            StatDS["Statistic<br>Datasource"]:::ds
 
-            subgraph APIS[" "]
-                direction LR
-                NVE@{ shape: cloud, label: "NVE" }
-                NGU@{ shape: cloud, label: "NGU" }
-                Frost@{ shape: cloud, label: "MET Frost API" }
-                Mapbox@{ shape: cloud, label: "Mapbox" }
-            end
+            DS[("DataStore<br>Preferences")]:::store
+
+            NVE@{ shape: cloud, label: "NVE" }
+            NGU@{ shape: cloud, label: "NGU" }
+            Frost@{ shape: cloud, label: "MET Frost API" }
+            Mapbox@{ shape: cloud, label: "Mapbox" }
 
             MapRepo --> MapDS
             StatRepo --> StatDS
@@ -205,9 +197,6 @@ flowchart TB
     style CANVAS fill:#ffffff,stroke:#ffffff,color:#000000
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000000
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
-    style REPOS fill:#ffffff,stroke:#ffffff
-    style DSRCS fill:#ffffff,stroke:#ffffff
-    style APIS fill:#ffffff,stroke:#ffffff
 
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
     classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
