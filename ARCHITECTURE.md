@@ -1,5 +1,5 @@
 # Architecture - Team 45: Naturhendelser
-This document describes the architecture of the Naturhendelser app, developed for case 3 in IN2000. It is intended for people who will work with the codebase, add features, or maintain it over time. It gives an overview of the project structure, the architectural decisions, and the patterns we follow.
+This document describes the architecture of the Naturhendelser app, developed for case 3 in IN2000. It is intended for people who will maintain or further develop the app and need to understand the code style and practices we follow. It gives an overview of the project structure, the architectural decisions, and the patterns we use.
 
 The reader is assumed to be familiar with Kotlin and basic Android development. For the library list, see [README.md](README.md). For use cases, sequence diagrams and the class diagram, see [MODELING.md](MODELING.md). For git and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
 
@@ -52,6 +52,14 @@ The application implements the Model-View-ViewModel (MVVM) architecture, which i
 - View: The visual presentation layer, including Composable functions
 - ViewModel: ViewModel classes using StateFlow and UI state management
 
+## Unidirectional Data Flow (UDF)
+UDF is the data-flow pattern Compose and our ViewModels rely on. State flows in one direction, events in the other:
+
+- State flows **down**: data layer to ViewModel to Composable. The ViewModel exposes state either as `StateFlow<UiState>` (via `stateIn` on a repository `Flow<T>`, used by `StatisticViewModel`, `SavedPlacesViewModel` and `SoundViewModel`) or as Compose `mutableStateOf` for screen-local state (`MapViewModel`). The Composable observes it; it does not mutate.
+- Events flow **up**: the Composable calls a ViewModel method (or a lambda passed in by the parent) on user interaction.
+
+This routes every state transition through one place (the ViewModel), which keeps recomposition cheap (only sub-trees that read the changed state recompose) and makes behavior reproducible. The "single source of truth" rule under "Object-oriented principles" is the same idea applied at the screen level.
+
 ## Dependency injection
 
 We do not use Hilt or Dagger. Dependencies are wired manually:
@@ -88,7 +96,7 @@ scale.
 - One Ktor client (`network/KtorClient.kt`) is shared so timeouts, serialization and the engine config exist in exactly one place.
 
 ### Single source of truth
-The ViewModel is the only source of truth for screen state. The View never holds business state. State flows down (data layer to ViewModel to View) and events flow up (View to ViewModel), which is the unidirectional data flow described in the MVVM section.
+The ViewModel is the only source of truth for screen state. The View never holds business state. State flows down (data layer to ViewModel to View) and events flow up (View to ViewModel), as described in the UDF section above.
 
 For continuous data (DataStore-backed preferences, saved places list, last camera position), the source of truth is the `Flow<T>` exposed by the repository. The ViewModel turns it into a `StateFlow` via `stateIn` so the View observes a single hot stream.
 
