@@ -170,10 +170,10 @@ flowchart TB
 
         subgraph APIS["External APIs"]
             direction LR
-            NVE["NVE"]:::api
-            NGU["NGU"]:::api
-            Frost["Frost"]:::api
-            Mapbox["Mapbox"]:::api
+            NVE@{ shape: cloud, label: "NVE" }
+            NGU@{ shape: cloud, label: "NGU" }
+            Frost@{ shape: cloud, label: "Frost" }
+            Mapbox@{ shape: cloud, label: "Mapbox" }
         end
 
         MapVM <--> MapRepo
@@ -198,9 +198,13 @@ flowchart TB
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
     style APIS fill:#ffffff,stroke:#0d47a1,stroke-width:2px,stroke-dasharray:5 5,color:#000000
 
+    style NVE fill:#e3f2fd,stroke:#0d47a1,color:#000
+    style NGU fill:#e3f2fd,stroke:#0d47a1,color:#000
+    style Frost fill:#e3f2fd,stroke:#0d47a1,color:#000
+    style Mapbox fill:#e3f2fd,stroke:#0d47a1,color:#000
+
     classDef ui fill:#a5d6a7,stroke:#1b5e20,color:#000
     classDef data fill:#90caf9,stroke:#0d47a1,color:#000
-    classDef api fill:#e3f2fd,stroke:#0d47a1,color:#000
 ```
 
 **Label legend.** The diagram uses short labels so renderers don't truncate them. Full class names:
@@ -216,7 +220,7 @@ flowchart TB
 | DataStore | `DataStore Preferences` (AndroidX) |
 | Frost / NVE / NGU / Mapbox | MET Frost API / NVE Atlas / NGU services / Mapbox (maps + search) |
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four boxes inside the dashed "External APIs" group are services we don't host: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four clouds inside the dashed "External APIs" group are services we don't host: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
 
 Two cross-feature dependencies are intentionally omitted from the diagram for readability and live here in prose instead: `SavedPlacesViewModel` calls `MapRepository` for hazard data per saved place, and `StatisticRepository` for the nearest weather stations.
 
