@@ -191,10 +191,10 @@ flowchart TB
 
     linkStyle default stroke:#333333,stroke-width:1.5px
 
-    style CANVAS fill:#ffffff,stroke:#ffffff
-    style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px
-    style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px
-    style API fill:#ffffff,stroke:#455a64,stroke-width:2px
+    style CANVAS fill:#ffffff,stroke:#ffffff,color:#000000
+    style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000000
+    style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
+    style API fill:#ffffff,stroke:#455a64,stroke-width:2px,color:#000000
 
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
     classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
