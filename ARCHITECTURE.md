@@ -138,7 +138,7 @@ flowchart TB
             SetScreen --> SoundVM
         end
 
-        %% =========== DATA LAYER ===========
+        %% =========== DATA LAYER (includes external APIs) ===========
         subgraph DATA["Data layer"]
             direction TB
 
@@ -154,6 +154,11 @@ flowchart TB
             Ktor["KtorClient"]:::net
             DS[("DataStore Preferences")]:::store
 
+            Frost@{ shape: cloud, label: "MET Frost API" }
+            NVE@{ shape: cloud, label: "NVE" }
+            NGU@{ shape: cloud, label: "NGU" }
+            Mapbox@{ shape: cloud, label: "Mapbox" }
+
             MapRepo --> MapDS
             StatRepo --> StatDS
             MapDS --> Ktor
@@ -162,15 +167,10 @@ flowchart TB
             SavRepo --> DS
             SoundRepo --> DS
             OtherRepos --> DS
-        end
 
-        %% =========== API LAYER ===========
-        subgraph API["API layer"]
-            direction LR
-            Frost@{ shape: cloud, label: "MET Frost API" }
-            NVE@{ shape: cloud, label: "NVE" }
-            NGU@{ shape: cloud, label: "NGU" }
-            Mapbox@{ shape: cloud, label: "Mapbox" }
+            Ktor --> Frost
+            Ktor --> NVE
+            Ktor --> NGU
         end
 
         class Frost,NVE,NGU,Mapbox api
@@ -181,12 +181,8 @@ flowchart TB
         SavVM --> SavRepo
         SoundVM --> SoundRepo
 
-        Ktor --> Frost
-        Ktor --> NVE
-        Ktor --> NGU
-
-        MapScreen -.-> Mapbox
-        StatVM -.-> Mapbox
+        MapScreen --> Mapbox
+        StatVM --> Mapbox
     end
 
     linkStyle default stroke:#333333,stroke-width:1.5px
@@ -194,7 +190,6 @@ flowchart TB
     style CANVAS fill:#ffffff,stroke:#ffffff,color:#000000
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000000
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
-    style API fill:#ffffff,stroke:#455a64,stroke-width:2px,color:#000000
 
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
     classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
@@ -206,7 +201,7 @@ flowchart TB
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. The `Other repositories` node groups five DataStore-backed repositories that only persist user state: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (which goes out to an external API via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. The external services (Frost, NVE, NGU, Mapbox) sit inside the data layer as cloud nodes: they are part of the data layer's responsibilities, not a separate architectural layer. The `Other repositories` node groups five DataStore-backed repositories that only persist user state: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
