@@ -146,7 +146,7 @@ flowchart TB
             StatRepo["StatisticRepository"]:::repo
             SavRepo["SavedPlacesRepository"]:::repo
             SoundRepo["SoundPreferenceRepository"]:::repo
-            OtherRepos["Other repositories<br/>MapCameraRepository, RecentSearchRepository,<br/>ThemePreferenceRepository, LanguagePreferenceRepository,<br/>OnboardingPreferenceRepository"]:::repo
+            OtherRepos["Other repositories"]:::repo
 
             MapDS["MapDatasource"]:::ds
             StatDS["StatisticDatasource"]:::ds
@@ -206,7 +206,7 @@ flowchart TB
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. The `Other repositories` node groups five DataStore-backed repositories that only persist user state: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
