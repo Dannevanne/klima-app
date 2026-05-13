@@ -229,6 +229,7 @@ The Android Studio IDE flags a number of issues across the project. The team pol
 - **GradleDependency** (5) -- `datastore-preferences`, `core-ktx`, `activity-compose`, `compose-bom`, `navigation-compose` are pinned to versions verified in the course environment.
 - **NewerVersionAvailable** (6) -- Ktor 3.4.0, accompanist-permissions 0.35.0-alpha, kotlinx-coroutines-test 1.10.2, kotlin compose plugin 2.0.21 are pinned likewise. Upgrades are deferred until course exit to avoid mid-project Kotlin/AGP churn.
 - **UseTomlInstead** (~20) -- several Mapbox SDK modules, Ktor modules, Coil, accompanist, mockk, browser, appcompat dependencies are declared inline in `app/build.gradle.kts` instead of via `libs.versions.toml`. Migrating them to the version catalog is a planned follow-up; doing it during the course adds review noise without functional value.
+- **UnstableApiUsage** (4, `settings.gradle.kts:18-19`) -- `RepositoriesMode.FAIL_ON_PROJECT_REPOS` is marked `@Incubating` in Gradle. This is the standard pattern Android Studio writes when you opt into centralised dependency resolution. We keep it because rolling back to per-project repositories would break the build.
 
 ## Note: emulator keyboard setup
 
