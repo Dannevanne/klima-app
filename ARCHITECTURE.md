@@ -142,25 +142,33 @@ flowchart TB
         subgraph DATA["Data layer"]
             direction TB
 
-            MapCameraRepo["MapCameraRepository"]:::repo
-            ThemeRepo["ThemePreferenceRepository"]:::repo
-            LangRepo["LanguagePreferenceRepository"]:::repo
-            MapRepo["MapRepository"]:::repo
-            StatRepo["StatisticRepository"]:::repo
-            RecentRepo["RecentSearchRepository"]:::repo
-            SavRepo["SavedPlacesRepository"]:::repo
-            SoundRepo["SoundPreferenceRepository"]:::repo
-            OnbRepo["OnboardingPreferenceRepository"]:::repo
+            subgraph REPOS[" "]
+                direction LR
+                MapRepo["MapRepository"]:::repo
+                MapCameraRepo["MapCameraRepository"]:::repo
+                ThemeRepo["ThemePreferenceRepository"]:::repo
+                LangRepo["LanguagePreferenceRepository"]:::repo
+                StatRepo["StatisticRepository"]:::repo
+                RecentRepo["RecentSearchRepository"]:::repo
+                SavRepo["SavedPlacesRepository"]:::repo
+                SoundRepo["SoundPreferenceRepository"]:::repo
+                OnbRepo["OnboardingPreferenceRepository"]:::repo
+            end
 
-            MapDS["MapDatasource"]:::ds
-            StatDS["StatisticDatasource"]:::ds
+            subgraph DSRCS[" "]
+                direction LR
+                MapDS["MapDatasource"]:::ds
+                StatDS["StatisticDatasource"]:::ds
+                DS[("DataStore Preferences")]:::store
+            end
 
-            DS[("DataStore Preferences")]:::store
-
-            NVE@{ shape: cloud, label: "NVE" }
-            NGU@{ shape: cloud, label: "NGU" }
-            Frost@{ shape: cloud, label: "MET Frost API" }
-            Mapbox@{ shape: cloud, label: "Mapbox" }
+            subgraph APIS[" "]
+                direction LR
+                NVE@{ shape: cloud, label: "NVE" }
+                NGU@{ shape: cloud, label: "NGU" }
+                Frost@{ shape: cloud, label: "MET Frost API" }
+                Mapbox@{ shape: cloud, label: "Mapbox" }
+            end
 
             MapRepo --> MapDS
             StatRepo --> StatDS
@@ -181,7 +189,7 @@ flowchart TB
 
         class NVE,NGU,Frost,Mapbox api
 
-        %% VM to Repo edges (primary + cross-feature)
+        %% Primary VM -> Repo edges only (cross-feature edges live in prose)
         MapVM --> MapRepo
         MapVM --> MapCameraRepo
         MapVM --> ThemeRepo
@@ -189,8 +197,6 @@ flowchart TB
         StatVM --> StatRepo
         StatVM --> RecentRepo
         SavVM --> SavRepo
-        SavVM --> MapRepo
-        SavVM --> StatRepo
         SoundVM --> SoundRepo
     end
 
@@ -199,6 +205,9 @@ flowchart TB
     style CANVAS fill:#ffffff,stroke:#ffffff,color:#000000
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000000
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
+    style REPOS fill:#ffffff,stroke:#ffffff
+    style DSRCS fill:#ffffff,stroke:#ffffff
+    style APIS fill:#ffffff,stroke:#ffffff
 
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
     classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
@@ -209,7 +218,9 @@ flowchart TB
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. `SavedPlacesViewModel` is the main cross-feature consumer: along with its own `SavedPlacesRepository` it also pulls `MapRepository` (hazard data per saved place) and `StatisticRepository` (nearest weather stations). Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
+
+Two cross-feature dependencies are intentionally omitted from the diagram for readability and live here in prose instead: `SavedPlacesViewModel` calls `MapRepository` for hazard data per saved place, and `StatisticRepository` for the nearest weather stations.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
