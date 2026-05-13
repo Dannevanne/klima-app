@@ -25,10 +25,70 @@ The app has three main screens accessible from a bottom navigation bar:
 
 ## Tech stack
 
-- Kotlin + Jetpack Compose + Material 3
-- Mapbox SDK for the map
-- Ktor (CIO) + kotlinx.serialization for network calls
-- MVVM architecture with datasource / repository / view-model layers
+- Language: Kotlin
+- UI: Jetpack Compose + Material 3
+- Map: Mapbox SDK + Mapbox Search SDK
+- Network: Ktor (CIO) + kotlinx.serialization JSON
+- Image loading: Coil
+- Persistence: AndroidX DataStore Preferences
+- Navigation: Jetpack Navigation Compose
+- Architecture: MVVM with datasource / repository / view-model layers
+  (see [ARCHITECTURE.md](ARCHITECTURE.md))
+
+## Libraries
+
+Versions and the full list live in `app/build.gradle.kts` and
+`gradle/libs.versions.toml`. Grouped by purpose:
+
+UI / Compose
+- `androidx.compose:compose-bom`
+- `androidx.compose.ui`, `ui-graphics`, `ui-tooling-preview`
+- `androidx.compose.material3`
+- `androidx.compose.material:material-icons-extended`
+- `androidx.activity:activity-compose`
+- `androidx.appcompat:appcompat` 1.7.1
+
+Navigation and lifecycle
+- `androidx.navigation:navigation-compose`
+- `androidx.navigation:navigation-runtime-ktx`
+- `androidx.lifecycle:lifecycle-runtime-ktx`
+
+Networking
+- `io.ktor:ktor-client-core` 3.4.0
+- `io.ktor:ktor-client-cio` 3.4.0
+- `io.ktor:ktor-client-content-negotiation` 3.4.0
+- `io.ktor:ktor-serialization-kotlinx-json` 3.4.0
+
+Map and search
+- `com.mapbox.maps:android-ndk27` 11.20.1
+- `com.mapbox.extension:maps-compose-ndk27` 11.20.1
+- `com.mapbox.mapboxsdk:mapbox-sdk-turf` 7.10.0
+- `com.mapbox.search:autofill-ndk27` 2.21.0
+- `com.mapbox.search:discover-ndk27` 2.21.0
+- `com.mapbox.search:place-autocomplete-ndk27` 2.21.0
+- `com.mapbox.search:offline-ndk27` 2.21.0
+- `com.mapbox.search:mapbox-search-android-ndk27` 2.21.0
+- `com.mapbox.search:mapbox-search-android-ui-ndk27` 2.21.0
+
+Image loading
+- `io.coil-kt:coil-compose` 2.7.0
+
+Persistence
+- `androidx.datastore:datastore-preferences` 1.1.7
+
+Permissions
+- `com.google.accompanist:accompanist-permissions` 0.35.0-alpha
+
+Browser (url launching)
+- `androidx.browser:browser` 1.10.0
+
+Testing
+- `junit` 4.13.2
+- `io.mockk:mockk` 1.14.9
+- `org.jetbrains.kotlinx:kotlinx-coroutines-test` 1.10.2
+- `androidx.test.ext:junit`
+- `androidx.test.espresso:espresso-core`
+- `androidx.compose.ui:ui-test-junit4`
 
 ## APIs
 
