@@ -202,7 +202,7 @@ Requires:
   - Register at https://frost.met.no/auth/requestCredentials.html
 
 ## Warnings and errors from IDE
-The Android Studio IDE flags a number of issues across the project. The team policy is to either fix them or list them here with the reasoning for keeping them. The list below was last verified against `./gradlew :app:lintDebug` and Android Studio code analysis on 2026-05-13.
+The Android Studio IDE flags a number of issues across the project. The team policy is to either fix them or list them here with the reasoning for keeping them. The list below was last verified against `./gradlew :app:lintDebug` and Android Studio code analysis on 2026-05-14.
 
 ### Kotlin/Compose code-analysis warnings
 - **MapContent.kt** -- "Calling a Mapbox Map Composable function where a UI Composable composable was expected". The `MapEffect` blocks live inside the `MapboxMap` block, which is the canonical pattern in the Mapbox Compose extension. The IDE's general Compose scope analysis doesn't know about Mapbox's nested scopes, so it flags this. No runtime impact.
@@ -214,8 +214,8 @@ The Android Studio IDE flags a number of issues across the project. The team pol
 
 ### Lint resource warnings/errors
 - **MissingDefaultResource** (error) -- `drawable-normal/safeproperty_logo_sharp.xml`, `drawable-normal/safeproperty_logo_v6.png`. The `-normal` qualifier matches the screen-size class of our target devices (phones). The app is not designed for `xlarge` tablets, so the missing fallback is intentional.
-- **MissingTranslation** (error, ~22) -- English strings without Sami translations (`building_in_hazard_areas`, `avalanche_warnings`, onboarding strings, zoom labels, etc.). Sami support is best-effort; coverage is incomplete and a planned follow-up. The base English text falls back when a Sami translation is missing.
-- **StringFormatInvalid** (error) -- `legend_radon_cat_red` in `values-nb` and `values-nn` ("Rødt -- høy aktsomhet (≥20% av boliger ...)"). Lint reads `% a` as a malformed format specifier. The string is rendered directly via `stringResource`, not through `String.format`, so the literal `%` displays correctly. Escaping to `%%` would render two `%` characters when shown directly.
+- **DefaultLocale** (5) -- `String.format(...)` calls in `ClimateComponents.kt` without an explicit locale. Open PR #428 passes `Locale.getDefault()` explicitly; runtime behaviour is unchanged.
+- **RedundantLabel** -- `android:label` on `MainActivity` duplicates the application label. Open PR #429 drops it.
 - **PluralsCandidate** (4) -- `months_count`, `years_count`, `days_per_year`, `max_saved_places_message`. The app always shows counts of two or more (e.g., "12 months", "30 years"), so the singular form never appears. Switching to `<plurals>` would add complexity without changing what users see.
 - **Untranslatable** (4) -- `language_bokmal` / `language_nynorsk` are translated in `values-nb` and `values-nn` even though they're marked `translatable="false"` in `values/`. The values are the labels shown in the Settings language picker, and we want each option to render in its own language consistently.
 - **UnusedResources** (~33) -- color tokens from the Compose template (`purple_200`, `teal_700`, etc.), API name strings, legend body strings, an unused sound file. Removing them piecemeal is risky because lint's translation completeness checks treat absence as `MissingTranslation`. A consolidated cleanup pass is a planned follow-up.

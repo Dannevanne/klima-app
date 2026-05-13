@@ -126,7 +126,7 @@
 
     <string name="legend_radon_what">Indoor radon awareness classes for the area.</string>
     <string name="legend_radon_cat_purple">Purple — particularly high caution (highest concern)</string>
-    <string name="legend_radon_cat_red">Red — high caution (≥20% of dwellings exceed 200 Bq/m³)</string>
+    <string name="legend_radon_cat_red">Red — high caution (≥20‰ of dwellings exceed 200 Bq/m³)</string>
     <string name="legend_radon_cat_yellow">Yellow — moderate to low</string>
     <string name="legend_radon_cat_grey">Grey — unsure (insufficient data)</string>
     <string name="legend_radon_caveat">The map cannot predict radon in a specific building — only a measurement can.</string>

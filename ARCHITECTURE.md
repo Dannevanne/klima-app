@@ -60,6 +60,29 @@ UDF is the data-flow pattern Compose and our ViewModels rely on. State flows in 
 
 This routes every state transition through one place (the ViewModel), which keeps recomposition cheap (only sub-trees that read the changed state recompose) and makes behavior reproducible. The "single source of truth" rule under "Object-oriented principles" is the same idea applied at the screen level.
 
+## Activity Lifecycle and state preservation
+Android destroys and re-creates Activities on certain events: screen rotation, switching dark/light theme at the OS level, or the OS reclaiming memory. The app combines three Android mechanisms so important information is not lost across those events.
+
+**ViewModel scope (survives configuration changes).** Each screen has a `ViewModel` that outlives configuration changes. Anything held in a `StateFlow<UiState>` or Compose `mutableStateOf` on the VM is therefore preserved when the device rotates: the recomposed UI re-collects the state and renders identically. This is why search results in the Statistics screen, the active overlay on the Map screen and the saved-place list in Saved Places all survive a rotation without a reload.
+
+**DataStore Preferences (survives process death).** When the app process itself is killed (the user swipes it away, or Android reclaims memory while the app is in the background) the ViewModel is destroyed too. Anything we need to keep across process death lives in DataStore Preferences behind a `*PreferenceRepository`:
+
+- `MapCameraRepository` -- last camera position (zoom, lat/lon) so the map opens where the user left it
+- `RecentSearchRepository` -- the recent place searches in the Statistics screen
+- `SavedPlacesRepository` -- the user's saved places
+- `ThemePreferenceRepository`, `LanguagePreferenceRepository`, `SoundPreferenceRepository` -- user-chosen settings
+- `OnboardingPreferenceRepository` -- whether the user has completed the onboarding flow
+
+Each VM collects the relevant `Flow<T>` from these repositories via `stateIn`, so on next launch the initial state is rehydrated before the user sees the screen.
+
+**Navigation back-stack (survives in-app navigation).** When the user navigates to a different screen the previous `NavBackStackEntry` stays on the back-stack and its ViewModel stays alive. Returning to the screen shows it in the same state. `MainActivity` sets `android:configChanges="locale|layoutDirection"` in `AndroidManifest.xml` so that changing the in-app language doesn't tear down the activity -- the Compose tree just recomposes with the new strings.
+
+Concretely, this covers every state-loss scenario in the produktkrav's robustness section:
+- **Screen rotation**: ViewModel survives, state preserved.
+- **User navigates between screens and back**: back-stack keeps the VM alive, state preserved.
+- **App backgrounded then re-entered**: VM survives if the process is alive; if not, state is restored from DataStore on next launch (camera position, saved places, settings, recent searches).
+- **Language change in Settings**: `configChanges="locale|layoutDirection"` keeps the activity, Compose recomposes with new strings.
+
 ## Dependency injection
 
 We do not use Hilt or Dagger. Dependencies are wired manually:
