@@ -40,7 +40,7 @@ The app has three main screens accessible from a bottom navigation bar:
 Versions and the full list live in `app/build.gradle.kts` and
 `gradle/libs.versions.toml`. Grouped by purpose:
 
-UI / Compose
+UI / Compose. Jetpack Compose is our UI toolkit. The `compose-bom` pins consistent versions across the Compose artifacts. `material3` plus the extended icons set give us the Material 3 design system. `activity-compose` hooks Compose into `MainActivity`. `appcompat` is pulled in because Mapbox Search's UI components extend `AppCompatActivity`.
 - `androidx.compose:compose-bom`
 - `androidx.compose.ui`, `ui-graphics`, `ui-tooling-preview`
 - `androidx.compose.material3`
@@ -48,18 +48,18 @@ UI / Compose
 - `androidx.activity:activity-compose`
 - `androidx.appcompat:appcompat` 1.7.1
 
-Navigation and lifecycle
+Navigation and lifecycle. Jetpack Navigation drives the bottom-bar routing between Map, Statistics and Saved Places screens. `lifecycle-runtime-ktx` adds Kotlin coroutine support to `ViewModel`s (`viewModelScope`).
 - `androidx.navigation:navigation-compose`
 - `androidx.navigation:navigation-runtime-ktx`
 - `androidx.lifecycle:lifecycle-runtime-ktx`
 
-Networking
+Networking. Ktor is the HTTP client we use to call Frost, NVE and NGU. The CIO engine is a coroutine-based Kotlin engine (no Java HttpURLConnection underneath). `content-negotiation` plus `kotlinx-serialization-kotlinx-json` plug in JSON parsing for the API responses.
 - `io.ktor:ktor-client-core` 3.4.0
 - `io.ktor:ktor-client-cio` 3.4.0
 - `io.ktor:ktor-client-content-negotiation` 3.4.0
 - `io.ktor:ktor-serialization-kotlinx-json` 3.4.0
 
-Map and search
+Map and search. The Mapbox map SDK renders the map and our NVE/NGU image overlays. `maps-compose` is the Compose binding for the map view. `sdk-turf` does the geospatial math we need (point-in-polygon for flood zones, distance calculations for nearest weather stations). The Mapbox Search packages power the place autocomplete in the search bar; `place-autocomplete` is the one we call directly, the rest are required transitive UI/discover/offline pieces of the Search SDK.
 - `com.mapbox.maps:android-ndk27` 11.20.1
 - `com.mapbox.extension:maps-compose-ndk27` 11.20.1
 - `com.mapbox.mapboxsdk:mapbox-sdk-turf` 7.10.0
@@ -70,19 +70,19 @@ Map and search
 - `com.mapbox.search:mapbox-search-android-ndk27` 2.21.0
 - `com.mapbox.search:mapbox-search-android-ui-ndk27` 2.21.0
 
-Image loading
+Image loading. Coil loads the NVE/NGU image overlays into the Compose UI; we also use it for any other remote images (for example flag icons in settings).
 - `io.coil-kt:coil-compose` 2.7.0
 
-Persistence
+Persistence. AndroidX DataStore Preferences is our on-device key-value store. We use it for the saved places list, recent searches, last camera position, theme, language, sound and onboarding-completed flags.
 - `androidx.datastore:datastore-preferences` 1.1.7
 
-Permissions
+Permissions. Accompanist Permissions wraps the runtime permission API for the location permission flow on the map screen.
 - `com.google.accompanist:accompanist-permissions` 0.35.0-alpha
 
-Browser (url launching)
+Browser (url launching). AndroidX Browser opens external links (NVE, NGU, Frost source pages) in a Chrome custom tab instead of leaving the app.
 - `androidx.browser:browser` 1.10.0
 
-Testing
+Testing. JUnit 4 is the test runner. MockK is a Kotlin-friendly mocking library used in unit tests (it handles `object`, `coroutines` and Kotlin defaults better than Mockito). `kotlinx-coroutines-test` provides `runTest` and the test dispatcher for testing suspend functions. The AndroidX Test pieces plus Espresso and `ui-test-junit4` are for instrumented tests on the emulator.
 - `junit` 4.13.2
 - `io.mockk:mockk` 1.14.9
 - `org.jetbrains.kotlinx:kotlinx-coroutines-test` 1.10.2
