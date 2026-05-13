@@ -105,6 +105,7 @@ network/   shared Ktor client (KtorClient.kt)
 The diagram shows the UI layer and data layer, the shared Ktor client, on-device storage, and the external services we depend on.
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'background':'#ffffff', 'mainBkg':'#ffffff', 'clusterBkg':'#ffffff', 'edgeLabelBackground':'#ffffff', 'lineColor':'#444444'}}}%%
 flowchart TB
     %% =========== UI LAYER ===========
     subgraph UI["UI layer"]
