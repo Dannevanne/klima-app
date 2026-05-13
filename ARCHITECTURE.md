@@ -138,7 +138,7 @@ flowchart TB
             SetScreen --> SoundVM
         end
 
-        %% =========== DATA LAYER (includes external APIs) ===========
+        %% =========== DATA LAYER ===========
         subgraph DATA["Data layer"]
             direction TB
 
@@ -146,43 +146,36 @@ flowchart TB
             StatRepo["StatisticRepository"]:::repo
             SavRepo["SavedPlacesRepository"]:::repo
             SoundRepo["SoundPreferenceRepository"]:::repo
-            OtherRepos["Other repositories"]:::repo
 
             MapDS["MapDatasource"]:::ds
             StatDS["StatisticDatasource"]:::ds
 
-            Ktor["KtorClient"]:::net
             DS[("DataStore Preferences")]:::store
 
-            Frost@{ shape: cloud, label: "MET Frost API" }
             NVE@{ shape: cloud, label: "NVE" }
             NGU@{ shape: cloud, label: "NGU" }
+            Frost@{ shape: cloud, label: "MET Frost API" }
             Mapbox@{ shape: cloud, label: "Mapbox" }
 
             MapRepo --> MapDS
             StatRepo --> StatDS
-            MapDS --> Ktor
-            StatDS --> Ktor
 
             SavRepo --> DS
             SoundRepo --> DS
-            OtherRepos --> DS
 
-            Ktor --> Frost
-            Ktor --> NVE
-            Ktor --> NGU
+            MapDS --> NVE
+            MapDS --> NGU
+            StatDS --> Frost
+            StatDS --> Mapbox
         end
 
-        class Frost,NVE,NGU,Mapbox api
+        class NVE,NGU,Frost,Mapbox api
 
         %% Cross-layer edges
         MapVM --> MapRepo
         StatVM --> StatRepo
         SavVM --> SavRepo
         SoundVM --> SoundRepo
-
-        MapScreen --> Mapbox
-        StatVM --> Mapbox
     end
 
     linkStyle default stroke:#333333,stroke-width:1.5px
@@ -196,12 +189,11 @@ flowchart TB
     classDef vm fill:#a5d6a7,stroke:#1b5e20,color:#000
     classDef repo fill:#bbdefb,stroke:#1565c0,color:#000
     classDef ds fill:#90caf9,stroke:#0d47a1,color:#000
-    classDef net fill:#64b5f6,stroke:#0d47a1,color:#000
     classDef api fill:#eceff1,stroke:#37474f,color:#000
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (which goes out to an external API via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. The external services (Frost, NVE, NGU, Mapbox) sit inside the data layer as cloud nodes: they are part of the data layer's responsibilities, not a separate architectural layer. The `Other repositories` node groups five DataStore-backed repositories that only persist user state: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository. Repositories either call a datasource (which makes HTTP calls to an external API via the shared `KtorClient` under `network/`) or read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed the map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding plus the in-SDK place-autocomplete client) feed `StatisticDatasource`. The diagram shows one representative preference repository (`SoundPreferenceRepository`); five more live in the data layer with the same DataStore-backed pattern: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Some ViewModels reach additional repositories not drawn here (for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations).
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
