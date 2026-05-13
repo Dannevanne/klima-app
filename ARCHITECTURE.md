@@ -110,22 +110,21 @@ flowchart TB
     subgraph CANVAS[" "]
         direction TB
 
-        %% =========== UI LAYER ===========
         subgraph UI["UI layer"]
             direction TB
 
-            AppNav["AppNav"]:::navhost
+            AppNav["AppNav"]:::ui
 
-            OnbScreen["Onboarding"]:::screen
-            MapScreen["Map"]:::screen
-            StatScreen["Statistic"]:::screen
-            SavScreen["Saved<br>Places"]:::screen
-            SetScreen["Settings"]:::screen
+            OnbScreen["Onboarding"]:::ui
+            MapScreen["Map"]:::ui
+            StatScreen["Statistic"]:::ui
+            SavScreen["SavedPlaces"]:::ui
+            SetScreen["Settings"]:::ui
 
-            MapVM["Map<br>VM"]:::vm
-            StatVM["Stat<br>VM"]:::vm
-            SavVM["Saved<br>Places<br>VM"]:::vm
-            SoundVM["Sound<br>VM"]:::vm
+            MapVM["MapVM"]:::ui
+            StatVM["StatVM"]:::ui
+            SavVM["SavedPlacesVM"]:::ui
+            SoundVM["SoundVM"]:::ui
 
             AppNav --> OnbScreen
             AppNav --> MapScreen
@@ -133,79 +132,75 @@ flowchart TB
             AppNav --> SavScreen
             AppNav --> SetScreen
 
-            MapScreen --> MapVM
-            StatScreen --> StatVM
-            SavScreen --> SavVM
-            SetScreen --> SoundVM
+            MapScreen <--> MapVM
+            StatScreen <--> StatVM
+            SavScreen <--> SavVM
+            SetScreen <--> SoundVM
         end
 
-        %% =========== DATA LAYER ===========
         subgraph DATA["Data layer"]
             direction TB
 
-            MapRepo["Map<br>Repo"]:::repo
-            MapCameraRepo["MapCamera<br>Repo"]:::repo
-            ThemeRepo["Theme<br>Pref<br>Repo"]:::repo
-            LangRepo["Lang<br>Pref<br>Repo"]:::repo
-            StatRepo["Stat<br>Repo"]:::repo
-            RecentRepo["Recent<br>Search<br>Repo"]:::repo
-            SavRepo["Saved<br>Places<br>Repo"]:::repo
-            SoundRepo["Sound<br>Pref<br>Repo"]:::repo
-            OnbRepo["Onb<br>Pref<br>Repo"]:::repo
+            MapRepo["MapRepo"]:::data
+            MapCameraRepo["MapCameraRepo"]:::data
+            ThemeRepo["ThemeRepo"]:::data
+            LangRepo["LangRepo"]:::data
+            StatRepo["StatRepo"]:::data
+            RecentRepo["RecentRepo"]:::data
+            SavRepo["SavedPlacesRepo"]:::data
+            SoundRepo["SoundRepo"]:::data
+            OnbRepo["OnbRepo"]:::data
 
-            MapDS["Map<br>DS"]:::ds
-            StatDS["Stat<br>DS"]:::ds
+            MapDS["MapDS"]:::data
+            StatDS["StatDS"]:::data
 
-            DS[("DataStore")]:::store
+            DS[("DataStore")]:::data
 
-            NVE@{ shape: cloud, label: "NVE" }
-            NGU@{ shape: cloud, label: "NGU" }
-            Frost@{ shape: cloud, label: "Frost" }
-            Mapbox@{ shape: cloud, label: "Mapbox" }
+            MapRepo <--> MapDS
+            StatRepo <--> StatDS
 
-            MapRepo --> MapDS
-            StatRepo --> StatDS
-
-            MapCameraRepo --> DS
-            ThemeRepo --> DS
-            LangRepo --> DS
-            RecentRepo --> DS
-            SavRepo --> DS
-            SoundRepo --> DS
-            OnbRepo --> DS
-
-            MapDS --> NVE
-            MapDS --> NGU
-            StatDS --> Frost
-            StatDS --> Mapbox
+            MapCameraRepo <--> DS
+            ThemeRepo <--> DS
+            LangRepo <--> DS
+            RecentRepo <--> DS
+            SavRepo <--> DS
+            SoundRepo <--> DS
+            OnbRepo <--> DS
         end
 
-        class NVE,NGU,Frost,Mapbox api
+        subgraph APIS["External APIs"]
+            direction LR
+            NVE["NVE"]:::api
+            NGU["NGU"]:::api
+            Frost["Frost"]:::api
+            Mapbox["Mapbox"]:::api
+        end
 
-        %% Primary VM -> Repo edges only (cross-feature edges live in prose)
-        MapVM --> MapRepo
-        MapVM --> MapCameraRepo
-        MapVM --> ThemeRepo
-        MapVM --> LangRepo
-        StatVM --> StatRepo
-        StatVM --> RecentRepo
-        SavVM --> SavRepo
-        SoundVM --> SoundRepo
+        MapVM <--> MapRepo
+        MapVM <--> MapCameraRepo
+        MapVM <--> ThemeRepo
+        MapVM <--> LangRepo
+        StatVM <--> StatRepo
+        StatVM <--> RecentRepo
+        SavVM <--> SavRepo
+        SoundVM <--> SoundRepo
+
+        MapDS <--> NVE
+        MapDS <--> NGU
+        StatDS <--> Frost
+        StatDS <--> Mapbox
     end
 
-    linkStyle default stroke:#333333,stroke-width:1.5px
+    linkStyle default stroke:#333333,stroke-width:2px
 
     style CANVAS fill:#ffffff,stroke:#ffffff,color:#000000
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000000
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px,color:#000000
+    style APIS fill:#ffffff,stroke:#0d47a1,stroke-width:2px,stroke-dasharray:5 5,color:#000000
 
-    classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
-    classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
-    classDef vm fill:#a5d6a7,stroke:#1b5e20,color:#000
-    classDef repo fill:#bbdefb,stroke:#1565c0,color:#000
-    classDef ds fill:#90caf9,stroke:#0d47a1,color:#000
-    classDef api fill:#eceff1,stroke:#37474f,color:#000
-    classDef store fill:#eceff1,stroke:#37474f,color:#000
+    classDef ui fill:#a5d6a7,stroke:#1b5e20,color:#000
+    classDef data fill:#90caf9,stroke:#0d47a1,color:#000
+    classDef api fill:#e3f2fd,stroke:#0d47a1,color:#000
 ```
 
 **Label legend.** The diagram uses short labels so renderers don't truncate them. Full class names:
@@ -213,15 +208,15 @@ flowchart TB
 | In the diagram | Full class name |
 |---|---|
 | AppNav | `AppNavigation` |
-| Onboarding / Map / Statistic / Saved Places / Settings | `OnboardingScreen` / `MapScreen` / `StatisticScreen` / `SavedPlacesScreen` / `SettingsScreen` |
-| Map VM / Stat VM / Saved Places VM / Sound VM | `MapViewModel` / `StatisticViewModel` / `SavedPlacesViewModel` / `SoundViewModel` |
-| Map Repo / Stat Repo / Saved Places Repo / MapCamera Repo / Recent Search Repo | `MapRepository` / `StatisticRepository` / `SavedPlacesRepository` / `MapCameraRepository` / `RecentSearchRepository` |
-| Theme Pref Repo / Lang Pref Repo / Sound Pref Repo / Onb Pref Repo | `ThemePreferenceRepository` / `LanguagePreferenceRepository` / `SoundPreferenceRepository` / `OnboardingPreferenceRepository` |
-| Map DS / Stat DS | `MapDatasource` / `StatisticDatasource` |
+| Onboarding / Map / Statistic / SavedPlaces / Settings | `OnboardingScreen` / `MapScreen` / `StatisticScreen` / `SavedPlacesScreen` / `SettingsScreen` |
+| MapVM / StatVM / SavedPlacesVM / SoundVM | `MapViewModel` / `StatisticViewModel` / `SavedPlacesViewModel` / `SoundViewModel` |
+| MapRepo / StatRepo / SavedPlacesRepo / MapCameraRepo / RecentRepo | `MapRepository` / `StatisticRepository` / `SavedPlacesRepository` / `MapCameraRepository` / `RecentSearchRepository` |
+| ThemeRepo / LangRepo / SoundRepo / OnbRepo | `ThemePreferenceRepository` / `LanguagePreferenceRepository` / `SoundPreferenceRepository` / `OnboardingPreferenceRepository` |
+| MapDS / StatDS | `MapDatasource` / `StatisticDatasource` |
 | DataStore | `DataStore Preferences` (AndroidX) |
 | Frost / NVE / NGU / Mapbox | MET Frost API / NVE Atlas / NGU services / Mapbox (maps + search) |
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four boxes inside the dashed "External APIs" group are services we don't host: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
 
 Two cross-feature dependencies are intentionally omitted from the diagram for readability and live here in prose instead: `SavedPlacesViewModel` calls `MapRepository` for hazard data per saved place, and `StatisticRepository` for the nearest weather stations.
 
