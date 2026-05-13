@@ -106,7 +106,6 @@ The diagram shows the UI layer and data layer, the shared Ktor client, on-device
 
 ```mermaid
 flowchart TB
-    %% =========== OUTER WHITE CANVAS ===========
     subgraph CANVAS[" "]
         direction TB
 
@@ -144,40 +143,29 @@ flowchart TB
             direction TB
 
             MapRepo["MapRepository"]:::repo
-            CamRepo["MapCameraRepository"]:::repo
             StatRepo["StatisticRepository"]:::repo
-            RecentRepo["RecentSearchRepository"]:::repo
             SavRepo["SavedPlacesRepository"]:::repo
-            ThemeRepo["ThemePreferenceRepository"]:::repo
-            LangRepo["LanguagePreferenceRepository"]:::repo
             SoundRepo["SoundPreferenceRepository"]:::repo
-            OnbRepo["OnboardingPreferenceRepository"]:::repo
+            OtherRepos["Other repositories<br/>MapCameraRepository, RecentSearchRepository,<br/>ThemePreferenceRepository, LanguagePreferenceRepository,<br/>OnboardingPreferenceRepository"]:::repo
 
             MapDS["MapDatasource"]:::ds
             StatDS["StatisticDatasource"]:::ds
-            InfoDS["InfoDatasource"]:::ds
 
             Ktor["KtorClient"]:::net
-
             DS[("DataStore Preferences")]:::store
 
             MapRepo --> MapDS
             StatRepo --> StatDS
             MapDS --> Ktor
             StatDS --> Ktor
-            InfoDS --> Ktor
 
-            CamRepo --> DS
             SavRepo --> DS
-            RecentRepo --> DS
-            ThemeRepo --> DS
-            LangRepo --> DS
             SoundRepo --> DS
-            OnbRepo --> DS
+            OtherRepos --> DS
         end
 
-        %% =========== EXTERNAL APIS (bottom) ===========
-        subgraph EXT["External APIs"]
+        %% =========== API LAYER ===========
+        subgraph API["API layer"]
             direction LR
             Frost@{ shape: cloud, label: "MET Frost API" }
             NVE@{ shape: cloud, label: "NVE" }
@@ -186,39 +174,28 @@ flowchart TB
         end
 
         class Frost,NVE,NGU,Mapbox api
+
+        %% Cross-layer edges
+        MapVM --> MapRepo
+        StatVM --> StatRepo
+        SavVM --> SavRepo
+        SoundVM --> SoundRepo
+
+        Ktor --> Frost
+        Ktor --> NVE
+        Ktor --> NGU
+
+        MapScreen -.-> Mapbox
+        StatVM -.-> Mapbox
     end
 
-    %% UI to Data edges
-    MapVM --> MapRepo
-    MapVM --> CamRepo
-    MapVM --> ThemeRepo
-    MapVM --> LangRepo
-    StatVM --> StatRepo
-    StatVM --> RecentRepo
-    SavVM --> SavRepo
-    SavVM --> MapRepo
-    SavVM --> StatRepo
-    SoundVM --> SoundRepo
-
-    %% Data to External APIs edges (bottom)
-    Ktor --> Frost
-    Ktor --> NVE
-    Ktor --> NGU
-    MapScreen -.-> Mapbox
-    StatVM -.-> Mapbox
-
-    %% Darken all arrows
     linkStyle default stroke:#333333,stroke-width:1.5px
 
-    %% Outer canvas: white fill, no visible border
     style CANVAS fill:#ffffff,stroke:#ffffff
-
-    %% Inner layer subgraphs: white fill, colored border per layer
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px
-    style EXT fill:#ffffff,stroke:#455a64,stroke-width:2px
+    style API fill:#ffffff,stroke:#455a64,stroke-width:2px
 
-    %% Node colors
     classDef navhost fill:#66bb6a,stroke:#1b5e20,color:#000
     classDef screen fill:#c8e6c9,stroke:#2e7d32,color:#000
     classDef vm fill:#a5d6a7,stroke:#1b5e20,color:#000
@@ -229,7 +206,7 @@ flowchart TB
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to one or more repositories; repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. Mapbox is an SDK we drop into the UI for the map view, and into the ViewModel for the autocomplete client used in the search bar.
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository (some ViewModels also use additional repositories: for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations, omitted from the diagram for clarity). Repositories either call a datasource (remote, via the shared `KtorClient`) or read and write to `DataStore Preferences` directly. Mapbox is an SDK we drop into the UI for the map view and into the ViewModel for the autocomplete client used in the search bar.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
