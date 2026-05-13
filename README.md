@@ -98,8 +98,9 @@ Testing. JUnit 4 is the test runner. MockK is a Kotlin-friendly mocking library 
 - **MapBox** -- Geographical information (map and search suggestions)
 
 ## API-level 
-We use compileSdk 36 and targetSdk 36 (Android 16.0 “Baklava”, API level 36.1). This means the app is built and tested against the latest Android version, ensuring compatibility with current system behavior, security updates, and API changes. 
-The app is tested on a Medium Phone emulator running Android 16.0 (API level 36.1, arm64) to ensure stability on newer Android versions.
+The app is developed and tested on API level 36.1 (Android 16, “Baklava”) using a Medium Phone emulator.
+
+We use compileSdk 36 and targetSdk 36, with a minimum SDK of minSdk 24 (Android 7.0, “Nougat”). minSdk 24 was chosen to support modern Android development with Jetpack Compose, Material 3, and coroutines, while still covering the majority of actively used devices. Lower API levels would require legacy solutions, while higher levels would exclude a significant portion of users without a major benefit. targetSdk 36 ensures the app follows the latest Android 16 behavior changes (such as predictive back, edge-to-edge rendering, notification permissions, and scoped storage) and meets Google Play requirements.
   
 ## Location Restriction Using GeoJSON Boundary Data
 The application only allows saving locations within Norway, based on GeoJSON boundary data. This prevents users from saving areas without available underlying data and ensures valid and consistent risk assessments. Link to the repo used: [https://github.com/georgique/world-geojson](https://raw.githubusercontent.com/georgique/world-geojson/refs/heads/develop/countries/norway.json).
