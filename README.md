@@ -97,6 +97,10 @@ Testing. JUnit 4 is the test runner. MockK is a Kotlin-friendly mocking library 
 - **NGU** -- Radon information
 - **MapBox** -- Geographical information (map and search suggestions)
 
+> **Note: Frost** Data is fetched directly from the Frost API v0 using Basic auth
+> with the client ID as the username and an empty password. The IFI proxy is
+> not used, as Frost is an external API with its own access control. 
+
 ## API-level 
 The app is developed and tested on API level 36.1 (Android 16, “Baklava”) using a Medium Phone emulator.
 
