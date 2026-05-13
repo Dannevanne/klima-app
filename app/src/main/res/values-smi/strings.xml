@@ -245,4 +245,26 @@
     <string name="show_on_map_help">Deaddil sajádatnállu vurkejuvvon báikkis vai oainnát dan kárttás</string>
     <string name="remove_saved_place_help">Deaddil ruskalihti-ikona vurkejuvvon báikki sihkkun várás</string>
     <string name="expand_advice_help">Deaddil njuolggu vuolasguvlui čájehit dahje čiehkat rávvagiid vurkejuvvon báikki várás</string>
+    <string name="building_in_hazard_areas">Huksen váralaš guovlluin</string>
+    <string name="avalanche_warnings">Muohtačielggadeapmi várrehusat</string>
+    <string name="radon_and_radiation_safety">Radon ja suotnjarisksuodjalus</string>
+    <string name="storm_preparedness">Stoarmmagearggusvuohta</string>
+    <string name="open_in_statistics">Raba statistihkas</string>
+    <string name="show_in_statistics">Čájet statistihkas</string>
+    <string name="zoom_in">Stuorit</string>
+    <string name="zoom_out">Unnidit</string>
+    <string name="onboarding_skip">Váldde badjel</string>
+    <string name="onboarding_next">Boađejuvvon</string>
+    <string name="onboarding_get_started">Álgge</string>
+    <string name="onboarding_progress">%1$d / 3</string>
+    <string name="onboarding_welcome_title">Bures boahtin SafePropertyii</string>
+    <string name="onboarding_welcome_subtitle">Guorahala kárttaid, dálkkádatdáhtaid ja dorvvolašvuođadieđuid báikkiide mat leat dutnje dehálaččat.</string>
+    <string name="onboarding_map_subtitle">Movt geavahit kártaoasi</string>
+    <string name="onboarding_saved_subtitle">Movt geavahit vurkejuvvon báikkiid</string>
+    <string name="onboarding_stats_subtitle">Movt geavahit dálkkádatstatistihka</string>
+    <string name="onboarding_select_overlay_desc">Deaddil vuolimus gurut boalu válljet kártalaga</string>
+    <string name="onboarding_my_location_desc">Deaddil boalu vuolimus olgešbealde oaidnin dihte iežat sajádaga</string>
+    <string name="onboarding_overlay_explanation_desc">Deaddil diehtoikona lohkat válljejuvvon laga čilgehusa</string>
+    <string name="safety_information">Dorvvolašvuođadieđut</string>
+    <string name="onboarding_footer_help">Jus háliidat gávdnat dán dieđu maŋŋá, de gávnnat dan hamburgerfállus “Veahkki” vuolde</string>
 </resources>
