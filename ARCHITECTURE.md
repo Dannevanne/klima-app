@@ -142,10 +142,15 @@ flowchart TB
         subgraph DATA["Data layer"]
             direction TB
 
+            MapCameraRepo["MapCameraRepository"]:::repo
+            ThemeRepo["ThemePreferenceRepository"]:::repo
+            LangRepo["LanguagePreferenceRepository"]:::repo
             MapRepo["MapRepository"]:::repo
             StatRepo["StatisticRepository"]:::repo
+            RecentRepo["RecentSearchRepository"]:::repo
             SavRepo["SavedPlacesRepository"]:::repo
             SoundRepo["SoundPreferenceRepository"]:::repo
+            OnbRepo["OnboardingPreferenceRepository"]:::repo
 
             MapDS["MapDatasource"]:::ds
             StatDS["StatisticDatasource"]:::ds
@@ -160,8 +165,13 @@ flowchart TB
             MapRepo --> MapDS
             StatRepo --> StatDS
 
+            MapCameraRepo --> DS
+            ThemeRepo --> DS
+            LangRepo --> DS
+            RecentRepo --> DS
             SavRepo --> DS
             SoundRepo --> DS
+            OnbRepo --> DS
 
             MapDS --> NVE
             MapDS --> NGU
@@ -171,10 +181,16 @@ flowchart TB
 
         class NVE,NGU,Frost,Mapbox api
 
-        %% Cross-layer edges
+        %% VM to Repo edges (primary + cross-feature)
         MapVM --> MapRepo
+        MapVM --> MapCameraRepo
+        MapVM --> ThemeRepo
+        MapVM --> LangRepo
         StatVM --> StatRepo
+        StatVM --> RecentRepo
         SavVM --> SavRepo
+        SavVM --> MapRepo
+        SavVM --> StatRepo
         SoundVM --> SoundRepo
     end
 
@@ -193,7 +209,7 @@ flowchart TB
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
 
-Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; the ViewModel talks to its primary repository. Repositories either call a datasource (which makes HTTP calls to an external API via the shared `KtorClient` under `network/`) or read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed the map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding plus the in-SDK place-autocomplete client) feed `StatisticDatasource`. The diagram shows one representative preference repository (`SoundPreferenceRepository`); five more live in the data layer with the same DataStore-backed pattern: `MapCameraRepository`, `RecentSearchRepository`, `ThemePreferenceRepository`, `LanguagePreferenceRepository` and `OnboardingPreferenceRepository`. Some ViewModels reach additional repositories not drawn here (for example `SavedPlacesViewModel` calls `MapRepository` for hazard checks and `StatisticRepository` for nearest stations).
+Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. `SavedPlacesViewModel` is the main cross-feature consumer: along with its own `SavedPlacesRepository` it also pulls `MapRepository` (hazard data per saved place) and `StatisticRepository` (nearest weather stations). Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
 
 ## Guidelines for further development
 For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE.md).
