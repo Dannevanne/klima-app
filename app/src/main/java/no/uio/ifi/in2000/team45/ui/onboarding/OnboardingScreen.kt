@@ -54,6 +54,11 @@ import no.uio.ifi.in2000.team45.R
 
 private const val PAGE_COUNT = 4
 
+/**
+ * Onboarding flow screen with horizontal pager.
+ * Guides the user through multiple intro pages and finishes onboarding.
+ * @param onFinished Called when onboarding is completed or skipped.
+ */
 @Composable
 fun OnboardingScreen(onFinished: () -> Unit) {
     val pagerState = rememberPagerState(pageCount = { PAGE_COUNT })
@@ -107,6 +112,12 @@ fun OnboardingScreen(onFinished: () -> Unit) {
     }
 }
 
+/**
+ * Top bar for onboarding screen.
+ *
+ * @param pageIndex Current onboarding page index.
+ * @param onSkip Called when user skips onboarding.
+ */
 @Composable
 private fun OnboardingTopBar(pageIndex: Int, onSkip: () -> Unit) {
     Row(
@@ -135,6 +146,9 @@ private fun OnboardingTopBar(pageIndex: Int, onSkip: () -> Unit) {
     }
 }
 
+/**
+ * First onboarding page introducing the app.
+ */
 @Composable
 private fun WelcomePage() {
     Column(
@@ -168,6 +182,9 @@ private fun WelcomePage() {
     }
 }
 
+/**
+ * Onboarding page describing map features.
+ */
 @Composable
 private fun MapPage() {
     OnboardingListPage(
@@ -197,7 +214,9 @@ private fun MapPage() {
         )
     )
 }
-
+/**
+ * Onboarding page describing saved places features.
+ */
 @Composable
 private fun SavedPlacesPage() {
     OnboardingListPage(
@@ -228,6 +247,9 @@ private fun SavedPlacesPage() {
     )
 }
 
+/**
+ * Onboarding page describing statistics features.
+ */
 @Composable
 private fun StatisticsPage() {
     OnboardingListPage(
@@ -265,6 +287,14 @@ private data class OnboardingItem(
     val description: String
 )
 
+/**
+ * Onboarding page with a title, subtitle, items, and optional footer.
+ *
+ * @param title Page title.
+ * @param subtitle Page subtitle.
+ * @param items List of feature items to display.
+ * @param footer Optional footer text.
+ */
 @Composable
 private fun OnboardingListPage(
     title: String,
@@ -309,6 +339,11 @@ private fun OnboardingListPage(
     }
 }
 
+/**
+ * Single onboarding feature row with icon, title, and description.
+ *
+ * @param item Feature data to display.
+ */
 @Composable
 private fun OnboardingItemRow(item: OnboardingItem) {
     Row(
@@ -350,6 +385,12 @@ private fun OnboardingItemRow(item: OnboardingItem) {
     }
 }
 
+/**
+ * Pagination indicator dots for onboarding pages.
+ *
+ * @param currentPage Currently selected page.
+ * @param total Total number of pages.
+ */
 @Composable
 private fun PaginationDots(currentPage: Int, total: Int) {
     Row(
@@ -375,6 +416,13 @@ private fun PaginationDots(currentPage: Int, total: Int) {
     }
 }
 
+/**
+ * Onboarding primary action button.
+ * Advances pages or finishes onboarding on last page.
+ *
+ * @param pageIndex Current page index.
+ * @param onClick Called when button is pressed.
+ */
 @Composable
 private fun CtaButton(pageIndex: Int, onClick: () -> Unit) {
     val isLast = pageIndex == PAGE_COUNT - 1

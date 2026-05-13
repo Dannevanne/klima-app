@@ -27,11 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-// Material3 AlertDialog tears its window down the moment the visibility flag
-// flips false, so the built-in scale/fade exit animation never gets to play
-// and the dialog clips out. This wrapper keeps the window mounted until the
-// AnimatedVisibility transition has actually finished, so the exit looks the
-// same as the entrance.
+/**
+ * A custom animated confirmation dialog with fade and scale transitions.
+ *
+ * @param visible Controls whether the dialog is shown.
+ * @param onDismissed Callback invoked when the 'confirmText' action is clicked.
+ * @param title Title text displayed at the top of the dialog.
+ * @param text Body message shown inside the dialog.
+ * @param confirmText Label for the confirm button.
+ */
 @Composable
 fun AnimatedConfirmDialog(
     visible: Boolean,

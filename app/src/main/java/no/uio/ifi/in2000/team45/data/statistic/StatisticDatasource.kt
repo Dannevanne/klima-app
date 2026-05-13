@@ -23,10 +23,20 @@ private const val TAG = "StatisticDatasource"
 private const val FROST_BASE = "https://frost.met.no"
 private const val MAPBOX_GEOCODE_BASE = "https://api.mapbox.com/search/geocode/v6/forward"
 
+/**
+ * Datasource responsible for fetching and parsing weather, climate, and geocoding
+ * data from external APIs.
+ */
 class StatisticDatasource {
 
     private val json = Json { ignoreUnknownKeys = true }
 
+    /**
+     * Creates a Authentication header for Frost API requests.
+     *
+     * @param clientId The Frost API client ID.
+     * @return A formatted authentication header string.
+     */
     private fun authHeader(clientId: String): String {
         val encoded = android.util.Base64.encodeToString(
             "$clientId:".toByteArray(),
@@ -35,15 +45,22 @@ class StatisticDatasource {
         return "Basic $encoded"
     }
 
-    // URLEncoder.encode(String, String) declares throws UnsupportedEncodingException,
-    // which trips the IDE's "blocking call in non-blocking context" warning inside
-    // suspend functions. UTF-8 is guaranteed to exist on every JVM so it can't throw.
-    // The Charset overload would avoid the warning but is API 33+ on Android (we are
-    // on minSdk 24).
+    /**
+     * URL-encodes a string using UTF-8 encoding.
+     *
+     * @param s The string to encode.
+     * @return The UTF-8 encoded string.
+     */
     private fun encodeUtf8(s: String): String =
         java.net.URLEncoder.encode(s, Charsets.UTF_8.name())
 
-    // Expand query to handle Norwegian letter substitutions (o->oe, a->aa, etc.)
+    /**
+     * Generates Norwegian language variants of a search query to improve matching
+     * against station names.
+     *
+     * @param query The original search query.
+     * @return A list of possible query variants.
+     */
     private fun norwegianVariants(query: String): List<String> {
         val trimmed = query.trim()
         val variants = mutableSetOf(trimmed)
@@ -65,6 +82,13 @@ class StatisticDatasource {
         return variants.toList()
     }
 
+    /**
+     * Searches for weather stations matching the given query.
+     *
+     * @param query The station search query.
+     * @param clientId The Frost API client ID.
+     * @return A list of matching WeatherStation objects.
+     */
     suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
         val allStations = mutableListOf<WeatherStation>()
         val seenIds = mutableSetOf<String>()
@@ -99,10 +123,14 @@ class StatisticDatasource {
         return allStations
     }
 
-    // Single batch probe of which (station, element) combinations Frost actually
-    // serves and the time range for each. Lets us pick the canonical station
-    // for a place (Blindern for Oslo) instead of guessing by distance and then
-    // discovering after the climate fetch that the picked station has nothing.
+    /**
+     * Retrieves available time series data for given stations and elements.
+     *
+     * @param stationIds List of station ids.
+     * @param elementIds List of climate element ids.
+     * @param clientId The Frost API client ID.
+     * @return A list of available time series.
+     */
     suspend fun getAvailableTimeSeries(
         stationIds: List<String>,
         elementIds: List<String>,
@@ -132,6 +160,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses available time series response into structured objects.
+     *
+     * @param body Raw Json response body.
+     * @return Parsed list of TimeSeriesAvailability objects.
+     */
     private fun parseAvailableTimeSeries(body: String): List<TimeSeriesAvailability> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
@@ -153,6 +187,13 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Retrieves climate normals for a given station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @return A list of climate normals.
+     */
     suspend fun getClimateNormals(
         stationId: String,
         clientId: String
@@ -191,6 +232,15 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Retrieves monthly climate observations for a station within a time range.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @param yearFrom Start year.
+     * @param yearTo End year.
+     * @return A list of monthly observations.
+     */
     suspend fun getMonthlyObservations(
         stationId: String,
         clientId: String,
@@ -224,9 +274,13 @@ class StatisticDatasource {
         }
     }
 
-    // Mapbox Geocoding v6, restricted to Norwegian admin units. The PlaceAutocomplete
-    // SDK with limit=1 ranked phonetic mismatches (Åbestad for Ibestad) above the
-    // real place; v6 with the type filter resolves Ibestad correctly.
+    /**
+     * Searches for places using Mapbox geocoding API.
+     *
+     * @param query The search query.
+     * @param mapboxToken Mapbox API access token.
+     * @return A list of matching Place objects.
+     */
     suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
         val encoded = encodeUtf8(query.trim())
         val url = MAPBOX_GEOCODE_BASE +
@@ -249,6 +303,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses Mapbox geocoding response into Place objects.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of parsed places.
+     */
     fun parseGeocodeFeatures(body: String): List<Place> {
         val root = json.parseToJsonElement(body).jsonObject
         val features = root["features"]?.jsonArray ?: return emptyList()
@@ -266,6 +326,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses Frost station response into WeatherStation objects.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of parsed weather stations.
+     */
     fun parseStations(body: String): List<WeatherStation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
@@ -294,6 +360,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses climate normals response into structured climate data.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of ClimateNormal objects.
+     */
     private fun parseClimateNormals(body: String): List<ClimateNormal> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
@@ -314,7 +386,15 @@ class StatisticDatasource {
         }
     }
 
-    // Find N nearest stations to given coordinates
+    /**
+     * Finds the nearest weather stations to a given geographic coordinate.
+     *
+     * @param lat Latitude coordinate.
+     * @param lon Longitude coordinate.
+     * @param clientId The Frost API client ID.
+     * @param count Maximum number of stations to return.
+     * @return A list of nearest weather stations.
+     */
     suspend fun findNearestStations(
         lat: Double, lon: Double, clientId: String, count: Int = 5
     ): List<WeatherStation> {
@@ -339,7 +419,13 @@ class StatisticDatasource {
         }
     }
 
-    // Get latest observations for a station
+    /**
+     * Retrieves the latest available observations for a weather station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @return A map of element IDs to their latest observed values.
+     */
     suspend fun getLatestObservations(
         stationId: String, clientId: String
     ): Map<String, Double> {
@@ -373,6 +459,15 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Retrieves annual aggregated weather observations for a station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @param yearFrom Start year.
+     * @param yearTo End year .
+     * @return A list of annual observations.
+     */
     suspend fun getAnnualObservations(
         stationId: String,
         clientId: String,
@@ -404,9 +499,16 @@ class StatisticDatasource {
         }
     }
 
-    // Frost has no P1Y aggregations for wind/snow, so we pull monthly maxes
-    // and the repository folds them up to per-year maximums.
-    // Returns: list of (year, elementId, monthly value) tuples.
+    /**
+     * Retrieves monthly wind and snow observations for a station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @param yearFrom Start year.
+     * @param yearTo End year.
+     * @param wantedElements Set of climate elements to fetch.
+     * @return A list of monthly observations.
+     */
     suspend fun getMonthlyWindAndSnow(
         stationId: String,
         clientId: String,
@@ -440,10 +542,15 @@ class StatisticDatasource {
         }
     }
 
-    // Returns daily precipitation values keyed by year, so callers can count
-    // heavy-rain days. We pull only the value, not the full observation,
-    // because the daily endpoint can return tens of thousands of points over
-    // a 50-year window, and we don't need any per-day metadata.
+    /**
+     * Retrieves daily precipitation values grouped by year for a station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @param yearFrom Start year (inclusive).
+     * @param yearTo End year (inclusive).
+     * @return A map of year to daily precipitation values.
+     */
     suspend fun getDailyPrecipitation(
         stationId: String,
         clientId: String,
@@ -471,6 +578,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses daily precipitation response into a year-grouped structure.
+     *
+     * @param body Raw JSON response body.
+     * @return A map of year to precipitation values.
+     */
     private fun parseDailyPrecipitation(body: String): Map<Int, List<Double>> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyMap()
@@ -488,8 +601,12 @@ class StatisticDatasource {
         return byYear
     }
 
-    // Like parseMonthlyObservations but uses the year-month (YYYYMM) packed
-    // into the month field so the repository can group by year.
+    /**
+     * Parses monthly observations that include year information packed into the month field.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of monthly observations with year-month encoding.
+     */
     private fun parseMonthlyObservationsWithYear(body: String): List<MonthlyObservation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
@@ -511,6 +628,12 @@ class StatisticDatasource {
         return results
     }
 
+    /**
+     * Parses annual observations into structured yearly aggregates.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of annual observations.
+     */
     private fun parseAnnualObservations(body: String): List<AnnualObservation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()
@@ -541,6 +664,12 @@ class StatisticDatasource {
         }
     }
 
+    /**
+     * Parses monthly climate observations from Frost API response.
+     *
+     * @param body Raw JSON response body.
+     * @return A list of monthly observations.
+     */
     private fun parseMonthlyObservations(body: String): List<MonthlyObservation> {
         val root = json.parseToJsonElement(body).jsonObject
         val data = root["data"]?.jsonArray ?: return emptyList()

@@ -28,6 +28,10 @@ import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 import no.uio.ifi.in2000.team45.ui.map.utils.makeBitmap
 import no.uio.ifi.in2000.team45.ui.theme.AppTheme
 
+/**
+ * UI state for map rendering.
+ * Represents loading, error, idle, or successful overlay state with bitmap data.
+ */
 sealed interface MapUiState {
     data class Success(
         val bitmap: Bitmap,
@@ -38,6 +42,15 @@ sealed interface MapUiState {
     object Idle : MapUiState
 }
 
+/**
+ * ViewModel that manages all map-related state and business logic.
+ * Handles overlays, camera position, search, location, themes, and saved state.
+ *
+ * @param mapRepository Provides overlay data from data layer.
+ * @param themePreferenceRepository Persists and observes theme selection.
+ * @param languagePreferenceRepository Persists and observes language selection.
+ * @param cameraRepository Persists and restores last map camera position.
+ */
 class MapViewModel(
     private val mapRepository: MapRepository = MapRepository(),
     private val themePreferenceRepository: ThemePreferenceRepository,
@@ -148,6 +161,14 @@ class MapViewModel(
         }
     }
 
+    /**
+     * Updates overlay data based on current camera bounds.
+     *
+     * @param bbox Visible map bounding box.
+     * @param width Map width in pixels.
+     * @param height Map height in pixels.
+     * @param context Android context for bitmap decoding.
+     */
     fun updateOverlay(
         bbox: List<Double>,
         width: Int,
@@ -212,6 +233,11 @@ class MapViewModel(
 
     }
 
+    /**
+     * Updates app theme and persists selection.
+     *
+     * @param theme Selected application theme.
+     */
     fun updateAppTheme(theme: AppTheme) {
         appTheme = theme
         viewModelScope.launch {
@@ -219,6 +245,11 @@ class MapViewModel(
         }
     }
 
+    /**
+     * Updates selected language and persists selection.
+     *
+     * @param language Selected language option.
+     */
     fun updateLanguage(language: LanguageOption) {
         selectedLanguage = language
         viewModelScope.launch {
@@ -226,18 +257,28 @@ class MapViewModel(
         }
     }
 
-    // Is called by Mapbox's locationlistener in DataMap.
-    // Updates the location without moving the camera.
+    /**
+     * Updates the last known user location without moving the camera.
+     *
+     * @param point Current user location.
+     */
     fun updateUserLocation(point: Point) {
         userLocation = point
     }
 
-    // The UI can call this when the user click "my position".
-    // By copying userLocation to selectedLocation it triggers the camera to move.
+    /**
+     * Moves camera to the user's current location.
+     */
     fun moveToUserLocation() {
         userLocation?.let { selectedLocation = it }
     }
 
+    /**
+     * Sets active overlay type and triggers fetch.
+     *
+     * @param type Selected overlay type.
+     * @param context Android context for overlay fetching.
+     */
     fun setOverlay(type: OverlayType, context: Context) {
         activeOverlay = type
         lastOverlayURL = null
@@ -265,14 +306,22 @@ class MapViewModel(
         }
     }
 
-    // Used by Saved Places to jump the map to a specific point. Switches to
-    // NONE so the camera move isn't immediately fighting an overlay-zoom snap.
+    /**
+     * Centers map on a specific location and disables overlays.
+     *
+     * @param point Target location.
+     * @param context Android context.
+     */
     fun showLocation(point: Point, context: Context) {
         setOverlay(OverlayType.NONE, context)
         selectedLocation = point
     }
 
-    // Main search function. Saves query text and fetches suggestions.
+    /**
+     * Updates search query and fetches autocomplete suggestions.
+     *
+     * @param query User input search text.
+     */
     fun updateSearchQuery(query: String) {
         searchQuery = query
 
@@ -322,7 +371,9 @@ class MapViewModel(
         }
     }
 
-    // Clear search for when user clicks X or selects a result
+    /**
+     * Clears current search state and suggestions.
+     */
     fun clearSearch() {
         searchJob?.cancel()
         searchQuery = ""
@@ -330,6 +381,9 @@ class MapViewModel(
         isSearching = false
     }
 
+    /**
+     * Cancels all ongoing map-related operations and resets state.
+     */
     fun cancelMapScreenWork() {
         searchJob?.cancel()
         selectJob?.cancel()
@@ -342,7 +396,12 @@ class MapViewModel(
         mapUiState = MapUiState.Loading
     }
 
-    // Select a suggested place and get its coordinates
+    /**
+     * Selects a search suggestion and resolves it into coordinates.
+     *
+     * @param item Selected suggestion.
+     * @param onResult Callback returning resolved map point.
+     */
     fun selectSuggestion(
         item: SearchSuggestionUi,
         onResult: (Point) -> Unit
@@ -367,23 +426,33 @@ class MapViewModel(
         super.onCleared()
     }
 
-    // Saves map-camera
+    /**
+     * Saves current camera position.
+     *
+     * @param center Camera center point.
+     * @param zoom Camera zoom level.
+     */
     fun saveCamera(center: Point, zoom: Double){
         lastCameraCenter = center
         lastCameraZoom = zoom
         cameraSaveRequests.tryEmit(center to zoom)
     }
 
-    // Resets SelectedLocation
+    /**
+     * Clears the currently selected location.
+     */
     fun clearSelectedLocation(){
         selectedLocation = null
     }
 }
 
-// Function to say whether dark theme should be used or not.
-// If the user has selected to follow device settings, the boolean
-// that gets returned from the function will be the same as the boolean
-// which says if the device is in dark theme.
+/**
+ * Determines whether dark theme should be used.
+ *
+ * @param theme Selected app theme setting.
+ * @param systemIsDark Whether system is in dark mode.
+ * @return True if dark theme should be enabled.
+ */
 fun useDarkThemeFrom(theme: AppTheme, systemIsDark: Boolean): Boolean{
     return when(theme) {
         AppTheme.DEVICE -> systemIsDark

@@ -21,6 +21,10 @@ import no.uio.ifi.in2000.team45.ui.theme.IconLightPurple
 import no.uio.ifi.in2000.team45.ui.theme.IconOrange
 import no.uio.ifi.in2000.team45.ui.theme.IconPurple
 
+/**
+ * Represents an informational resource displayed in the app,
+ * including its title, link, description, colors, and icon.
+ */
 data class InfoDatasource(
     val title: String,
     val url: String,
@@ -30,6 +34,7 @@ data class InfoDatasource(
     val icon: ImageVector
 )
 
+// list of all the external resources used in the app
 val infoDatasources = listOf(
     InfoDatasource(
         title = "NVE",

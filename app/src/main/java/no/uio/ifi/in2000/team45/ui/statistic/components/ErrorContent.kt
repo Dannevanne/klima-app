@@ -17,6 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Displays a centered error message with a try again button.
+ *
+ * @param message the error message to display to the user.
+ * @param onRetry callback invoked when the user presses the retry button.
+ */
 @Composable
 fun ErrorContent(
     message: String,

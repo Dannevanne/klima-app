@@ -15,6 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Settings control for enabling or disabling sound effects in the app.
+ *
+ * @param soundEnabled Whether sound effects are currently enabled.
+ * @param onSoundEnabledChange Callback triggered when the switch state changes.
+ * @param modifier Optional modifier for layout customization.
+ */
 @Composable
 fun SoundSetting(
     soundEnabled: Boolean,

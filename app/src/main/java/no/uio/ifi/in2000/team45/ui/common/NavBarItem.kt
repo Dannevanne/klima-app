@@ -15,6 +15,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Individual navigation item used inside a bottom navigation bar.
+ * Displays an icon and label in a vertically centered column and handles click interaction.
+ *
+ * @param onClick Callback invoked when the item is clicked.
+ * @param icon Composable function that is the navigation icon.
+ * @param label Text label displayed below the icon.
+ * @param modifier Optional modifier for styling.
+ */
 @Composable
 fun NavBarItem(
     onClick: () -> Unit,

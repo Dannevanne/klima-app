@@ -21,9 +21,13 @@ import com.mapbox.maps.viewannotation.geometry
 import no.uio.ifi.in2000.team45.data.savedplaces.models.SavedPlacesLocation
 import no.uio.ifi.in2000.team45.R
 
-// Renders one filled circle per saved place and reports clicks via a callback.
-// Recreates the annotations whenever the list changes; cheap because the list
-// is small (a handful of saved places at most).
+/**
+ * Renders saved places as map annotations and handles click events.
+ * Each saved location is displayed as a circular icon on the map.
+ *
+ * @param savedPlaces List of saved locations to render on the map.
+ * @param onPlaceClick Called when a saved place annotation is clicked.
+ */
 @Composable
 fun MapSavedPlacesEffect(
     savedPlaces: List<SavedPlacesLocation>,

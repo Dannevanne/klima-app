@@ -9,6 +9,7 @@ import no.uio.ifi.in2000.team45.data.statistic.models.TimeSeriesAvailability
 import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.data.statistic.utils.PlaceSelector
 
+// list of all annual elements
 private val ALL_ANNUAL_ELEMENTS = setOf(
     "mean(air_temperature P1Y)",
     "sum(precipitation_amount P1Y)",
@@ -22,29 +23,70 @@ private val ALL_ANNUAL_ELEMENTS = setOf(
 // discriminates between climates (Bergen ~40 days/yr, Karasjok ~1).
 private const val HEAVY_PRECIP_THRESHOLD_MM = 20.0
 
+/**
+ * Repository responsible for coordinating statistic operations,
+ * combining multiple datasource calls into data.
+ */
 class StatisticRepository(
     private val datasource: StatisticDatasource = StatisticDatasource()
 ) {
-
+    /**
+     * Searches for weather stations matching the given query.
+     *
+     * @param query The station search query.
+     * @param clientId The Frost API client ID.
+     * @return A list of matching WeatherStation objects.
+     */
     suspend fun searchStations(query: String, clientId: String): List<WeatherStation> {
         return datasource.searchStations(query, clientId)
     }
 
+    /**
+     * Geocodes a place query into a single best-matching Place result.
+     *
+     * @param query The place search query.
+     * @param mapboxToken Mapbox API access token.
+     * @return A list containing the best matching Place, or an empty list if none found.
+     */
     suspend fun geocodePlaces(query: String, mapboxToken: String): List<Place> {
         val candidates = datasource.geocodePlaces(query, mapboxToken)
         return PlaceSelector.pickBest(query, candidates)?.let { listOf(it) } ?: emptyList()
     }
 
+    /**
+     * Finds the nearest weather stations to a geographic coordinate.
+     *
+     * @param lat Latitude coordinate.
+     * @param lon Longitude coordinate.
+     * @param clientId The Frost API client ID.
+     * @param count Maximum number of stations to return.
+     * @return A list of nearest WeatherStation objects.
+     */
     suspend fun findNearestStations(
         lat: Double, lon: Double, clientId: String, count: Int = 5
     ): List<WeatherStation> {
         return datasource.findNearestStations(lat, lon, clientId, count)
     }
 
+    /**
+     * Retrieves the latest available observations for a station.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @return A map of element IDs to their latest observed values.
+     */
     suspend fun getLatestObservations(stationId: String, clientId: String): Map<String, Double> {
         return datasource.getLatestObservations(stationId, clientId)
     }
 
+    /**
+     * Retrieves available time series data for a set of stations and elements.
+     *
+     * @param stationIds List of station ids.
+     * @param elementIds List of climate element ids.
+     * @param clientId The Frost API client ID.
+     * @return A list of available time series information.
+     */
     suspend fun getAvailableTimeSeries(
         stationIds: List<String>,
         elementIds: List<String>,
@@ -53,6 +95,16 @@ class StatisticRepository(
         return datasource.getAvailableTimeSeries(stationIds, elementIds, clientId)
     }
 
+    /**
+     * Retrieves aggregated annual observations
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @param yearFrom Start year.
+     * @param yearTo End year.
+     * @param elements Set of requested climate elements.
+     * @return A list of AnnualObservation objects.
+     */
     suspend fun getAnnualObservations(
         stationId: String,
         clientId: String,
@@ -71,8 +123,6 @@ class StatisticRepository(
             datasource.getAnnualObservations(stationId, clientId, yearFrom, yearTo)
         } else emptyList()
 
-        // Frost has no P1Y aggregations for wind/snow. Pull monthly maxes
-        // and roll them up to per-year maxes here, then merge.
         val monthly = if (needsMonthly) {
             datasource.getMonthlyWindAndSnow(
                 stationId, clientId, yearFrom, yearTo, elements
@@ -122,6 +172,13 @@ class StatisticRepository(
         return byYearAnnual.values.sortedBy { it.year }
     }
 
+    /**
+     * Safely returns the maximum of two nullable Double values.
+     *
+     * @param a First value.
+     * @param b Second value.
+     * @return The maximum value, or null if both are null.
+     */
     private fun maxOfNullable(a: Double?, b: Double?): Double? {
         return when {
             a == null -> b
@@ -130,6 +187,14 @@ class StatisticRepository(
         }
     }
 
+    /**
+     * Retrieves monthly climate statistics for a station. Uses climate normals when available,
+     * otherwise falls back to observations.
+     *
+     * @param stationId The station identifier.
+     * @param clientId The Frost API client ID.
+     * @return A list of monthly climate statistics.
+     */
     suspend fun getClimateStats(
         stationId: String,
         clientId: String
@@ -148,6 +213,12 @@ class StatisticRepository(
         return buildStatsFromObservations(observations)
     }
 
+    /**
+     * Builds monthly climate statistics from climate normal values.
+     *
+     * @param normals List of climate normals.
+     * @return A list of monthly climate statistics for all 12 months.
+     */
     private fun buildStatsFromNormals(normals: List<ClimateNormal>): List<MonthlyClimateStats> {
         val byMonth = normals.groupBy { it.month }
 
@@ -189,6 +260,12 @@ class StatisticRepository(
         }
     }
 
+    /**
+     * Builds monthly climate statistics from observed data.
+     *
+     * @param observations List of monthly observations.
+     * @return A list of monthly climate statistics for all 12 months.
+     */
     private fun buildStatsFromObservations(
         observations: List<MonthlyObservation>
     ): List<MonthlyClimateStats> {

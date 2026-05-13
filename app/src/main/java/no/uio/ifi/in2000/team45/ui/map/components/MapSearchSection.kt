@@ -31,6 +31,17 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionDropdown
 import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 
+/**
+ * Search section for the map screen, including a text input field and suggestion dropdown.
+ *
+ * @param searchQuery Current text entered in the search field.
+ * @param searchSuggestions List of search suggestions to display.
+ * @param isSearching Whether a search request is currently in progress.
+ * @param onSearchQueryChange Callback invoked when the search query changes.
+ * @param onClearSearch Callback invoked when the clear button is pressed.
+ * @param onSuggestionClick Callback invoked when a search suggestion is selected.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 fun MapSearchSection(
     searchQuery: String,

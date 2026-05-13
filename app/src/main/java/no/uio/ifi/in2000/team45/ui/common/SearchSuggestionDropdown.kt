@@ -21,6 +21,14 @@ import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
+/**
+ * Dropdown UI component displaying search suggestions or a loading indicator.
+ *
+ * @param searchSuggestions List of search suggestion items to display.
+ * @param isSearching Whether a search request is currently in progress.
+ * @param onSuggestionClick Callback invoked when a suggestion is selected.
+ * @param modifier Optional modifier for styling.
+ */
 @Composable
 fun SearchSuggestionDropdown(
     searchSuggestions: List<SearchSuggestionUi>,

@@ -11,12 +11,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 
+
+/**
+ * Data model representing an item in the application's bottom navigation bar.
+ *
+ * @property label Text label displayed under the icon.
+ * @property onClick Callback invoked when the item is clicked.
+ * @property icon Composable function that renders the item's icon.
+ */
 data class BottomBarItemData(
     val label: String,
     val onClick: () -> Unit,
     val icon: @Composable () -> Unit
 )
 
+/**
+ * Bottom navigation bar used for primary app navigation.
+ *
+ * @param items List of navigation items to display in the bottom bar.
+ * @param modifier Optional modifier for styling or layout adjustments.
+ */
 @Composable
 fun AppBottomBar(
     items: List<BottomBarItemData>,

@@ -40,11 +40,18 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
+// matching the risk levels with the correct color
 private val RiskHigh = StatisticsRed
 private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
 private val RiskUnknown = StatisticsGray
 
+/**
+ * Converts wind speed into a readable risk level.
+ *
+ * @param windSpeed Average wind speed in m/s, or null if unavailable.
+ * @return "High", "Moderate", "Low", or "Unknown".
+ */
 private fun windRiskLevel(windSpeed: Double?): String = when {
     windSpeed == null -> "Unknown"
     windSpeed >= 8.0 -> "High"
@@ -52,6 +59,12 @@ private fun windRiskLevel(windSpeed: Double?): String = when {
     else -> "Low"
 }
 
+/**
+ * Maps a risk level string to a UI color.
+ *
+ * @param level Risk level ("High", "Moderate", "Low", "Unknown").
+ * @return Corresponding [Color] for UI rendering.
+ */
 private fun riskColor(level: String): Color {
     return when (level) {
         "High" -> RiskHigh
@@ -61,6 +74,12 @@ private fun riskColor(level: String): Color {
     }
 }
 
+/**
+ * Converts a risk level into a localized UI label.
+ *
+ * @param level Risk level string.
+ * @return Localized string resource representing the level.
+ */
 @Composable
 private fun riskLevelLabel(level: String): String {
     return when (level) {
@@ -71,6 +90,12 @@ private fun riskLevelLabel(level: String): String {
     }
 }
 
+/**
+ * Computes overall risk from multiple hazard levels.
+ *
+ * @param levels Variable list of risk level strings.
+ * @return The highest severity level present.
+ */
 private fun overallRisk(vararg levels: String): String {
     return when {
         levels.any { it == "High" } -> "High"
@@ -80,6 +105,15 @@ private fun overallRisk(vararg levels: String): String {
     }
 }
 
+/**
+ * Card displaying a saved location and its associated risk data.
+ *
+ * @param location Saved location data.
+ * @param status Risk status data for the location, or null if loading.
+ * @param onRemove Callback when user deletes location.
+ * @param onShowOnMap Callback to open location on map.
+ * @param onShowInStatistics Callback to open statistics view.
+ */
 @Composable
 fun SavedPlacesLocationCard(
     location: SavedPlacesLocation,
@@ -225,6 +259,11 @@ fun SavedPlacesLocationCard(
     }
 }
 
+/**
+ * Risk level pill label.
+ *
+ * @param level Risk level string used for color and label selection.
+ */
 @Composable
 private fun RiskPill(level: String) {
     Box(
@@ -241,6 +280,14 @@ private fun RiskPill(level: String) {
     }
 }
 
+/**
+ * UI box showing a single risk category (flood, wind, etc.).
+ *
+ * @param modifier Modifier for layout customization.
+ * @param label Category name.
+ * @param level Risk level string.
+ * @param loading Whether data is still loading.
+ */
 @Composable
 private fun RiskCategoryBox(
     modifier: Modifier = Modifier,
@@ -283,6 +330,9 @@ private fun RiskCategoryBox(
     }
 }
 
+/**
+ * Loading indicator used inside risk components.
+ */
 @Composable
 private fun RiskSpinner() {
     CircularProgressIndicator(

@@ -47,11 +47,21 @@ import no.uio.ifi.in2000.team45.ui.theme.StatisticsOrange
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 import androidx.core.net.toUri
 
+// matching the risk levels with the correct color
 private val RiskHigh = StatisticsRed
 private val RiskModerate = StatisticsOrange
 private val RiskLow = StatisticsGreen
 private val RiskUnknown = StatisticsGray
 
+/**
+ * Data model for a risk advice category shown in the UI.
+ *
+ * @param title Category title.
+ * @param dotColor Color indicator for the risk level.
+ * @param bullets List of advice bullet points.
+ * @param linkText Clickable link label.
+ * @param linkUrl External URL for more information.
+ */
 data class AdviceCategory(
     val title: String,
     val dotColor: Color,
@@ -60,6 +70,12 @@ data class AdviceCategory(
     val linkUrl: String
 )
 
+/**
+ * Maps a risk level string to a UI color.
+ *
+ * @param level Risk level ("High", "Moderate", "Low").
+ * @return Corresponding color for the level.
+ */
 private fun riskColor(level: String): Color = when (level) {
     "High" -> RiskHigh
     "Moderate" -> RiskModerate
@@ -67,6 +83,12 @@ private fun riskColor(level: String): Color = when (level) {
     else -> RiskUnknown
 }
 
+/**
+ * Flood safety advice based on risk level.
+ *
+ * @param level Flood risk level.
+ * @return Advice category for flood protection.
+ */
 @Composable
 private fun floodAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -95,6 +117,12 @@ private fun floodAdvice(level: String): AdviceCategory {
     )
 }
 
+/**
+ * Landslide safety advice based on risk level.
+ *
+ * @param level Landslide risk level.
+ * @return Advice category for landslide protection.
+ */
 @Composable
 private fun landslideAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -123,10 +151,12 @@ private fun landslideAdvice(level: String): AdviceCategory {
     )
 }
 
-// Quick clay is a type of landslide, so its advice reuses the landslide
-// bullets. The DiBK skred page covers both. Kept as its own category so the
-// user sees a dot matching their quick clay risk level alongside the other
-// hazard rows.
+/**
+ * Quick clay safety advice based on risk level.
+ *
+ * @param level Quick clay risk level.
+ * @return Advice category for quick clay protection.
+ */
 @Composable
 private fun quickClayAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -155,6 +185,12 @@ private fun quickClayAdvice(level: String): AdviceCategory {
     )
 }
 
+/**
+ * Avalanche safety advice based on risk level.
+ *
+ * @param level Avalanche risk level.
+ * @return Advice category for avalanche protection.
+ */
 @Composable
 private fun avalancheAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -183,6 +219,12 @@ private fun avalancheAdvice(level: String): AdviceCategory {
     )
 }
 
+/**
+ * Radon safety advice based on risk level.
+ *
+ * @param level Radon risk level.
+ * @return Advice category for radon protection.
+ */
 @Composable
 private fun radonAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -211,6 +253,12 @@ private fun radonAdvice(level: String): AdviceCategory {
     )
 }
 
+/**
+ * Wind safety advice based on risk level.
+ *
+ * @param level Wind risk level.
+ * @return Advice category for wind protection.
+ */
 @Composable
 private fun windAdvice(level: String): AdviceCategory {
     val bullets = when (level) {
@@ -239,6 +287,17 @@ private fun windAdvice(level: String): AdviceCategory {
     )
 }
 
+/**
+ * Builds a list of advice categories for all risk types.
+ *
+ * @param floodLevel Flood risk level.
+ * @param landslideLevel Landslide risk level.
+ * @param avalancheLevel Avalanche risk level.
+ * @param quickClayLevel Quick clay risk level.
+ * @param windLevel Wind risk level.
+ * @param radonLevel Radon risk level.
+ * @return List of advice categories.
+ */
 @Composable
 fun adviceForRiskLevels(
     floodLevel: String,
@@ -256,6 +315,16 @@ fun adviceForRiskLevels(
     radonAdvice(radonLevel)
 )
 
+/**
+ * Section that displays expandable safety advice for multiple hazards.
+ *
+ * @param floodLevel Flood risk level.
+ * @param landslideLevel Landslide risk level.
+ * @param avalancheLevel Avalanche risk level.
+ * @param quickClayLevel Quick clay risk level.
+ * @param windLevel Wind risk level.
+ * @param radonLevel Radon risk level.
+ */
 @Composable
 fun WhatCanIDoSection(
     floodLevel: String,
@@ -318,6 +387,13 @@ fun WhatCanIDoSection(
     }
 }
 
+/**
+ * Expandable card that shows advice for a single risk category.
+ *
+ * @param category Advice content to display.
+ * @param isExpanded Whether the card is expanded.
+ * @param onToggle Called when user expands or collapses the card.
+ */
 @Composable
 private fun AdviceAccordionCard(
     category: AdviceCategory,

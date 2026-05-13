@@ -33,6 +33,20 @@ import no.uio.ifi.in2000.team45.ui.common.AppTopBar
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenu
 import no.uio.ifi.in2000.team45.ui.common.OverflowMenuButton
 
+/**
+ * The primary entry point for the climate statistics feature.
+ * This screen coordinates the display of search-driven results and historical data.
+ *
+ * @param modifier standard layout modifier for the root container.
+ * @param statisticViewModel source for climate data, search logic, and UI state.
+ * @param savedPlacesViewModel manages user-specific data like favorite weather stations.
+ * @param onSettingsClick navigation callback to open the settings interface.
+ * @param onInfoClick navigation callback to open the information screen.
+ * @param onHelpClick navigation callback to open the help screen.
+ * @param onMapClick navigation callback to switch to the primary map view.
+ * @param onSavedPlacesClick navigation callback to access the user's saved locations.
+ * @param onShowOnMap optional callback to focus the map on specific coordinates.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticScreen(

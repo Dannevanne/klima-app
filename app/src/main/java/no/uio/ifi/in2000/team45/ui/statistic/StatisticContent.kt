@@ -54,6 +54,19 @@ import no.uio.ifi.in2000.team45.ui.statistic.components.PlaceList
 import no.uio.ifi.in2000.team45.ui.statistic.components.StationList
 import androidx.compose.runtime.getValue
 
+/**
+ * Renders different content states (idle, loading, search results,
+ * place results, climate data, and error) based on [state].
+ *
+ * @param modifier layout modifier for the root container
+ * @param state current UI state driving screen content
+ * @param favoriteStations list of user-saved favorite stations
+ * @param statisticViewModel ViewModel controlling search and statistics logic
+ * @param savedPlacesViewModel ViewModel controlling saved stations and places
+ * @param topInset vertical offset to avoid overlap with the Top Bar.
+ * @param bottomInset vertical offset to avoid overlap with the Bottom Navigation.
+ * @param onShowOnMap optional callback for showing coordinates on map
+ */
 @Composable
 fun StatisticContent(
     modifier: Modifier = Modifier,
@@ -352,6 +365,12 @@ fun StatisticContent(
     }
 }
 
+/**
+ * Header containing the search bar used across multiple states.
+ *
+ * @param statisticViewModel ViewModel providing search state, query,
+ * suggestions, and search actions
+ */
 @Composable
 private fun SearchBarHeader(statisticViewModel: StatisticViewModel) {
     SearchBar(

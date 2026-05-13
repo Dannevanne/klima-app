@@ -20,6 +20,12 @@ import no.uio.ifi.in2000.team45.data.statistic.StatisticRepository
 import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 
+/**
+ * Holds computed environmental and weather risk data for a saved location.
+ *
+ * This includes both raw hazard flags, if user is in zone and derived risk
+ * levels used by the UI.
+ */
 data class LocationStatus(
     val stationName: String = "",
     val temperature: Double? = null,
@@ -45,6 +51,11 @@ data class LocationStatus(
     val avgWindSpeed: Double? = null
 )
 
+/**
+ * ViewModel responsible for saved places, risk evaluation, etc.
+ *
+ * @param application Android application context used for repositories.
+ */
 class SavedPlacesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = SavedPlacesRepository(application)
@@ -78,14 +89,27 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         const val MAX_SAVED_PLACES = 4
     }
 
+    /**
+     * Checks whether a new saved location can be added.
+     *
+     * @return true if under the maximum limit.
+     */
     fun canAddLocation(): Boolean {
         return locations.value.size < MAX_SAVED_PLACES
     }
 
+    /**
+     * Requests UI focus on a specific saved location.
+     *
+     * @param location Location to scroll to in UI.
+     */
     fun requestFocus(location: SavedPlacesLocation) {
         pendingFocus = location
     }
 
+    /**
+     * Clears pending scroll focus.
+     */
     fun clearPendingFocus() {
         pendingFocus = null
     }
@@ -107,10 +131,23 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch { repository.removeStation(stationId) }
     }
 
+    /**
+     * Removes a saved location.
+     *
+     * @param location Location to remove.
+     */
     fun removeLocation(location: SavedPlacesLocation) {
         viewModelScope.launch { repository.removeLocation(location) }
     }
 
+    /**
+     * Adds a new saved location if valid.
+     *
+     * @param lat Latitude
+     * @param lng Longitude
+     * @param label User-defined label
+     * @return true if successfully queued for saving
+     */
     fun addLocation(lat: Double, lng: Double, label: String): Boolean {
         if (!canAddLocation()) return false
         if (!NorwayLocationValidator.isInsideNorway(lat, lng)) return false
@@ -129,6 +166,11 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    /**
+     * Fetches and environmental + weather status for a location.
+     *
+     * @param location Saved location to evaluate.
+     */
     fun fetchStatusForLocation(location: SavedPlacesLocation) {
         val key = "${location.latitude},${location.longitude}"
         if (locationStatuses.containsKey(key)) return
@@ -262,10 +304,15 @@ class SavedPlacesViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    // High when the saved point itself sits in the hazard zone, Moderate when
-    // any of four cardinal offsets ~500 m away does, Low otherwise. Returns
-    // Unknown when the source API didn't respond at the saved point so we
-    // don't show a misleading "Low".
+    /**
+     * Computes risk level based on zone presence and nearby offset checks.
+     *
+     * @param lat Latitude of point.
+     * @param lon Longitude of point.
+     * @param atPoint Whether the point is directly inside a hazard zone.
+     * @param check Function to test nearby coordinates.
+     * @return Risk level string ("High", "Moderate", "Low", "Unknown").
+     */
     private suspend fun zoneRiskLevel(
         lat: Double,
         lon: Double,

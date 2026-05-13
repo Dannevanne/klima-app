@@ -10,6 +10,16 @@ import com.mapbox.maps.MapIdleCallback
 import com.mapbox.maps.toCameraOptions
 import no.uio.ifi.in2000.team45.ui.map.MapViewModel
 
+/**
+ * Syncs map camera state with overlay rendering logic. Triggers overlay updates
+ * when the camera changes or becomes idle, and persists camera position in the ViewModel.
+ *
+ * @param mapView Mapbox MapView instance.
+ * @param mapWidth Current rendered map width.
+ * @param mapHeight Current rendered map height.
+ * @param mapViewModel ViewModel responsible for overlay updates and camera state.
+ * @param context Android context used for overlay data requests.
+ */
 @Composable
 fun MapCameraOverlayEffect(
     mapView: MapView?,

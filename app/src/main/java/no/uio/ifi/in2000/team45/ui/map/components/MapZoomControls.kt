@@ -16,8 +16,14 @@ import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.UnscaledFont
 
-// This composable doesn't know about MapBox, the camera or the ViewModel
-// it just sends the buttons to whoeever uses the component
+/**
+ * UI controls for zooming in and out on the map. This composable do not depend on Mapbox,
+ * camera state, or ViewModel logic. It simply exposes zoom in/out actions via callbacks.
+ *
+ * @param onZoomIn Callback invoked when the zoom-in button is pressed.
+ * @param onZoomOut Callback invoked when the zoom-out button is pressed.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 fun MapZoomControls(onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,

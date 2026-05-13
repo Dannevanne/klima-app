@@ -10,6 +10,12 @@ import kotlinx.coroutines.flow.map
 // Datastore for context
 private val Context.cameraDataStore by preferencesDataStore(name = "mapCamera")
 
+/**
+ * Repository responsible for storing and retrieving the map camera position
+ * using DataStore persistence.
+ *
+ * @property context Application context used to access the DataStore instance.
+ */
 class MapCameraRepository(private val context: Context){
 
     // Keys to save and get cameraposition from DataStore
@@ -29,8 +35,13 @@ class MapCameraRepository(private val context: Context){
             )
         }
 
-    // Saves the cameraposition to disk
-    // Is called every time the camera moves
+    /**
+     * Saves the current map camera position to DataStore.
+     *
+     * @param lat The latitude of the camera position.
+     * @param lng The longitude of the camera position.
+     * @param zoom The zoom level of the camera.
+     */
     suspend fun saveCamera(lat: Double, lng: Double, zoom: Double) {
         context.cameraDataStore.edit { preferences ->
             preferences[keyLat] = lat

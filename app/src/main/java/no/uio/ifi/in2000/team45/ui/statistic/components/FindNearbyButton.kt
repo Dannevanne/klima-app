@@ -23,6 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.uio.ifi.in2000.team45.R
 
+/**
+ * Button that requests the user's last known location and returns it via callback.
+ *
+ * @param onLocationFound callback invoked with coordinated when a location is retrieved.
+ * @param modifier optional modifier for layout and styling.
+ */
 @Composable
 fun FindNearbyButton(
     onLocationFound: (lat: Double, lon: Double) -> Unit,

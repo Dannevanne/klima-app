@@ -14,8 +14,14 @@ import com.mapbox.maps.extension.style.sources.getSourceAs
 import com.mapbox.maps.extension.style.sources.updateImage
 import no.uio.ifi.in2000.team45.ui.map.utils.cornersFromBBox
 
-// When the bitmap and style is ready,
-// a temporary overlay is built over the map.
+/**
+ * Applies a temporary raster overlay on top of the Mapbox map.
+ * Updates or removes the overlay layer depending on bitmap availability.
+ *
+ * @param bitmap Overlay image to render on the map.
+ * @param overlayBBox Bounding box defining the overlay placement on the map.
+ * @param useDarkMap Flag indicating whether the dark map style is active.
+ */
 @Composable
 fun MapOverlayEffect(
     bitmap: Bitmap?,

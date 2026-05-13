@@ -23,10 +23,15 @@ import no.uio.ifi.in2000.team45.data.savedplaces.utils.NorwayLocationValidator
 import no.uio.ifi.in2000.team45.ui.common.AnimatedConfirmDialog
 import no.uio.ifi.in2000.team45.ui.savedplaces.SavedPlacesViewModel
 
-// Naming dialog for saved location. `point` is nullable so the OK-only
-// warning branches can stay mounted during their exit animation; the parent
-// nulls out pendingPoint right when OK is tapped, but AnimatedConfirmDialog
-// keeps its window alive until the fade-out finishes.
+/**
+ * Dialog flow for saving a map location.
+ *
+ * @param point Selected map coordinate to save, or null if no selection exists.
+ * @param locationName Current text input for the place name.
+ * @param onLocationNameChange Callback for updating the name input state.
+ * @param onDismiss Callback invoked when any dialog is dismissed or completed.
+ * @param savedPlacesViewModel ViewModel responsible for storing the saved locations.
+ */
 @Composable
 fun MapSaveLocationDialog(
     point: Point?,

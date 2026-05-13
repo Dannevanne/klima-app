@@ -30,6 +30,11 @@ import no.uio.ifi.in2000.team45.data.settings.SoundPreferenceRepository
 import no.uio.ifi.in2000.team45.ui.settings.SoundViewModel
 import no.uio.ifi.in2000.team45.ui.settings.SoundViewModelFactory
 
+/**
+ * Main activity that initializes repositories, configures Mapbox,
+ * creates application-scoped ViewModels, applies theme and language
+ * preferences, and sets the app's Compose content hierarchy.
+ */
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

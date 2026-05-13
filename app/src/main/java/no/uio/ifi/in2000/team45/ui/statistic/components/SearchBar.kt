@@ -26,6 +26,17 @@ import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.ui.common.SearchSuggestionDropdown
 import no.uio.ifi.in2000.team45.ui.common.models.SearchSuggestionUi
 
+/**
+ * Search bar with text input, search action, and suggestion dropdown.
+ * And handles keyboard dismissal and focus clearing on search actions.
+ *
+ * @param query current text in the search field
+ * @param suggestions list of search suggestions to display
+ * @param isSearching whether a search request is currently in progress
+ * @param onQueryChange callback invoked when the query text changes
+ * @param onSearch callback triggered when a search is executed
+ * @param onSuggestionClick callback triggered when a suggestion is selected
+ */
 @Composable
 fun SearchBar(
     query: String,

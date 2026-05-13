@@ -6,9 +6,14 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-// primary is the brand accent (Material Blue 700/200) so default Buttons read
-// as a real button -- previously primary == onPrimary collapsed Button text
-// to invisible. surface/background colors are unchanged.
+/**
+ * Dark color scheme for the application theme.
+ *
+ * Defines color roles for dark mode, ensuring sufficient contrast for UI elements
+ * such as buttons, surfaces, backgrounds, and text. The primary color is used as
+ * the brand accent, while surface and background colors are tuned for readability
+ * in low-light environments.
+ */
 private val DarkColorScheme = darkColorScheme(
     primary = LoadingBlueLight,
     secondary = DarkOnSurface,
@@ -34,6 +39,13 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = IconBlack
 )
 
+/**
+ * Light color scheme for the application theme.
+ *
+ * Defines color roles for light mode, optimized for readability in bright environments.
+ * Maintains consistent branding via the primary color while adjusting surfaces and text
+ * for appropriate contrast in light UI contexts.
+ */
 private val LightColorScheme = lightColorScheme(
     primary = LoadingBlue,
     secondary = LightOnSurface,

@@ -12,6 +12,14 @@ import androidx.compose.ui.res.stringResource
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.settings.models.LanguageOption
 
+/**
+ * Settings section that allows the user to choose the application language.
+ * Displays a list of available language options using [LanguageOptionRow].
+ *
+ * @param selectedLanguage Currently selected language option.
+ * @param onLanguageSelected Callback triggered when the user selects a new language.
+ * @param modifier Optional modifier for layout.
+ */
 @Composable
 fun LanguageSetting(
     selectedLanguage: LanguageOption,

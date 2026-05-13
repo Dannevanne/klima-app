@@ -64,6 +64,12 @@ import no.uio.ifi.in2000.team45.ui.map.dialogs.MapSaveLocationDialog
 import no.uio.ifi.in2000.team45.ui.map.dialogs.OverlayLegendSheet
 import no.uio.ifi.in2000.team45.ui.map.utils.moveToPoint
 
+/**
+ * Root map screen that composes all map UI layers and interactions.
+ *
+ * Combines MapContent, overlays, search, controls, dialogs, and ViewModel state.
+ * Owns all UI interactions for the entire map feature.
+ */
 @Composable
 fun MapStateScreen(
     mapViewModel: MapViewModel,
@@ -144,6 +150,11 @@ fun MapStateScreen(
     }
 }
 
+/**
+ * Scaffold-based map screen with top bar, bottom bar, and map content.
+ *
+ * Hosts navigation UI and delegates map rendering to DataMap.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
@@ -234,6 +245,18 @@ fun MapScreen(
     }
 }
 
+/**
+ * Core map rendering composable that binds UI state to Mapbox.
+ * Manages overlays, camera, gestures, search, saved places, and dialogs.
+ *
+ * @param mapViewModel Handles map logic and state.
+ * @param locationGranted Whether location permission is granted.
+ * @param onLocationClick Handles location button click.
+ * @param onSavedPlacesClick Opens saved places screen.
+ * @param onShowInStatistics Navigates to statistics screen.
+ * @param savedPlacesViewModel Handles saved places state.
+ * @param modifier Optional layout modifier.
+ */
 @Composable
 fun DataMap(
     mapViewModel: MapViewModel,
@@ -478,7 +501,11 @@ fun DataMap(
     )
 }
 
-// Composable to change map look when the selected theme changes
+/**
+ * Applies map theme based on light/dark mode.
+ *
+ * @param useDarkMap Whether dark map style should be used.
+ */
 @Composable
 fun MapThemeEffect(useDarkMap: Boolean){
     MapEffect(useDarkMap) { mapView ->

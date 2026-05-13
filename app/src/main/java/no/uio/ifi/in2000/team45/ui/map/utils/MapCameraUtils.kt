@@ -6,8 +6,18 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 
-// Returns true if the user tried to zoom out past the overlay's minZoom.
-// Callers use it to surface a "switch overlay to zoom out further" hint.
+/**
+ * Zooms the map within overlay-defined limits.
+ *
+ * Returns true if the user attempted to zoom out past the minimum zoom
+ * for the active overlay, allowing the UI to show a hint or fallback action.
+ *
+ * @param mapView Mapbox MapView used to read current zoom level.
+ * @param viewPortState Map viewport controller used to animate zoom changes.
+ * @param zoomChange Zoom change to apply.
+ * @param activeOverlay Currently active overlay defining zoom bounds.
+ * @return True if zoom-out was blocked by overlay min zoom.
+ */
 fun zoomMap(
     mapView: MapView?,
     viewPortState: MapViewportState,
@@ -31,7 +41,13 @@ fun zoomMap(
             activeOverlay != OverlayType.NONE
 }
 
-// Builds new camera configuration for the map
+/**
+ * Moves the map camera to a specific geographic point.
+ * Centers the camera on the given point with a fixed zoom level.
+ *
+ * @param point Target geographic coordinate.
+ * @param viewPortState Map viewport controller used for camera animation.
+ */
 fun moveToPoint(
     point: Point,
     viewPortState: MapViewportState

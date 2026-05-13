@@ -9,8 +9,14 @@ import coil.request.SuccessResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-// Makes Bitmap from the URL from the repository / datasource
-// so it can be shown as an overlay on the map.
+/**
+ * Loads an image from a URL and converts it to a Bitmap.
+ * Used for rendering raster overlays on the map.
+ *
+ * @param context Android context used by the image loader.
+ * @param imageURL URL of the image to load.
+ * @return Decoded Bitmap or null if loading fails.
+ */
 suspend fun makeBitmap(context: Context, imageURL: String): Bitmap? = withContext(Dispatchers.IO) {
     val request = ImageRequest.Builder(context)
         .data(imageURL)

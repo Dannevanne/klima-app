@@ -11,6 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Observes the device's current network connectivity state as a Compose state.
+ * Listens for network availability changes and updates the returned Boolean accordingly.
+ *
+ * @return `true` if a network is available, `false` otherwise.
+ */
 @Composable
 fun isOnline(): Boolean {
 

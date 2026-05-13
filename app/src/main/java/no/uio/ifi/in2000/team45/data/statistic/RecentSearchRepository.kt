@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.map
 
 private val Context.statisticDataStore by preferencesDataStore(name = "statistic_preferences")
 
+/**
+ * Repository responsible for storing and retrieving recent search queries
+ * using DataStore.
+ */
 class RecentSearchRepository(private val context: Context) {
 
     companion object {
@@ -16,11 +20,21 @@ class RecentSearchRepository(private val context: Context) {
         private const val MAX_HISTORY_SIZE = 5
     }
 
+    /**
+     * Flow of recent search queries stored in persistent storage.
+     *
+     * @return A Flow emitting the current list of recent search strings.
+     */
     val recentSearchesFlow: Flow<List<String>> =
         context.statisticDataStore.data.map { preferences ->
             parse(preferences[RECENT_SEARCHES_KEY])
         }
 
+    /**
+     * Adds a search query to the recent search history.
+     *
+     * @param query The search query to store.
+     */
     suspend fun addSearch(query: String) {
         val trimmed = query.trim()
         if (trimmed.isBlank()) return
@@ -35,6 +49,11 @@ class RecentSearchRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Removes a search query from the recent search history.
+     *
+     * @param query The search query to remove.
+     */
     suspend fun removeSearch(query: String) {
         val trimmed = query.trim()
         if (trimmed.isBlank()) return
@@ -46,6 +65,13 @@ class RecentSearchRepository(private val context: Context) {
         }
     }
 
+
+    /**
+     * Parses a serialized recent search history string into a list of queries.
+     *
+     * @param raw The raw stored string containing search queries.
+     * @return A list of search queries.
+     */
     private fun parse(raw: String?): List<String> {
         return raw
             ?.split("|")
@@ -54,6 +80,9 @@ class RecentSearchRepository(private val context: Context) {
             ?: emptyList()
     }
 
+    /**
+     * Clears all stored recent search history.
+     */
     suspend fun clearHistory() {
         context.statisticDataStore.edit { preferences ->
             preferences.remove(RECENT_SEARCHES_KEY)

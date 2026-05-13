@@ -6,6 +6,10 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+/**
+ * HTTP client configured with Ktor CIO engine and JSON support.
+ * Used for all network requests across the application.
+ */
 object KtorClient {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {

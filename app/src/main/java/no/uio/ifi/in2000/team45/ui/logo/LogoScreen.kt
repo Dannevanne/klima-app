@@ -15,6 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.ui.theme.loadingColor
 
+/**
+ * Logo screen displaying the app logo and a loading indicator.
+ * Right now just used for the aesthetics and look of the app
+ *
+ * @param modifier Optional modifier for layout.
+ */
 @Composable
 fun LogoScreen(modifier: Modifier = Modifier) {
     Box(

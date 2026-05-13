@@ -42,14 +42,21 @@ import no.uio.ifi.in2000.team45.data.statistic.models.WeatherStation
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsGreen
 import no.uio.ifi.in2000.team45.ui.theme.StatisticsRed
 
-// Chart tick labels need higher contrast than M3's onSurfaceVariant gives in
-// dark mode (purple-gray on a dark blue card reads dim). Light mode keeps the
-// secondary onSurfaceVariant tone so labels don't fight the chart line.
+/**
+ * Returns the color used for chart axis labels.
+ */
 @Composable
 private fun chartAxisColor(): Color =
     if (isSystemInDarkTheme()) Color.White
     else MaterialTheme.colorScheme.onSurfaceVariant
 
+/**
+ * Displays an overview section of climate statistics as summary cards.
+ *
+ * @param annualData list of yearly climate observations used for calculations.
+ * @param stats list of monthly climate statistics used for normal/baseline values.
+ * @param selectedPeriod number of years included in the selected time period.
+ */
 @Composable
 fun OverviewCards(
     annualData: List<AnnualObservation>,
@@ -178,6 +185,14 @@ fun OverviewCards(
     }
 }
 
+/**
+ * Displays a single climate statistic card with value and trend indicator.
+ *
+ * @param label text label describing the statistic.
+ * @param value formatted value to display.
+ * @param trend trend information compared to baseline normals.
+ * @param modifier optional modifier for layout and styling.
+ */
 @Composable
 fun OverviewStatCard(
     label: String,
@@ -228,6 +243,14 @@ fun OverviewStatCard(
     }
 }
 
+/**
+ * Renders a time-series line chart with optional filled area under the curve.
+ *
+ * @param title title shown above the chart.
+ * @param data list of (year, value) pairs to plot.
+ * @param lineColor color of the chart line and points.
+ * @param fillColor optional fill color for the area under the line.
+ */
 @Composable
 fun TrendChart(
     title: String,
@@ -351,6 +374,15 @@ fun TrendChart(
     }
 }
 
+/**
+ * Displays a card listing weather stations used in climate calculations.
+ *
+ * @param station primary weather station used.
+ * @param annualData list of yearly observations used for statistics.
+ * @param onShowOnMap optional callback to open station location on map.
+ * @param placeName name of the selected place for distance calculation.
+ * @param stationsUsed list of all stations contributing to data.
+ */
 @Composable
 fun StationsUsedCard(
     station: WeatherStation,
@@ -397,6 +429,14 @@ fun StationsUsedCard(
     }
 }
 
+/**
+ * Displays a single weather station row with data.
+ *
+ * @param station weather station information to display.
+ * @param placeName place used for distance calculation.
+ * @param onShowOnMap optional callback to open station on map.
+ * @param obsCountSuffix suffix indicating number of observations.
+ */
 @Composable
 private fun StationsUsedRow(
     station: WeatherStation,
@@ -466,8 +506,12 @@ private fun StationsUsedRow(
 }
 
 
-// If selected place don't have data for all years in chosen periode,
-// a warning-message appear telling this
+/**
+ * Displays a warning when climate data does not fully cover the selected time period.
+ *
+ * @param annualData list of available yearly observations.
+ * @param selectedPeriod expected number of years in the selected time range.
+ */
 @Composable
 fun MissingData(
     annualData: List<AnnualObservation>,

@@ -27,6 +27,17 @@ import no.uio.ifi.in2000.team45.ui.settings.components.ResetAppDataSection
 import no.uio.ifi.in2000.team45.ui.settings.components.SoundSetting
 import no.uio.ifi.in2000.team45.ui.statistic.StatisticViewModel
 
+/**
+ * Main settings screen for the application.
+
+ * @param modifier Optional modifier for layout customization.
+ * @param mapViewModel ViewModel responsible for theme and language settings.
+ * @param onClick Callback triggered when navigating back.
+ * @param statisticViewModel ViewModel handling statistics reset actions.
+ * @param savedPlacesViewModel ViewModel handling saved places reset actions.
+ * @param soundEnabled Whether sound effects are currently enabled.
+ * @param onSoundEnabledChanged Callback triggered when sound setting changes.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -96,6 +107,13 @@ fun SettingsScreen(
     }
 }
 
+/**
+ * Displays the app theme selection UI with radio buttons for DEVICE, LIGHT, and DARK mode.
+ *
+ * @param selectedTheme the currently selected app theme.
+ * @param onThemeSelected callback invoked when the user selects a different theme option.
+ * @param modifier optional modifier for styling and layout adjustments.
+ */
 @Composable
 fun AppThemeSetting(selectedTheme: AppTheme,
                     onThemeSelected: (AppTheme) -> Unit,

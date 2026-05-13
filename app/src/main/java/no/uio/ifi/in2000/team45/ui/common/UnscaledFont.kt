@@ -5,9 +5,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 
-// Pins font scaling to 1x for the wrapped subtree. Use on small fixed-height
-// chrome (bottom bar labels, zoom buttons) where huge system fonts would
-// otherwise overflow the container.
+/**
+ * Composable that forces a fixed font scale, ignoring the system font scaling setting.
+ *
+ * @param content Composable content that will be rendered with a fixed font scale.
+ */
 @Composable
 fun UnscaledFont(content: @Composable () -> Unit) {
     val density = LocalDensity.current

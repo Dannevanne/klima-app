@@ -20,6 +20,12 @@ import no.uio.ifi.in2000.team45.ui.map.effects.MapSavedPlacesEffect
 import no.uio.ifi.in2000.team45.ui.map.effects.MapSelectedLocationEffect
 import no.uio.ifi.in2000.team45.ui.map.effects.MapUserLocationEffect
 
+/**
+ * Main Mapbox composable that wires all map effects together.
+ *
+ * Handles camera, overlays, gestures, user location, and saved places.
+ * Acts as the central entry point for map rendering logic.
+ */
 @Composable
 fun MapContent(
     viewportState: MapViewportState,
@@ -40,6 +46,7 @@ fun MapContent(
     context: Context,
     modifier: Modifier = Modifier
 ) {
+    // The MapboxMap instance
     MapboxMap(
         modifier = modifier
             .onSizeChanged {

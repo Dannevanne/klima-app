@@ -32,6 +32,16 @@ import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team45.R
 import no.uio.ifi.in2000.team45.data.map.OverlayType
 
+/**
+ * Overlay selector component for the map, allowing the user to choose and toggle map overlays.
+ *
+ * @param activeOverlay Currently selected overlay type.
+ * @param expanded Whether the overlay selection menu is expanded.
+ * @param onExpandedChange Callback invoked when the expanded state should change.
+ * @param onOverlaySelected Callback invoked when a new overlay is selected.
+ * @param onLegendClick Callback invoked when the info button is clicked.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 fun MapOverlaySelector(
     activeOverlay: OverlayType,
@@ -111,6 +121,14 @@ fun MapOverlaySelector(
     }
 }
 
+/**
+ * Pill-shaped button showing the currently selected overlay and toggling the overlay menu.
+ *
+ * @param activeOverlay Currently selected overlay type.
+ * @param expanded Whether the overlay menu is currently expanded.
+ * @param onClick Callback invoked when the button is clicked.
+ * @param modifier Optional modifier for layout and styling.
+ */
 @Composable
 private fun OverlayPillButton(
     activeOverlay: OverlayType,
@@ -147,6 +165,13 @@ private fun OverlayPillButton(
     }
 }
 
+/**
+ * A selectable row representing an overlay option in the overlay menu.
+ *
+ * @param type Overlay type represented by this row.
+ * @param selected Whether this overlay is currently selected.
+ * @param onClick Callback invoked when the row is clicked.
+ */
 @Composable
 private fun OverlayOptionRow(
     type: OverlayType,
@@ -172,6 +197,12 @@ private fun OverlayOptionRow(
     }
 }
 
+/**
+ * Maps an overlay type to a representative emoji icon.
+ *
+ * @param type Overlay type to convert into an emoji.
+ * @return Emoji string representing the overlay type.
+ */
 internal fun overlayEmoji(type: OverlayType): String = when (type) {
     OverlayType.NONE -> "\uD83D\uDEAB"
     OverlayType.FLOOD -> "\uD83C\uDF0A"
