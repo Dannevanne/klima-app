@@ -242,4 +242,8 @@ For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE
 - Mapbox composables and plain Compose composables are different scopes. The IDE warnings listed in README.md describe the few places the two cross.
 - DataStore writes must be on the IO dispatcher; all repository write helpers are already suspend functions, so call them from `viewModelScope.launch`.
 
+## Code documentation
 
+A majority of the code including functions, classes, and enums is well documented using Kotlin KDoc-style docstrings. These docstrings are fully written and typically include all the relevant tags such as @param, @return, and other annotations that clearly describe inputs, output, and behavior. For some of the complex parts of the code, additional comments are used to explain the behavior.
+
+Some of this documentation can feel slightly redundant at times for example, when @param tags mainly repeat information that is already clear from the function signature or the name. However, this consistency is still valuable because it creates a predictable structure across the code, improves readability in larger teams, and helps tools like IDEs to present and explain a complete view of the code. Overall, even when some details may seem repetitive, the clarity and long term maintainability benefits outweigh the extra redundancy.
