@@ -93,7 +93,7 @@ Testing. JUnit 4 is the test runner. MockK is a Kotlin-friendly mocking library 
 ## APIs
 
 - **MET Frost API v0** -- climate data (stations, normals, observations)
-- **NVE flood-zone service** -- flood-zone map as overlay
+- ** NVE ** -- flood-, landslide-, avalanche-, quick clay-, and wind overlay on map 
 - **NGU** -- Radon information
 - **MapBox** -- Geographical information (map and search suggestions)
 
@@ -108,7 +108,7 @@ We use compileSdk 36 and targetSdk 36, with a minimum SDK of minSdk 24 (Android 
 
 
 ## Accessibility
-The app is built with WCAG 2.1 (levels A and AA) in mind. The app aldo uses adaptive layouts and scalable units to support varying screen sizes.
+The app is built with WCAG 2.1 (levels A and AA) in mind. The app also uses adaptive layouts and scalable units to support varying screen sizes.
 
 ## Location Permission
 The app requests access to the device's location to center the map on the
