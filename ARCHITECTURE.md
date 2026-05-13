@@ -105,6 +105,7 @@ network/   shared Ktor client (KtorClient.kt)
 The diagram shows the UI layer and data layer, the shared Ktor client, on-device storage, and the external services we depend on.
 
 ```mermaid
+%%{init: {'flowchart': {'useMaxWidth': false}}}%%
 flowchart TB
     subgraph CANVAS[" "]
         direction TB
@@ -113,18 +114,18 @@ flowchart TB
         subgraph UI["UI layer"]
             direction TB
 
-            AppNav["AppNavigation"]:::navhost
+            AppNav["AppNav"]:::navhost
 
-            OnbScreen["Onboarding<br>Screen"]:::screen
-            MapScreen["Map<br>Screen"]:::screen
-            StatScreen["Statistic<br>Screen"]:::screen
-            SavScreen["SavedPlaces<br>Screen"]:::screen
-            SetScreen["Settings<br>Screen"]:::screen
+            OnbScreen["Onboarding"]:::screen
+            MapScreen["Map"]:::screen
+            StatScreen["Statistic"]:::screen
+            SavScreen["Saved<br>Places"]:::screen
+            SetScreen["Settings"]:::screen
 
-            MapVM["Map<br>ViewModel"]:::vm
-            StatVM["Statistic<br>ViewModel"]:::vm
-            SavVM["SavedPlaces<br>ViewModel"]:::vm
-            SoundVM["Sound<br>ViewModel"]:::vm
+            MapVM["Map<br>VM"]:::vm
+            StatVM["Stat<br>VM"]:::vm
+            SavVM["Saved<br>Places<br>VM"]:::vm
+            SoundVM["Sound<br>VM"]:::vm
 
             AppNav --> OnbScreen
             AppNav --> MapScreen
@@ -142,24 +143,24 @@ flowchart TB
         subgraph DATA["Data layer"]
             direction TB
 
-            MapRepo["Map<br>Repository"]:::repo
-            MapCameraRepo["MapCamera<br>Repository"]:::repo
-            ThemeRepo["Theme<br>Preference<br>Repository"]:::repo
-            LangRepo["Language<br>Preference<br>Repository"]:::repo
-            StatRepo["Statistic<br>Repository"]:::repo
-            RecentRepo["RecentSearch<br>Repository"]:::repo
-            SavRepo["SavedPlaces<br>Repository"]:::repo
-            SoundRepo["Sound<br>Preference<br>Repository"]:::repo
-            OnbRepo["Onboarding<br>Preference<br>Repository"]:::repo
+            MapRepo["Map<br>Repo"]:::repo
+            MapCameraRepo["MapCamera<br>Repo"]:::repo
+            ThemeRepo["Theme<br>Pref<br>Repo"]:::repo
+            LangRepo["Lang<br>Pref<br>Repo"]:::repo
+            StatRepo["Stat<br>Repo"]:::repo
+            RecentRepo["Recent<br>Search<br>Repo"]:::repo
+            SavRepo["Saved<br>Places<br>Repo"]:::repo
+            SoundRepo["Sound<br>Pref<br>Repo"]:::repo
+            OnbRepo["Onb<br>Pref<br>Repo"]:::repo
 
-            MapDS["Map<br>Datasource"]:::ds
-            StatDS["Statistic<br>Datasource"]:::ds
+            MapDS["Map<br>DS"]:::ds
+            StatDS["Stat<br>DS"]:::ds
 
-            DS[("DataStore<br>Preferences")]:::store
+            DS[("DataStore")]:::store
 
             NVE@{ shape: cloud, label: "NVE" }
             NGU@{ shape: cloud, label: "NGU" }
-            Frost@{ shape: cloud, label: "MET Frost API" }
+            Frost@{ shape: cloud, label: "Frost" }
             Mapbox@{ shape: cloud, label: "Mapbox" }
 
             MapRepo --> MapDS
@@ -206,6 +207,19 @@ flowchart TB
     classDef api fill:#eceff1,stroke:#37474f,color:#000
     classDef store fill:#eceff1,stroke:#37474f,color:#000
 ```
+
+**Label legend.** The diagram uses short labels so renderers don't truncate them. Full class names:
+
+| In the diagram | Full class name |
+|---|---|
+| AppNav | `AppNavigation` |
+| Onboarding / Map / Statistic / Saved Places / Settings | `OnboardingScreen` / `MapScreen` / `StatisticScreen` / `SavedPlacesScreen` / `SettingsScreen` |
+| Map VM / Stat VM / Saved Places VM / Sound VM | `MapViewModel` / `StatisticViewModel` / `SavedPlacesViewModel` / `SoundViewModel` |
+| Map Repo / Stat Repo / Saved Places Repo / MapCamera Repo / Recent Search Repo | `MapRepository` / `StatisticRepository` / `SavedPlacesRepository` / `MapCameraRepository` / `RecentSearchRepository` |
+| Theme Pref Repo / Lang Pref Repo / Sound Pref Repo / Onb Pref Repo | `ThemePreferenceRepository` / `LanguagePreferenceRepository` / `SoundPreferenceRepository` / `OnboardingPreferenceRepository` |
+| Map DS / Stat DS | `MapDatasource` / `StatisticDatasource` |
+| DataStore | `DataStore Preferences` (AndroidX) |
+| Frost / NVE / NGU / Mapbox | MET Frost API / NVE Atlas / NGU services / Mapbox (maps + search) |
 
 Read top to bottom. `AppNavigation` is the central nav host: from it the user reaches the three main screens (Map, Statistic, SavedPlaces), the Settings screen, and the Onboarding screen on first launch. Each screen owns its ViewModel; ViewModels then call one or more repositories. `MapViewModel` is the broadest: it reaches `MapRepository` for overlays and hazard checks, `MapCameraRepository` for the last camera position, and `ThemePreferenceRepository` + `LanguagePreferenceRepository` for user-chosen theme and language. Repositories either call a datasource that makes HTTP calls to an external API via the shared `KtorClient` under `network/`, or they read and write to `DataStore Preferences` directly. The four cloud nodes are external services: NVE and NGU feed map overlays and hazard checks through `MapDatasource`; Frost (climate observations and normals) and Mapbox (geocoding, plus the in-SDK place-autocomplete client used in the search bar) feed `StatisticDatasource`. `OnboardingPreferenceRepository` is the one repository not owned by a ViewModel; `MainActivity` reads it directly to decide whether to show the Onboarding flow before the rest of the UI.
 
