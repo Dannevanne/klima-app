@@ -202,7 +202,7 @@ Requires:
   - Register at https://frost.met.no/auth/requestCredentials.html
 
 ## Warnings and errors from IDE
-The Android Studio IDE flags a number of issues across the project. The team policy is to either fix them or list them here with the reasoning for keeping them. The list below was last verified against `./gradlew :app:lintDebug` and Android Studio code analysis on 2026-05-13.
+The Android Studio IDE flags a number of issues across the project. The team policy is to either fix them or list them here with the reasoning for keeping them. The list below was last verified against `./gradlew :app:lintDebug` and Android Studio code analysis on 2026-05-14.
 
 ### Kotlin/Compose code-analysis warnings
 - **MapContent.kt** -- "Calling a Mapbox Map Composable function where a UI Composable composable was expected". The `MapEffect` blocks live inside the `MapboxMap` block, which is the canonical pattern in the Mapbox Compose extension. The IDE's general Compose scope analysis doesn't know about Mapbox's nested scopes, so it flags this. No runtime impact.
