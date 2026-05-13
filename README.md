@@ -93,7 +93,7 @@ Testing. JUnit 4 is the test runner. MockK is a Kotlin-friendly mocking library 
 ## APIs
 
 - **MET Frost API v0** -- climate data (stations, normals, observations)
-- ** NVE ** -- flood-, landslide-, avalanche-, quick clay-, and wind overlay on map 
+- **NVE** -- flood-, landslide-, avalanche-, quick clay-, and wind overlay on map 
 - **NGU** -- Radon information
 - **MapBox** -- Geographical information (map and search suggestions)
 
