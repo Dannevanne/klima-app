@@ -1,5 +1,3 @@
-import com.android.tools.r8.internal.im
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
