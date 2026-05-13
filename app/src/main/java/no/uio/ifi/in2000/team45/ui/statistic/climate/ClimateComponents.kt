@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.team45.ui.statistic.climate
 
+import java.util.Locale
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -158,7 +159,7 @@ fun OverviewCards(
             )
             OverviewStatCard(
                 label = stringResource(R.string.max_wind_gust),
-                value = if (maxWindGust != null) "${String.format("%.1f", maxWindGust)} m/s" else "-",
+                value = if (maxWindGust != null) "${String.format(Locale.getDefault(), "%.1f", maxWindGust)} m/s" else "-",
                 trend = windTrend,
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
@@ -233,7 +234,7 @@ fun OverviewStatCard(
                 }
                 val vsNorm = stringResource(R.string.trend_vs_norm)
                 Text(
-                    text = "$arrow ${String.format("%+.0f", trend.percentChange)}% $vsNorm",
+                    text = "$arrow ${String.format(Locale.getDefault(), "%+.0f", trend.percentChange)}% $vsNorm",
                     color = trendColor,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
@@ -291,17 +292,17 @@ fun TrendChart(
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = String.format("%.0f", maxVal),
+                        text = String.format(Locale.getDefault(), "%.0f", maxVal),
                         fontSize = 10.sp,
                         color = chartAxisColor()
                     )
                     Text(
-                        text = String.format("%.0f", midVal),
+                        text = String.format(Locale.getDefault(), "%.0f", midVal),
                         fontSize = 10.sp,
                         color = chartAxisColor()
                     )
                     Text(
-                        text = String.format("%.0f", minVal),
+                        text = String.format(Locale.getDefault(), "%.0f", minVal),
                         fontSize = 10.sp,
                         color = chartAxisColor()
                     )
