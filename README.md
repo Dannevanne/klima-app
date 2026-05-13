@@ -198,14 +198,34 @@ Requires:
 - **Frost client ID** in `app/src/main/res/values/frost_client_id.xml`
   - Register at https://frost.met.no/auth/requestCredentials.html
 
-## Warnings from IDE
-The project contains some warnings in the Android Studio IDE. These warnings do not affect functionality, but indicate parts of the code that could be cleaned up to improve readability and maintainability. The warning and the corresponding file are listed below:
-- MapContent.kt: "Calling a Mapbox Map Composable function where a UI Composable composable was expected" Warning due to incorrect composable usage, where a Mapbox composable is used in a context expecting a standard UI composable, indicating a mismatch in composable scope. These warnings originate from Android Studio / Kotlin Compose analysis of Mapbox-specific composable scopes. They do not affect compilation or runtime behavior, and the application functions as expected.
-- MapSavedPlacesEffect.kt: "Calling a UI Composable composable function where a Mapbox Map Composable was expected" Similar composable scope warning where a UI composable is called inside a Mapbox-specific composable context, which may lead to unexpected UI behavior. These warnings originate from Android Studio / Kotlin Compose analysis of Mapbox-specific composable scopes. They do not affect compilation or runtime behavior, and the application functions as expected.
-- MapScreen.kt: "Assigned value is never read" Warning for multiple variables (showDialog, locationName, pendingPoint) that are assigned values but never read, indicating unused or incomplete UI state handling. 
-- SavedPlacePopup.kt: "Parameter "onDismiss" is never used. (onDismiss is the contract" Warning that the onDismiss parameter is never directly used in the function body; dismissal is instead handled through map interaction, but the parameter is kept to allow external control of popup lifecycle.
-- OnBoardingScreen.kt: "Value of parameter "total" is always "OnBoardingScrenn.kt.PAGE_COUNT"" Warning that the total parameter is always equal to OnBoardingScreen.PAGE_COUNT, making it redundant and unnecessary as a parameter. 
-- ResetAppDataSection.kt: "Assigned value is never read (four are showDialog)" Warning that multiple showDialog state variables are assigned but never read, indicating unused or incomplete dialog state management in the UI logic.
+## Warnings and errors from IDE
+The Android Studio IDE flags a number of issues across the project. The team policy is to either fix them or list them here with the reasoning for keeping them. The list below was last verified against `./gradlew :app:lintDebug` and Android Studio code analysis on 2026-05-13.
+
+### Kotlin/Compose code-analysis warnings
+- **MapContent.kt** -- "Calling a Mapbox Map Composable function where a UI Composable composable was expected". The `MapEffect` blocks live inside the `MapboxMap` block, which is the canonical pattern in the Mapbox Compose extension. The IDE's general Compose scope analysis doesn't know about Mapbox's nested scopes, so it flags this. No runtime impact.
+- **MapSavedPlacesEffect.kt** -- "Calling a UI Composable composable function where a Mapbox Map Composable was expected". Mirror of the above. Same explanation: the Mapbox-specific scope is fine, the IDE's generic Compose scope analysis flags it anyway.
+- **MapScreen.kt** -- "Assigned value is never read" for `showDialog`, `locationName`, `pendingPoint`. These are remembered state variables whose writes feed downstream effects (e.g., dialog visibility flows through composition rather than a direct read). The IDE's simple read-tracking doesn't follow that path.
+- **SavedPlacePopup.kt** -- "Parameter `onDismiss` is never used". Dismissal is wired through the Mapbox annotation gesture instead of the lambda body. The parameter is kept as part of the function contract so callers can pass an explicit `onDismiss` if the dismissal mechanism changes.
+- **OnBoardingScreen.kt** -- "Value of parameter `total` is always `OnBoardingScreen.PAGE_COUNT`". Kept as a parameter so the progress indicator stays decoupled from the global page count constant.
+- **ResetAppDataSection.kt** -- "Assigned value is never read" for four `showDialog` state variables. Same shape as `MapScreen.kt` -- the values gate visibility through composition, not via direct reads.
+
+### Lint resource warnings/errors
+- **MissingDefaultResource** (error) -- `drawable-normal/safeproperty_logo_sharp.xml`, `drawable-normal/safeproperty_logo_v6.png`. The `-normal` qualifier matches the screen-size class of our target devices (phones). The app is not designed for `xlarge` tablets, so the missing fallback is intentional.
+- **MissingTranslation** (error, ~22) -- English strings without Sami translations (`building_in_hazard_areas`, `avalanche_warnings`, onboarding strings, zoom labels, etc.). Sami support is best-effort; coverage is incomplete and a planned follow-up. The base English text falls back when a Sami translation is missing.
+- **StringFormatInvalid** (error) -- `legend_radon_cat_red` in `values-nb` and `values-nn` ("Rødt -- høy aktsomhet (≥20% av boliger ...)"). Lint reads `% a` as a malformed format specifier. The string is rendered directly via `stringResource`, not through `String.format`, so the literal `%` displays correctly. Escaping to `%%` would render two `%` characters when shown directly.
+- **PluralsCandidate** (4) -- `months_count`, `years_count`, `days_per_year`, `max_saved_places_message`. The app always shows counts of two or more (e.g., "12 months", "30 years"), so the singular form never appears. Switching to `<plurals>` would add complexity without changing what users see.
+- **Untranslatable** (4) -- `language_bokmal` / `language_nynorsk` are translated in `values-nb` and `values-nn` even though they're marked `translatable="false"` in `values/`. The values are the labels shown in the Settings language picker, and we want each option to render in its own language consistently.
+- **UnusedResources** (~33) -- color tokens from the Compose template (`purple_200`, `teal_700`, etc.), API name strings, legend body strings, an unused sound file. Removing them piecemeal is risky because lint's translation completeness checks treat absence as `MissingTranslation`. A consolidated cleanup pass is a planned follow-up.
+- **TypographyOther** (3) -- `average_annual_temperature` ("Average annual temperature (C)") and its translations. The `(C)` means Celsius, not copyright. We keep the parenthesised unit because the strings serve as chart labels where the unit needs to follow the metric name.
+- **IconLocation** (3) -- `gb_flag.png`, `norway_flag.png`, `sami_flag.png` live in `res/drawable/`. They're rendered at a fixed small size in the Settings language picker, so density-specific variants would not improve quality.
+- **VectorRaster** -- `safeproperty_logo_sharp.xml` declares a 400dp width. This is the main launcher/splash logo and is intentionally large; lint's 200dp guideline is for inline icons.
+- **ButtonCase / Typos** -- `string/ok` is "Ok". The team-approved capitalisation matches the rest of the dialog vocabulary in the app.
+
+### Lint Gradle warnings
+- **AndroidGradlePluginVersion** (2) -- gradle 9.2.1 and AGP 9.0.1 are pinned to the versions recommended by the IN2000 course materials. Upgrading is deferred until course exit.
+- **GradleDependency** (5) -- `datastore-preferences`, `core-ktx`, `activity-compose`, `compose-bom`, `navigation-compose` are pinned to versions verified in the course environment.
+- **NewerVersionAvailable** (6) -- Ktor 3.4.0, accompanist-permissions 0.35.0-alpha, kotlinx-coroutines-test 1.10.2, kotlin compose plugin 2.0.21 are pinned likewise. Upgrades are deferred until course exit to avoid mid-project Kotlin/AGP churn.
+- **UseTomlInstead** (~20) -- several Mapbox SDK modules, Ktor modules, Coil, accompanist, mockk, browser, appcompat dependencies are declared inline in `app/build.gradle.kts` instead of via `libs.versions.toml`. Migrating them to the version catalog is a planned follow-up; doing it during the course adds review noise without functional value.
 
 ## Note: emulator keyboard setup
 
