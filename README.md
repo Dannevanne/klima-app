@@ -112,6 +112,9 @@ The app is built with WCAG 2.1 (levels A and AA) in mind. The app also uses adap
 ## Network behaviour
 The app handles connectivity loss gracefully. If the network becomes unavailable, the user is informed through an error message rather than experiencing a crash or blank screen. Any content that was already loaded before the connection was lost remains visible, so the user can continue navigating the app without a live connection.
 
+## Lifecycle and state persistence
+The app supports the Android Activity Lifecycle and handles configuration changes such as screen rotation without losing important data. State is preserved when the device rotates, the user navigates between screens, or the app is interrupted or temporarily closed. This ensures a stable user experience and prevents important information from disappearing during lifecycle events.
+
 ## Location Permission
 The app requests access to the device's location to center the map on the
 user's current position. The permission prompt is handled by the OS via the standard Android runtime permission flow. The app functions
