@@ -105,70 +105,74 @@ network/   shared Ktor client (KtorClient.kt)
 The diagram shows the UI layer and data layer, the shared Ktor client, on-device storage, and the external services we depend on.
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'background':'#ffffff', 'mainBkg':'#ffffff', 'clusterBkg':'#ffffff', 'edgeLabelBackground':'#ffffff', 'lineColor':'#444444'}}}%%
 flowchart TB
-    %% =========== UI LAYER ===========
-    subgraph UI["UI layer"]
+    %% =========== OUTER WHITE CANVAS ===========
+    subgraph CANVAS[" "]
         direction TB
 
-        AppNav["AppNavigation"]:::navhost
+        %% =========== UI LAYER ===========
+        subgraph UI["UI layer"]
+            direction TB
 
-        OnbScreen["OnboardingScreen"]:::screen
-        MapScreen["MapScreen"]:::screen
-        StatScreen["StatisticScreen"]:::screen
-        SavScreen["SavedPlacesScreen"]:::screen
-        SetScreen["SettingsScreen"]:::screen
+            AppNav["AppNavigation"]:::navhost
 
-        MapVM["MapViewModel"]:::vm
-        StatVM["StatisticViewModel"]:::vm
-        SavVM["SavedPlacesViewModel"]:::vm
-        SoundVM["SoundViewModel"]:::vm
+            OnbScreen["OnboardingScreen"]:::screen
+            MapScreen["MapScreen"]:::screen
+            StatScreen["StatisticScreen"]:::screen
+            SavScreen["SavedPlacesScreen"]:::screen
+            SetScreen["SettingsScreen"]:::screen
 
-        AppNav --> OnbScreen
-        AppNav --> MapScreen
-        AppNav --> StatScreen
-        AppNav --> SavScreen
-        AppNav --> SetScreen
+            MapVM["MapViewModel"]:::vm
+            StatVM["StatisticViewModel"]:::vm
+            SavVM["SavedPlacesViewModel"]:::vm
+            SoundVM["SoundViewModel"]:::vm
 
-        MapScreen --> MapVM
-        StatScreen --> StatVM
-        SavScreen --> SavVM
-        SetScreen --> SoundVM
+            AppNav --> OnbScreen
+            AppNav --> MapScreen
+            AppNav --> StatScreen
+            AppNav --> SavScreen
+            AppNav --> SetScreen
+
+            MapScreen --> MapVM
+            StatScreen --> StatVM
+            SavScreen --> SavVM
+            SetScreen --> SoundVM
+        end
+
+        %% =========== DATA LAYER ===========
+        subgraph DATA["Data layer"]
+            direction TB
+
+            MapRepo["MapRepository"]:::repo
+            CamRepo["MapCameraRepository"]:::repo
+            StatRepo["StatisticRepository"]:::repo
+            RecentRepo["RecentSearchRepository"]:::repo
+            SavRepo["SavedPlacesRepository"]:::repo
+            ThemeRepo["ThemePreferenceRepository"]:::repo
+            LangRepo["LanguagePreferenceRepository"]:::repo
+            SoundRepo["SoundPreferenceRepository"]:::repo
+            OnbRepo["OnboardingPreferenceRepository"]:::repo
+
+            MapDS["MapDatasource"]:::ds
+            StatDS["StatisticDatasource"]:::ds
+            InfoDS["InfoDatasource"]:::ds
+
+            Ktor["KtorClient"]:::net
+
+            MapRepo --> MapDS
+            StatRepo --> StatDS
+            MapDS --> Ktor
+            StatDS --> Ktor
+            InfoDS --> Ktor
+        end
+
+        %% =========== EXTERNAL (inside canvas) ===========
+        Frost(("MET Frost API")):::ext
+        NVE(("NVE")):::ext
+        NGU(("NGU")):::ext
+        Mapbox(("Mapbox")):::ext
+        DS[("DataStore Preferences")]:::store
     end
-
-    %% =========== DATA LAYER ===========
-    subgraph DATA["Data layer"]
-        direction TB
-
-        MapRepo["MapRepository"]:::repo
-        CamRepo["MapCameraRepository"]:::repo
-        StatRepo["StatisticRepository"]:::repo
-        RecentRepo["RecentSearchRepository"]:::repo
-        SavRepo["SavedPlacesRepository"]:::repo
-        ThemeRepo["ThemePreferenceRepository"]:::repo
-        LangRepo["LanguagePreferenceRepository"]:::repo
-        SoundRepo["SoundPreferenceRepository"]:::repo
-        OnbRepo["OnboardingPreferenceRepository"]:::repo
-
-        MapDS["MapDatasource"]:::ds
-        StatDS["StatisticDatasource"]:::ds
-        InfoDS["InfoDatasource"]:::ds
-
-        Ktor["KtorClient"]:::net
-
-        MapRepo --> MapDS
-        StatRepo --> StatDS
-        MapDS --> Ktor
-        StatDS --> Ktor
-        InfoDS --> Ktor
-    end
-
-    %% =========== EXTERNAL ===========
-    Frost(("MET Frost API")):::ext
-    NVE(("NVE")):::ext
-    NGU(("NGU")):::ext
-    Mapbox(("Mapbox")):::ext
-    DS[("DataStore Preferences")]:::store
 
     %% UI to Data edges
     MapVM --> MapRepo
@@ -198,7 +202,10 @@ flowchart TB
     SoundRepo --> DS
     OnbRepo --> DS
 
-    %% Subgraph backgrounds: no grey fill, just a clear border per layer
+    %% Outer canvas: white fill, no visible border (covers full diagram bounds)
+    style CANVAS fill:#ffffff,stroke:#ffffff
+
+    %% Inner layer subgraphs: white fill, colored border per layer
     style UI fill:#ffffff,stroke:#2e7d32,stroke-width:2px
     style DATA fill:#ffffff,stroke:#0d47a1,stroke-width:2px
 
