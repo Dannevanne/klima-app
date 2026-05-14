@@ -145,7 +145,7 @@
     <string name="legend_avalanche_what">Awareness areas for snow avalanches, based on terrain modelling.</string>
     <string name="legend_avalanche_cat_polygon">Marked area — terrain where a snow avalanche is possible</string>
     <string name="legend_avalanche_caveat">Not a measured forecast — a "could happen" zone, not a "will happen" one.</string>
-    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
+    <string name="legend_avalanche_src">NVE SnøskredAktsomhet</string>
 
     <string name="legend_none_what">No overlay is selected.</string>
     <string name="legend_none_cat_pick">Pick a layer from the pill to see hazard data on the map</string>
