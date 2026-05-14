@@ -43,9 +43,16 @@ The app has three main screens accessible from a bottom navigation bar:
   used are listed under the overview
 
 ### Saved Places (middle button)
-- See risk assessment for places saved in the map screen
-- Jump to saved places in either the map or the statistics screen to see in-depth climate statistics
-- Receive precautionary measures based on risk assessment profile
+- One card per saved location (max 4), showing the address and the
+  place's overall risk level (High, Moderate, Low or Unknown,
+  color-coded red, orange, green, grey)
+- Each card expands to per-hazard advice (flood, landslide, quick
+  clay, avalanche, wind, radon). Each hazard section has bullet-point
+  measures and a link out to the source agency (NVE, DiBK, DSA, DSB,
+  Varsom)
+- A pin icon on the card jumps to the place on the map; a chart icon
+  jumps to climate statistics for that place
+- The list persists across launches via DataStore
 
 ## Tech stack
 
