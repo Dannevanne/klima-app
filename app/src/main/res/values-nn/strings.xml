@@ -122,7 +122,7 @@
     <string name="legend_avalanche_what">Aktsomheitsområde for snøskred, basert på terrengmodellering.</string>
     <string name="legend_avalanche_cat_polygon">Markert område — terreng der eit snøskred er mogleg</string>
     <string name="legend_avalanche_caveat">Ikkje ei målt prognose — eit "kan skje"-område, ikkje eit "vil skje"-område.</string>
-    <string name="legend_avalanche_src">NVE SnoskredAktsomhet</string>
+    <string name="legend_avalanche_src">NVE SnøskredAktsomhet</string>
 
     <string name="legend_none_what">Ingen lag er valt.</string>
     <string name="legend_none_cat_pick">Vel eit lag frå pilla for å sjå faredata på kartet</string>
