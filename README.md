@@ -54,6 +54,20 @@ The app has three main screens accessible from a bottom navigation bar:
   jumps to climate statistics for that place
 - The list persists across launches via DataStore
 
+### Other screens
+Reached from a hamburger menu in the top bar of every main screen.
+
+- **Onboarding**: shown on first launch (four pages introducing the
+  map, saved places and statistics). Reachable later from the help
+  screen
+- **Settings**: app theme (device, light, dark), language (English,
+  Norwegian Bokmål, Norwegian Nynorsk, Sami), sound effects toggle,
+  reset app data
+- **Info**: lists the data sources used (NVE, NGU, Frost, Mapbox and
+  the safety-information agencies) with links to their websites
+- **Help**: per-screen tips covering the search bar, the save flow,
+  the overlay legend and the climate statistics period chips
+
 ## Tech stack
 
 - Language: Kotlin
