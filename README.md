@@ -27,9 +27,20 @@ The app has three main screens accessible from a bottom navigation bar:
 - Zoom in/out buttons on the right side
 
 ### Climate statistics (right button)
-- Search for a weather station by name
-- Shows climate normals (30-year averages) for temperature, precipitation and wind
-- Falls back to historical observations (2010-2024) when normals are not available
+- Search by place name (Mapbox autocomplete) or pick a Frost station
+  directly from the suggestions
+- Once a station is picked, the screen shows monthly and annual data
+  for temperature, precipitation, peak wind gust, peak snow depth,
+  and number of days per year with >= 20 mm rain ("extreme precipitation")
+- Time-period chips switch between 5, 10, 20, 30 and 50 years. Charts
+  and trend arrows (compared to the 30-year climate normals) update
+  with the chosen window
+- When normals are not available for a station, the screen falls back
+  to historical observations from 2010-2024
+- `StationPicker` assigns elements to the closest station with enough
+  history. If no single station covers everything for 50+ years, it
+  splits per element (see Algorithms below). The stations actually
+  used are listed under the overview
 
 ### Saved Places (middle button)
 - See risk assessment for places saved in the map screen
