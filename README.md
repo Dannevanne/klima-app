@@ -1,8 +1,9 @@
 # Team 45 -- Naturhendelser
 
 Android app for Case 3 (Naturhendelser) in IN2000 at UiO.
-The app lets homeowners and cabin owners check climate risk (flood, landslide)
-and climate statistics for their area.
+The app lets homeowners and cabin owners check climate risk
+(flood, quick clay, radon, wind, landslide, avalanche) and
+climate statistics for their area.
 
 ## Features
 
