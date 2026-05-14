@@ -48,7 +48,7 @@ UI / Compose. Jetpack Compose is our UI toolkit. The `compose-bom` pins consiste
 - `androidx.activity:activity-compose`
 - `androidx.appcompat:appcompat` 1.7.1
 
-Navigation and lifecycle. Jetpack Navigation drives the bottom-bar routing between Map, Statistics and Saved Places screens. `lifecycle-runtime-ktx` adds Kotlin coroutine support to `ViewModel`s (`viewModelScope`).
+Navigation and lifecycle. Jetpack Navigation drives the bottom-bar routing between Map, Statistics and Saved Places screens. `lifecycle-runtime-ktx` provides Kotlin extensions for AndroidX lifecycle components. `viewModelScope`, used in our ViewModels, is pulled in transitively via `activity-compose`.
 - `androidx.navigation:navigation-compose`
 - `androidx.navigation:navigation-runtime-ktx`
 - `androidx.lifecycle:lifecycle-runtime-ktx`
@@ -156,29 +156,29 @@ functions in a controlled coroutine scope via `runTest`. All tests live in
 ./gradlew testDebugUnitTest
 ```
 
-There are 14 tests across six classes:
+There are 47 tests across seven classes:
 
 | Class | Tests | What is covered |
 |---|---|---|
-| `StatisticDatasourceTest` | 4 | JSON parsing of Frost stations: single station, multiple stations, empty list, and that malformed entries are skipped |
-| `StatisticRepositoryTest` | 1 | Mocks the datasource and verifies that `getClimateStats` falls back to climate normals when available |
+| `StatisticDatasourceTest` | 9 | JSON parsing of Frost station responses and Mapbox geocode features (empty, malformed, missing fields) |
+| `StatisticRepositoryTest` | 2 | Mocks the datasource and verifies that `getClimateStats` uses normals when available |
 | `StatisticViewModelTest` | 1 | Mocks `Application` and checks that `searchStations` sets `uiState` to `Loading` |
-| `MapDatasourceTest` | 5 | URL construction for each overlay type (flood, radon, quick clay, landslide, wind) |
+| `MapDatasourceTest` | 6 | URL construction for each overlay type (flood, radon, quick clay, landslide, wind, avalanche) and that bbox values are included |
 | `MapRepositoryTest` | 2 | Verifies that the repository delegates correctly to the datasource |
-| `ExampleUnitTest` | 1 | Android Studio default — can be removed |
+| `StationPickerTest` | 18 | Single-station vs split-per-element selection, history thresholds, edge cases (empty inputs, ties, missing availability) |
+| `PlaceSelectorTest` | 9 | Place-selection logic for the statistics search-result list |
 
-**12 tests pass, 2 fail.** Both failures are pre-existing on `main`:
+**46 tests pass, 1 fails.** The failure is pre-existing on `main`:
 
-- `StatisticViewModelTest` — fails because `StatisticViewModel` calls
-  `PlaceAutocomplete.create` in `init`, which requires the Android runtime
-  and is not available in unit tests.
-- `MapRepositoryTest.testGetOverlayUrlAllTypesReturnNonEmpty` — iterates over
-  `OverlayType.entries` including `NONE`, and `buildOverlayURL` intentionally
-  throws for `NONE`.
+- `StatisticViewModelTest.testSearchStationsShouldSetLoadingState` — fails
+  because `StatisticViewModel` calls `PlaceAutocomplete.create()` as a
+  property initializer, which requires the Android runtime and is not
+  available in unit tests.
 
 **Not covered:** The `androidTest` folder contains only the Android Studio
-default. `SavedPlacesViewModel` and `MapViewModel` are not unit tested due to
-their Mapbox and DataStore dependencies requiring the Android runtime.
+default (`ExampleInstrumentedTest`). `SavedPlacesViewModel` and `MapViewModel`
+are not unit tested due to their Mapbox and DataStore dependencies requiring
+the Android runtime.
   
 ## Location Restriction Using GeoJSON Boundary Data
 The application only allows saving locations within Norway, based on GeoJSON boundary data. This prevents users from saving areas without available underlying data and ensures valid and consistent risk assessments. Link to the repo used: [https://github.com/georgique/world-geojson](https://raw.githubusercontent.com/georgique/world-geojson/refs/heads/develop/countries/norway.json).
@@ -214,8 +214,6 @@ The Android Studio IDE flags a number of issues across the project. The team pol
 
 ### Lint resource warnings/errors
 - **MissingDefaultResource** (error) -- `drawable-normal/safeproperty_logo_sharp.xml`, `drawable-normal/safeproperty_logo_v6.png`. The `-normal` qualifier matches the screen-size class of our target devices (phones). The app is not designed for `xlarge` tablets, so the missing fallback is intentional.
-- **DefaultLocale** (5) -- `String.format(...)` calls in `ClimateComponents.kt` without an explicit locale. Open PR #428 passes `Locale.getDefault()` explicitly; runtime behaviour is unchanged.
-- **RedundantLabel** -- `android:label` on `MainActivity` duplicates the application label. Open PR #429 drops it.
 - **PluralsCandidate** (4) -- `months_count`, `years_count`, `days_per_year`, `max_saved_places_message`. The app always shows counts of two or more (e.g., "12 months", "30 years"), so the singular form never appears. Switching to `<plurals>` would add complexity without changing what users see.
 - **Untranslatable** (4) -- `language_bokmal` / `language_nynorsk` are translated in `values-nb` and `values-nn` even though they're marked `translatable="false"` in `values/`. The values are the labels shown in the Settings language picker, and we want each option to render in its own language consistently.
 - **UnusedResources** (~33) -- color tokens from the Compose template (`purple_200`, `teal_700`, etc.), API name strings, legend body strings, an unused sound file. Removing them piecemeal is risky because lint's translation completeness checks treat absence as `MissingTranslation`. A consolidated cleanup pass is a planned follow-up.
