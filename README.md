@@ -10,9 +10,21 @@ climate statistics for their area.
 The app has three main screens accessible from a bottom navigation bar:
 
 ### Map (left button)
-- Mapbox map of Norway
-- NVE flood-zone overlay rendered on top of the map
-- The overlay updates dynamically as the user moves the map
+- Mapbox base map of Norway
+- Six hazard overlays from NVE and NGU, picked from a bottom-left
+  pill: flood, quick clay, radon, wind, landslide, avalanche. A
+  "no overlay" option turns the layer off
+- Each overlay has its own minimum zoom (e.g. flood activates at 11.5,
+  avalanche at 10). The overlay image re-fetches as the camera moves
+- An info button next to the pill opens a legend sheet that explains
+  what the colors mean and names the source dataset
+- Long-press on the map opens a save dialog that adds the spot to
+  Saved Places (up to 4 places)
+- A search bar at the top accepts a place name (Mapbox autocomplete)
+  and recenters the map
+- A location button on the bottom-right centers on the user. The app
+  works fully without granting location access
+- Zoom in/out buttons on the right side
 
 ### Climate statistics (right button)
 - Search for a weather station by name
