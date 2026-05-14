@@ -1,27 +1,72 @@
 # Team 45 -- Naturhendelser
 
 Android app for Case 3 (Naturhendelser) in IN2000 at UiO.
-The app lets homeowners and cabin owners check climate risk (flood, landslide)
-and climate statistics for their area.
+The app lets homeowners and cabin owners check climate risk
+(flood, quick clay, radon, wind, landslide, avalanche) and
+climate statistics for their area.
 
 ## Features
 
 The app has three main screens accessible from a bottom navigation bar:
 
 ### Map (left button)
-- Mapbox map of Norway
-- NVE flood-zone overlay rendered on top of the map
-- The overlay updates dynamically as the user moves the map
+- Mapbox base map of Norway
+- Six hazard overlays from NVE and NGU, picked from a bottom-left
+  pill: flood, quick clay, radon, wind, landslide, avalanche. A
+  "no overlay" option turns the layer off
+- Each overlay has its own minimum zoom (e.g. flood activates at 11.5,
+  avalanche at 10). The overlay image re-fetches as the camera moves
+- An info button next to the pill opens a legend sheet that explains
+  what the colors mean and names the source dataset
+- Long-press on the map opens a save dialog that adds the spot to
+  Saved Places (up to 4 places)
+- A search bar at the top accepts a place name (Mapbox autocomplete)
+  and recenters the map
+- A location button on the bottom-right centers on the user. The app
+  works fully without granting location access
+- Zoom in/out buttons on the right side
 
 ### Climate statistics (right button)
-- Search for a weather station by name
-- Shows climate normals (30-year averages) for temperature, precipitation and wind
-- Falls back to historical observations (2010-2024) when normals are not available
+- Search by place name (Mapbox autocomplete) or pick a Frost station
+  directly from the suggestions
+- Once a station is picked, the screen shows monthly and annual data
+  for temperature, precipitation, peak wind gust, peak snow depth,
+  and number of days per year with >= 20 mm rain ("extreme precipitation")
+- Time-period chips switch between 5, 10, 20, 30 and 50 years. Charts
+  and trend arrows (compared to the 30-year climate normals) update
+  with the chosen window
+- When normals are not available for a station, the screen falls back
+  to historical observations from 2010-2024
+- `StationPicker` assigns elements to the closest station with enough
+  history. If no single station covers everything for 50+ years, it
+  splits per element (see Algorithms below). The stations actually
+  used are listed under the overview
 
 ### Saved Places (middle button)
-- See risk assessment for places saved in the map screen
-- Jump to saved places in either the map or the statistics screen to see in-depth climate statistics
-- Receive precautionary measures based on risk assessment profile
+- One card per saved location (max 4), showing the address and the
+  place's overall risk level (High, Moderate, Low or Unknown,
+  color-coded red, orange, green, grey)
+- Each card expands to per-hazard advice (flood, landslide, quick
+  clay, avalanche, wind, radon). Each hazard section has bullet-point
+  measures and a link out to the source agency (NVE, DiBK, DSA, DSB,
+  Varsom)
+- A pin icon on the card jumps to the place on the map; a chart icon
+  jumps to climate statistics for that place
+- The list persists across launches via DataStore
+
+### Other screens
+Reached from a hamburger menu in the top bar of every main screen.
+
+- **Onboarding**: shown on first launch (four pages introducing the
+  map, saved places and statistics). Reachable later from the help
+  screen
+- **Settings**: app theme (device, light, dark), language (English,
+  Norwegian Bokmål, Norwegian Nynorsk, Sami), sound effects toggle,
+  reset app data
+- **Info**: lists the data sources used (NVE, NGU, Frost, Mapbox and
+  the safety-information agencies) with links to their websites
+- **Help**: per-screen tips covering the search bar, the save flow,
+  the overlay legend and the climate statistics period chips
 
 ## Tech stack
 
