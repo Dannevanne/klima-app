@@ -156,29 +156,29 @@ functions in a controlled coroutine scope via `runTest`. All tests live in
 ./gradlew testDebugUnitTest
 ```
 
-There are 14 tests across six classes:
+There are 47 tests across seven classes:
 
 | Class | Tests | What is covered |
 |---|---|---|
-| `StatisticDatasourceTest` | 4 | JSON parsing of Frost stations: single station, multiple stations, empty list, and that malformed entries are skipped |
-| `StatisticRepositoryTest` | 1 | Mocks the datasource and verifies that `getClimateStats` falls back to climate normals when available |
+| `StatisticDatasourceTest` | 9 | JSON parsing of Frost station responses and Mapbox geocode features (empty, malformed, missing fields) |
+| `StatisticRepositoryTest` | 2 | Mocks the datasource and verifies that `getClimateStats` uses normals when available |
 | `StatisticViewModelTest` | 1 | Mocks `Application` and checks that `searchStations` sets `uiState` to `Loading` |
-| `MapDatasourceTest` | 5 | URL construction for each overlay type (flood, radon, quick clay, landslide, wind) |
+| `MapDatasourceTest` | 6 | URL construction for each overlay type (flood, radon, quick clay, landslide, wind, avalanche) and that bbox values are included |
 | `MapRepositoryTest` | 2 | Verifies that the repository delegates correctly to the datasource |
-| `ExampleUnitTest` | 1 | Android Studio default — can be removed |
+| `StationPickerTest` | 18 | Single-station vs split-per-element selection, history thresholds, edge cases (empty inputs, ties, missing availability) |
+| `PlaceSelectorTest` | 9 | Place-selection logic for the statistics search-result list |
 
-**12 tests pass, 2 fail.** Both failures are pre-existing on `main`:
+**46 tests pass, 1 fails.** The failure is pre-existing on `main`:
 
-- `StatisticViewModelTest` — fails because `StatisticViewModel` calls
-  `PlaceAutocomplete.create` in `init`, which requires the Android runtime
-  and is not available in unit tests.
-- `MapRepositoryTest.testGetOverlayUrlAllTypesReturnNonEmpty` — iterates over
-  `OverlayType.entries` including `NONE`, and `buildOverlayURL` intentionally
-  throws for `NONE`.
+- `StatisticViewModelTest.testSearchStationsShouldSetLoadingState` — fails
+  because `StatisticViewModel` calls `PlaceAutocomplete.create()` as a
+  property initializer, which requires the Android runtime and is not
+  available in unit tests.
 
 **Not covered:** The `androidTest` folder contains only the Android Studio
-default. `SavedPlacesViewModel` and `MapViewModel` are not unit tested due to
-their Mapbox and DataStore dependencies requiring the Android runtime.
+default (`ExampleInstrumentedTest`). `SavedPlacesViewModel` and `MapViewModel`
+are not unit tested due to their Mapbox and DataStore dependencies requiring
+the Android runtime.
   
 ## Location Restriction Using GeoJSON Boundary Data
 The application only allows saving locations within Norway, based on GeoJSON boundary data. This prevents users from saving areas without available underlying data and ensures valid and consistent risk assessments. Link to the repo used: [https://github.com/georgique/world-geojson](https://raw.githubusercontent.com/georgique/world-geojson/refs/heads/develop/countries/norway.json).
