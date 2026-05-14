@@ -48,7 +48,7 @@ UI / Compose. Jetpack Compose is our UI toolkit. The `compose-bom` pins consiste
 - `androidx.activity:activity-compose`
 - `androidx.appcompat:appcompat` 1.7.1
 
-Navigation and lifecycle. Jetpack Navigation drives the bottom-bar routing between Map, Statistics and Saved Places screens. `lifecycle-runtime-ktx` adds Kotlin coroutine support to `ViewModel`s (`viewModelScope`).
+Navigation and lifecycle. Jetpack Navigation drives the bottom-bar routing between Map, Statistics and Saved Places screens. `lifecycle-runtime-ktx` provides Kotlin extensions for AndroidX lifecycle components. `viewModelScope`, used in our ViewModels, is pulled in transitively via `activity-compose`.
 - `androidx.navigation:navigation-compose`
 - `androidx.navigation:navigation-runtime-ktx`
 - `androidx.lifecycle:lifecycle-runtime-ktx`
