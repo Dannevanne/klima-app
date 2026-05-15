@@ -105,6 +105,47 @@ We picked manual DI because the dependency graph is small. Hilt would
 add an annotation processor and Kapt config without payoff at this
 scale.
 
+## Network and API communication
+
+All HTTP traffic goes through one shared Ktor client.
+`network/KtorClient.kt` is an `object` that builds a single
+`HttpClient` on the CIO engine with the `ContentNegotiation` plugin and
+a lenient `kotlinx.serialization` JSON config (`ignoreUnknownKeys`,
+`isLenient`). `StatisticDatasource` and `MapDatasource` import this
+client instead of constructing their own, so the engine, timeouts and
+JSON setup exist in one place.
+
+### Frost authentication
+
+`StatisticDatasource` calls the MET Frost API for stations, climate
+normals and observations. Frost uses HTTP Basic auth. The datasource
+builds the header in `authHeader()`: the Frost client ID is the
+username, the password is empty, and the pair is Base64-encoded into an
+`Authorization: Basic ...` header sent on every request. The Mapbox
+geocoding endpoint, called from the same datasource, takes its access
+token as a query parameter instead.
+
+The app calls Frost directly rather than through the IFI proxy. Frost
+is a public MET API with its own credentials, so routing through the
+proxy would add a network hop without granting access the client ID
+does not already provide. The Frost client ID and Mapbox token live in
+`res/values/frost_client_id.xml` and
+`res/values/mapbox_access_token.xml`, both kept out of version control.
+
+### Asynchronous calls
+
+Every datasource network function is a `suspend` function. The Ktor CIO
+engine is coroutine-based and non-blocking: a `get()` call suspends the
+coroutine rather than blocking the thread it runs on. ViewModels start
+these calls inside `viewModelScope`, keep the resulting `Job`, and
+cancel it when the user types a new query or leaves the screen (see
+`searchJob` and `climateJob` in `StatisticViewModel`). One spot uses an
+explicit dispatcher: `MapBitmapLoader.makeBitmap()` wraps overlay-image
+decoding in `withContext(Dispatchers.IO)`, since bitmap decoding is
+blocking work the Ktor engine does not handle. DataStore reads and
+writes are suspend functions that the DataStore library runs off the
+main thread.
+
 ## Object-oriented principles
 
 ### Low coupling
