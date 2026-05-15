@@ -105,6 +105,87 @@ We picked manual DI because the dependency graph is small. Hilt would
 add an annotation processor and Kapt config without payoff at this
 scale.
 
+## Network and API communication
+
+All HTTP traffic goes through one shared Ktor client.
+`network/KtorClient.kt` is an `object` that builds a single
+`HttpClient` on the CIO engine with the `ContentNegotiation` plugin and
+a lenient `kotlinx.serialization` JSON config (`ignoreUnknownKeys`,
+`isLenient`). `StatisticDatasource` and `MapDatasource` import this
+client instead of constructing their own, so the engine, timeouts and
+JSON setup exist in one place.
+
+### Frost authentication
+
+`StatisticDatasource` calls the MET Frost API for stations, climate
+normals and observations. Frost uses HTTP Basic auth. The datasource
+builds the header in `authHeader()`: the Frost client ID is the
+username, the password is empty, and the pair is Base64-encoded into an
+`Authorization: Basic ...` header sent on every request. The Mapbox
+geocoding endpoint, called from the same datasource, takes its access
+token as a query parameter instead.
+
+The app calls Frost directly rather than through the IFI proxy. Frost
+is a public MET API with its own credentials, so routing through the
+proxy would add a network hop without granting access the client ID
+does not already provide. The Frost client ID and Mapbox token live in
+`res/values/frost_client_id.xml` and
+`res/values/mapbox_access_token.xml`, both kept out of version control.
+
+### Asynchronous calls
+
+Every datasource network function is a `suspend` function. The Ktor CIO
+engine is coroutine-based and non-blocking: a `get()` call suspends the
+coroutine rather than blocking the thread it runs on. ViewModels start
+these calls inside `viewModelScope`, keep the resulting `Job`, and
+cancel it when the user types a new query or leaves the screen (see
+`searchJob` and `climateJob` in `StatisticViewModel`). One spot uses an
+explicit dispatcher: `MapBitmapLoader.makeBitmap()` wraps overlay-image
+decoding in `withContext(Dispatchers.IO)`, since bitmap decoding is
+blocking work the Ktor engine does not handle. DataStore reads and
+writes are suspend functions that the DataStore library runs off the
+main thread.
+
+## Error handling
+
+Errors are handled at three levels: the datasource contains them, the
+ViewModel turns them into state, and the UI renders that state.
+
+### Datasource
+
+Every network call in `StatisticDatasource` and `MapDatasource` runs
+inside a `try`/`catch (e: Exception)`. On failure the datasource logs
+the cause with `Log.e` and returns a safe empty value: an empty list,
+an empty map, or `null`. A non-200 HTTP status is treated the same way.
+A datasource never throws to its caller and never returns a partly
+parsed result. This keeps a dropped connection or a malformed response
+from crashing the app.
+
+### ViewModel and UiState
+
+The statistics screen models its state as a sealed interface,
+`StatisticUiState`, with `Idle`, `Loading`, `StationResults`,
+`PlaceResults`, `ClimateData` and `Error` cases. `StatisticViewModel`
+wraps each repository call in a `try`/`catch`. On an exception it sets
+`uiState` to `StatisticUiState.Error`, carrying a localized message
+from a string resource (`error_search_failed`, `error_fetch_data` and
+similar). An empty result that is not itself an exception (no station
+found for the query) also maps to `Error`. `CancellationException` is
+re-thrown rather than shown: a search the user has already replaced
+should not paint an error.
+
+### UI
+
+`StatisticContent` is a `when` over `StatisticUiState`. The `Error`
+case renders `ErrorContent`, a centered message in the Material 3
+`error` color with a "Try again" button that returns the screen to its
+idle search state. Connectivity has a separate path: `isOnline()` in
+`NoInternetConnection.kt` registers a `ConnectivityManager` callback
+and exposes the result as Compose state. `AppNavigation` reads it and
+shows a "no internet connection" banner above the content while the
+device is offline, so the user sees why a fetch failed instead of a
+bare error message.
+
 ## Object-oriented principles
 
 ### Low coupling
@@ -264,6 +345,49 @@ For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE
 - The `StationPicker` logic in `data/statistic/utils` is the trickiest part of the app. Test changes against both Oslo (single Blindern station) and Stavanger (multi-station). See [README.md](README.md).
 - Mapbox composables and plain Compose composables are different scopes. The IDE warnings listed in README.md describe the few places the two cross.
 - DataStore writes must be on the IO dispatcher; all repository write helpers are already suspend functions, so call them from `viewModelScope.launch`.
+
+## Accessibility and adaptive layout
+
+### Accessibility
+
+The app targets WCAG 2.1 levels A and AA. The Compose tools used for it:
+
+- **Content descriptions.** `Icon` and `Image` composables that carry
+  meaning take a `contentDescription` from a string resource, so
+  TalkBack can announce them. Purely decorative icons pass
+  `contentDescription = null` so TalkBack skips them instead of reading
+  noise.
+- **Semantics modifier.** Where the describable element is not an
+  `Icon` or `Image`, `Modifier.semantics { contentDescription = ... }`
+  attaches the label directly (for example the buttons in
+  `MapZoomControls`).
+- **Material 3 color roles.** `Team45Theme` defines a full light and
+  dark `colorScheme`. UI code reads `MaterialTheme.colorScheme` roles
+  (`onSurface`, `error`, `surfaceContainer`) rather than fixed color
+  values, so foreground and background pairs keep their intended
+  contrast in both themes.
+- **Scalable text.** Text sizes are declared in `sp`, so they follow
+  the system font-scale setting. `UnscaledFont` is a deliberate
+  exception: it pins the font scale to 1f in two cramped spots (the
+  bottom navigation bar and the map zoom controls) where a very large
+  system scale would otherwise break the layout.
+
+### Adaptive layout
+
+The app does not use `WindowSizeClass` or `BoxWithConstraints`. It is a
+phone-only app and adapts to different phone sizes through Compose's
+constraint-based layout rather than size breakpoints:
+
+- `Modifier.fillMaxWidth()` and `Modifier.weight(...)` share the
+  available width, so rows such as the bottom-bar items or the paired
+  statistic cards split evenly at any phone width.
+- `Modifier.height(IntrinsicSize.Min)` lets paired cards match the
+  taller card's content height, so they stay aligned when text grows.
+- Scrolling screens use `LazyColumn`, so content taller than the
+  viewport scrolls instead of clipping.
+- `Scaffold` and `WindowInsets` padding keep content clear of the
+  status bar, the navigation bar and the app's own top and bottom bars.
+- Spacing and sizing use `dp`, so they scale with screen density.
 
 ## Code documentation
 
