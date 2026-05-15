@@ -146,6 +146,46 @@ blocking work the Ktor engine does not handle. DataStore reads and
 writes are suspend functions that the DataStore library runs off the
 main thread.
 
+## Error handling
+
+Errors are handled at three levels: the datasource contains them, the
+ViewModel turns them into state, and the UI renders that state.
+
+### Datasource
+
+Every network call in `StatisticDatasource` and `MapDatasource` runs
+inside a `try`/`catch (e: Exception)`. On failure the datasource logs
+the cause with `Log.e` and returns a safe empty value: an empty list,
+an empty map, or `null`. A non-200 HTTP status is treated the same way.
+A datasource never throws to its caller and never returns a partly
+parsed result. This keeps a dropped connection or a malformed response
+from crashing the app.
+
+### ViewModel and UiState
+
+The statistics screen models its state as a sealed interface,
+`StatisticUiState`, with `Idle`, `Loading`, `StationResults`,
+`PlaceResults`, `ClimateData` and `Error` cases. `StatisticViewModel`
+wraps each repository call in a `try`/`catch`. On an exception it sets
+`uiState` to `StatisticUiState.Error`, carrying a localized message
+from a string resource (`error_search_failed`, `error_fetch_data` and
+similar). An empty result that is not itself an exception (no station
+found for the query) also maps to `Error`. `CancellationException` is
+re-thrown rather than shown: a search the user has already replaced
+should not paint an error.
+
+### UI
+
+`StatisticContent` is a `when` over `StatisticUiState`. The `Error`
+case renders `ErrorContent`, a centered message in the Material 3
+`error` color with a "Try again" button that returns the screen to its
+idle search state. Connectivity has a separate path: `isOnline()` in
+`NoInternetConnection.kt` registers a `ConnectivityManager` callback
+and exposes the result as Compose state. `AppNavigation` reads it and
+shows a "no internet connection" banner above the content while the
+device is offline, so the user sees why a fetch failed instead of a
+bare error message.
+
 ## Object-oriented principles
 
 ### Low coupling
