@@ -346,6 +346,49 @@ For git workflow, branch naming and commit rules, see [CONTRIBUTE.md](CONTRIBUTE
 - Mapbox composables and plain Compose composables are different scopes. The IDE warnings listed in README.md describe the few places the two cross.
 - DataStore writes must be on the IO dispatcher; all repository write helpers are already suspend functions, so call them from `viewModelScope.launch`.
 
+## Accessibility and adaptive layout
+
+### Accessibility
+
+The app targets WCAG 2.1 levels A and AA. The Compose tools used for it:
+
+- **Content descriptions.** `Icon` and `Image` composables that carry
+  meaning take a `contentDescription` from a string resource, so
+  TalkBack can announce them. Purely decorative icons pass
+  `contentDescription = null` so TalkBack skips them instead of reading
+  noise.
+- **Semantics modifier.** Where the describable element is not an
+  `Icon` or `Image`, `Modifier.semantics { contentDescription = ... }`
+  attaches the label directly (for example the buttons in
+  `MapZoomControls`).
+- **Material 3 color roles.** `Team45Theme` defines a full light and
+  dark `colorScheme`. UI code reads `MaterialTheme.colorScheme` roles
+  (`onSurface`, `error`, `surfaceContainer`) rather than fixed color
+  values, so foreground and background pairs keep their intended
+  contrast in both themes.
+- **Scalable text.** Text sizes are declared in `sp`, so they follow
+  the system font-scale setting. `UnscaledFont` is a deliberate
+  exception: it pins the font scale to 1f in two cramped spots (the
+  bottom navigation bar and the map zoom controls) where a very large
+  system scale would otherwise break the layout.
+
+### Adaptive layout
+
+The app does not use `WindowSizeClass` or `BoxWithConstraints`. It is a
+phone-only app and adapts to different phone sizes through Compose's
+constraint-based layout rather than size breakpoints:
+
+- `Modifier.fillMaxWidth()` and `Modifier.weight(...)` share the
+  available width, so rows such as the bottom-bar items or the paired
+  statistic cards split evenly at any phone width.
+- `Modifier.height(IntrinsicSize.Min)` lets paired cards match the
+  taller card's content height, so they stay aligned when text grows.
+- Scrolling screens use `LazyColumn`, so content taller than the
+  viewport scrolls instead of clipping.
+- `Scaffold` and `WindowInsets` padding keep content clear of the
+  status bar, the navigation bar and the app's own top and bottom bars.
+- Spacing and sizing use `dp`, so they scale with screen density.
+
 ## Code documentation
 
 A majority of the code including functions, classes, and enums is well documented using Kotlin KDoc-style docstrings. These docstrings are fully written and typically include all the relevant tags such as @param, @return, and other annotations that clearly describe inputs, output, and behavior. For some of the complex parts of the code, additional comments are used to explain the behavior.
